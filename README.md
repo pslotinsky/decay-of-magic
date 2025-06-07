@@ -1,5 +1,7 @@
 # Decay of Magic (DOM)
 
-**Decay of Magic** — In this world, magic dies, but battles live on.
+> Just a pet project: building a card game because why not?
 
-> Pet project. Built just for fun, learning, and experimentation.
+![alt text](dom_banner.jpg "Title")
+
+_In this world, magic dies, but battles live on._
