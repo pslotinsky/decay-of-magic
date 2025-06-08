@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ruler
+      POSTGRES_PASSWORD: 123qwe
+      POSTGRES_DB: codex
+      POSTGRES_PORT: 5432
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  codex:
+    build: ./packages/codex-service
+    depends_on:
+      - db
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      DATABASE_URL: "postgresql://ruler:123qwe@db:5432/codex"
+    volumes:
+      - ./packages/codex-service:/app
+      - /app/node_modules
+    command: npm run start:dev
+
+volumes:
+  postgres_data:
