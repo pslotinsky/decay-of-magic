@@ -2,17 +2,17 @@ import { IsString, IsNumber } from 'class-validator';
 
 export class CardDto {
   @IsString()
-  public id: string;
+  public id!: string;
 
   @IsString()
-  public name: string;
+  public name!: string;
 
   @IsString()
-  public description: string;
+  public description!: string;
 
   @IsString()
-  public schoolId: string;
+  public schoolId!: string;
 
   @IsNumber()
-  public cost: number;
+  public cost!: number;
 }

@@ -6,7 +6,7 @@ import { CardRepository } from '@service/domain/repositories/card.repository';
 import { PrismaService } from '../prisma/prisma.service';
 
 export class PrismaCardRepository implements CardRepository {
-  @Inject() private readonly prisma: PrismaService;
+  @Inject() private readonly prisma!: PrismaService;
 
   public async getById(id: string): Promise<Card | undefined> {
     const model = await this.prisma.card.findFirst({ where: { id } });
