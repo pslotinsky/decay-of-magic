@@ -1,8 +1,8 @@
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
-import { CreateCardDto } from '@service/api/dto/create-card.dto';
+import { CreateCardDto } from '@service/api/dto/body/create-card.dto';
 import { CreateCardCommand } from '@service/application/commands/create-card.command';
 import { GetCardQuery } from '@service/application/queries/get-card.query';
 import { FindCardsQuery } from '@service/application/queries/find-cards.query';
@@ -10,6 +10,7 @@ import { FindCardsQuery } from '@service/application/queries/find-cards.query';
 import { CardDto } from '../dto/card.dto';
 
 @Controller('/v1/card')
+@ApiTags('Card')
 export class CardController {
   constructor(
     private readonly commandBus: CommandBus,
