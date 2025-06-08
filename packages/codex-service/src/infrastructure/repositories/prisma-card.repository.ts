@@ -3,7 +3,7 @@ import { Inject, NotFoundException } from '@nestjs/common';
 import { Card } from '@service/domain/entities/card.entity';
 import { CardRepository } from '@service/domain/repositories/card.repository';
 
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 export class PrismaCardRepository implements CardRepository {
   @Inject() private readonly prisma: PrismaService;

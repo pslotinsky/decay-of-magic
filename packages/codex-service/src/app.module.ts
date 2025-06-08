@@ -7,7 +7,7 @@ import { FindCardsHandler } from '@service/application/queries/find-cards.query'
 import { CreateCardHandler } from '@service/application/commands/create-card.command';
 import { CardRepository } from '@service/domain/repositories/card.repository';
 import { PrismaCardRepository } from '@service/infrastructure/repositories/prisma-card.repository';
-import { PrismaService } from './infrastructure/prisma.service';
+import { PrismaService } from './infrastructure/prisma/prisma.service';
 
 const queryHandlers = [GetCardHandler, FindCardsHandler];
 const commandHandlers = [CreateCardHandler];
@@ -20,7 +20,7 @@ const repositories = [
 const services = [PrismaService];
 
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule.forRoot()],
   controllers: [CardController],
   providers: [
     ...queryHandlers,

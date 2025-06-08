@@ -6,6 +6,8 @@ import { CreateCardCommand } from '@service/application/commands/create-card.com
 import { GetCardQuery } from '@service/application/queries/get-card.query';
 import { FindCardsQuery } from '@service/application/queries/find-cards.query';
 
+import { CardDto } from '../dto/card.dto';
+
 @Controller('/v1/card')
 export class CardController {
   constructor(
@@ -19,12 +21,12 @@ export class CardController {
   }
 
   @Get('/:id')
-  public async getById(@Param('id') id: string) {
+  public async getById(@Param('id') id: string): Promise<CardDto> {
     return this.queryBus.execute(new GetCardQuery(id));
   }
 
   @Get('/')
-  public async find() {
+  public async find(): Promise<CardDto[]> {
     return this.queryBus.execute(new FindCardsQuery());
   }
 }

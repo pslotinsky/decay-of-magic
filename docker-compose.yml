@@ -14,7 +14,9 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   codex:
-    build: ./packages/codex-service
+    build:
+      context: ./packages/codex-service
+      target: dev
     depends_on:
       - db
     ports:
@@ -25,7 +27,6 @@ services:
     volumes:
       - ./packages/codex-service:/app
       - /app/node_modules
-    command: npm run start:dev
 
 volumes:
   postgres_data:
