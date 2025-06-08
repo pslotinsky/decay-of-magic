@@ -1,3 +1,6 @@
+# ================================
+# 👷 Stage: Build
+# ================================
 FROM node:22-alpine as build
 
 WORKDIR /app
@@ -6,12 +9,14 @@ COPY package*.json ./
 COPY tsconfig*.json ./
 COPY src ./src
 
-RUN npm install
+RUN npm ci
 
 RUN npm run prisma:generate
 RUN npm run build
 
-
+# ================================
+# 👷 Stage: Production build
+# ================================
 FROM node:22-alpine as prod_build
 
 WORKDIR /app
@@ -21,9 +26,11 @@ COPY --from=build /app/tsconfig*.json ./tsconfig.json
 COPY --from=build /app/package*.json ./package.json
 COPY --from=build /app/node_modules ./node_modules
 
-RUN npm install --omit=dev
+RUN npm prune --production
 
-
+# ================================
+# 🚀 Stage: Development
+# ================================
 FROM node:22-alpine as dev
 
 WORKDIR /app
@@ -35,7 +42,9 @@ COPY --from=build /app/tsconfig.json ./tsconfig.json
 
 CMD ["npm", "run", "start:debug"]
 
-
+# ================================
+# 🚀 Stage: Production
+# ================================
 FROM node:22-alpine as prod
 
 WORKDIR /app
