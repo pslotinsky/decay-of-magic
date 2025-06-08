@@ -15,7 +15,7 @@ services:
 
   codex:
     build:
-      context: ./packages/codex-service
+      context: ./apps/codex-service
       target: dev
     depends_on:
       - db
@@ -25,7 +25,7 @@ services:
       PORT: 3001
       DATABASE_URL: "postgresql://ruler:123qwe@db:5432/codex"
     volumes:
-      - ./packages/codex-service:/app
+      - ./apps/codex-service:/app
 
 volumes:
   postgres_data:
