@@ -2,6 +2,6 @@
 
 > Just a pet project: building a card game because why not?
 
-![alt text](dom_banner.jpg "Title")
+![DOM banner](banner.jpg "Decay of Magic")
 
 _In this world, magic dies, but battles live on._
