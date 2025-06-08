@@ -1,4 +1,4 @@
-export type CardProps = {
+export type CardParams = {
   id: string;
   name: string;
   description: string;
@@ -7,29 +7,21 @@ export type CardProps = {
 };
 
 export class Card {
-  public static create(props: CardProps): Card {
-    return new Card(props);
+  public static create(params: CardParams): Card {
+    return new Card(params);
   }
 
-  protected constructor(private readonly props: CardProps) {}
+  public readonly id: string;
+  public name: string;
+  public description: string;
+  public schoolId: string;
+  public cost: number;
 
-  public get id(): string {
-    return this.props.id;
-  }
-
-  public get name(): string {
-    return this.props.name;
-  }
-
-  public get description(): string {
-    return this.props.description;
-  }
-
-  public get schoolId(): string {
-    return this.props.schoolId;
-  }
-
-  public get cost(): number {
-    return this.props.cost;
+  protected constructor(params: CardParams) {
+    this.id = params.id;
+    this.name = params.name;
+    this.description = params.description;
+    this.schoolId = params.schoolId;
+    this.cost = params.cost;
   }
 }

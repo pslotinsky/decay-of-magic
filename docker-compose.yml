@@ -26,7 +26,6 @@ services:
       DATABASE_URL: "postgresql://ruler:123qwe@db:5432/codex"
     volumes:
       - ./packages/codex-service:/app
-      - /app/node_modules
 
 volumes:
   postgres_data:
