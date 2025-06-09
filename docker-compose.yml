@@ -27,5 +27,18 @@ services:
     volumes:
       - ./apps/codex-service:/app
 
+  admin:
+    build:
+      context: ./apps/admin-web
+      target: dev
+    depends_on:
+      - codex
+    ports:
+      - "5175:5175"
+    environment:
+      PORT: 5175
+    volumes:
+      - ./apps/admin-web:/app
+
 volumes:
   postgres_data:

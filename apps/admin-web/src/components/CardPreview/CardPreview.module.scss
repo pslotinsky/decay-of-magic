@@ -1,0 +1,47 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+
+  width: 100%;
+  max-width: 280px;
+  padding: 16px;
+
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+  }
+
+  img {
+    width: 100%;
+    margin-bottom: 8px;
+
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  .title {
+    margin-bottom: 4px;
+
+    font-size: 18px;
+  }
+
+  .type {
+    margin-bottom: 6px;
+
+    font-size: 14px;
+  }
+
+  .description {
+    flex-grow: 1;
+
+    color: #aaa;
+
+    font-size: 14px;
+  }
+}
