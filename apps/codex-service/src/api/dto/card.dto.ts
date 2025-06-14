@@ -8,11 +8,17 @@ export class CardDto {
   public name!: string;
 
   @ApiProperty()
+  public imageUrl!: string;
+
+  @ApiProperty()
   public description!: string;
 
-  @ApiProperty({ format: 'uuid' })
-  public schoolId!: string;
+  @ApiProperty()
+  public level!: number;
 
   @ApiProperty()
   public cost!: number;
+
+  @ApiProperty()
+  public manaId!: string;
 }

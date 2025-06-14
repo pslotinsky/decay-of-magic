@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, Min, IsInt } from 'class-validator';
 
 export class CreateCardDto {
   @IsString()
@@ -12,13 +12,23 @@ export class CreateCardDto {
 
   @IsString()
   @ApiProperty()
+  public imageUrl!: string;
+
+  @IsString()
+  @ApiProperty()
   public description!: string;
+
+  @IsInt()
+  @Min(1)
+  @ApiProperty()
+  public level!: number;
+
+  @IsInt()
+  @Min(0)
+  @ApiProperty()
+  public cost!: number;
 
   @IsString()
   @ApiProperty({ format: 'uuid' })
-  public schoolId!: string;
-
-  @IsNumber()
-  @ApiProperty()
-  public cost!: number;
+  public manaId!: string;
 }

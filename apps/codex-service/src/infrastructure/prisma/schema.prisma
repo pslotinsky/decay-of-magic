@@ -8,18 +8,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Card {
-  id          String      @id @default(uuid())
-  name        String
-  description String
-  schoolId    String
-  cost        Int
-  school      MagicSchool @relation(fields: [schoolId], references: [id])
+model Mana {
+  id   String @id
+  name String
+  type String
+  Mage Mage[]
+  Card Card[]
+
+  @@map("mana")
 }
 
-model MagicSchool {
+model Mage {
+  id          String  @id @default(uuid())
+  name        String
+  imageUrl    String  @map("image_url")
+  description String?
+  manaId      String  @map("mana_id")
+  mana        Mana    @relation(fields: [manaId], references: [id])
+
+  @@map("mage")
+}
+
+model Card {
   id          String @id @default(uuid())
   name        String
+  imageUrl    String @map("image_url")
   description String
-  cards       Card[]
+  level       Int
+  cost        Int
+  manaId      String @map("mana_id")
+  mana        Mana   @relation(fields: [manaId], references: [id])
+
+  @@map("card")
 }

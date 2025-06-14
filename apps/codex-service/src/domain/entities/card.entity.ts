@@ -1,9 +1,11 @@
 export type CardParams = {
   id: string;
   name: string;
+  imageUrl: string;
   description: string;
-  schoolId: string;
+  level: number;
   cost: number;
+  manaId: string;
 };
 
 export class Card {
@@ -13,15 +15,19 @@ export class Card {
 
   public readonly id: string;
   public name: string;
+  public imageUrl: string;
   public description: string;
-  public schoolId: string;
+  public level: number;
   public cost: number;
+  public manaId: string;
 
   protected constructor(params: CardParams) {
     this.id = params.id;
     this.name = params.name;
+    this.imageUrl = params.imageUrl;
     this.description = params.description;
-    this.schoolId = params.schoolId;
+    this.level = params.level;
     this.cost = params.cost;
+    this.manaId = params.manaId;
   }
 }
