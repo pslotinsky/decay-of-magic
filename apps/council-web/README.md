@@ -1,4 +1,4 @@
-# Admin web UI
+# Council UI
 
 Admin panel for DoM content
 
