@@ -16,10 +16,10 @@ async function bootstrap() {
 
 function setupSwagger(app: INestApplication): void {
   const config = new DocumentBuilder()
-    .setTitle('Codex service')
-    .setDescription('Game content management service API')
+    .setTitle('Vault service')
+    .setDescription('File service API')
     .setVersion('1.0')
-    .addTag('codex')
+    .addTag('vault')
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);

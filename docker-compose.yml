@@ -13,6 +13,42 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  s3:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ruler
+      MINIO_ROOT_PASSWORD: 12345qwe
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+
+  s3-init:
+    image: minio/mc
+    depends_on:
+      - s3
+    environment:
+      MINIO_ROOT_USER: ruler
+      MINIO_ROOT_PASSWORD: 12345qwe
+      MINIO_BUCKET_NAME: vault
+    entrypoint: >
+      /bin/sh -c "
+      until /usr/bin/mc alias set local http://s3:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD}; do
+        echo 'Waiting for MinIO to become available...';
+        sleep 2;
+      done;
+
+      echo 'Creating bucket...';
+      /usr/bin/mc mb local/$${MINIO_BUCKET_NAME};
+
+      echo 'Making bucket public...';
+      /usr/bin/mc anonymous set download local/$${MINIO_BUCKET_NAME};
+
+      echo 'MinIO init done.';
+      "
+
   codex:
     build:
       context: ./apps/codex-service
@@ -26,6 +62,25 @@ services:
       DATABASE_URL: "postgresql://ruler:123qwe@db:5432/codex"
     volumes:
       - ./apps/codex-service:/app
+
+  vault:
+    build:
+      context: ./apps/vault-service
+      target: dev
+    depends_on:
+      - s3
+    ports:
+      - "3002:3002"
+    environment:
+      PORT: 3002
+      PUBLIC_ENDPOINT: http://localhost:9000
+      S3_ENDPOINT: http://s3:9000
+      S3_ACCESS_KEY: ruler
+      S3_SECRET_KEY: 12345qwe
+      S3_BUCKET: vault
+      S3_REGION: default
+    volumes:
+      - ./apps/vault-service:/app
 
   council:
     build:
@@ -42,3 +97,4 @@ services:
 
 volumes:
   postgres_data:
+  minio_data:
