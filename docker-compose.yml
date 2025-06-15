@@ -49,6 +49,22 @@ services:
       echo 'MinIO init done.';
       "
 
+  gateway:
+    build:
+      context: ./apps/gateway-service
+      target: dev
+    depends_on:
+      - codex
+      - vault
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      CODEX_SERVICE_URL: "http://codex:3001"
+      VAULT_SERVICE_URL: "http://vault:3002"
+    volumes:
+      - ./apps/gateway-service:/app
+  
   codex:
     build:
       context: ./apps/codex-service
@@ -92,6 +108,7 @@ services:
       - "5175:5175"
     environment:
       PORT: 5175
+      GATEWAY_URL: http://gateway:3000
     volumes:
       - ./apps/council-web:/app
 
