@@ -1,7 +1,9 @@
+import { Page } from "../../components/Page";
+
 export const ManaPage = () => {
   return (
-    <div>
+    <Page>
       <h1>Mana page</h1>
-    </div>
+    </Page>
   );
 };

@@ -1,8 +1,10 @@
 import { Link } from "react-router";
 
+import { Page } from "../../components/Page";
+
 export const HomePage = () => {
   return (
-    <div>
+    <Page>
       <h1>Home page</h1>
       <ul>
         <li>
@@ -12,6 +14,6 @@ export const HomePage = () => {
           <Link to="/mana">Mana</Link>
         </li>
       </ul>
-    </div>
+    </Page>
   );
 };
