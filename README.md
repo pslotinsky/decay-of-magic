@@ -6,7 +6,15 @@
 
 _In this world, magic dies, but battles live on._
 
----
+## Project structure
+
+```sh
+├── apps/           # client applications: council-web, decay-of-magic-web, ...
+├── services/       # microservices: codex, battle, vault, ...
+├── packages/       # shared libs
+├── scripts/        # support scripts: docs generation, ...
+└── docs/           # docs, devlogs, ideas, roadmap
+```
 
 ## Architecture
 
