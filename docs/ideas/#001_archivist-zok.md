@@ -4,7 +4,7 @@
 
 Make a documentation assistant. Senior orc archivist Zok
 
-<img src="images/zok.jpg" alt="Senior orc archivist Zok" width="200"/>
+<img src="../assets/zok.jpg" alt="Senior orc archivist Zok" width="200"/>
 
 ### He can:
 
