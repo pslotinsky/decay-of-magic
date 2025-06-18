@@ -1,10 +1,10 @@
 # Idea #001: Archivist Zok
 
+<img src="../assets/zok.jpg" alt="Senior orc archivist Zok" width="200"/>
+
 ## Description
 
 Make a documentation assistant. Senior orc archivist Zok
-
-<img src="../assets/zok.jpg" alt="Senior orc archivist Zok" width="200"/>
 
 ### He can:
 
@@ -61,3 +61,4 @@ Make cool documentation
 
 - All documentation root folders should have a README with a table of contents.
 - A future task is to generate links from other documents, something like `<zok:link>Idea #001</zok:link>`
+- The task of the distant future is to analyze voice messages and act accordingly (Ah-hah. Poor Zok. Could he hate me any more?)
