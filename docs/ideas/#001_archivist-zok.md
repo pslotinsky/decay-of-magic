@@ -64,5 +64,5 @@ This is an elderly orc with the status of an archivist. He is significantly smar
 ## Offtop
 
 - All documentation root folders should have a README with a table of contents.
-- A future task is to generate links from other documents, something like `<zok:link>Idea #001</zok:link>`
+- A future task is to generate links from other documents, something like `<zok:link>Idea #001</zok:link>`. (UPD. There is no need for a metalanguage, Zok knows perfectly well what everything is called and can rename it everywhere)
 - The task of the distant future is to analyze voice messages and act accordingly (Ah-hah. Poor Zok. Could he hate me any more?)
