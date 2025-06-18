@@ -1,4 +1,4 @@
-# Idea 001: Archivist Zok
+# Idea #001: Archivist Zok
 
 ## Description
 
@@ -56,3 +56,8 @@ Make cool documentation
 - [x] MVP-0001: Create archivist Zok
 - [ ] MVP-0002: Add documentation autogeneration
 ```
+
+## Offtop
+
+- All documentation root folders should have a README with a table of contents.
+- A future task is to generate links from other documents, something like `<zok:link>Idea #001</zok:link>`
