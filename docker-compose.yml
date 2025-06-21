@@ -51,7 +51,7 @@ services:
 
   gateway:
     build:
-      context: ./apps/gateway-service
+      context: ./services/gateway-service
       target: dev
     depends_on:
       - codex
@@ -63,11 +63,11 @@ services:
       CODEX_SERVICE_URL: "http://codex:3001"
       VAULT_SERVICE_URL: "http://vault:3002"
     volumes:
-      - ./apps/gateway-service:/app
+      - ./services/gateway-service:/app
   
   codex:
     build:
-      context: ./apps/codex-service
+      context: ./services/codex-service
       target: dev
     depends_on:
       - db
@@ -77,11 +77,11 @@ services:
       PORT: 3001
       DATABASE_URL: "postgresql://ruler:123qwe@db:5432/codex"
     volumes:
-      - ./apps/codex-service:/app
+      - ./services/codex-service:/app
 
   vault:
     build:
-      context: ./apps/vault-service
+      context: ./services/vault-service
       target: dev
     depends_on:
       - s3
@@ -96,7 +96,7 @@ services:
       S3_BUCKET: vault
       S3_REGION: default
     volumes:
-      - ./apps/vault-service:/app
+      - ./services/vault-service:/app
 
   council:
     build:
