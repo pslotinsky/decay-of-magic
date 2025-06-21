@@ -1,0 +1,20 @@
+{
+  "name": "zok",
+  "private": true,
+  "version": "0.0.0",
+  "bin": "./dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "./dist/index.js",
+    "test": "tsx --test **/*.test.ts"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "commander": "^14.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.3",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}
