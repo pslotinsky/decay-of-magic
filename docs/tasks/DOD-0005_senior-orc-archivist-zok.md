@@ -10,6 +10,7 @@
 
 - [Zok's idea](../ideas/Idea-001_archivist-zok.md)
 - [Zok's ADR](../adr/ADR-002_zok-for-doc.md)
+- [Zok's design](../design/Design-001_the-inner-world-of-zok.md)
 
 ### MVP Scope:
 
