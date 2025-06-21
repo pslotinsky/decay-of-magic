@@ -1,49 +1,48 @@
-# Design-001: The inner world of Zok
+# Design-001: The Inner World of Zok
 
 | Field   | Value      |
 | ------- | ---------- |
-| Status  | Draft      |
 | Created | 2025-06-21 |
 
-## Сущности
+## Entities
 
-### API layer (Zok office)
+### API layer (Zok's Office)
 
-- Zok — главный управляющий
-- Request — Зок не принимает команд, только просьбы
-- Remark — реплика Зока (ответ пользователю)
+- `Zok` — the overseer and orchestrator
+- `Plea` — Zok does not accept commands, only pleas
+- `Remark` — Zok's formal response to a plea
 
-### Application layer (Zok's assistants)
+### Application layer (Zok's Assistants)
 
-- DutyInstruction — должностная инструкция Зока (по сути юз-кейс)
-- Assistant — Базовый класс для всех помощников Зока
-- Interpreter — Расшифровывает Зоку, что от него хотят эти неразумные существа
-- Scribe — создание документов / шаблонизация
-- Linker — управление ссылками и связями
-- ProtocolClerk — загрузка и проверка конфигурации
-- HumorAdvisor — подсказывает ремарки Зоку
-- DocumentSeeker — Ищет документы в архиве. Сам Зок в хранилище архива никогда не ходит
+- `DutyInstruction` — a use-case; Zok's assigned responsibility
+- `Assistant` — base class for all of Zok's helpers
+- `Interpreter` — deciphers the intent of a plea
+- `Scribe` — creates and edits documents
+- `Linker` — updates cross-references and tables of contents
+- `ProtocolClerk` — loads and validates document protocols
+- `HumorAdvisor` — crafts Zok's witty remarks
+- `DocumentSeeker` — locates documents in the archive
 
-### Domain layer (Precious archive information)
+### Domain layer (Precious Archive Information)
 
-- Document — конкретный файл с содержимым и метаданными
-- DocumentProtocol — описание типа документа (task, idea, ...)
-- FieldDefinition — описание отдельного поля документа
-- FieldType — тип поля: string, date, enum, link, ...
-- Profile — досье на сотрудника архива
+- `Document` — a specific file with metadata and content
+- `DocumentProtocol` — definition of a document type (task, idea, ...)
+- `FieldDefinition` — structure of a single document field
+- `FieldType` — field kind: `string`, `date`, `enum`, `link`, ...
+- `Dossier` — a whimsical profile for each assistant (name, species, hobbies, etc.)
 
-### Infrastructure layer (Buildings, equipment, etc.)
+### Infrastructure layer (Buildings, Equipment, etc.)
 
-- Archive — хранилище файлов
+- `Archive` — the physical storage of documents
 
-### Диаграмма классов
+## Class Diagram
 
 ```mermaid
 classDiagram
   class Zok
-  class Request
+  class Plea
   class Remark
-  class Profile
+  class Dossier
   class Interpreter
   class Assistant
   class Scribe
@@ -55,144 +54,147 @@ classDiagram
   class DocumentProtocol
   class FieldDefinition
   class Archive
-  Zok *-- Profile
-  Zok --> Request
+  Zok *-- Dossier
+  Zok --> Plea
   Zok --> Remark
   Zok --> Assistant
-  Assistant *-- Profile
+  Assistant *-- Dossier
   Assistant --> Archive
   Assistant --> Document
+  Interpreter --> Plea
   Interpreter --|> Assistant
   Scribe --|> Assistant
   Linker --|> Assistant
   ProtocolClerk --|> Assistant
+  HumorAdvisor --> Remark
   HumorAdvisor --|> Assistant
   DocumentSeeker --|> Assistant
-  Interpreter --> Request
   ProtocolClerk --> DocumentProtocol
-  HumorAdvisor --> Remark
   DocumentProtocol *-- FieldDefinition
   Document *-- DocumentProtocol
   Archive o-- Document
 ```
 
-## Должностные инструкции
+## Duty Instructions
 
-Любое выполнение должностной инструкции начинается с того, что Зок получает какую-то просьбу от пользователя и просит интерпретатора объяснить нормально, чего от него хотят. Поняв это, Зок просит протоколиста проверить, что для запрашиваемого типа документов сущетсвует протокол. Если протокол существует, то Зок приступает к должностным инструкциям. Иначе Зок раздраженно просит советника по юмору составить ему язвительный ответ и передает его пользователю. Иначе Зок выполняет свою должностную инструкцию, и возвращает пользователю ремарку о проделанной работе
+Each `DutyInstruction` begins with Zok receiving a `Plea` from the user. He consults the `Interpreter` to understand it. Then asks the `ProtocolClerk` whether a protocol exists for the requested document type.
+
+If the protocol is unknown, he asks the `HumorAdvisor` for a sarcastic `Remark` and sends it back to the user.
+If the protocol is valid, Zok performs the duty and returns a `Remark`.
 
 ```mermaid
 sequenceDiagram
   actor User
-  User->>Zok: Asks Zok for something
-  Zok->>Interpreter: What does he want from me?
-  Interpreter->>Zok: Request
-  Zok->>ProtocolClerk: What protocol is required for this type of document?
-  alt is unknown
-    ProtocolClerk->>Zok: I don't know
-    Zok->>HumorAdvisor: So what should I tell him?
+  User->>Zok: Submits a plea
+  Zok->>Interpreter: What is the intent?
+  Interpreter->>Zok: Plea
+  Zok->>ProtocolClerk: Do we have a protocol for this?
+  alt Unknown protocol
+    ProtocolClerk->>Zok: No
+    Zok->>HumorAdvisor: What should I tell them?
     HumorAdvisor->>Zok: Remark
     Zok->>User: Remark
-  else is known
+  else Valid protocol
     ProtocolClerk->>Zok: Protocol
-    Zok->>Zok: Execute duty instruction
+    Zok->>Zok: Execute DutyInstruction
     Zok->>User: Remark
   end
 ```
 
-### Должностная инструкция по созданию документа
+### Creating a Document
 
-- Зоку передает запрос пользователя и протокол документа Писателю
-- Писатель создает документ и возвращает его Зоку
-- Зок просит Линкера узнать, есть ли связи с другими документами и перелинковать их, а так же обновить таблицы с содержанием
-- Зок просит Советника по шуткам придумать остроумную ремарку
-- Зок передает ремарку пользователю
+- Zok forwards the `Plea` and corresponding `DocumentProtocol` to the `Scribe`
+- The `Scribe` returns a new `Document`
+- Zok requests the `Linker` to update references and table of contents
+- Zok requests a `Remark` from the `HumorAdvisor`
+- Zok responds to the user with the `Remark`
 
 ```mermaid
 sequenceDiagram
-  Zok->>Scribe: Request + DocumentProtocol
+  Zok->>Scribe: Plea + DocumentProtocol
   Scribe->>Zok: Document
   Zok->>Linker: Document
-  Linker->>Linker: Update links and tables of content
+  Linker->>Linker: Update links and tables
   Linker->>Zok: Done
-  Zok->>HumorAdvisor: Request + Document
+  Zok->>HumorAdvisor: Plea + Document
   HumorAdvisor->>Zok: Remark
 ```
 
-### Должностная инструкция по изменению статуса документа
+### Changing Document Status
 
-- Зок просит искателя докуметов найти документ
-- Если документ не найден, то просит советника по юмору составить язвительны ответ
-- Если найден, то Зок просит протоколиста узнать поддерживает ли протокол статус
-- Если нет, то просит советника по юмору составить язвительны ответ
-- Если да, то Зок просит писаря исправить стутус документа
-- Зок просит линкера обновить таблицы с содержимым
-- Зок просит советника по юмору составить ироничный отчет о работе
+- Zok asks `DocumentSeeker` to locate the document
+- If not found, `HumorAdvisor` crafts a snarky `Remark`
+- If found, Zok asks `ProtocolClerk` if the protocol supports status changes
+- If not supported, `HumorAdvisor` crafts a snarky `Remark`
+- If supported, Zok asks the `Scribe` to update status
+- Then `Linker` updates references and TOC
+- Finally, `HumorAdvisor` returns a report `Remark`
 
 ```mermaid
 sequenceDiagram
-  Zok->>DocumentSeeker: Request
-  alt document is not found
-    DocumentSeeker->>Zok: Document not found
-    Zok->>HumorAdvisor: Request
+  Zok->>DocumentSeeker: Plea
+  alt Document not found
+    DocumentSeeker->>Zok: Not Found
+    Zok->>HumorAdvisor: Plea
     HumorAdvisor->>Zok: Remark
-  else document is found
+  else Document found
     DocumentSeeker->>Zok: Document
-    Zok->>ProtocolClerk: Request
-    alt status is not supported
+    Zok->>ProtocolClerk: DocumentProtocol
+    alt Status not supported
       ProtocolClerk->>Zok: No
-      Zok->>HumorAdvisor: Request + Document
+      Zok->>HumorAdvisor: Plea + Document
       HumorAdvisor->>Zok: Remark
-    else status is supported
+    else Supported
       ProtocolClerk->>Zok: Yes
-      Zok->>Scribe: Request + DocumentProtocol + Document
+      Zok->>Scribe: Plea + DocumentProtocol + Document
       Zok->>Linker: Document
-      Linker->>Linker: Update tables of content
+      Linker->>Linker: Update TOC
       Linker->>Zok: Done
-      Zok->>HumorAdvisor: Request + Document
+      Zok->>HumorAdvisor: Plea + Document
       HumorAdvisor->>Zok: Remark
     end
   end
 ```
 
-### Должностная инструкция по переименованию документа
+### Renaming a Document
 
-- Зок просит искателя докуметов найти документ
-- Если документ не найден, то просит советника по юмору составить язвительны ответ
-- Если найден, то Зок просит писаря переназвать документ
-- Зок просит линкера перелинковать документы и обновить таблицы с содержимым
-- Зок просит советника по юмору составить ироничный отчет о работе
+- Zok asks `DocumentSeeker` to locate the document
+- If not found, `HumorAdvisor` crafts a snarky `Remark`
+- If found, `Scribe` renames it
+- `Linker` updates all links and TOC
+- `HumorAdvisor` composes the final `Remark`
 
 ```mermaid
 sequenceDiagram
-  Zok->>DocumentSeeker: Request
-  alt document is not found
-    DocumentSeeker->>Zok: Document not found
-    Zok->>HumorAdvisor: Request
+  Zok->>DocumentSeeker: Plea
+  alt Document not found
+    DocumentSeeker->>Zok: Not Found
+    Zok->>HumorAdvisor: Plea
     HumorAdvisor->>Zok: Remark
-  else document is found
+  else Document found
     DocumentSeeker->>Zok: Document
-    Zok->>Scribe: Request + DocumentProtocol + Document
+    Zok->>Scribe: Plea + DocumentProtocol + Document
     Zok->>Linker: Document
-    Linker->>Linker: Update links and tables of content
+    Linker->>Linker: Update links and TOC
     Linker->>Zok: Done
-    Zok->>HumorAdvisor: Request + Document
+    Zok->>HumorAdvisor: Plea + Document
     HumorAdvisor->>Zok: Remark
   end
 ```
 
-### Должностная инструкция по поиску документов
+### Searching for Documents
 
-- Зок просит искателя докуметов найти документ
-- Зок просит советника по юмору составить остроумный отчет
+- Zok asks `DocumentSeeker` to gather documents
+- `HumorAdvisor` creates a witty summary `Remark`
 
 ```mermaid
 sequenceDiagram
-  Zok->>DocumentSeeker: Request
+  Zok->>DocumentSeeker: Plea
   DocumentSeeker->>Zok: Documents
-  Zok->>HumorAdvisor: Request + Documents
+  Zok->>HumorAdvisor: Plea + Documents
   HumorAdvisor->>Zok: Remark
 ```
 
-## Zok's office
+## Zok's Office
 
 ![Zok's team](../assets/zok-team.jpg "Zok's team")
