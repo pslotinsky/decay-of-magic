@@ -1,9 +1,9 @@
 # ADR-001: ADR about ADR
 
-| Attribute | Value      |
-| --------- | ---------- |
-| Status    | Accepted   |
-| Created   | 2025-06-21 |
+| Field   | Value      |
+| ------- | ---------- |
+| Status  | Accepted   |
+| Created | 2025-06-21 |
 
 ## Context
 

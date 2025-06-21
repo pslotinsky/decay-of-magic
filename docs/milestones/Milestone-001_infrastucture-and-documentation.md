@@ -1,10 +1,10 @@
 # Milestone-001: Infrastructure and documentation
 
-| Attribute | Value                                |
-| --------- | ------------------------------------ |
-| Status    | In progress                          |
-| Roadmap   | [MVP](../roadmaps/Roadmap-01_mvp.md) |
-| Created   | 2025-06-18                           |
+| Field   | Value                                |
+| ------- | ------------------------------------ |
+| Status  | In progress                          |
+| Roadmap | [MVP](../roadmaps/Roadmap-01_mvp.md) |
+| Created | 2025-06-18                           |
 
 ## Tasks
 

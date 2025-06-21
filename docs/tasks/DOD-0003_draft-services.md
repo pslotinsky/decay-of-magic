@@ -1,6 +1,6 @@
 # DOD-0003: Draft services
 
-| Attribute | Value                                                                                              |
+| Field     | Value                                                                                              |
 | --------- | -------------------------------------------------------------------------------------------------- |
 | Status    | In progress                                                                                        |
 | Milestone | [Infrastructure and documentation](../milestones/Milestone-001_infrastucture-and-documentation.md) |

@@ -1,9 +1,9 @@
 # Roadmap-01: MVP
 
-| Attribute | Value       |
-| --------- | ----------- |
-| Status    | In progress |
-| Created   | 2025-06-18  |
+| Field   | Value       |
+| ------- | ----------- |
+| Status  | In progress |
+| Created | 2025-06-18  |
 
 ## Roadmap
 

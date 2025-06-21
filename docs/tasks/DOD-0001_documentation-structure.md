@@ -1,6 +1,6 @@
 # DOD-0001: Documentation structure
 
-| Attribute | Value                                                                                              |
+| Field     | Value                                                                                              |
 | --------- | -------------------------------------------------------------------------------------------------- |
 | Status    | Done                                                                                               |
 | Milestone | [Infrastructure and documentation](../milestones/Milestone-001_infrastucture-and-documentation.md) |

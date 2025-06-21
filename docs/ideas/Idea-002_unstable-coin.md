@@ -1,9 +1,9 @@
 # Idea-002: Unstable coin
 
-| Attribute | Value      |
-| --------- | ---------- |
-| Tags      | `random`   |
-| Created   | 2025-06-21 |
+| Field   | Value      |
+| ------- | ---------- |
+| Tags    | `random`   |
+| Created | 2025-06-21 |
 
 ## Description
 

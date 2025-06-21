@@ -1,6 +1,6 @@
 # DOD-0004: Basic CI
 
-| Attribute | Value                                                                                              |
+| Field     | Value                                                                                              |
 | --------- | -------------------------------------------------------------------------------------------------- |
 | Status    | In progress                                                                                        |
 | Milestone | [Infrastructure and documentation](../milestones/Milestone-001_infrastucture-and-documentation.md) |

@@ -1,9 +1,9 @@
 # ADR-002: Zoc for doc
 
-| Attribute | Value      |
-| --------- | ---------- |
-| Status    | Accepted   |
-| Created   | 2025-06-21 |
+| Field   | Value      |
+| ------- | ---------- |
+| Status  | Accepted   |
+| Created | 2025-06-21 |
 
 ## Context
 
