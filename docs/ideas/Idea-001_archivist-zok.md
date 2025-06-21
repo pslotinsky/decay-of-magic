@@ -1,4 +1,9 @@
-# Idea #001: Archivist Zok
+# Idea-001: Archivist Zok
+
+| Attribute | Value                 |
+| --------- | --------------------- |
+| Tags      | `cool`, `tool`, `Zok` |
+| Created   | 2025-06-18            |
 
 ## Description
 
