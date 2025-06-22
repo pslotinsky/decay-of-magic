@@ -7,6 +7,8 @@
 
 ## Context
 
+![Zoc for doc](../assets/zok-doc.webp)
+
 I want to keep beautifully organized documentation right in the repository
 
 ### What features would be nice to have
