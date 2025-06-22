@@ -9,24 +9,16 @@
 
 I came across a promising methodology [ADR](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)
 
+It's not that I have any pressing need for it, but the idea is interesting. At the very least, it makes you reflect on the decisions you make, rather than doing them mindlessly.
+
 ## Decision
 
-Entrust this to [senior archivist Zok](../ideas/Idea-001_archivist-zok.md)
+Try it
 
 ## Consequences
 
-### In theory, Zok should solve the following problems:
-
-- Maintaining document numbering
-- Putting cross-references in documents (e.g. parent documents should link to children)
-- Document templating
-- Creating a content table in the root directories of the documentation
-- Renaming documents (with correction of headings and cross-references)
-- Perhaps, I will ask it to collect comments on the code for automatic generation of documentation. Although this might be a case of responsibility creep. Perhaps Zok will have an assistant
-- It is possible to add a telegram bot to commit tasks to the repository directly from the chat
-- It is even possible to try to learn how to give instructions to Zok via voice messages
-
-### Trade-offs:
-
-- This adds yet another utility that needs to be written and then supported, which takes away from creating the game itself
-- This is a non-standard tool. +1 interface that needs to be kept in mind. But a quick search did not yield any tools that would do everything necessary
+- I will have more documentation!
+- But less time for coding
+- Architectural decisions will become more balanced and thoughtful
+- It will be possible to track the reasons behind decisions
+- And, over time, evaluate their consequences
