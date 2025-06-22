@@ -1,0 +1,1 @@
+export { DocumentProtocol } from './DocumentProtocol';

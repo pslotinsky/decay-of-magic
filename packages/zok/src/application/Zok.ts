@@ -1,32 +1,32 @@
-import { DocumentSeeker } from '../domain/assistants/DocumentSeeker';
-import { HumorAdvisor } from '../domain/assistants/HumorAdvisor';
-import { PleaFormalist } from '../domain/assistants/PleaFormalist';
-import { Binder } from '../domain/assistants/Binder';
-import { ProtocolClerk } from '../domain/assistants/ProtocolClerk';
-import { Scribe } from '../domain/assistants/Scribe';
-import { Remark } from '../domain/Remark';
-import { Plea } from '../domain/Plea';
-import { DutyInstruction } from './DutyInstruction';
+import {
+  Binder,
+  DocumentSeeker,
+  HumorAdvisor,
+  PleaFormalist,
+  ProtocolClerk,
+  Scribe,
+} from '@zok/domain/assistants';
+import { DocumentProtocol } from '@zok/domain/document';
+import { Remark } from '@zok/domain/Remark';
+import { Plea } from '@zok/domain/Plea';
+import { PleaType } from '@zok/domain/PleaType';
 
-type ZokAssistants = {
-  formalist: PleaFormalist;
-  scribe: Scribe;
-  binder: Binder;
-  humorAdvisor: HumorAdvisor;
+import { CreateDocumentDutyInstruction, DutyInstruction } from './instructions';
+import { ZokAssistants } from './ZokAssistants';
+
+type NewZokAssistants = Partial<ZokAssistants> & {
   protocolClerk: ProtocolClerk;
-  seeker: DocumentSeeker;
 };
 
 export class Zok {
   private assistants: ZokAssistants;
 
-  public static revealItself(assistants: Partial<ZokAssistants> = {}): Zok {
+  public static revealItself(assistants: NewZokAssistants): Zok {
     return new Zok({
       formalist: new PleaFormalist(),
       scribe: new Scribe(),
       binder: new Binder(),
       humorAdvisor: new HumorAdvisor(),
-      protocolClerk: new ProtocolClerk(),
       seeker: new DocumentSeeker(),
       ...assistants,
     });
@@ -43,14 +43,29 @@ export class Zok {
   }
 
   public async handlePlea(plea: Plea): Promise<Remark> {
-    const instruction = this.createDutyInstruction(plea);
+    const protocol = this.assistants.protocolClerk.getProtocol(plea);
+    const instruction = this.createDutyInstruction(plea, protocol);
 
     const remark = await instruction.execute();
 
     return remark;
   }
 
-  private createDutyInstruction(plea: Plea): DutyInstruction {
-    throw new Error('Method not implemented.');
+  public async init(): Promise<void> {
+    for (const assistant of Object.values(this.assistants)) {
+      await assistant.init();
+    }
+  }
+
+  private createDutyInstruction(
+    plea: Plea,
+    protocol: DocumentProtocol,
+  ): DutyInstruction {
+    switch (plea.type) {
+      case PleaType.Create:
+        return new CreateDocumentDutyInstruction(this.assistants, plea);
+      default:
+        throw new Error(`Unknown plea type ${plea.type}`);
+    }
   }
 }

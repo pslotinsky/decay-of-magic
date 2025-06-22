@@ -10,7 +10,8 @@
   },
   "license": "UNLICENSED",
   "dependencies": {
-    "commander": "^14.0.0"
+    "commander": "^14.0.0",
+    "yaml": "^2.8.0"
   },
   "devDependencies": {
     "@types/node": "^24.0.3",

@@ -1,0 +1,8 @@
+{% extends "document.nj" %}
+
+{% block content %}
+## Tasks
+
+<!-- <zok.list type=task milestone={{ document.id }}> -->
+<!-- </zok.list> -->
+{% endblock %}

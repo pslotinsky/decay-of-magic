@@ -1,0 +1,7 @@
+{% extends "document.nj" %}
+
+{% block content %}
+## Description
+
+{document.content}
+{% endblock %}

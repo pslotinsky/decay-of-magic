@@ -1,0 +1,20 @@
+{% block header %}
+# {{ document.id }}: {{ document.name }}
+{% endblock %}
+
+{% block fields %}
+{% if document.fields %}
+| Field | Value |
+{% for name, value in document.fields %}
+| {{ name }} | {{ value }} |
+{% endfor %}
+{% endif %}
+{% endblock %}
+
+{% if document.description %}
+{{ document.description }}
+{% endif %}
+
+{% block content %}
+{{ document.content }}
+{% endblock %}

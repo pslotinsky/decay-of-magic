@@ -1,4 +1,5 @@
-import { Plea, PleaType } from '../Plea';
+import { Plea } from '../Plea';
+import { PleaType } from '../PleaType';
 import { Assistant } from './Assistant';
 
 export class PleaFormalist extends Assistant {

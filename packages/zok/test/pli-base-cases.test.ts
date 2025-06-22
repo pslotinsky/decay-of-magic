@@ -1,12 +1,19 @@
-import test, { beforeEach } from 'node:test';
+import test, { before, beforeEach } from 'node:test';
 import assert from 'node:assert';
 
 import { Zok } from '../src/application/Zok';
+import { YamlProtocolClerk } from '@zok/infrastructure/assistants/YamlProtocolClerk';
 
 // const archive = new MockArchive();
-const zok = Zok.revealItself();
+const zok = Zok.revealItself({
+  protocolClerk: new YamlProtocolClerk(),
+});
 
 test.describe('Zok PLI. Base cases', () => {
+  before(async () => {
+    await zok.init();
+  });
+
   test(`zok create task "Hello task"`, async () => {
     const remark = await zok.handleTextPlea(`zok create task "Hello task"`);
 
