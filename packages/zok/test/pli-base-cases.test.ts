@@ -1,8 +1,17 @@
-import test from "node:test";
-import assert from "node:assert";
+import test, { beforeEach } from 'node:test';
+import assert from 'node:assert';
 
-test.describe("Zok PLI. Base cases", () => {
-  test(`zok create task "Hello task"`, async () => {});
+import { Zok } from '../src/application/Zok';
+
+// const archive = new MockArchive();
+const zok = Zok.revealItself();
+
+test.describe('Zok PLI. Base cases', () => {
+  test(`zok create task "Hello task"`, async () => {
+    const remark = await zok.handleTextPlea(`zok create task "Hello task"`);
+
+    console.log(remark);
+  });
 
   test(`zok list tasks`, async () => {});
 
