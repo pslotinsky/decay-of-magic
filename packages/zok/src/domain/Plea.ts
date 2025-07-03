@@ -1,8 +1,31 @@
 import { PleaType } from './PleaType';
 
+export type PleaForm = {
+  type: PleaType;
+  protocol: string;
+  values: Record<string, unknown>;
+  creationTime: Date;
+};
+
 export class Plea {
-  constructor(
-    public readonly type: PleaType,
-    public readonly values?: Record<string, unknown>,
-  ) {}
+  public static make(id: string, form: PleaForm): Plea {
+    return new Plea(id, form);
+  }
+
+  public readonly id: string;
+
+  protected readonly form: PleaForm;
+
+  protected constructor(id: string, form: PleaForm) {
+    this.id = id;
+    this.form = form;
+  }
+
+  public get type(): PleaType {
+    return this.form.type;
+  }
+
+  public get protocol(): string {
+    return this.form.protocol;
+  }
 }

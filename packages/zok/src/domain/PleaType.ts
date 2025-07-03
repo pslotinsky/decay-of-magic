@@ -3,4 +3,5 @@ export enum PleaType {
   Rename = 'Rename',
   ChangeStatus = 'ChangeStatus',
   List = 'List',
+  Unknown = 'Unknown',
 }

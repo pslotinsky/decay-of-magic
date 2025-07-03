@@ -2,10 +2,15 @@ import test, { before, beforeEach } from 'node:test';
 import assert from 'node:assert';
 
 import { Zok } from '../src/application/Zok';
-import { YamlProtocolClerk } from '@zok/infrastructure/assistants/YamlProtocolClerk';
+import {
+  NanoPleaFormalist,
+  YamlProtocolClerk,
+} from '@zok/infrastructure/assistants';
+import { PleaType } from '@zok/domain/PleaType';
 
 // const archive = new MockArchive();
 const zok = Zok.revealItself({
+  formalist: new NanoPleaFormalist(),
   protocolClerk: new YamlProtocolClerk(),
 });
 
@@ -15,7 +20,11 @@ test.describe('Zok PLI. Base cases', () => {
   });
 
   test(`zok create task "Hello task"`, async () => {
-    const remark = await zok.handleTextPlea(`zok create task "Hello task"`);
+    const remark = await zok.handleTextPlea({
+      protocol: 'task',
+      type: PleaType.Create,
+      values: { title: 'Hello task' },
+    });
 
     console.log(remark);
   });

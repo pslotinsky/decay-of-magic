@@ -1,20 +1,23 @@
 {
   "name": "zok",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "bin": "./dist/index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "start": "./dist/index.js",
+    "build": "tsc -p tsconfig.build.json && tsc-alias",
+    "start": "node ./dist/index.js",
     "test": "tsx --test **/*.test.ts"
   },
   "license": "UNLICENSED",
   "dependencies": {
     "commander": "^14.0.0",
+    "nanoid": "^3.3.11",
+    "source-map-support": "^0.5.21",
     "yaml": "^2.8.0"
   },
   "devDependencies": {
     "@types/node": "^24.0.3",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }

@@ -7,10 +7,10 @@ export abstract class ProtocolClerk extends Assistant {
   protected protocols: Map<string, DocumentProtocol> = new Map();
 
   public getProtocol(plea: Plea): DocumentProtocol {
-    const protocol = this.protocols.get(plea.type);
+    const protocol = this.protocols.get(plea.protocol);
 
     if (!protocol) {
-      throw new NotFoundError(DocumentProtocol, { id: plea.type });
+      throw new NotFoundError(DocumentProtocol, { name: plea.protocol });
     }
 
     return protocol;

@@ -12,5 +12,7 @@ type DocumentProtocolParams = {
 };
 
 export class DocumentProtocol {
+  public static UnknownName = 'UnknownName';
+
   public constructor(public readonly params: DocumentProtocolParams) {}
 }

@@ -2,6 +2,7 @@ import {
   Binder,
   DocumentSeeker,
   HumorAdvisor,
+  PleaDraft,
   PleaFormalist,
   ProtocolClerk,
   Scribe,
@@ -15,6 +16,7 @@ import { CreateDocumentDutyInstruction, DutyInstruction } from './instructions';
 import { ZokAssistants } from './ZokAssistants';
 
 type NewZokAssistants = Partial<ZokAssistants> & {
+  formalist: PleaFormalist;
   protocolClerk: ProtocolClerk;
 };
 
@@ -23,7 +25,6 @@ export class Zok {
 
   public static revealItself(assistants: NewZokAssistants): Zok {
     return new Zok({
-      formalist: new PleaFormalist(),
       scribe: new Scribe(),
       binder: new Binder(),
       humorAdvisor: new HumorAdvisor(),
@@ -36,8 +37,8 @@ export class Zok {
     this.assistants = assistants;
   }
 
-  public handleTextPlea(text: string): Promise<Remark> {
-    const plea = this.assistants.formalist.formalizePlea(text);
+  public async handleTextPlea(draft: PleaDraft): Promise<Remark> {
+    const plea = await this.assistants.formalist.formalizePlea(draft);
 
     return this.handlePlea(plea);
   }

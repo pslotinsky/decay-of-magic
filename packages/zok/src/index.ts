@@ -1,3 +1,5 @@
 #!/usr/bin/env node
 
-console.log("Hello!");
+import 'source-map-support/register';
+
+import './api/pli';
