@@ -2,17 +2,15 @@ import test, { before } from 'node:test';
 
 import { Zok } from '@zok/application/Zok';
 import { PleaType } from '@zok/domain/plea';
-import {
-  NanoPleaFormalist,
-  YamlProtocolClerk,
-} from '@zok/infrastructure/assistants';
 
-import { MockArchiveKeeper } from '../mocks/MockArchiveKeeper';
+import { MockArchiveKeeper } from 'test/mocks/MockArchiveKeeper';
+import { MockPleaFormalist } from 'test/mocks/MockPleaFormalist';
+import { MockProtocolClerk } from 'test/mocks/MockProtocolClerk';
 
 const zok = Zok.revealItself({
   archiveKeeper: new MockArchiveKeeper(),
-  pleaFormalist: new NanoPleaFormalist(),
-  protocolClerk: new YamlProtocolClerk(),
+  pleaFormalist: new MockPleaFormalist(),
+  protocolClerk: new MockProtocolClerk(),
 });
 
 test.describe('Flow: Positive cases', () => {

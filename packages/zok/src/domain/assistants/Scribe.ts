@@ -1,4 +1,4 @@
-import { DocumentProtocol } from '../document';
+import { Document, DocumentProtocol } from '../document';
 import { Plea } from '../plea';
 import { Assistant } from './Assistant';
 
@@ -8,8 +8,14 @@ type CreateDocumentParams = {
   protocol: DocumentProtocol;
 };
 
+const DEFAULT_NAME = 'Untitled';
+
 export class Scribe extends Assistant {
   public createDocument(params: CreateDocumentParams): Document {
-    throw new Error('Method not implemented.');
+    return new Document({
+      id: params.id,
+      name: params.plea.getValue<string>('title', DEFAULT_NAME),
+      protocol: params.protocol,
+    });
   }
 }

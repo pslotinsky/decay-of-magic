@@ -28,4 +28,10 @@ export class Plea {
   public get protocol(): string {
     return this.form.protocol;
   }
+
+  public getValue<T = unknown>(key: string, defaultValue: T): T {
+    const value = this.form.values[key] as T | undefined;
+
+    return value ?? defaultValue;
+  }
 }
