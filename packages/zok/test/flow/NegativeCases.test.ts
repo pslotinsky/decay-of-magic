@@ -1,7 +1,6 @@
-import test from "node:test";
-import assert from "node:assert";
+import test from 'node:test';
 
-test.describe("Zok PLI. Base cases", () => {
+test.describe('Flow: Negative cases', () => {
   test(`zok create table "Oops"`, async () => {});
 
   test(`zok close task "DDD-0001"`, async () => {});

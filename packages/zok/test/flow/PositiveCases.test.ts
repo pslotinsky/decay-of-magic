@@ -1,20 +1,21 @@
-import test, { before, beforeEach } from 'node:test';
-import assert from 'node:assert';
+import test, { before } from 'node:test';
 
-import { Zok } from '../src/application/Zok';
+import { Zok } from '@zok/application/Zok';
+import { PleaType } from '@zok/domain/plea';
 import {
   NanoPleaFormalist,
   YamlProtocolClerk,
 } from '@zok/infrastructure/assistants';
-import { PleaType } from '@zok/domain/PleaType';
 
-// const archive = new MockArchive();
+import { MockArchiveKeeper } from '../mocks/MockArchiveKeeper';
+
 const zok = Zok.revealItself({
-  formalist: new NanoPleaFormalist(),
+  archiveKeeper: new MockArchiveKeeper(),
+  pleaFormalist: new NanoPleaFormalist(),
   protocolClerk: new YamlProtocolClerk(),
 });
 
-test.describe('Zok PLI. Base cases', () => {
+test.describe('Flow: Positive cases', () => {
   before(async () => {
     await zok.init();
   });
@@ -26,7 +27,7 @@ test.describe('Zok PLI. Base cases', () => {
       values: { title: 'Hello task' },
     });
 
-    console.log(remark);
+    console.log(remark); // TODO: assert remark
   });
 
   test(`zok list tasks`, async () => {});

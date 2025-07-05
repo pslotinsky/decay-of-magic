@@ -1,8 +1,7 @@
-import { PleaType } from '../PleaType';
 import { FieldDefinition } from './FieldDefinition';
 
-type DocumentProtocolParams = {
-  id: PleaType;
+export type DocumentProtocolParams = {
+  id: string;
   prefix: string;
   idDigits: number;
   path: string;
@@ -12,7 +11,23 @@ type DocumentProtocolParams = {
 };
 
 export class DocumentProtocol {
-  public static UnknownName = 'UnknownName';
+  public static UnknownId = 'UnknownId';
 
-  public constructor(public readonly params: DocumentProtocolParams) {}
+  public readonly id: string;
+  public readonly prefix: string;
+  public readonly idDigits: number;
+  public readonly path: string;
+  public readonly template: string;
+  public readonly aliases: string[];
+  public readonly fields: Record<string, FieldDefinition>;
+
+  public constructor(params: DocumentProtocolParams) {
+    this.id = params.id;
+    this.prefix = params.prefix;
+    this.idDigits = params.idDigits;
+    this.path = params.path;
+    this.template = params.template;
+    this.aliases = params.aliases;
+    this.fields = params.fields;
+  }
 }

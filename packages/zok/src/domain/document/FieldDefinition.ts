@@ -21,7 +21,6 @@ type LinkFieldDefinition = BaseFieldDefinition & {
 
 type DateFieldDefinition = BaseFieldDefinition & {
   type: FieldType.Date;
-  values: string[];
 };
 
 export type FieldDefinition =

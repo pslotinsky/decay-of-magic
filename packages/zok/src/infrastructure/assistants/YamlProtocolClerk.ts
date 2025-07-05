@@ -4,7 +4,7 @@ import yaml from 'yaml';
 
 import { ProtocolClerk } from '@zok/domain/assistants';
 import { DocumentProtocol } from '@zok/domain/document';
-import { PleaType } from '@zok/domain/PleaType';
+import { PleaType } from '@zok/domain/plea';
 
 import { ZogConfig } from '../types/config';
 

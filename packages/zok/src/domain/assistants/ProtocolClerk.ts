@@ -1,6 +1,6 @@
 import { DocumentProtocol } from '../document';
 import { NotFoundError } from '../errors';
-import { Plea } from '../Plea';
+import { Plea } from '../plea';
 import { Assistant } from './Assistant';
 
 export abstract class ProtocolClerk extends Assistant {

@@ -1,6 +1,5 @@
 import { DocumentProtocol } from '../document';
-import { Plea, PleaForm } from '../Plea';
-import { PleaType } from '../PleaType';
+import { Plea, PleaType, PleaForm } from '../plea';
 import { Assistant } from './Assistant';
 
 export type PleaDraft = Partial<PleaForm>;
@@ -29,7 +28,7 @@ export abstract class PleaFormalist extends Assistant {
   }
 
   protected fillPleaProtocol(draft: PleaDraft): string {
-    return draft.protocol ?? DocumentProtocol.UnknownName;
+    return draft.protocol ?? DocumentProtocol.UnknownId;
   }
 
   protected fillPleaValues(draft: PleaDraft): Record<string, unknown> {

@@ -1,6 +1,6 @@
 import {
+  ArchiveKeeper,
   Binder,
-  DocumentSeeker,
   HumorAdvisor,
   PleaDraft,
   PleaFormalist,
@@ -8,16 +8,16 @@ import {
   Scribe,
 } from '@zok/domain/assistants';
 import { DocumentProtocol } from '@zok/domain/document';
-import { Remark } from '@zok/domain/Remark';
-import { Plea } from '@zok/domain/Plea';
-import { PleaType } from '@zok/domain/PleaType';
+import { Remark } from '@zok/domain/remark';
+import { Plea, PleaType } from '@zok/domain/plea';
 
 import { CreateDocumentDutyInstruction, DutyInstruction } from './instructions';
 import { ZokAssistants } from './ZokAssistants';
 
 type NewZokAssistants = Partial<ZokAssistants> & {
-  formalist: PleaFormalist;
+  pleaFormalist: PleaFormalist;
   protocolClerk: ProtocolClerk;
+  archiveKeeper: ArchiveKeeper;
 };
 
 export class Zok {
@@ -28,7 +28,6 @@ export class Zok {
       scribe: new Scribe(),
       binder: new Binder(),
       humorAdvisor: new HumorAdvisor(),
-      seeker: new DocumentSeeker(),
       ...assistants,
     });
   }
@@ -38,7 +37,7 @@ export class Zok {
   }
 
   public async handleTextPlea(draft: PleaDraft): Promise<Remark> {
-    const plea = await this.assistants.formalist.formalizePlea(draft);
+    const plea = await this.assistants.pleaFormalist.formalizePlea(draft);
 
     return this.handlePlea(plea);
   }
@@ -64,7 +63,11 @@ export class Zok {
   ): DutyInstruction {
     switch (plea.type) {
       case PleaType.Create:
-        return new CreateDocumentDutyInstruction(this.assistants, plea);
+        return new CreateDocumentDutyInstruction({
+          plea,
+          protocol,
+          assistants: this.assistants,
+        });
       default:
         throw new Error(`Unknown plea type ${plea.type}`);
     }

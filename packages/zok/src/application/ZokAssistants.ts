@@ -1,6 +1,6 @@
 import {
   Binder,
-  DocumentSeeker,
+  ArchiveKeeper,
   HumorAdvisor,
   PleaFormalist,
   ProtocolClerk,
@@ -8,10 +8,10 @@ import {
 } from '@zok/domain/assistants';
 
 export type ZokAssistants = {
-  formalist: PleaFormalist;
+  pleaFormalist: PleaFormalist;
   scribe: Scribe;
   binder: Binder;
   humorAdvisor: HumorAdvisor;
   protocolClerk: ProtocolClerk;
-  seeker: DocumentSeeker;
+  archiveKeeper: ArchiveKeeper;
 };

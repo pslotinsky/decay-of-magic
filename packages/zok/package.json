@@ -11,11 +11,13 @@
   "license": "UNLICENSED",
   "dependencies": {
     "commander": "^14.0.0",
+    "lodash": "^4.17.21",
     "nanoid": "^3.3.11",
     "source-map-support": "^0.5.21",
     "yaml": "^2.8.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.20",
     "@types/node": "^24.0.3",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.20.3",
