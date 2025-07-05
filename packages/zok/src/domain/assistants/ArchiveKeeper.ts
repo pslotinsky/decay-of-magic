@@ -14,17 +14,21 @@ export abstract class ArchiveKeeper extends Assistant {
   public async issueDocumentNumber(
     protocol: DocumentProtocol,
   ): Promise<string> {
+    const serialNumber = await this.getSerialNumber(protocol);
+
+    return this.formatDocumentNumber(serialNumber, protocol);
+  }
+
+  protected async getSerialNumber(protocol: DocumentProtocol): Promise<number> {
     const count = await this.archive.count({
       protocol: protocol.id,
       prefix: protocol.prefix,
     });
 
-    return this.formatNumber(count + 1, protocol);
+    return count + 1;
   }
 
-  protected abstract createArchive(): Archive;
-
-  protected formatNumber(
+  protected formatDocumentNumber(
     serialNumber: number,
     protocol: DocumentProtocol,
   ): string {
@@ -34,4 +38,6 @@ export abstract class ArchiveKeeper extends Assistant {
 
     return `${protocol.prefix}-${formattedSerialNumber}`;
   }
+
+  protected abstract createArchive(): Archive;
 }
