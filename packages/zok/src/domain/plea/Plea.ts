@@ -29,7 +29,9 @@ export class Plea {
     return this.form.protocol;
   }
 
-  public getValue<T = unknown>(key: string, defaultValue: T): T {
+  public getValue<T = unknown>(key: string, defaultValue: T): T;
+  public getValue<T = unknown>(key: string): T | undefined;
+  public getValue<T = unknown>(key: string, defaultValue?: T): T | undefined {
     const value = this.form.values[key] as T | undefined;
 
     return value ?? defaultValue;

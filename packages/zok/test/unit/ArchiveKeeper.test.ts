@@ -11,7 +11,7 @@ test.describe('Unit: ArchiveKeeper', () => {
 
     const taskNumber = await keeper.issueDocumentNumber(protocols.task);
 
-    assert.strictEqual(taskNumber, 'DOD-0001');
+    assert.equal(taskNumber, 'DOD-0001');
   });
 
   test(`issues correct number for milestone`, async () => {
@@ -21,7 +21,7 @@ test.describe('Unit: ArchiveKeeper', () => {
       protocols.milestone,
     );
 
-    assert.strictEqual(milestoneNumber, 'Milestone-001');
+    assert.equal(milestoneNumber, 'Milestone-001');
   });
 
   test(`issues correct number for roadmap`, async () => {
@@ -29,6 +29,6 @@ test.describe('Unit: ArchiveKeeper', () => {
 
     const roadmapNumber = await keeper.issueDocumentNumber(protocols.roadmap);
 
-    assert.strictEqual(roadmapNumber, 'Roadmap-01');
+    assert.equal(roadmapNumber, 'Roadmap-01');
   });
 });

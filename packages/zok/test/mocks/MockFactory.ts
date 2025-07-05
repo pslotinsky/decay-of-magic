@@ -1,10 +1,19 @@
 import { Assistant } from '@zok/domain/assistants';
 
 import { MockArchiveKeeper } from './MockArchiveKeeper';
+import { MockPleaFormalist } from './MockPleaFormalist';
 
 export class MockFactory {
+  public static createPleaFormalist(): MockPleaFormalist {
+    return new MockPleaFormalist();
+  }
+
   public static createArchiveKeeper(): MockArchiveKeeper {
     return new MockArchiveKeeper();
+  }
+
+  public static async createInitializedPleaFormalist(): Promise<MockPleaFormalist> {
+    return MockFactory.initialize(new MockPleaFormalist());
   }
 
   public static async createInitializedArchiveKeeper(): Promise<MockArchiveKeeper> {
