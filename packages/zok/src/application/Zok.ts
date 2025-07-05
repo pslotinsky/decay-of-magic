@@ -43,7 +43,7 @@ export class Zok {
   }
 
   public async handlePlea(plea: Plea): Promise<Remark> {
-    const protocol = this.assistants.protocolClerk.getProtocol(plea);
+    const protocol = this.assistants.protocolClerk.getProtocol(plea.protocol);
     const instruction = this.createDutyInstruction(plea, protocol);
 
     const remark = await instruction.execute();
