@@ -21,4 +21,8 @@ export class MockArchive extends Archive {
 
     return document;
   }
+
+  public reset(): void {
+    this.items = {};
+  }
 }
