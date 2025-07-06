@@ -4,14 +4,16 @@ import { Zok } from '@zok/application/Zok';
 import {
   FileSystemArchiveKeeper,
   NanoPleaFormalist,
+  NunjucksScribe,
   YamlProtocolClerk,
 } from '@zok/infrastructure/assistants';
-import { PleaType } from '@zok/domain/plea/PleaType';
+import { PleaType } from '@zok/domain/plea';
 
 const zok = Zok.revealItself({
   pleaFormalist: new NanoPleaFormalist(),
   protocolClerk: new YamlProtocolClerk(),
   archiveKeeper: new FileSystemArchiveKeeper(),
+  scribe: new NunjucksScribe(),
 });
 
 const DESCRIPTION = `

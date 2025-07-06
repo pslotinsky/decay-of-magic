@@ -1,6 +1,16 @@
-import { PleaType } from './PleaType';
+import { DocumentProtocol } from '../document';
 
-export type PleaForm = {
+export enum PleaType {
+  Create = 'Create',
+  Rename = 'Rename',
+  ChangeStatus = 'ChangeStatus',
+  List = 'List',
+  Unknown = 'Unknown',
+}
+
+export type PleaDraft = Partial<PleaForm>;
+
+type PleaForm = {
   type: PleaType;
   protocol: string;
   values: Record<string, unknown>;
@@ -8,8 +18,13 @@ export type PleaForm = {
 };
 
 export class Plea {
-  public static make(id: string, form: PleaForm): Plea {
-    return new Plea(id, form);
+  public static make(id: string, draft: PleaDraft): Plea {
+    return new Plea(id, {
+      type: draft.type ?? PleaType.Unknown,
+      protocol: draft.protocol ?? DocumentProtocol.UnknownId,
+      values: draft.values ?? {},
+      creationTime: draft.creationTime ?? new Date(),
+    });
   }
 
   public readonly id: string;
@@ -27,6 +42,10 @@ export class Plea {
 
   public get protocol(): string {
     return this.form.protocol;
+  }
+
+  public get creationTime(): Date {
+    return this.form.creationTime;
   }
 
   public getValue<T = unknown>(key: string, defaultValue: T): T;

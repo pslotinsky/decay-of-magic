@@ -1,1 +1,2 @@
-export { NotFoundError } from './NotFoundError';
+export * from './NotFoundError';
+export * from './UnexpectedValueError';

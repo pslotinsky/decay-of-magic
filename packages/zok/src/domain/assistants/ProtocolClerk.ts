@@ -9,7 +9,7 @@ export abstract class ProtocolClerk extends Assistant {
     const protocol = this.protocols.get(name);
 
     if (!protocol) {
-      throw new NotFoundError(DocumentProtocol, { name });
+      throw new NotFoundError(DocumentProtocol.Name, { name });
     }
 
     return protocol;

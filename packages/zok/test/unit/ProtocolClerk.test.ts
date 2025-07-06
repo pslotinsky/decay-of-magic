@@ -12,7 +12,7 @@ test.describe('Unit: ProtocolClerk', () => {
 
     const protocol = await protocolist.getProtocol(protocols.task.id);
 
-    assert.equal(protocol, protocols.task);
+    assert.equal(protocol.id, protocols.task.id);
   });
 
   test(`throws NotFoundError when protocol is missing`, async () => {

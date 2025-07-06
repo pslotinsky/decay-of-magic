@@ -19,7 +19,7 @@ export class YamlProtocolClerk extends ProtocolClerk {
 
     for (const [key, value] of Object.entries(protocols)) {
       id = key as PleaType;
-      protocol = new DocumentProtocol({ id, ...value });
+      protocol = DocumentProtocol.init({ id, ...value });
 
       this.protocols.set(key, protocol);
     }

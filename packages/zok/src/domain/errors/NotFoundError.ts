@@ -5,14 +5,11 @@ export class NotFoundError<
   public readonly entity: string;
   public readonly criteria: C;
 
-  constructor(entityClass: new (...args: any[]) => T, criteria: C) {
-    super(
-      `${entityClass.name} not found with criteria: ${JSON.stringify(
-        criteria,
-      )}`,
-    );
+  constructor(entity: string, criteria: C) {
+    super(`${entity} not found with criteria: ${JSON.stringify(criteria)}`);
+
     this.name = this.constructor.name;
-    this.entity = entityClass.name;
+    this.entity = entity;
     this.criteria = criteria;
   }
 }

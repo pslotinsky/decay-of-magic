@@ -3,14 +3,13 @@ import test, { before } from 'node:test';
 import { Zok } from '@zok/application/Zok';
 import { PleaType } from '@zok/domain/plea';
 
-import { MockArchiveKeeper } from 'test/mocks/MockArchiveKeeper';
-import { MockPleaFormalist } from 'test/mocks/MockPleaFormalist';
-import { MockProtocolClerk } from 'test/mocks/MockProtocolClerk';
+import { MockFactory } from 'test/mocks/MockFactory';
 
 const zok = Zok.revealItself({
-  archiveKeeper: new MockArchiveKeeper(),
-  pleaFormalist: new MockPleaFormalist(),
-  protocolClerk: new MockProtocolClerk(),
+  archiveKeeper: MockFactory.createArchiveKeeper(),
+  pleaFormalist: MockFactory.createPleaFormalist(),
+  protocolClerk: MockFactory.createProtocolClerk(),
+  scribe: MockFactory.createScribe(),
 });
 
 test.describe('Flow: Positive cases', () => {

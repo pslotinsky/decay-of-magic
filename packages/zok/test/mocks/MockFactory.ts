@@ -3,6 +3,7 @@ import { Assistant } from '@zok/domain/assistants';
 import { MockPleaFormalist } from './MockPleaFormalist';
 import { MockProtocolClerk } from './MockProtocolClerk';
 import { MockArchiveKeeper } from './MockArchiveKeeper';
+import { MockScribe } from './MockScribe';
 
 export class MockFactory {
   public static createPleaFormalist(): MockPleaFormalist {
@@ -17,6 +18,10 @@ export class MockFactory {
     return new MockArchiveKeeper();
   }
 
+  public static createScribe(): MockScribe {
+    return new MockScribe();
+  }
+
   public static async createInitializedPleaFormalist(): Promise<MockPleaFormalist> {
     return MockFactory.initialize(new MockPleaFormalist());
   }
@@ -27,6 +32,10 @@ export class MockFactory {
 
   public static async createInitializedArchiveKeeper(): Promise<MockArchiveKeeper> {
     return MockFactory.initialize(new MockArchiveKeeper());
+  }
+
+  public static async createInitializedScribe(): Promise<MockScribe> {
+    return MockFactory.initialize(new MockScribe());
   }
 
   private static async initialize<T extends Assistant>(

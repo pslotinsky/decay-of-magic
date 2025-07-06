@@ -2,14 +2,13 @@ import {
   ArchiveKeeper,
   Binder,
   HumorAdvisor,
-  PleaDraft,
   PleaFormalist,
   ProtocolClerk,
   Scribe,
 } from '@zok/domain/assistants';
 import { DocumentProtocol } from '@zok/domain/document';
 import { Remark } from '@zok/domain/remark';
-import { Plea, PleaType } from '@zok/domain/plea';
+import { Plea, PleaDraft, PleaType } from '@zok/domain/plea';
 
 import { CreateDocumentDutyInstruction, DutyInstruction } from './instructions';
 import { ZokAssistants } from './ZokAssistants';
@@ -18,6 +17,7 @@ type NewZokAssistants = Partial<ZokAssistants> & {
   pleaFormalist: PleaFormalist;
   protocolClerk: ProtocolClerk;
   archiveKeeper: ArchiveKeeper;
+  scribe: Scribe;
 };
 
 export class Zok {
@@ -25,7 +25,6 @@ export class Zok {
 
   public static revealItself(assistants: NewZokAssistants): Zok {
     return new Zok({
-      scribe: new Scribe(),
       binder: new Binder(),
       humorAdvisor: new HumorAdvisor(),
       ...assistants,
