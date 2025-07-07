@@ -3,8 +3,7 @@ import path from 'node:path';
 import yaml from 'yaml';
 
 import { ProtocolClerk } from '@zok/domain/assistants';
-import { DocumentProtocol } from '@zok/domain/document';
-import { PleaType } from '@zok/domain/plea';
+import { DocumentProtocol, PleaType } from '@zok/domain/entities';
 
 import { ZogConfig } from '../types/config';
 

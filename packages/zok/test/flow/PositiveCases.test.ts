@@ -1,7 +1,7 @@
 import test, { before } from 'node:test';
 
 import { Zok } from '@zok/application/Zok';
-import { PleaType } from '@zok/domain/plea';
+import { PleaType } from '@zok/domain/entities';
 
 import { MockFactory } from 'test/mocks/MockFactory';
 

@@ -6,9 +6,13 @@ import {
   ProtocolClerk,
   Scribe,
 } from '@zok/domain/assistants';
-import { DocumentProtocol } from '@zok/domain/document';
-import { Remark } from '@zok/domain/remark';
-import { Plea, PleaDraft, PleaType } from '@zok/domain/plea';
+import {
+  DocumentProtocol,
+  Remark,
+  Plea,
+  PleaDraft,
+  PleaType,
+} from '@zok/domain/entities';
 
 import { CreateDocumentDutyInstruction, DutyInstruction } from './instructions';
 import { ZokAssistants } from './ZokAssistants';

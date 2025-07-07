@@ -7,7 +7,7 @@ import {
   NunjucksScribe,
   YamlProtocolClerk,
 } from '@zok/infrastructure/assistants';
-import { PleaType } from '@zok/domain/plea';
+import { PleaType } from '@zok/domain/entities';
 
 const zok = Zok.revealItself({
   pleaFormalist: new NanoPleaFormalist(),

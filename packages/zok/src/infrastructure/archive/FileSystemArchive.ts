@@ -1,5 +1,5 @@
-import { Archive, DocumentQueryObject } from '@zok/domain/archive';
-import { Document } from '@zok/domain/document';
+import { Archive, DocumentQueryObject } from '@zok/domain/tools';
+import { Document } from '@zok/domain/entities';
 
 export class FileSystemArchive extends Archive {
   public async count(query: DocumentQueryObject): Promise<number> {

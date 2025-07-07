@@ -1,4 +1,4 @@
-import { DocumentProtocol } from '../document';
+import { DocumentProtocol } from './DocumentProtocol';
 
 export enum PleaType {
   Create = 'Create',

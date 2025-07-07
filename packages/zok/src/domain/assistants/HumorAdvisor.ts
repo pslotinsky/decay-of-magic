@@ -1,5 +1,4 @@
-import { Remark } from '../remark';
-import { Document } from '../document';
+import { Document, Remark } from '../entities';
 import { Assistant } from './Assistant';
 
 export class HumorAdvisor extends Assistant {

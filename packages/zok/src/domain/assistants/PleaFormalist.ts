@@ -1,4 +1,4 @@
-import { Plea, PleaDraft } from '../plea';
+import { Plea, PleaDraft } from '../entities';
 import { Assistant } from './Assistant';
 
 export abstract class PleaFormalist extends Assistant {

@@ -1,6 +1,6 @@
 import { isMatch } from 'lodash';
 
-import { Archive, DocumentQueryObject } from '@zok/domain/archive';
+import { Archive, DocumentQueryObject } from '@zok/domain/tools';
 import { Document } from '@zok/domain/document';
 
 export class MockArchive extends Archive {

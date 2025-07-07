@@ -4,8 +4,7 @@ import assert from 'node:assert';
 import * as protocols from 'test/fixtures/protocols';
 import { MockFactory } from 'test/mocks/MockFactory';
 
-import { PleaType } from '@zok/domain/plea';
-import { DocumentProtocol } from '@zok/domain/document';
+import { PleaType, DocumentProtocol } from '@zok/domain/entities';
 
 test.describe('Unit: PleaFormalist', () => {
   test(`returns Plea with given values and generated id`, async () => {

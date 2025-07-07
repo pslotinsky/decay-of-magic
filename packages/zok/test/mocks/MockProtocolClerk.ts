@@ -1,5 +1,5 @@
 import { ProtocolClerk } from '@zok/domain/assistants';
-import { DocumentProtocol } from '@zok/domain/document';
+import { DocumentProtocol } from '@zok/domain/entities';
 
 import * as protocols from '../fixtures/protocols';
 

@@ -1,4 +1,4 @@
-import { Remark } from '@zok/domain/remark';
+import { Remark } from '@zok/domain/entities';
 
 import { DutyInstruction } from './DutyInstruction';
 

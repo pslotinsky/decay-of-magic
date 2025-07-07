@@ -1,4 +1,4 @@
-import { Document } from '@zok/domain/document';
+import { Document } from '@zok/domain/entities';
 
 export type DocumentQueryObject = {
   protocol: string;

@@ -1,5 +1,9 @@
-import { Document, DocumentMetadata, DocumentProtocol } from '../document';
-import { Plea } from '../plea';
+import {
+  Document,
+  DocumentMetadata,
+  DocumentProtocol,
+  Plea,
+} from '../entities';
 import { Assistant } from './Assistant';
 
 type CreateDocumentParams = {

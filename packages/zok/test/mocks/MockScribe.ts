@@ -5,7 +5,7 @@ import {
   DocumentMetadata,
   FieldDefinition,
   FieldType,
-} from '@zok/domain/document';
+} from '@zok/domain/entities';
 
 export class MockScribe extends Scribe {
   protected override fillDocumentContent(metadata: DocumentMetadata): string {

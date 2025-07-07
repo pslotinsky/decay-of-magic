@@ -1,4 +1,4 @@
-import { FieldDefinition } from '@zok/domain/document/FieldDefinition';
+import { FieldDefinition } from '@zok/domain/entities/FieldDefinition';
 
 export type ZogConfig = {
   archive: ArchiveConfig;

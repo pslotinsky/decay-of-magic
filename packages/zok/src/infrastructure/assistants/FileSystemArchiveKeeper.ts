@@ -1,4 +1,4 @@
-import { Archive } from '@zok/domain/archive';
+import { Archive } from '@zok/domain/tools';
 import { ArchiveKeeper } from '@zok/domain/assistants';
 
 import { FileSystemArchive } from '../archive';

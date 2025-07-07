@@ -2,8 +2,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { isEqual } from 'date-fns';
 
-import { DocumentProtocol } from '@zok/domain/document';
-import { Plea, PleaType } from '@zok/domain/plea';
+import { DocumentProtocol, Plea, PleaType } from '@zok/domain/entities';
 
 import * as protocols from 'test/fixtures/protocols';
 import { MockFactory } from 'test/mocks/MockFactory';

@@ -1,5 +1,5 @@
-import { Archive } from '../archive';
-import { DocumentProtocol } from '../document';
+import { Archive } from '../tools';
+import { DocumentProtocol } from '../entities';
 import { Assistant } from './Assistant';
 
 export abstract class ArchiveKeeper extends Assistant {

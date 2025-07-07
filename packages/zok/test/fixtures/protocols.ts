@@ -1,5 +1,4 @@
-import { DocumentProtocolParams } from '@zok/domain/document';
-import { FieldType } from '@zok/domain/document';
+import { DocumentProtocolParams, FieldType } from '@zok/domain/entities';
 
 export const roadmap: DocumentProtocolParams = {
   id: 'roadmap',

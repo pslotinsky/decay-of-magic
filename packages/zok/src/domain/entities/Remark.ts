@@ -1,4 +1,4 @@
-import { Document } from '../document';
+import { Document } from './Document';
 
 export class Remark {
   public static create(text: string, document?: Document): Remark {

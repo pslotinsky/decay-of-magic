@@ -1,4 +1,4 @@
-import { DocumentProtocol } from '../document';
+import { DocumentProtocol } from '../entities';
 import { NotFoundError } from '../errors';
 import { Assistant } from './Assistant';
 
