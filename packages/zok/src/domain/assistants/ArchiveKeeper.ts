@@ -1,5 +1,5 @@
 import { Archive } from '../tools';
-import { DocumentProtocol } from '../entities';
+import { Document, DocumentProtocol } from '../entities';
 import { Assistant } from './Assistant';
 
 export abstract class ArchiveKeeper extends Assistant {
@@ -17,6 +17,10 @@ export abstract class ArchiveKeeper extends Assistant {
     const serialNumber = await this.getSerialNumber(protocol);
 
     return this.formatDocumentNumber(serialNumber, protocol);
+  }
+
+  public async save(document: Document): Promise<Document> {
+    return this.archive.save(document);
   }
 
   protected async getSerialNumber(protocol: DocumentProtocol): Promise<number> {

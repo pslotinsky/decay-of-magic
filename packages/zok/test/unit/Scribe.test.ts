@@ -2,7 +2,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { isEqual } from 'date-fns';
 
-import { DocumentProtocol, Plea, PleaType } from '@zok/domain/entities';
+import { Plea, PleaType } from '@zok/domain/entities';
 
 import * as protocols from 'test/fixtures/protocols';
 import { MockFactory } from 'test/mocks/MockFactory';
@@ -10,7 +10,7 @@ import { MockFactory } from 'test/mocks/MockFactory';
 describe('Unit: Scribe', () => {
   it('creates a Document from Plea', async () => {
     const scribe = await MockFactory.createInitializedScribe();
-    const protocol = DocumentProtocol.init(protocols.task);
+    const protocol = protocols.task;
     const plea = Plea.make('plea-id-1', {
       type: PleaType.Create,
       protocol: protocol.id,
@@ -33,7 +33,7 @@ describe('Unit: Scribe', () => {
 
   it('fills defaults if Plea is missing fields', async () => {
     const scribe = await MockFactory.createInitializedScribe();
-    const protocol = DocumentProtocol.init(protocols.task);
+    const protocol = protocols.task;
     const plea = Plea.make('plea-id-2', {
       type: PleaType.Create,
       protocol: protocol.id,
@@ -52,7 +52,7 @@ describe('Unit: Scribe', () => {
 
   it('normalizes values using protocol', async () => {
     const scribe = await MockFactory.createInitializedScribe();
-    const protocol = DocumentProtocol.init(protocols.task);
+    const protocol = protocols.task;
     const plea = Plea.make('plea-id-3', {
       type: PleaType.Create,
       protocol: protocol.id,

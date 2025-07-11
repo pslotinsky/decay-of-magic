@@ -1,6 +1,6 @@
-import { DocumentProtocolParams, FieldType } from '@zok/domain/entities';
+import { DocumentProtocol, FieldType } from '@zok/domain/entities';
 
-export const roadmap: DocumentProtocolParams = {
+export const roadmap = DocumentProtocol.init({
   id: 'roadmap',
   prefix: 'Roadmap',
   idDigits: 2,
@@ -18,9 +18,9 @@ export const roadmap: DocumentProtocolParams = {
       type: FieldType.Date,
     },
   },
-};
+});
 
-export const milestone: DocumentProtocolParams = {
+export const milestone = DocumentProtocol.init({
   id: 'milestone',
   prefix: 'Milestone',
   idDigits: 3,
@@ -43,9 +43,9 @@ export const milestone: DocumentProtocolParams = {
       type: FieldType.Date,
     },
   },
-};
+});
 
-export const task: DocumentProtocolParams = {
+export const task = DocumentProtocol.init({
   id: 'task',
   prefix: 'DOD',
   idDigits: 4,
@@ -68,4 +68,4 @@ export const task: DocumentProtocolParams = {
       type: FieldType.Date,
     },
   },
-};
+});

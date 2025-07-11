@@ -14,6 +14,8 @@ export class CreateDocumentDutyInstruction extends DutyInstruction {
       protocol: this.protocol,
     });
 
+    await this.assistants.archiveKeeper.save(document);
+
     return this.assistants.humorAdvisor.remarkOnDocumentCreation(document);
   }
 }

@@ -32,4 +32,10 @@ export class Document {
   public getValue<T = unknown>(key: string): T | undefined {
     return this.metadata.fields[key] as T | undefined;
   }
+
+  public followsProtocol(protocol: string): boolean {
+    const { id } = this.metadata.protocol;
+
+    return protocol === id;
+  }
 }

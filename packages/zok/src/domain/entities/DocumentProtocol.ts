@@ -1,7 +1,7 @@
 import { UnexpectedValueError } from '../errors';
 import { FieldDefinition, FieldType } from './FieldDefinition';
 
-export type DocumentProtocolParams = {
+type DocumentProtocolParams = {
   id: string;
   prefix: string;
   idDigits: number;
