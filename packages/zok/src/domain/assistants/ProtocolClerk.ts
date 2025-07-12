@@ -5,13 +5,27 @@ import { Assistant } from './Assistant';
 export abstract class ProtocolClerk extends Assistant {
   protected protocols: Map<string, DocumentProtocol> = new Map();
 
-  public getProtocol(name: string): DocumentProtocol {
-    const protocol = this.protocols.get(name);
+  public getProtocol(id: string): DocumentProtocol {
+    let protocol = this.protocols.get(id);
 
     if (!protocol) {
-      throw new NotFoundError(DocumentProtocol.Name, { name });
+      protocol = this.findByAlias(id);
+    }
+
+    if (!protocol) {
+      throw new NotFoundError(DocumentProtocol.Name, { id });
     }
 
     return protocol;
+  }
+
+  public hasProtocol(id: string): boolean {
+    return this.protocols.has(id);
+  }
+
+  protected findByAlias(alias: string): DocumentProtocol | undefined {
+    const protocols = Array.from(this.protocols.values());
+
+    return protocols.find((protocol) => protocol.aliases.includes(alias));
   }
 }

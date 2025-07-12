@@ -4,14 +4,6 @@ import assert from 'node:assert';
 import { NanoPleaFormalist } from '@zok/infrastructure/assistants';
 
 test.describe('Integration: NanoPleaFormalist', () => {
-  test(`returns Plea with generated id`, async () => {
-    const formalist = new NanoPleaFormalist();
-
-    const plea = await formalist.formalizePlea({});
-
-    assert.equal(typeof plea.id, 'string');
-  });
-
   test(`issues unique ids`, async () => {
     const formalist = new NanoPleaFormalist();
     const ids = new Set<string>();

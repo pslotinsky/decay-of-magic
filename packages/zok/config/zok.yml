@@ -55,5 +55,16 @@ protocols:
         name: Created
         type: date
 
+  idea:
+    prefix: Idea
+    idDigits: 3
+    path: ./ideas
+    template: idea.nj
+    aliases: ['ideas']
+    fields:
+      created:
+        name: Created
+        type: date
+
 logging:
   level: info
