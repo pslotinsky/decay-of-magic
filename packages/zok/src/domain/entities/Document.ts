@@ -33,9 +33,9 @@ export class Document {
     return this.metadata.fields[key] as T | undefined;
   }
 
-  public followsProtocol(protocol: string): boolean {
-    const { id } = this.metadata.protocol;
+  public followsProtocol(protocolId: string): boolean {
+    const { protocol } = this.metadata;
 
-    return protocol === id;
+    return protocol.id === protocolId;
   }
 }
