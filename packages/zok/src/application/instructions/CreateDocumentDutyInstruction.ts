@@ -8,7 +8,7 @@ export class CreateDocumentDutyInstruction extends DutyInstruction {
       this.protocol,
     );
 
-    const document = this.assistants.scribe.createDocument({
+    const document = await this.assistants.scribe.createDocument({
       id,
       plea: this.plea,
       protocol: this.protocol,

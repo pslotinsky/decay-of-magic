@@ -8,7 +8,9 @@ import {
 } from '@zok/domain/entities';
 
 export class MockScribe extends Scribe {
-  protected override fillDocumentContent(metadata: DocumentMetadata): string {
+  protected override async fillDocumentContent(
+    metadata: DocumentMetadata,
+  ): Promise<string> {
     const { id, title, fields, protocol } = metadata;
 
     return [

@@ -15,7 +15,7 @@ type CreateDocumentParams = {
 const DEFAULT_NAME = 'Untitled';
 
 export abstract class Scribe extends Assistant {
-  public createDocument(params: CreateDocumentParams): Document {
+  public async createDocument(params: CreateDocumentParams): Promise<Document> {
     const { id, plea, protocol } = params;
 
     const metadata = {
@@ -25,10 +25,9 @@ export abstract class Scribe extends Assistant {
       fields: this.fillDocumentFields(protocol, plea),
     };
 
-    return Document.issue({
-      metadata,
-      content: this.fillDocumentContent(metadata),
-    });
+    const content = await this.fillDocumentContent(metadata);
+
+    return Document.issue({ metadata, content });
   }
 
   protected fillDocumentFields(
@@ -56,5 +55,7 @@ export abstract class Scribe extends Assistant {
     };
   }
 
-  protected abstract fillDocumentContent(metadata: DocumentMetadata): string;
+  protected abstract fillDocumentContent(
+    metadata: DocumentMetadata,
+  ): Promise<string>;
 }

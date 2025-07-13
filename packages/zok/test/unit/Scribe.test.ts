@@ -21,7 +21,11 @@ describe('Unit: Scribe', () => {
       },
     });
 
-    const document = scribe.createDocument({ id: 'DOD-0001', protocol, plea });
+    const document = await scribe.createDocument({
+      id: 'DOD-0001',
+      protocol,
+      plea,
+    });
 
     assert.equal(document.id, 'DOD-0001');
     assert.equal(document.metadata.protocol, protocol);
@@ -39,7 +43,7 @@ describe('Unit: Scribe', () => {
       protocol: protocol.id,
     });
 
-    const document = scribe.createDocument({
+    const document = await scribe.createDocument({
       id: 'DOD-0002',
       plea,
       protocol,
@@ -61,7 +65,7 @@ describe('Unit: Scribe', () => {
       },
     });
 
-    const document = scribe.createDocument({
+    const document = await scribe.createDocument({
       id: 'DOD-0003',
       plea,
       protocol,
