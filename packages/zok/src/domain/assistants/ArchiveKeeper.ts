@@ -25,7 +25,7 @@ export abstract class ArchiveKeeper extends Assistant {
 
   protected async getSerialNumber(protocol: DocumentProtocol): Promise<number> {
     const count = await this.archive.count({
-      protocol: protocol.id,
+      protocol: protocol,
       prefix: protocol.prefix,
     });
 

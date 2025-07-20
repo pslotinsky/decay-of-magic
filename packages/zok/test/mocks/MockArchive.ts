@@ -14,7 +14,7 @@ export class MockArchive extends Archive {
     const { protocol, prefix } = query;
 
     let documents = Object.values(this.items).filter((document) =>
-      document.followsProtocol(protocol),
+      document.followsProtocol(protocol.id),
     );
 
     if (prefix) {

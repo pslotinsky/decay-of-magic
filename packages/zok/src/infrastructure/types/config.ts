@@ -1,14 +1,6 @@
-import { FieldDefinition } from '@zok/domain/entities/FieldDefinition';
+import { FieldDefinition } from '@zok/domain/entities';
 
-export type ZogConfig = {
-  archive: ArchiveConfig;
-  protocols: Record<string, ProtocolConfig>;
-  logging: LoggingConfig;
-};
-
-type ArchiveConfig = {
-  path: string;
-};
+export type Protocols = Record<string, ProtocolConfig>;
 
 type ProtocolConfig = {
   prefix: string;
@@ -17,8 +9,4 @@ type ProtocolConfig = {
   template: string;
   aliases: string[];
   fields: Record<string, FieldDefinition>;
-};
-
-type LoggingConfig = {
-  level: 'fatal' | 'error' | 'info' | 'warn' | 'debug' | 'trace';
 };

@@ -45,7 +45,7 @@ test.describe('Unit: ArchiveKeeper', () => {
           fields: {},
           protocol: protocols.task,
         },
-        content: '',
+        content: '# DOD-0001: Test task',
       }),
     );
 

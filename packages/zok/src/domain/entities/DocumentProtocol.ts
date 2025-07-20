@@ -51,6 +51,21 @@ export class DocumentProtocol {
     return field;
   }
 
+  public findFieldKeyByName(name: string): string {
+    const entry = Object.entries(this.fields).find(
+      ([_key, field]) => field.name === name,
+    );
+
+    if (!entry) {
+      throw new UnexpectedValueError(
+        name,
+        `A field with name ${name} is unknown for a protocol ${this.id}`,
+      );
+    }
+
+    return entry[0];
+  }
+
   public normalizeFieldValue(key: string, value: unknown): unknown {
     const field = this.getField(key);
 

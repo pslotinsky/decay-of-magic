@@ -36,7 +36,7 @@ program
       values: { title },
     });
 
-    console.log(remark);
+    console.info(remark);
   });
 
 program.parse();

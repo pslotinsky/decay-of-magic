@@ -1,17 +1,18 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+
 import yaml from 'yaml';
 
 import { ProtocolClerk } from '@zok/domain/assistants';
 import { DocumentProtocol, PleaType } from '@zok/domain/entities';
 
-import { ZogConfig } from '../types/config';
+import { Protocols } from '../types/config';
 
-const { ZOK_CONFIG_PATH = './config/zok.yml' } = process.env;
+const { ZOK_CONFIG_PATH = './config/protocols.yml' } = process.env;
 
 export class YamlProtocolClerk extends ProtocolClerk {
   public override async init(): Promise<void> {
-    const { protocols } = await this.loadYamlConfig<ZogConfig>();
+    const protocols = await this.loadProtocols();
 
     let id;
     let protocol;
@@ -24,7 +25,7 @@ export class YamlProtocolClerk extends ProtocolClerk {
     }
   }
 
-  private async loadYamlConfig<T = unknown>(): Promise<T> {
+  private async loadProtocols(): Promise<Protocols> {
     const filePath = path.resolve(ZOK_CONFIG_PATH);
     const content = await fs.readFile(filePath, 'utf-8');
 
