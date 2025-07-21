@@ -51,6 +51,43 @@ task:
       name: Created
       type: date
 
+adr:
+  prefix: ADR
+  idDigits: 3
+  path: ./adr
+  template: adr.nj
+  aliases: ['adrs']
+  fields:
+    status:
+      name: Status
+      type: enum
+      values: ['In progress', 'Accepted', 'Deprecated']
+    created:
+      name: Created
+      type: date
+
+design:
+  prefix: Design
+  idDigits: 3
+  path: ./design
+  template: design.nj
+  aliases: ['designs']
+  fields:
+    created:
+      name: Created
+      type: date
+
+devlog:
+  prefix: DevLog
+  idDigits: 3
+  path: ./devlogs
+  template: devlog.nj
+  aliases: ['devlogs']
+  fields:
+    created:
+      name: Created
+      type: date
+
 idea:
   prefix: Idea
   idDigits: 3

@@ -1,4 +1,4 @@
-# DevLog-001: Zok's birth
+# DevLog-002: Zok's birth
 
 | Field   | Value      |
 | ------- | ---------- |

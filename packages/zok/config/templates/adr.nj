@@ -1,0 +1,10 @@
+{% extends "document.nj" %}
+
+{% block content %}
+## Context
+
+## Decision
+
+## Consequences
+
+{% endblock %}
