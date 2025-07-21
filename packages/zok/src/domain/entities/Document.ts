@@ -29,6 +29,10 @@ export class Document {
     return this.metadata.id;
   }
 
+  public get title(): string {
+    return this.metadata.title;
+  }
+
   public getValue<T = unknown>(key: string): T | undefined {
     return this.metadata.fields[key] as T | undefined;
   }

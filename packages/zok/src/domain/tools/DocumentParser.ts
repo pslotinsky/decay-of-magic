@@ -6,7 +6,7 @@ import {
   DocumentProtocol,
   FieldType,
 } from '../entities';
-import { MalformedDocumentError } from '../errors';
+import { MalformedDocumentError, UnexpectedValueError } from '../errors';
 
 export class DocumentParser {
   public parse(protocol: DocumentProtocol, content: string): Document {
@@ -35,7 +35,20 @@ export class DocumentParser {
   private parseIdAndTitle(text: string): string[] {
     const [idPart, titlePart] = text.split(':');
 
-    return [idPart.substring(2), titlePart.trim()];
+    const id = idPart?.replace('# ', '').trim();
+    const title = titlePart?.trim();
+
+    if (!id) {
+      throw new MalformedDocumentError(`Can't parse id from line: "${text}"`);
+    }
+
+    if (!title) {
+      throw new MalformedDocumentError(
+        `Can't parse title from line: "${text}"`,
+      );
+    }
+
+    return [id, title];
   }
 
   private parseFields(
@@ -69,7 +82,7 @@ export class DocumentParser {
     if (valueString) {
       switch (field.type) {
         case FieldType.Date:
-          value = new Date(valueString);
+          value = this.parseDateField(valueString);
           break;
         default:
           value = valueString;
@@ -77,6 +90,19 @@ export class DocumentParser {
     }
 
     return [key, value];
+  }
+
+  private parseDateField(valueString: string): Date {
+    const date = new Date(valueString);
+
+    if (isNaN(date.getTime())) {
+      throw new UnexpectedValueError(
+        valueString,
+        `Field value is invalid date`,
+      );
+    }
+
+    return date;
   }
 
   private splitOnSections(content: string): [string, string[]] {
@@ -121,7 +147,7 @@ export class DocumentParser {
 
     let endIndex = startIndex;
 
-    while (lines[endIndex].startsWith('| ') && endIndex < lines.length) {
+    while (endIndex < lines.length && lines[endIndex].startsWith('| ')) {
       endIndex += 1;
     }
 

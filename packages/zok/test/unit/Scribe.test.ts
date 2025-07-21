@@ -27,10 +27,10 @@ describe('Unit: Scribe', () => {
       plea,
     });
 
-    assert.equal(document.id, 'DOD-0001');
-    assert.equal(document.metadata.protocol, protocol);
-    assert.equal(document.metadata.title, 'Test task');
-    assert.equal(document.getValue('status'), 'Done');
+    assert.strictEqual(document.id, 'DOD-0001');
+    assert.strictEqual(document.metadata.protocol, protocol);
+    assert.strictEqual(document.metadata.title, 'Test task');
+    assert.strictEqual(document.getValue('status'), 'Done');
     assert.ok(isEqual(document.getValue('created')!, '2025-07-03'));
     assert.match(document.content, /# DOD-0001: Test task/);
   });
@@ -49,8 +49,8 @@ describe('Unit: Scribe', () => {
       protocol,
     });
 
-    assert.equal(document.metadata.title, 'Untitled');
-    assert.equal(document.getValue('status'), 'In progress');
+    assert.strictEqual(document.metadata.title, 'Untitled');
+    assert.strictEqual(document.getValue('status'), 'In progress');
     assert.ok(document.getValue('created') instanceof Date);
   });
 

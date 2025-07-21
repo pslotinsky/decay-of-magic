@@ -38,7 +38,7 @@ test.describe('Integration: FileSystemArchive', () => {
     const filePath = join(tmpDir, 'tasks', 'DOD-0001_test-document.md');
     const content = await readFile(filePath, 'utf-8');
 
-    assert.equal(content, '# DOD-0001: Test Document');
+    assert.strictEqual(content, '# DOD-0001: Test Document');
   });
 
   test('finds documents by protocol', async () => {
@@ -58,8 +58,8 @@ test.describe('Integration: FileSystemArchive', () => {
 
     const found = await archive.find({ protocol: protocols.task });
 
-    assert.equal(found.length, 1);
-    assert.equal(found[0].id, 'DOD-0001');
+    assert.strictEqual(found.length, 1);
+    assert.strictEqual(found[0].id, 'DOD-0001');
   });
 
   test('counts documents correctly', async () => {
@@ -90,7 +90,7 @@ test.describe('Integration: FileSystemArchive', () => {
     );
 
     const count = await archive.count({ protocol: protocols.task });
-    assert.equal(count, 2);
+    assert.strictEqual(count, 2);
   });
 
   test('returns empty if nothing found', async () => {
@@ -100,6 +100,6 @@ test.describe('Integration: FileSystemArchive', () => {
     assert.deepEqual(found, []);
 
     const count = await archive.count({ protocol: protocols.task });
-    assert.equal(count, 0);
+    assert.strictEqual(count, 0);
   });
 });

@@ -12,7 +12,7 @@ test.describe('Unit: ProtocolClerk', () => {
 
     const protocol = protocolist.getProtocol(protocols.task.id);
 
-    assert.equal(protocol.id, protocols.task.id);
+    assert.strictEqual(protocol.id, protocols.task.id);
   });
 
   test(`resolves protocol by alias`, async () => {
@@ -20,7 +20,7 @@ test.describe('Unit: ProtocolClerk', () => {
 
     const protocol = protocolist.getProtocol(protocols.task.aliases[0]);
 
-    assert.equal(protocol.id, protocols.task.id);
+    assert.strictEqual(protocol.id, protocols.task.id);
   });
 
   test(`throws NotFoundError when protocol is missing`, async () => {

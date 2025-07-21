@@ -14,6 +14,6 @@ test.describe('Integration: NanoPleaFormalist', () => {
       ids.add(plea.id);
     }
 
-    assert.equal(ids.size, 1000);
+    assert.strictEqual(ids.size, 1000);
   });
 });

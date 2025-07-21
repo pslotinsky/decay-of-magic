@@ -17,9 +17,9 @@ test.describe('Unit: PleaFormalist', () => {
     });
 
     assert.ok(plea.id);
-    assert.equal(plea.type, PleaType.Create);
-    assert.equal(plea.protocol, protocols.task.id);
-    assert.equal(plea.getValue<string>('title'), 'Test plea');
+    assert.strictEqual(plea.type, PleaType.Create);
+    assert.strictEqual(plea.protocol, protocols.task.id);
+    assert.strictEqual(plea.getValue<string>('title'), 'Test plea');
   });
 
   test(`uses default values when missing`, async () => {
@@ -28,8 +28,8 @@ test.describe('Unit: PleaFormalist', () => {
     const plea = await formalist.formalizePlea({});
 
     assert.ok(plea.id);
-    assert.equal(plea.type, PleaType.Unknown);
-    assert.equal(plea.protocol, DocumentProtocol.UnknownId);
-    assert.equal(plea.getValue('title'), undefined);
+    assert.strictEqual(plea.type, PleaType.Unknown);
+    assert.strictEqual(plea.protocol, DocumentProtocol.UnknownId);
+    assert.strictEqual(plea.getValue('title'), undefined);
   });
 });
