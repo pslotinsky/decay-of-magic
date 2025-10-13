@@ -1,16 +1,10 @@
-import { Document } from './Document';
-
-export class Remark {
-  public static create(text: string, document?: Document): Remark {
-    return new Remark(text, document);
-  }
-
+export class Remark<TResult = unknown> {
   public readonly text: string;
-  public readonly document?: Document;
+  public readonly result?: TResult;
 
-  protected constructor(text: string, document?: Document) {
+  public constructor(text: string, result?: TResult) {
     this.text = text;
-    this.document = document;
+    this.result = result;
   }
 
   public toString(): string {

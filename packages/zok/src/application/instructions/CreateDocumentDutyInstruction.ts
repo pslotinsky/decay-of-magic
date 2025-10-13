@@ -1,17 +1,24 @@
-import { Remark } from '@zok/domain/entities';
+import { DocumentProtocol, Remark, Document } from '@zok/domain/entities';
 
-import { DutyInstruction } from './DutyInstruction';
+import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
 
-export class CreateDocumentDutyInstruction extends DutyInstruction {
-  public async execute(): Promise<Remark> {
+interface CreateDocumentDutyInstructionParams extends DutyInstructionParams {
+  protocol: DocumentProtocol;
+}
+
+export class CreateDocumentDutyInstruction extends DutyInstruction<
+  CreateDocumentDutyInstructionParams,
+  Document
+> {
+  public async execute(): Promise<Remark<Document>> {
     const id = await this.assistants.archiveKeeper.issueDocumentNumber(
-      this.protocol,
+      this.params.protocol,
     );
 
     const document = await this.assistants.scribe.createDocument({
       id,
-      plea: this.plea,
-      protocol: this.protocol,
+      plea: this.params.plea,
+      protocol: this.params.protocol,
     });
 
     await this.assistants.archiveKeeper.save(document);

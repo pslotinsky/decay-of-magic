@@ -1,23 +1,25 @@
-import { DocumentProtocol, Remark, Plea } from '@zok/domain/entities';
+import { Remark, Plea } from '@zok/domain/entities';
 
 import { ZokAssistants } from '../ZokAssistants';
 
-type DutyInstructionParams = {
+export type DutyInstructionParams = {
   assistants: ZokAssistants;
   plea: Plea;
-  protocol: DocumentProtocol;
 };
 
-export abstract class DutyInstruction {
-  public readonly assistants: ZokAssistants;
-  public readonly plea: Plea;
-  public readonly protocol: DocumentProtocol;
+export abstract class DutyInstruction<
+  TParams extends DutyInstructionParams = DutyInstructionParams,
+  TResult = unknown,
+> {
+  protected readonly params: TParams;
 
-  constructor(params: DutyInstructionParams) {
-    this.assistants = params.assistants;
-    this.plea = params.plea;
-    this.protocol = params.protocol;
+  constructor(params: TParams) {
+    this.params = params;
   }
 
-  public abstract execute(): Promise<Remark>;
+  public get assistants(): ZokAssistants {
+    return this.params.assistants;
+  }
+
+  public abstract execute(): Promise<Remark<TResult>>;
 }

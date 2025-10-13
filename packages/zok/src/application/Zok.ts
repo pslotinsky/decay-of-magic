@@ -12,9 +12,13 @@ import {
   Plea,
   PleaDraft,
   PleaType,
+  Document,
 } from '@zok/domain/entities';
 
-import { CreateDocumentDutyInstruction, DutyInstruction } from './instructions';
+import {
+  CreateDocumentDutyInstruction,
+  UpdateDocumentRelationsDutyInstruction,
+} from './instructions';
 import { ZokAssistants } from './ZokAssistants';
 
 type NewZokAssistants = Partial<ZokAssistants> & {
@@ -47,11 +51,13 @@ export class Zok {
 
   public async handlePlea(plea: Plea): Promise<Remark> {
     const protocol = this.assistants.protocolClerk.getProtocol(plea.protocol);
-    const instruction = this.createDutyInstruction(plea, protocol);
 
-    const remark = await instruction.execute();
-
-    return remark;
+    switch (plea.type) {
+      case PleaType.Create:
+        return this.createDocument(plea, protocol);
+      default:
+        throw new Error(`Unknown plea type ${plea.type}`);
+    }
   }
 
   public async init(): Promise<void> {
@@ -60,19 +66,42 @@ export class Zok {
     }
   }
 
-  private createDutyInstruction(
+  private async createDocument(
     plea: Plea,
     protocol: DocumentProtocol,
-  ): DutyInstruction {
-    switch (plea.type) {
-      case PleaType.Create:
-        return new CreateDocumentDutyInstruction({
-          plea,
-          protocol,
-          assistants: this.assistants,
-        });
-      default:
-        throw new Error(`Unknown plea type ${plea.type}`);
+  ): Promise<Remark> {
+    const createDocumentDutyInstruction = new CreateDocumentDutyInstruction({
+      plea,
+      protocol,
+      assistants: this.assistants,
+    });
+
+    const remark = await createDocumentDutyInstruction.execute();
+
+    await this.updateDocumentRelations(plea, remark.result);
+
+    return remark;
+  }
+
+  private async updateDocumentRelations(
+    plea: Plea,
+    document?: Document,
+  ): Promise<void> {
+    let instruction: UpdateDocumentRelationsDutyInstruction;
+    let remark: Remark<Document | undefined>;
+
+    for (
+      let currentDocument = document;
+      currentDocument instanceof Document;
+      currentDocument = remark.result
+    ) {
+      instruction = new UpdateDocumentRelationsDutyInstruction({
+        plea,
+        document: currentDocument,
+        assistants: this.assistants,
+      });
+
+      remark = await instruction.execute();
     }
   }
 }
