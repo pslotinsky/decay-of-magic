@@ -1,2 +1,2 @@
 export * from './Archive';
-export * from './DocumentParser';
+export * from './parser/DocumentParser';

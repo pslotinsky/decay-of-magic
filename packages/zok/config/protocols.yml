@@ -8,7 +8,10 @@ roadmap:
     status:
       name: Status
       type: enum
-      values: ['In progress', 'Done', 'Cancelled']
+      values:
+        done: Done
+        inProgress: In progress
+        cancelled: Cancelled
     created:
       name: Created
       type: date
@@ -23,7 +26,10 @@ milestone:
     status:
       name: Status
       type: enum
-      values: ['In progress', 'Done', 'Cancelled']
+      values:
+        done: Done
+        inProgress: In progress
+        cancelled: Cancelled
     parent:
       name: Roadmap
       type: link
@@ -42,7 +48,10 @@ task:
     status:
       name: Status
       type: enum
-      values: ['In progress', 'Done', 'Cancelled']
+      values:
+        done: Done
+        inProgress: In progress
+        cancelled: Cancelled
     parent:
       name: Milestone
       type: link
@@ -61,7 +70,10 @@ adr:
     status:
       name: Status
       type: enum
-      values: ['In progress', 'Accepted', 'Deprecated']
+      values:
+        done: Accepted
+        inProgress: In progress
+        cancelled: Deprecated
     created:
       name: Created
       type: date

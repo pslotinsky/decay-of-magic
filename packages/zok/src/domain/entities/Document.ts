@@ -10,6 +10,19 @@ export type DocumentMetadata = {
   title: string;
   protocol: DocumentProtocol;
   fields: Record<string, unknown>;
+  toc?: DocumentToc;
+};
+
+export type DocumentToc = {
+  protocolName: string;
+  lines: DocumentTocLine[];
+};
+
+export type DocumentTocLine = {
+  id: string;
+  title: string;
+  link: string;
+  status?: string;
 };
 
 export class Document {
@@ -33,8 +46,8 @@ export class Document {
     return this.metadata.title;
   }
 
-  public getValue<T = unknown>(key: string): T | undefined {
-    return this.metadata.fields[key] as T | undefined;
+  public getField<T = unknown>(name: string): T | undefined {
+    return this.metadata.fields[name] as T | undefined;
   }
 
   public followsProtocol(protocolId: string): boolean {

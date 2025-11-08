@@ -1,6 +1,6 @@
 import { Document, DocumentProtocol } from '@zok/domain/entities';
 
-import { DocumentParser } from './DocumentParser';
+import { DocumentParser } from './parser/DocumentParser';
 
 export type DocumentQueryObject = {
   protocol: DocumentProtocol;

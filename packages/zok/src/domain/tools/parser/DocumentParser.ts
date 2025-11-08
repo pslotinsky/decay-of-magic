@@ -4,9 +4,11 @@ import {
   Document,
   DocumentMetadata,
   DocumentProtocol,
+  DocumentToc,
   FieldType,
-} from '../entities';
-import { MalformedDocumentError, UnexpectedValueError } from '../errors';
+} from '../../entities';
+import { MalformedDocumentError, UnexpectedValueError } from '../../errors';
+import { DocumentTocParser } from './DocumentTocParser';
 
 export class DocumentParser {
   public parse(protocol: DocumentProtocol, content: string): Document {
@@ -29,6 +31,7 @@ export class DocumentParser {
       title,
       protocol,
       fields: this.parseFields(protocol, fieldsSection),
+      toc: this.parseToc(content),
     };
   }
 
@@ -58,6 +61,10 @@ export class DocumentParser {
     const entries = lines.map((line) => this.parseField(protocol, line));
 
     return Object.fromEntries(entries);
+  }
+
+  private parseToc(content: string): DocumentToc | undefined {
+    return DocumentTocParser.parse(content);
   }
 
   private parseField(

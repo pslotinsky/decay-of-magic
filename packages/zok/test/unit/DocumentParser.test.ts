@@ -25,11 +25,11 @@ test.describe('Unit: ArchiveKeeper', () => {
 
     assert.strictEqual(doc.id, 'DOD-0001');
     assert.strictEqual(doc.title, 'Test task');
-    assert.strictEqual(doc.getValue('status'), 'Done');
-    assert.deepStrictEqual(doc.getValue('created'), new Date('2025-07-17'));
+    assert.strictEqual(doc.getField('status'), 'Done');
+    assert.deepStrictEqual(doc.getField('created'), new Date('2025-07-17'));
   });
 
-  test('parses document without table', () => {
+  test('parses document without fields', () => {
     const content = makeContent([
       '# DOD-0001: Test task',
       '',
@@ -43,11 +43,11 @@ test.describe('Unit: ArchiveKeeper', () => {
 
     assert.strictEqual(doc.id, 'DOD-0001');
     assert.strictEqual(doc.title, 'Test task');
-    assert.strictEqual(doc.getValue('status'), undefined);
-    assert.strictEqual(doc.getValue('created'), undefined);
+    assert.strictEqual(doc.getField('status'), undefined);
+    assert.strictEqual(doc.getField('created'), undefined);
   });
 
-  test('parses document with partial table', () => {
+  test('parses document with partial fields table', () => {
     const content = makeContent([
       '# DOD-0001: Test task',
       '',
@@ -61,8 +61,8 @@ test.describe('Unit: ArchiveKeeper', () => {
 
     assert.strictEqual(doc.id, 'DOD-0001');
     assert.strictEqual(doc.title, 'Test task');
-    assert.strictEqual(doc.getValue('status'), 'Done');
-    assert.strictEqual(doc.getValue('created'), undefined);
+    assert.strictEqual(doc.getField('status'), 'Done');
+    assert.strictEqual(doc.getField('created'), undefined);
   });
 
   test('throws if title is missing', () => {
@@ -85,7 +85,7 @@ test.describe('Unit: ArchiveKeeper', () => {
     );
   });
 
-  test('throws if table without separator', () => {
+  test('throws if fields table without separator', () => {
     const content = makeContent([
       '# DOD-0001: Test task',
       '',
@@ -100,7 +100,7 @@ test.describe('Unit: ArchiveKeeper', () => {
     );
   });
 
-  test(`throws if table contains unknown field`, () => {
+  test(`throws if fields contains unknown field`, () => {
     const content = makeContent([
       '# DOD-0001: Test task',
       '',
@@ -117,7 +117,7 @@ test.describe('Unit: ArchiveKeeper', () => {
     );
   });
 
-  test('throws if table contains invalid value', () => {
+  test('throws if fields contains invalid value', () => {
     const content = makeContent([
       '# DOD-0001: Test task',
       '',
@@ -132,6 +132,25 @@ test.describe('Unit: ArchiveKeeper', () => {
       () => parser.parse(protocols.task, content),
       UnexpectedValueError,
     );
+  });
+
+  test('parses table of content', () => {
+    const content = makeContent([
+      '# Milestone-001: Infrastructure and documentation',
+      '',
+      '## Tasks',
+      '',
+      '<!-- TOC.START: task -->',
+      '- [x] [DOD-0001: Documentation structure](../tasks/DOD-0001_documentation-structure.md)',
+      '~~- [ ] [DOD-0002: Monorepo](../tasks/DOD-0002_monorepo.md)~~',
+      '- [ ] [DOD-0003: Draft services](../tasks/DOD-0003_draft-services.md)',
+      '- [ ] [DOD-0004: Basic CI](../tasks/DOD-0004_basic-ci.md)',
+      '<!-- TOC.END -->',
+      '',
+    ]);
+
+    const parser = new DocumentParser();
+    const doc = parser.parse(protocols.milestone, content);
   });
 });
 

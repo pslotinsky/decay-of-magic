@@ -30,8 +30,8 @@ describe('Unit: Scribe', () => {
     assert.strictEqual(document.id, 'DOD-0001');
     assert.strictEqual(document.metadata.protocol, protocol);
     assert.strictEqual(document.metadata.title, 'Test task');
-    assert.strictEqual(document.getValue('status'), 'Done');
-    assert.ok(isEqual(document.getValue('created')!, '2025-07-03'));
+    assert.strictEqual(document.getField('status'), 'Done');
+    assert.ok(isEqual(document.getField('created')!, '2025-07-03'));
     assert.match(document.content, /# DOD-0001: Test task/);
   });
 
@@ -50,8 +50,8 @@ describe('Unit: Scribe', () => {
     });
 
     assert.strictEqual(document.metadata.title, 'Untitled');
-    assert.strictEqual(document.getValue('status'), 'In progress');
-    assert.ok(document.getValue('created') instanceof Date);
+    assert.strictEqual(document.getField('status'), 'In progress');
+    assert.ok(document.getField('created') instanceof Date);
   });
 
   it('normalizes values using protocol', async () => {
@@ -71,6 +71,6 @@ describe('Unit: Scribe', () => {
       protocol,
     });
 
-    assert.ok(document.getValue('created') instanceof Date);
+    assert.ok(document.getField('created') instanceof Date);
   });
 });
