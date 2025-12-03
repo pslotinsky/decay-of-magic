@@ -1,4 +1,4 @@
-import { Archive } from '../tools';
+import { Archive, DocumentQueryObject } from '../tools';
 import { Document, DocumentProtocol } from '../entities';
 import { Assistant } from './Assistant';
 
@@ -17,6 +17,10 @@ export abstract class ArchiveKeeper extends Assistant {
     const serialNumber = await this.getSerialNumber(protocol);
 
     return this.formatDocumentNumber(serialNumber, protocol);
+  }
+
+  public async find(options: DocumentQueryObject): Promise<Document[]> {
+    return this.archive.find(options);
   }
 
   public async save(document: Document): Promise<Document> {

@@ -9,6 +9,7 @@ roadmap:
       name: Status
       type: enum
       values:
+        draft: Planned
         done: Done
         inProgress: In progress
         cancelled: Cancelled
@@ -27,6 +28,7 @@ milestone:
       name: Status
       type: enum
       values:
+        draft: Planned
         done: Done
         inProgress: In progress
         cancelled: Cancelled
@@ -49,6 +51,7 @@ task:
       name: Status
       type: enum
       values:
+        draft: Draft
         done: Done
         inProgress: In progress
         cancelled: Cancelled
@@ -71,6 +74,7 @@ adr:
       name: Status
       type: enum
       values:
+        draft: Draft
         done: Accepted
         inProgress: In progress
         cancelled: Deprecated

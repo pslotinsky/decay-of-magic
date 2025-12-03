@@ -1,4 +1,5 @@
 import { Assistant } from '@zok/domain/assistants';
+import { Zok } from '@zok/application/Zok';
 
 import { MockPleaFormalist } from './MockPleaFormalist';
 import { MockProtocolClerk } from './MockProtocolClerk';
@@ -6,6 +7,15 @@ import { MockArchiveKeeper } from './MockArchiveKeeper';
 import { MockScribe } from './MockScribe';
 
 export class MockFactory {
+  public static createZok(): Zok {
+    return Zok.revealItself({
+      protocolClerk: MockFactory.createProtocolClerk(),
+      archiveKeeper: MockFactory.createArchiveKeeper(),
+      pleaFormalist: MockFactory.createPleaFormalist(),
+      scribe: MockFactory.createScribe(),
+    });
+  }
+
   public static createPleaFormalist(): MockPleaFormalist {
     return new MockPleaFormalist();
   }

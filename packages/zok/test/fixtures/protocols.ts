@@ -31,7 +31,7 @@ export const milestone = DocumentProtocol.init({
     status: {
       name: 'Status',
       type: FieldType.Enum,
-      values: ['In progress', 'Done', 'Cancelled'],
+      values: ['In progress', 'Done', 'Cancelled', 'Planned'],
     },
     parent: {
       name: 'Roadmap',

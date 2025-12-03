@@ -28,6 +28,18 @@ type NewZokAssistants = Partial<ZokAssistants> & {
   scribe: Scribe;
 };
 
+type Typed<E, T extends PleaType> = E & { type: T };
+
+type PleaHandlingResult<T extends PleaType> = PleaHandlingResultMap[T];
+
+interface PleaHandlingResultMap {
+  [PleaType.Create]: Remark<Document>;
+  [PleaType.Rename]: Remark<Document>;
+  [PleaType.ChangeStatus]: Remark<Document>;
+  [PleaType.List]: Remark<Document[]>;
+  [PleaType.Unknown]: Remark<unknown>;
+}
+
 export class Zok {
   private assistants: ZokAssistants;
 
@@ -43,21 +55,34 @@ export class Zok {
     this.assistants = assistants;
   }
 
-  public async handleTextPlea(draft: PleaDraft): Promise<Remark> {
+  public async handleTextPlea<T extends PleaType>(
+    draft: Typed<PleaDraft, T>,
+  ): Promise<PleaHandlingResult<T>> {
     const plea = await this.assistants.pleaFormalist.formalizePlea(draft);
 
-    return this.handlePlea(plea);
+    return this.handlePlea(plea as Typed<Plea, T>);
   }
 
-  public async handlePlea(plea: Plea): Promise<Remark> {
+  public async handlePlea<T extends PleaType>(
+    plea: Typed<Plea, T>,
+  ): Promise<PleaHandlingResult<T>> {
     const protocol = this.assistants.protocolClerk.getProtocol(plea.protocol);
 
     switch (plea.type) {
       case PleaType.Create:
-        return this.createDocument(plea, protocol);
+        return this.createDocument(plea, protocol) as any;
       default:
         throw new Error(`Unknown plea type ${plea.type}`);
     }
+  }
+
+  public async findDocuments(
+    protocolName: string,
+    prefix?: string,
+  ): Promise<Document[]> {
+    const protocol = this.assistants.protocolClerk.getProtocol(protocolName);
+
+    return this.assistants.archiveKeeper.find({ protocol, prefix });
   }
 
   public async init(): Promise<void> {
@@ -69,7 +94,7 @@ export class Zok {
   private async createDocument(
     plea: Plea,
     protocol: DocumentProtocol,
-  ): Promise<Remark> {
+  ): Promise<Remark<Document>> {
     const createDocumentDutyInstruction = new CreateDocumentDutyInstruction({
       plea,
       protocol,
