@@ -55,4 +55,8 @@ export class Plea {
 
     return value ?? defaultValue;
   }
+
+  public setValue<T = unknown>(key: string, value: T): void {
+    this.form.values[key] = value;
+  }
 }

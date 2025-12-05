@@ -46,6 +46,10 @@ export class Document {
     return this.metadata.title;
   }
 
+  public get protocol(): DocumentProtocol {
+    return this.metadata.protocol;
+  }
+
   public getField<T = unknown>(name: string): T | undefined {
     return this.metadata.fields[name] as T | undefined;
   }

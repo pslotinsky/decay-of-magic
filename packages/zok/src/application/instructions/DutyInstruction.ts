@@ -11,7 +11,7 @@ export abstract class DutyInstruction<
   TParams extends DutyInstructionParams = DutyInstructionParams,
   TResult = unknown,
 > {
-  protected readonly params: TParams;
+  protected params: TParams;
 
   constructor(params: TParams) {
     this.params = params;

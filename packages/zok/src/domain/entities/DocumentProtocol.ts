@@ -38,6 +38,12 @@ export class DocumentProtocol {
     this.fields = params.fields;
   }
 
+  public get parentProtocolId(): string | undefined {
+    const parent = this.fields.parent;
+
+    return parent?.type === FieldType.Link ? parent.protocol : undefined;
+  }
+
   public getField(key: string): FieldDefinition {
     const field = this.fields[key];
 
