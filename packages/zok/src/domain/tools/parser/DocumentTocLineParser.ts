@@ -1,10 +1,10 @@
-import { DocumentTocLine } from '@zok/domain/entities';
+import { DocumentStatus, DocumentTocLine } from '@zok/domain/entities';
 import { MalformedDocumentError } from '@zok/domain/errors';
 import { TextExtractor } from './TextExtractor';
 
 export class DocumentTocLineParser {
   private line: string;
-  private status?: string;
+  private status?: DocumentStatus;
   private label?: string;
   private link?: string;
 
@@ -51,19 +51,19 @@ export class DocumentTocLineParser {
     let extraction = TextExtractor.extractBetween(resultLine, '~~');
 
     if (extraction.extractedText) {
-      this.status = 'cancelled';
+      this.status = DocumentStatus.Cancelled;
       resultLine = extraction.extractedText.trim();
     }
 
     extraction = TextExtractor.extractBetween(resultLine, '[', ']');
 
     if (extraction.extractedText === ' ') {
-      this.status = this.status ?? 'inProgress';
+      this.status = this.status ?? DocumentStatus.InProgress;
       resultLine = extraction.remainingText.trim();
     }
 
     if (extraction.extractedText === 'x') {
-      this.status = this.status ?? 'done';
+      this.status = this.status ?? DocumentStatus.Done;
       resultLine = extraction.remainingText.trim();
     }
 

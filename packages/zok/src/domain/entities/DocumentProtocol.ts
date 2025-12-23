@@ -11,6 +11,11 @@ type DocumentProtocolParams = {
   fields: Record<string, FieldDefinition>;
 };
 
+type ResolvedDocument = {
+  id: string;
+  title: string;
+};
+
 export class DocumentProtocol {
   public static Name = DocumentProtocol.constructor.name;
 

@@ -1,8 +1,6 @@
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import { kebabCase } from 'lodash';
-
 import { Archive, DocumentQueryObject } from '@zok/domain/tools';
 import { Document, DocumentProtocol } from '@zok/domain/entities';
 
@@ -36,10 +34,9 @@ export class FileSystemArchive extends Archive {
   }
 
   public async save(document: Document): Promise<Document> {
-    const { protocol, title } = document.metadata;
+    const { protocol } = document.metadata;
 
-    const name = `${document.id}_${kebabCase(title)}.md`;
-    await this.writeFile(protocol, name, document.content);
+    await this.writeFile(protocol, document.fileName, document.content);
 
     return document;
   }

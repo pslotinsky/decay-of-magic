@@ -32,7 +32,7 @@ test.describe('Flow: Task creation', () => {
     const task = await createTask(zok, { title: 'Hello task' });
     assert.equal(task.getField('parent'), inProgressMilestone.id);
 
-    const milestone = await findMilestone(zok, plannedMilestone.id);
+    const milestone = await findMilestone(zok, inProgressMilestone.id);
     const { toc } = milestone.metadata;
     assert.ok(toc);
     assert.equal(toc.lines.length, 1);
@@ -50,6 +50,7 @@ test.describe('Flow: Task creation', () => {
     assert.equal(task.getField('parent'), plannedMilestone.id);
 
     const milestone = await findMilestone(zok, plannedMilestone.id);
+
     const { toc } = milestone.metadata;
     assert.ok(toc);
     assert.equal(toc.lines.length, 1);

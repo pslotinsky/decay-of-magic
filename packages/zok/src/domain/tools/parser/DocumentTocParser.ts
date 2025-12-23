@@ -32,8 +32,6 @@ export class DocumentTocParser {
       };
     }
 
-    console.log(toc);
-
     return toc;
   }
 

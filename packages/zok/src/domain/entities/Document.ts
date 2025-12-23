@@ -1,3 +1,4 @@
+import { kebabCase } from 'lodash';
 import { DocumentProtocol } from './DocumentProtocol';
 
 type DocumentParams = {
@@ -22,8 +23,15 @@ export type DocumentTocLine = {
   id: string;
   title: string;
   link: string;
-  status?: string;
+  status?: DocumentStatus;
 };
+
+export enum DocumentStatus {
+  InProgress = 'In progress',
+  Done = 'Done',
+  Cancelled = 'Cancelled',
+  PLANNED = 'Planned',
+}
 
 export class Document {
   public static issue(params: DocumentParams): Document {
@@ -31,7 +39,7 @@ export class Document {
   }
 
   public readonly metadata: DocumentMetadata;
-  public readonly content: string;
+  public content: string;
 
   protected constructor(params: Required<DocumentParams>) {
     this.metadata = params.metadata;
@@ -48,6 +56,10 @@ export class Document {
 
   public get protocol(): DocumentProtocol {
     return this.metadata.protocol;
+  }
+
+  public get fileName(): string {
+    return `${this.id}_${kebabCase(this.title)}.md`;
   }
 
   public getField<T = unknown>(name: string): T | undefined {

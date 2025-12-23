@@ -1,6 +1,12 @@
-import { Document, DocumentProtocol, Remark } from '@zok/domain/entities';
+import {
+  Document,
+  DocumentProtocol,
+  DocumentToc,
+  Remark,
+} from '@zok/domain/entities';
 
 import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
+import { join } from 'node:path';
 
 interface UpdateDocumentRelationsDutyInstructionParams
   extends DutyInstructionParams {
@@ -17,7 +23,7 @@ export class UpdateDocumentRelationsDutyInstruction extends DutyInstruction<
     let parent = await this.getDocumentParent(document);
 
     if (parent) {
-      parent = await this.updateToc(parent);
+      parent = await this.updateToc(document, parent);
     }
 
     return this.assistants.humorAdvisor.remarkOnDocumentRelationsUpdate(
@@ -44,8 +50,24 @@ export class UpdateDocumentRelationsDutyInstruction extends DutyInstruction<
     return result;
   }
 
-  private async updateToc(parent: Document): Promise<Document> {
-    // TODO: Update ToC
+  private async updateToc(
+    document: Document,
+    parent: Document,
+  ): Promise<Document> {
+    const files = await this.assistants.archiveKeeper.find({
+      protocol: document.protocol,
+    });
+
+    files.filter((file) => file.getField('parent') === parent.id);
+
+    parent.metadata.toc = this.createToc(document.protocol, files);
+    parent.content = this.replaceTocContent(
+      parent.content,
+      parent.metadata.toc,
+    );
+
+    await this.assistants.archiveKeeper.save(parent);
+
     return parent;
   }
 
@@ -59,5 +81,24 @@ export class UpdateDocumentRelationsDutyInstruction extends DutyInstruction<
     });
 
     return document;
+  }
+
+  private createToc(
+    protocol: DocumentProtocol,
+    documents: Document[],
+  ): DocumentToc {
+    return {
+      protocolName: protocol.id,
+      lines: documents.map((document) => ({
+        id: document.id,
+        link: join('..', protocol.path, document.fileName),
+        title: document.title,
+        status: document.getField('status'),
+      })),
+    };
+  }
+
+  private replaceTocContent(content: string, toc: DocumentToc): string {
+    return content;
   }
 }

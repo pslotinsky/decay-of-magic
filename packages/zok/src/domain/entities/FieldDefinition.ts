@@ -1,12 +1,11 @@
 export enum FieldType {
   Enum = 'enum',
-  Link = 'Roadmap',
+  Link = 'link',
   Date = 'date',
 }
 
 type BaseFieldDefinition = {
   name: string;
-  type: FieldType;
 };
 
 type EnumFieldDefinition = BaseFieldDefinition & {
