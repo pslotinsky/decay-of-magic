@@ -1,5 +1,5 @@
 {% block header %}
-# {{ document.id }}: {{ document.title }}
+# {% if document.id %}{{ document.id }}: {% endif %}{{ document.title }}
 {% endblock %}
 
 {% block fields %}

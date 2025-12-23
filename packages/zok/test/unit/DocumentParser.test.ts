@@ -76,16 +76,6 @@ test.describe('Unit: DocumentParser', () => {
     );
   });
 
-  test('throws if title is malformed', () => {
-    const content = makeContent(['# DOD-0001 Test task']);
-
-    const parser = new DocumentParser();
-    assert.throws(
-      () => parser.parse(protocols.task, content),
-      MalformedDocumentError,
-    );
-  });
-
   test('throws if fields table without separator', () => {
     const content = makeContent([
       '# DOD-0001: Test task',
@@ -180,6 +170,31 @@ test.describe('Unit: DocumentParser', () => {
       title: 'Basic CI',
       link: '../tasks/DOD-0004_basic-ci.md',
       status: DocumentStatus.InProgress,
+    });
+  });
+
+  test('parses readme file', () => {
+    const content = makeContent([
+      '# Tasks',
+      '',
+      '<!-- TOC.START: task -->',
+      '- [x] [DOD-0001: Documentation structure](../tasks/DOD-0001_documentation-structure.md)',
+      '<!-- TOC.END -->',
+      '',
+    ]);
+
+    const parser = new DocumentParser();
+    const doc = parser.parse(protocols.task, content);
+
+    const { toc } = doc.metadata;
+    assert.ok(toc);
+    assert.equal(toc.protocolName, 'task');
+    assert.equal(toc.lines.length, 1);
+    assert.deepStrictEqual(toc.lines[0], {
+      id: 'DOD-0001',
+      title: 'Documentation structure',
+      link: '../tasks/DOD-0001_documentation-structure.md',
+      status: DocumentStatus.Done,
     });
   });
 });

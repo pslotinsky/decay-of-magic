@@ -38,17 +38,16 @@ export class DocumentParser {
   private parseIdAndTitle(text: string): string[] {
     const [idPart, titlePart] = text.split(':');
 
-    const id = idPart?.replace('# ', '').trim();
-    const title = titlePart?.trim();
+    let id = idPart?.replace('# ', '').trim();
+    let title = titlePart?.trim();
 
     if (!id) {
       throw new MalformedDocumentError(`Can't parse id from line: "${text}"`);
     }
 
     if (!title) {
-      throw new MalformedDocumentError(
-        `Can't parse title from line: "${text}"`,
-      );
+      title = id;
+      id = '';
     }
 
     return [id, title];
