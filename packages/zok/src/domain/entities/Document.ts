@@ -30,7 +30,7 @@ export enum DocumentStatus {
   InProgress = 'In progress',
   Done = 'Done',
   Cancelled = 'Cancelled',
-  PLANNED = 'Planned',
+  Planned = 'Planned',
 }
 
 export class Document {

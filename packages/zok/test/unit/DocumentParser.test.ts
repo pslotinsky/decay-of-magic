@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert';
 
+import { DocumentStatus } from '@zok/domain/entities';
 import { DocumentParser } from '@zok/domain/tools';
 import {
   MalformedDocumentError,
@@ -9,7 +10,7 @@ import {
 
 import * as protocols from 'test/fixtures/protocols';
 
-test.describe('Unit: ArchiveKeeper', () => {
+test.describe('Unit: DocumentParser', () => {
   test('parses correct markdown document', () => {
     const content = makeContent([
       '# DOD-0001: Test task',
@@ -151,6 +152,35 @@ test.describe('Unit: ArchiveKeeper', () => {
 
     const parser = new DocumentParser();
     const doc = parser.parse(protocols.milestone, content);
+
+    const { toc } = doc.metadata;
+    assert.ok(toc);
+    assert.equal(toc.protocolName, 'task');
+    assert.equal(toc.lines.length, 4);
+    assert.deepStrictEqual(toc.lines[0], {
+      id: 'DOD-0001',
+      title: 'Documentation structure',
+      link: '../tasks/DOD-0001_documentation-structure.md',
+      status: DocumentStatus.Done,
+    });
+    assert.deepStrictEqual(toc.lines[1], {
+      id: 'DOD-0002',
+      title: 'Monorepo',
+      link: '../tasks/DOD-0002_monorepo.md',
+      status: DocumentStatus.Cancelled,
+    });
+    assert.deepStrictEqual(toc.lines[2], {
+      id: 'DOD-0003',
+      title: 'Draft services',
+      link: '../tasks/DOD-0003_draft-services.md',
+      status: DocumentStatus.InProgress,
+    });
+    assert.deepStrictEqual(toc.lines[3], {
+      id: 'DOD-0004',
+      title: 'Basic CI',
+      link: '../tasks/DOD-0004_basic-ci.md',
+      status: DocumentStatus.InProgress,
+    });
   });
 });
 

@@ -40,6 +40,17 @@ test.describe('Flow: Task creation', () => {
     const line = toc.lines[0];
     assert.equal(line.id, task.id);
     assert.equal(line.title, task.title);
+
+    assert.ok(
+      milestone.content.endsWith(
+        [
+          '<!-- TOC.START: task -->',
+          '- [ ] [DOD-0001: Hello task](../tasks/DOD-0001_hello-task.md)',
+          '<!-- TOC.END -->',
+          '',
+        ].join('\n'),
+      ),
+    );
   });
 
   test(`Task can be bind to the required milestone manually`, async () => {
@@ -58,5 +69,16 @@ test.describe('Flow: Task creation', () => {
     const line = toc.lines[0];
     assert.equal(line.id, task.id);
     assert.equal(line.title, task.title);
+
+    assert.ok(
+      milestone.content.endsWith(
+        [
+          '<!-- TOC.START: task -->',
+          '- [ ] [DOD-0001: Hello task](../tasks/DOD-0001_hello-task.md)',
+          '<!-- TOC.END -->',
+          '',
+        ].join('\n'),
+      ),
+    );
   });
 });

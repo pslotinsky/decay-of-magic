@@ -7,6 +7,7 @@ import {
 
 import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
 import { join } from 'node:path';
+import { DocumentTocRender } from '@zok/domain/tools';
 
 interface UpdateDocumentRelationsDutyInstructionParams
   extends DutyInstructionParams {
@@ -54,11 +55,12 @@ export class UpdateDocumentRelationsDutyInstruction extends DutyInstruction<
     document: Document,
     parent: Document,
   ): Promise<Document> {
-    const files = await this.assistants.archiveKeeper.find({
+    let files = await this.assistants.archiveKeeper.find({
       protocol: document.protocol,
+      // TODO: parent: parent.id
     });
 
-    files.filter((file) => file.getField('parent') === parent.id);
+    files = files.filter((file) => file.getField('parent') === parent.id);
 
     parent.metadata.toc = this.createToc(document.protocol, files);
     parent.content = this.replaceTocContent(
@@ -99,6 +101,25 @@ export class UpdateDocumentRelationsDutyInstruction extends DutyInstruction<
   }
 
   private replaceTocContent(content: string, toc: DocumentToc): string {
-    return content;
+    let result = content;
+
+    const tocContent = DocumentTocRender.render(toc);
+
+    const openTag = DocumentTocRender.renderOpenTag(toc.protocolName);
+    const tocStart = content.indexOf(openTag);
+
+    if (tocStart > -1) {
+      const closeTag = DocumentTocRender.renderCloseTag();
+      const tocEnd = content.indexOf(closeTag, tocStart) + closeTag.length;
+
+      result =
+        content.substring(0, tocStart) +
+        tocContent +
+        content.substring(tocEnd, content.length);
+    } else {
+      result = result.concat(`${tocContent}\n`);
+    }
+
+    return result;
   }
 }
