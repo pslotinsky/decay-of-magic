@@ -17,4 +17,8 @@ export class HumorAdvisor extends Assistant {
         )
       : new Remark(`No relations to update for document ${document.id}`);
   }
+
+  public makeDummyRemark(): Remark {
+    return new Remark('Dummy remark');
+  }
 }

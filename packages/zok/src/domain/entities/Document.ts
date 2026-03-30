@@ -59,7 +59,7 @@ export class Document {
   }
 
   public get fileName(): string {
-    return `${this.id}_${kebabCase(this.title)}.md`;
+    return this.id ? `${this.id}_${kebabCase(this.title)}.md` : 'README.md';
   }
 
   public getField<T = unknown>(name: string): T | undefined {

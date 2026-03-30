@@ -28,7 +28,7 @@ export class DocumentTocParser {
 
       toc = {
         protocolName: this.parseTocProtocolName(startLine),
-        lines: tocLines.map(DocumentTocLineParser.parse),
+        lines: tocLines.filter(Boolean).map(DocumentTocLineParser.parse),
       };
     }
 

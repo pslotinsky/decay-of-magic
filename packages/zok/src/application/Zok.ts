@@ -18,6 +18,7 @@ import {
 import {
   CreateDocumentDutyInstruction,
   UpdateDocumentRelationsDutyInstruction,
+  UpdateReadmeDutyInstruction,
 } from './instructions';
 import { ZokAssistants } from './ZokAssistants';
 
@@ -104,6 +105,7 @@ export class Zok {
     const remark = await createDocumentDutyInstruction.execute();
 
     await this.updateDocumentRelations(plea, remark.result);
+    await this.updateReadme(plea, remark.result);
 
     return remark;
   }
@@ -127,6 +129,18 @@ export class Zok {
       });
 
       remark = await instruction.execute();
+    }
+  }
+
+  private async updateReadme(plea: Plea, document?: Document): Promise<void> {
+    if (document) {
+      const instruction = new UpdateReadmeDutyInstruction({
+        plea,
+        document,
+        assistants: this.assistants,
+      });
+
+      await instruction.execute();
     }
   }
 }
