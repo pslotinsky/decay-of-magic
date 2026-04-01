@@ -16,6 +16,7 @@ import {
 } from '@zok/domain/entities';
 
 import {
+  ChangeStatusDutyInstruction,
   CreateDocumentDutyInstruction,
   ListDocumentsDutyInstruction,
   UpdateDocumentRelationsDutyInstruction,
@@ -74,8 +75,13 @@ export class Zok {
     switch (plea.type) {
       case PleaType.Create:
         result = this.createDocument(plea, protocol);
+        break;
+      case PleaType.ChangeStatus:
+        result = this.changeStatus(plea, protocol);
+        break;
       case PleaType.List:
         result = this.listDocuments(plea, protocol);
+        break;
       default:
         result = this.assistants.humorAdvisor.makeDummyRemark();
     }
@@ -98,6 +104,24 @@ export class Zok {
     }
   }
 
+  private async createDocument(
+    plea: Plea,
+    protocol: DocumentProtocol,
+  ): Promise<Remark<Document>> {
+    const createDocumentDutyInstruction = new CreateDocumentDutyInstruction({
+      plea,
+      protocol,
+      assistants: this.assistants,
+    });
+
+    const remark = await createDocumentDutyInstruction.execute();
+
+    await this.updateDocumentRelations(plea, remark.result);
+    await this.updateReadme(plea, remark.result);
+
+    return remark;
+  }
+
   private async listDocuments(
     plea: Plea,
     protocol: DocumentProtocol,
@@ -111,17 +135,17 @@ export class Zok {
     return instruction.execute();
   }
 
-  private async createDocument(
+  private async changeStatus(
     plea: Plea,
     protocol: DocumentProtocol,
   ): Promise<Remark<Document>> {
-    const createDocumentDutyInstruction = new CreateDocumentDutyInstruction({
+    const instruction = new ChangeStatusDutyInstruction({
       plea,
       protocol,
       assistants: this.assistants,
     });
 
-    const remark = await createDocumentDutyInstruction.execute();
+    const remark = await instruction.execute();
 
     await this.updateDocumentRelations(plea, remark.result);
     await this.updateReadme(plea, remark.result);

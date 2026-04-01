@@ -25,6 +25,15 @@ export class HumorAdvisor extends Assistant {
     return new Remark(text, documents);
   }
 
+  public remarkOnDocumentStatusChange(document: Document): Remark<Document> {
+    const status = document.getField('status');
+
+    return new Remark(
+      `Document ${document.id} status changed to "${status}"`,
+      document,
+    );
+  }
+
   public makeDummyRemark(): Remark {
     return new Remark('Dummy remark');
   }

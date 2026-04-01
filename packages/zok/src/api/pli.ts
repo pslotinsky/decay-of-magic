@@ -40,6 +40,48 @@ program
   });
 
 program
+  .command('close <protocol> <id>')
+  .action(async (protocol: string, id: string) => {
+    await zok.init();
+
+    const remark = await zok.handleTextPlea({
+      protocol,
+      type: PleaType.ChangeStatus,
+      values: { id, status: 'done' },
+    });
+
+    console.info(remark.toString());
+  });
+
+program
+  .command('reopen <protocol> <id>')
+  .action(async (protocol: string, id: string) => {
+    await zok.init();
+
+    const remark = await zok.handleTextPlea({
+      protocol,
+      type: PleaType.ChangeStatus,
+      values: { id, status: 'inProgress' },
+    });
+
+    console.info(remark.toString());
+  });
+
+program
+  .command('cancel <protocol> <id>')
+  .action(async (protocol: string, id: string) => {
+    await zok.init();
+
+    const remark = await zok.handleTextPlea({
+      protocol,
+      type: PleaType.ChangeStatus,
+      values: { id, status: 'cancelled' },
+    });
+
+    console.info(remark.toString());
+  });
+
+program
   .command('list <protocol>')
   .action(async (protocol: string) => {
     await zok.init();
