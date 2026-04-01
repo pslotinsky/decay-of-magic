@@ -39,4 +39,18 @@ program
     console.info(remark.toString());
   });
 
+program
+  .command('list <protocol>')
+  .action(async (protocol: string) => {
+    await zok.init();
+
+    const remark = await zok.handleTextPlea({
+      protocol,
+      type: PleaType.List,
+      values: {},
+    });
+
+    console.info(remark.toString());
+  });
+
 program.parse();

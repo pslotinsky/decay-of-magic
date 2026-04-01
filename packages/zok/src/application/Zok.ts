@@ -17,6 +17,7 @@ import {
 
 import {
   CreateDocumentDutyInstruction,
+  ListDocumentsDutyInstruction,
   UpdateDocumentRelationsDutyInstruction,
   UpdateReadmeDutyInstruction,
 } from './instructions';
@@ -68,13 +69,18 @@ export class Zok {
     plea: Typed<Plea, T>,
   ): Promise<PleaHandlingResult<T>> {
     const protocol = this.assistants.protocolClerk.getProtocol(plea.protocol);
+    let result;
 
     switch (plea.type) {
       case PleaType.Create:
-        return this.createDocument(plea, protocol) as any;
+        result = this.createDocument(plea, protocol);
+      case PleaType.List:
+        result = this.listDocuments(plea, protocol);
       default:
-        throw new Error(`Unknown plea type ${plea.type}`);
+        result = this.assistants.humorAdvisor.makeDummyRemark();
     }
+
+    return result as unknown as PleaHandlingResult<T>;
   }
 
   public async findDocuments(
@@ -90,6 +96,19 @@ export class Zok {
     for (const assistant of Object.values(this.assistants)) {
       await assistant.init();
     }
+  }
+
+  private async listDocuments(
+    plea: Plea,
+    protocol: DocumentProtocol,
+  ): Promise<Remark<Document[]>> {
+    const instruction = new ListDocumentsDutyInstruction({
+      plea,
+      protocol,
+      assistants: this.assistants,
+    });
+
+    return instruction.execute();
   }
 
   private async createDocument(

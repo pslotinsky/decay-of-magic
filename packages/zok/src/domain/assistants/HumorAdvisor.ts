@@ -18,6 +18,13 @@ export class HumorAdvisor extends Assistant {
       : new Remark(`No relations to update for document ${document.id}`);
   }
 
+  public remarkOnDocumentList(documents: Document[]): Remark<Document[]> {
+    const lines = documents.map((doc) => `- ${doc.id}: ${doc.title}`);
+    const text = ['*Sigh* As you wish:', ...lines].join('\n');
+
+    return new Remark(text, documents);
+  }
+
   public makeDummyRemark(): Remark {
     return new Remark('Dummy remark');
   }

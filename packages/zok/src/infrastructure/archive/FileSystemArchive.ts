@@ -4,12 +4,13 @@ import { resolve } from 'node:path';
 import { Archive, DocumentQueryObject } from '@zok/domain/tools';
 import { Document, DocumentProtocol } from '@zok/domain/entities';
 
-const { DOC_PATH = '../../docs' } = process.env;
+const { DOC_PATH } = process.env;
+const DEFAULT_DOC_PATH = resolve(__dirname, '../../../../../docs');
 
 export class FileSystemArchive extends Archive {
   private path: string;
 
-  constructor(path: string = DOC_PATH) {
+  constructor(path: string = DOC_PATH ?? DEFAULT_DOC_PATH) {
     super();
 
     this.path = path;
