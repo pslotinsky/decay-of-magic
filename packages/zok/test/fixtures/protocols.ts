@@ -11,7 +11,12 @@ export const roadmap = DocumentProtocol.init({
     status: {
       name: 'Status',
       type: FieldType.Enum,
-      values: ['In progress', 'Done', 'Cancelled'],
+      values: {
+        draft: 'Planned',
+        done: 'Done',
+        inProgress: 'In progress',
+        cancelled: 'Cancelled',
+      },
     },
     created: {
       name: 'Created',
@@ -31,7 +36,12 @@ export const milestone = DocumentProtocol.init({
     status: {
       name: 'Status',
       type: FieldType.Enum,
-      values: ['In progress', 'Done', 'Cancelled', 'Planned'],
+      values: {
+        draft: 'Planned',
+        done: 'Done',
+        inProgress: 'In progress',
+        cancelled: 'Cancelled',
+      },
     },
     parent: {
       name: 'Roadmap',
@@ -56,7 +66,12 @@ export const task = DocumentProtocol.init({
     status: {
       name: 'Status',
       type: FieldType.Enum,
-      values: ['In progress', 'Done', 'Cancelled'],
+      values: {
+        draft: 'Draft',
+        done: 'Done',
+        inProgress: 'In progress',
+        cancelled: 'Cancelled',
+      },
     },
     parent: {
       name: 'Milestone',

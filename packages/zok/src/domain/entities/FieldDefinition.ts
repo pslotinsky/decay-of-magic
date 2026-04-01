@@ -10,7 +10,7 @@ type BaseFieldDefinition = {
 
 type EnumFieldDefinition = BaseFieldDefinition & {
   type: FieldType.Enum;
-  values: string[];
+  values: Record<string, string>;
 };
 
 type LinkFieldDefinition = BaseFieldDefinition & {

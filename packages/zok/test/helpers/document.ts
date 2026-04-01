@@ -1,6 +1,50 @@
 import { Document, PleaType } from '@zok/domain/entities';
 import { Zok } from '@zok/application/Zok';
 
+export async function listDocuments(
+  zok: Zok,
+  protocol: string,
+): Promise<Document[]> {
+  const remark = await zok.handleTextPlea({
+    type: PleaType.List,
+    protocol,
+    values: {},
+  });
+
+  if (!remark.result) {
+    throw new Error('Remark suppose to contain documents as result');
+  }
+
+  return remark.result;
+}
+
+export async function changeDocumentStatus(
+  zok: Zok,
+  protocol: string,
+  id: string,
+  status: string,
+): Promise<Document> {
+  const remark = await zok.handleTextPlea({
+    type: PleaType.ChangeStatus,
+    protocol,
+    values: { id, status },
+  });
+
+  if (!remark.result) {
+    throw new Error('Remark suppose to contain document as result');
+  }
+
+  return remark.result;
+}
+
+export async function changeTaskStatus(
+  zok: Zok,
+  id: string,
+  status: string,
+): Promise<Document> {
+  return changeDocumentStatus(zok, 'task', id, status);
+}
+
 export async function createMilestone(
   zok: Zok,
   values: Record<string, unknown>,

@@ -98,12 +98,14 @@ export class DocumentProtocol {
 
   protected normalizeDocumentEnumField(
     value: unknown,
-    values: string[],
+    values: Record<string, string>,
   ): string {
-    if (!values.includes(value as string)) {
+    const displayValues = Object.values(values);
+
+    if (!displayValues.includes(value as string)) {
       throw new UnexpectedValueError(
         value,
-        `Enum value must be in ${JSON.stringify(values)}`,
+        `Enum value must be in ${JSON.stringify(displayValues)}`,
       );
     }
 
