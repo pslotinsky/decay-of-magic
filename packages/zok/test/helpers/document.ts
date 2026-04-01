@@ -1,50 +1,6 @@
 import { Document, PleaType } from '@zok/domain/entities';
 import { Zok } from '@zok/application/Zok';
 
-export async function listDocuments(
-  zok: Zok,
-  protocol: string,
-): Promise<Document[]> {
-  const remark = await zok.handleTextPlea({
-    type: PleaType.List,
-    protocol,
-    values: {},
-  });
-
-  if (!remark.result) {
-    throw new Error('Remark suppose to contain documents as result');
-  }
-
-  return remark.result;
-}
-
-export async function changeDocumentStatus(
-  zok: Zok,
-  protocol: string,
-  id: string,
-  status: string,
-): Promise<Document> {
-  const remark = await zok.handleTextPlea({
-    type: PleaType.ChangeStatus,
-    protocol,
-    values: { id, status },
-  });
-
-  if (!remark.result) {
-    throw new Error('Remark suppose to contain document as result');
-  }
-
-  return remark.result;
-}
-
-export async function changeTaskStatus(
-  zok: Zok,
-  id: string,
-  status: string,
-): Promise<Document> {
-  return changeDocumentStatus(zok, 'task', id, status);
-}
-
 export async function createMilestone(
   zok: Zok,
   values: Record<string, unknown>,
@@ -65,6 +21,39 @@ export async function findMilestone(zok: Zok, id: string): Promise<Document> {
 
 export async function findTask(zok: Zok, id: string): Promise<Document> {
   return findDocument(zok, 'task', id);
+}
+
+export async function renameTask(
+  zok: Zok,
+  id: string,
+  title: string,
+): Promise<Document> {
+  return renameDocument(zok, 'task', id, title);
+}
+
+export async function changeTaskStatus(
+  zok: Zok,
+  id: string,
+  status: string,
+): Promise<Document> {
+  return changeDocumentStatus(zok, 'task', id, status);
+}
+
+export async function listDocuments(
+  zok: Zok,
+  protocol: string,
+): Promise<Document[]> {
+  const remark = await zok.handleTextPlea({
+    type: PleaType.List,
+    protocol,
+    values: {},
+  });
+
+  if (!remark.result) {
+    throw new Error('Remark suppose to contain documents as result');
+  }
+
+  return remark.result;
 }
 
 export async function createDocument(
@@ -97,4 +86,42 @@ export async function findDocument(
   }
 
   return document;
+}
+
+export async function renameDocument(
+  zok: Zok,
+  protocol: string,
+  id: string,
+  title: string,
+): Promise<Document> {
+  const remark = await zok.handleTextPlea({
+    type: PleaType.Rename,
+    protocol,
+    values: { id, title },
+  });
+
+  if (!remark.result) {
+    throw new Error('Remark suppose to contain document as result');
+  }
+
+  return remark.result;
+}
+
+export async function changeDocumentStatus(
+  zok: Zok,
+  protocol: string,
+  id: string,
+  status: string,
+): Promise<Document> {
+  const remark = await zok.handleTextPlea({
+    type: PleaType.ChangeStatus,
+    protocol,
+    values: { id, status },
+  });
+
+  if (!remark.result) {
+    throw new Error('Remark suppose to contain document as result');
+  }
+
+  return remark.result;
 }
