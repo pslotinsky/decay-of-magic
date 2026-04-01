@@ -37,6 +37,14 @@ test.describe('Flow: Rename task', () => {
     assert.equal(updated.title, 'Renamed task');
   });
 
+  test('Updates task heading in content', async () => {
+    await renameTask(zok, task.id, 'Renamed task');
+
+    const updated = await findTask(zok, task.id);
+
+    assert.ok(updated.content.startsWith('# DOD-0001: Renamed task'));
+  });
+
   test('Updates parent milestone TOC with new title', async () => {
     await renameTask(zok, task.id, 'Renamed task');
 

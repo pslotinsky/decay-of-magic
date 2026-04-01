@@ -19,6 +19,7 @@ import {
   ChangeStatusDutyInstruction,
   CreateDocumentDutyInstruction,
   ListDocumentsDutyInstruction,
+  RenameDocumentDutyInstruction,
   UpdateDocumentRelationsDutyInstruction,
   UpdateReadmeDutyInstruction,
 } from './instructions';
@@ -76,6 +77,9 @@ export class Zok {
       case PleaType.Create:
         result = this.createDocument(plea, protocol);
         break;
+      case PleaType.Rename:
+        result = this.renameDocument(plea, protocol);
+        break;
       case PleaType.ChangeStatus:
         result = this.changeStatus(plea, protocol);
         break;
@@ -102,6 +106,24 @@ export class Zok {
     for (const assistant of Object.values(this.assistants)) {
       await assistant.init();
     }
+  }
+
+  private async renameDocument(
+    plea: Plea,
+    protocol: DocumentProtocol,
+  ): Promise<Remark<Document>> {
+    const instruction = new RenameDocumentDutyInstruction({
+      plea,
+      protocol,
+      assistants: this.assistants,
+    });
+
+    const remark = await instruction.execute();
+
+    await this.updateDocumentRelations(plea, remark.result);
+    await this.updateReadme(plea, remark.result);
+
+    return remark;
   }
 
   private async createDocument(

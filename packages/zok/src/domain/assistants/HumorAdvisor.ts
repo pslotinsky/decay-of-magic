@@ -25,6 +25,13 @@ export class HumorAdvisor extends Assistant {
     return new Remark(text, documents);
   }
 
+  public remarkOnDocumentRename(document: Document): Remark<Document> {
+    return new Remark(
+      `Document ${document.id} renamed to "${document.title}"`,
+      document,
+    );
+  }
+
   public remarkOnDocumentStatusChange(document: Document): Remark<Document> {
     const status = document.getField('status');
 

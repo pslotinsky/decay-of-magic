@@ -82,6 +82,20 @@ program
   });
 
 program
+  .command('rename <protocol> <id> <title>')
+  .action(async (protocol: string, id: string, title: string) => {
+    await zok.init();
+
+    const remark = await zok.handleTextPlea({
+      protocol,
+      type: PleaType.Rename,
+      values: { id, title },
+    });
+
+    console.info(remark.toString());
+  });
+
+program
   .command('list <protocol>')
   .action(async (protocol: string) => {
     await zok.init();
