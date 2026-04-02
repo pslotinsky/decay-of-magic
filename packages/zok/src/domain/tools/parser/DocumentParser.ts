@@ -2,6 +2,7 @@ import { compact } from 'lodash';
 
 import {
   Document,
+  DocumentLink,
   DocumentMetadata,
   DocumentProtocol,
   DocumentToc,
@@ -89,6 +90,9 @@ export class DocumentParser {
       switch (field.type) {
         case FieldType.Date:
           value = this.parseDateField(valueString);
+          break;
+        case FieldType.Link:
+          value = DocumentLink.parse(valueString);
           break;
         default:
           value = valueString;

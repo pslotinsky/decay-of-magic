@@ -2,7 +2,7 @@ import test, { beforeEach } from 'node:test';
 import assert from 'node:assert';
 
 import { Zok } from '@zok/application/Zok';
-import { Document } from '@zok/domain/entities';
+import { Document, DocumentLink } from '@zok/domain/entities';
 
 import { MockFactory } from 'test/mocks/MockFactory';
 import {
@@ -30,7 +30,7 @@ test.describe('Flow: Task creation', () => {
 
   test(`Task automatically binds to the active milestone`, async () => {
     const task = await createTask(zok, { title: 'Hello task' });
-    assert.equal(task.getField('parent'), inProgressMilestone.id);
+    assert.equal(task.getField<DocumentLink>('parent')?.id, inProgressMilestone.id);
 
     const milestone = await findMilestone(zok, inProgressMilestone.id);
     const { toc } = milestone.metadata;
@@ -58,7 +58,7 @@ test.describe('Flow: Task creation', () => {
       title: 'Hello task',
       parent: plannedMilestone.id,
     });
-    assert.equal(task.getField('parent'), plannedMilestone.id);
+    assert.equal(task.getField<DocumentLink>('parent')?.id, plannedMilestone.id);
 
     const milestone = await findMilestone(zok, plannedMilestone.id);
 

@@ -1,13 +1,13 @@
 import {
   Document,
+  DocumentLink,
   DocumentProtocol,
   DocumentToc,
   Remark,
 } from '@zok/domain/entities';
+import { DocumentTocRender } from '@zok/domain/tools';
 
 import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
-import { join } from 'node:path';
-import { DocumentTocRender } from '@zok/domain/tools';
 
 interface UpdateDocumentRelationsDutyInstructionParams
   extends DutyInstructionParams {
@@ -38,10 +38,10 @@ export class UpdateDocumentRelationsDutyInstruction extends DutyInstruction<
   ): Promise<Document | undefined> {
     let result = undefined;
 
-    const parentId = document.getField('parent');
+    const parentId = document.getField<DocumentLink>('parent')?.id;
     const parentProtocolId = document.protocol.parentProtocolId;
 
-    if (typeof parentId === 'string' && parentProtocolId) {
+    if (parentId && parentProtocolId) {
       const parentProtocol =
         this.assistants.protocolClerk.getProtocol(parentProtocolId);
 
@@ -60,7 +60,9 @@ export class UpdateDocumentRelationsDutyInstruction extends DutyInstruction<
       // TODO: parent: parent.id
     });
 
-    files = files.filter((file) => file.getField('parent') === parent.id);
+    files = files.filter(
+      (file) => file.getField<DocumentLink>('parent')?.id === parent.id,
+    );
 
     parent.metadata.toc = this.createToc(document.protocol, files);
     parent.content = this.replaceTocContent(
@@ -93,7 +95,7 @@ export class UpdateDocumentRelationsDutyInstruction extends DutyInstruction<
       protocolName: protocol.id,
       lines: documents.map((document) => ({
         id: document.id,
-        link: join('..', protocol.path, document.fileName),
+        link: document.relativePath,
         title: document.title,
         status: document.getField('status'),
       })),

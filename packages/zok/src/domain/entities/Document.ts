@@ -1,4 +1,6 @@
+import { join } from 'node:path';
 import { kebabCase } from 'lodash';
+
 import { DocumentProtocol } from './DocumentProtocol';
 
 type DocumentParams = {
@@ -60,6 +62,10 @@ export class Document {
 
   public get fileName(): string {
     return this.id ? `${this.id}_${kebabCase(this.title)}.md` : 'README.md';
+  }
+
+  public get relativePath(): string {
+    return join('..', this.protocol.path, this.fileName);
   }
 
   public getField<T = unknown>(name: string): T | undefined {

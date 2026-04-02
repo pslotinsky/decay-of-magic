@@ -1,15 +1,19 @@
+import { join } from 'node:path';
+
 import nunjucks from 'nunjucks';
 import prettier from 'prettier';
 import { format } from 'date-fns';
 
 import { Scribe } from '@zok/domain/assistants';
 import {
+  DocumentLink,
   DocumentMetadata,
   FieldDefinition,
   FieldType,
 } from '@zok/domain/entities';
 
-const { ZOK_TEMPLATES_PATH = './config/templates' } = process.env;
+const { ZOK_TEMPLATES_PATH = join(__dirname, '../../../config/templates') } =
+  process.env;
 
 export class NunjucksScribe extends Scribe {
   private readonly env: nunjucks.Environment;
@@ -55,6 +59,8 @@ export class NunjucksScribe extends Scribe {
     switch (field.type) {
       case FieldType.Date:
         return format(value as Date, 'yyyy-MM-dd');
+      case FieldType.Link:
+        return value ? (value as DocumentLink).toString() : '';
       default:
         return value ? String(value) : '';
     }

@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 
 import { Scribe } from '@zok/domain/assistants';
 import {
+  DocumentLink,
   DocumentMetadata,
   FieldDefinition,
   FieldType,
@@ -32,15 +33,13 @@ export class MockScribe extends Scribe {
       return '';
     }
 
-    const { type } = field;
-
-    switch (type) {
+    switch (field.type) {
       case FieldType.Date:
         return format(value as Date, 'yyyy-MM-dd');
       case FieldType.Enum:
         return value as string;
       case FieldType.Link:
-        return value as string; // TODO: Link on document
+        return value ? (value as DocumentLink).toString() : '';
       default:
         return value as string;
     }

@@ -1,4 +1,9 @@
-import { DocumentProtocol, Remark, Document } from '@zok/domain/entities';
+import {
+  Document,
+  DocumentLink,
+  DocumentProtocol,
+  Remark,
+} from '@zok/domain/entities';
 
 import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
 
@@ -31,41 +36,51 @@ export class CreateDocumentDutyInstruction extends DutyInstruction<
   private async enrichParams(
     params: CreateDocumentDutyInstructionParams,
   ): Promise<CreateDocumentDutyInstructionParams> {
-    const parentId = this.params.plea.getValue('parent')
-      ? this.params.plea.getValue('parent')
-      : await this.tryToFindParentDocument(params.protocol);
+    const parentDocument = await this.resolveParentDocument(params.protocol);
 
-    if (parentId) {
-      this.params.plea.setValue('parent', parentId);
+    if (parentDocument) {
+      this.params.plea.setValue('parent', DocumentLink.from(parentDocument));
     }
 
     return params;
   }
 
-  private async tryToFindParentDocument(
+  private async resolveParentDocument(
     protocol: DocumentProtocol,
-  ): Promise<string | undefined> {
-    let result = undefined;
+  ): Promise<Document | undefined> {
     const parentProtocolId = protocol.parentProtocolId;
+
+    let result: Document | undefined = undefined;
 
     if (parentProtocolId) {
       const parentProtocol =
         this.assistants.protocolClerk.getProtocol(parentProtocolId);
+      const parentId = this.params.plea.getValue<string>('parent');
 
-      const activeDocument = await this.getActiveDocument(parentProtocol);
-
-      result = activeDocument?.id;
+      result = parentId
+        ? await this.getDocumentById(parentProtocol, parentId)
+        : await this.getActiveDocument(parentProtocol);
     }
 
     return result;
   }
 
+  private async getDocumentById(
+    protocol: DocumentProtocol,
+    id: string,
+  ): Promise<Document | undefined> {
+    const [document] = await this.assistants.archiveKeeper.find({
+      protocol,
+      prefix: id,
+    });
+
+    return document;
+  }
+
   private async getActiveDocument(
     protocol: DocumentProtocol,
   ): Promise<Document | undefined> {
-    const documents = await this.assistants.archiveKeeper.find({
-      protocol,
-    });
+    const documents = await this.assistants.archiveKeeper.find({ protocol });
 
     return documents.find(
       (document) => document.getField('status') === 'In progress',

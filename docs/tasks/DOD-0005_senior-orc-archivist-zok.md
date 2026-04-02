@@ -21,7 +21,7 @@
   - [x] List entities: `zok list tasks` // For now without filter and pagination
   - [x] Auto bind active milestones and roadmaps
   - [ ] Change attributes `zok update task 'Milestone:Milestone-002'`
-  - [ ] Link fields render as markdown links `[Title](path/to/file.md)` instead of raw ID
+  - [x] Link fields render as markdown links `[Title](path/to/file.md)` instead of raw ID
 - [x] Entities must be configured from config files
   - [x] Directory (`docs/adr`, `docs/devlogs`, ...) // TODO: Think about a scope (README.md + docs)?
   - [x] Name (`task` / `tasks`, `idea` / `ideas`, ...)
