@@ -1,5 +1,4 @@
 import {
-  Binder,
   ArchiveKeeper,
   HumorAdvisor,
   PleaFormalist,
@@ -10,7 +9,6 @@ import {
 export type ZokAssistants = {
   pleaFormalist: PleaFormalist;
   scribe: Scribe;
-  binder: Binder;
   humorAdvisor: HumorAdvisor;
   protocolClerk: ProtocolClerk;
   archiveKeeper: ArchiveKeeper;

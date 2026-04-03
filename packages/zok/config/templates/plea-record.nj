@@ -1,0 +1,14 @@
+--- PLEA --------------------------------------------
+
+ID:         {{ plea.id }}
+Protocol:   {{ plea.protocol }}
+Type:       {{ plea.type }}
+Submitted:  {{ plea.creationTime | time }}
+{% if plea.reports.length > 0 %}
+--- LOGS --------------------------------------------
+{% for report in plea.reports %}
+{{ report.time | time }} {{ report.note }}
+- {{ report.reporter.title }} {{ report.reporter.dossier.name }} -
+{% endfor %}
+{% endif -%}
+-----------------------------------------------------

@@ -1,4 +1,10 @@
+import { Dossier } from './Dossier';
 import { DocumentProtocol } from './DocumentProtocol';
+
+export type Official = {
+  title: string;
+  dossier: Dossier;
+};
 
 export enum PleaType {
   Create = 'Create',
@@ -9,6 +15,12 @@ export enum PleaType {
 }
 
 export type PleaDraft = Partial<PleaForm>;
+
+export type PleaReport = {
+  time: Date;
+  reporter: Official;
+  note: string;
+};
 
 type PleaForm = {
   type: PleaType;
@@ -30,6 +42,7 @@ export class Plea {
   public readonly id: string;
 
   protected readonly form: PleaForm;
+  protected readonly reports: PleaReport[] = [];
 
   protected constructor(id: string, form: PleaForm) {
     this.id = id;
@@ -58,5 +71,9 @@ export class Plea {
 
   public setValue<T = unknown>(key: string, value: T): void {
     this.form.values[key] = value;
+  }
+
+  public addReport(reporter: Official, note: string): void {
+    this.reports.push({ time: new Date(), reporter, note });
   }
 }

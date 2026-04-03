@@ -9,6 +9,10 @@ import {
 } from '@zok/infrastructure/assistants';
 import { PleaType } from '@zok/domain/entities';
 
+type CommandOptions = {
+  record?: boolean;
+};
+
 const zok = Zok.revealItself({
   pleaFormalist: new NanoPleaFormalist(),
   protocolClerk: new YamlProtocolClerk(),
@@ -27,86 +31,118 @@ program.name('zok').description(DESCRIPTION);
 
 program
   .command('create <protocol> <title>')
-  .action(async (protocol: string, title: string) => {
+  .option('-r, --record', 'show official activity record')
+  .action(async (protocol: string, title: string, options: CommandOptions) => {
     await zok.init();
 
-    const remark = await zok.handleTextPlea({
+    const result = await zok.handleTextPlea({
       protocol,
       type: PleaType.Create,
       values: { title },
     });
 
-    console.info(remark.toString());
+    await zok.announce(result, options.record);
   });
 
 program
   .command('close <protocol> <id>')
-  .action(async (protocol: string, id: string) => {
+  .option('-r, --record', 'show official activity record')
+  .action(async (protocol: string, id: string, options: CommandOptions) => {
     await zok.init();
 
-    const remark = await zok.handleTextPlea({
+    const result = await zok.handleTextPlea({
       protocol,
       type: PleaType.ChangeStatus,
       values: { id, status: 'done' },
     });
 
-    console.info(remark.toString());
+    await zok.announce(result, options.record);
   });
 
 program
   .command('reopen <protocol> <id>')
-  .action(async (protocol: string, id: string) => {
+  .option('-r, --record', 'show official activity record')
+  .action(async (protocol: string, id: string, options: CommandOptions) => {
     await zok.init();
 
-    const remark = await zok.handleTextPlea({
+    const result = await zok.handleTextPlea({
       protocol,
       type: PleaType.ChangeStatus,
       values: { id, status: 'inProgress' },
     });
 
-    console.info(remark.toString());
+    await zok.announce(result, options.record);
   });
 
 program
   .command('cancel <protocol> <id>')
-  .action(async (protocol: string, id: string) => {
+  .option('-r, --record', 'show official activity record')
+  .action(async (protocol: string, id: string, options: CommandOptions) => {
     await zok.init();
 
-    const remark = await zok.handleTextPlea({
+    const result = await zok.handleTextPlea({
       protocol,
       type: PleaType.ChangeStatus,
       values: { id, status: 'cancelled' },
     });
 
-    console.info(remark.toString());
+    await zok.announce(result, options.record);
   });
 
 program
   .command('rename <protocol> <id> <title>')
-  .action(async (protocol: string, id: string, title: string) => {
-    await zok.init();
+  .option('-r, --record', 'show official activity record')
+  .action(
+    async (
+      protocol: string,
+      id: string,
+      title: string,
+      options: CommandOptions,
+    ) => {
+      await zok.init();
 
-    const remark = await zok.handleTextPlea({
-      protocol,
-      type: PleaType.Rename,
-      values: { id, title },
-    });
+      const result = await zok.handleTextPlea({
+        protocol,
+        type: PleaType.Rename,
+        values: { id, title },
+      });
 
-    console.info(remark.toString());
-  });
+      await zok.announce(result, options.record);
+    },
+  );
 
 program
   .command('list <protocol>')
-  .action(async (protocol: string) => {
+  .option('-r, --record', 'show official activity record')
+  .action(async (protocol: string, options: CommandOptions) => {
     await zok.init();
 
-    const remark = await zok.handleTextPlea({
+    const result = await zok.handleTextPlea({
       protocol,
       type: PleaType.List,
       values: {},
     });
 
-    console.info(remark.toString());
+    await zok.announce(result, options.record);
   });
+
+program.command('office').action(() => {
+  const officials = [zok, ...Object.values(zok.assistants)];
+
+  console.info('ZOK OFFICE');
+  console.info('════════════════════════════════════════');
+  console.info();
+
+  for (const official of officials) {
+    const { dossier } = official;
+
+    console.info(`${dossier.name} — ${official.title}`);
+    console.info(
+      `  ${dossier.race} • ${dossier.age} years • ${dossier.gender}`,
+    );
+    console.info(`  ${dossier.bio}`);
+    console.info();
+  }
+});
 
 program.parse();

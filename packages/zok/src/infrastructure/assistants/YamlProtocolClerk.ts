@@ -3,8 +3,8 @@ import path from 'node:path';
 
 import yaml from 'yaml';
 
+import { Dossier, DocumentProtocol, PleaType } from '@zok/domain/entities';
 import { ProtocolClerk } from '@zok/domain/assistants';
-import { DocumentProtocol, PleaType } from '@zok/domain/entities';
 
 import { Protocols } from '../types/config';
 
@@ -15,6 +15,14 @@ const DEFAULT_CONFIG_PATH = path.resolve(
 );
 
 export class YamlProtocolClerk extends ProtocolClerk {
+  public readonly dossier = new Dossier({
+    name: 'Valen',
+    age: 184,
+    race: 'Vampire',
+    gender: 'male',
+    bio: 'Emotionless, precise, perfectly aligned with procedure. Capable of anything within protocol. Incapable of anything outside it. Has been known to wait indefinitely for proper authorization.',
+  });
+
   public override async init(): Promise<void> {
     const protocols = await this.loadProtocols();
 

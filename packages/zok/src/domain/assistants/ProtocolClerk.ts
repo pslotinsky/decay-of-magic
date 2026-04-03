@@ -3,6 +3,8 @@ import { NotFoundError } from '../errors';
 import { Assistant } from './Assistant';
 
 export abstract class ProtocolClerk extends Assistant {
+  public readonly title = 'Protocol Clerk';
+
   protected protocols: Map<string, DocumentProtocol> = new Map();
 
   public getProtocol(id: string): DocumentProtocol {

@@ -1,3 +1,4 @@
+export * from './Dossier';
 export * from './Document';
 export * from './DocumentLink';
 export * from './DocumentProtocol';

@@ -4,18 +4,28 @@ import nunjucks from 'nunjucks';
 import prettier from 'prettier';
 import { format } from 'date-fns';
 
-import { Scribe } from '@zok/domain/assistants';
 import {
+  Dossier,
   DocumentLink,
   DocumentMetadata,
   FieldDefinition,
   FieldType,
+  Plea,
 } from '@zok/domain/entities';
+import { Scribe } from '@zok/domain/assistants';
 
 const { ZOK_TEMPLATES_PATH = join(__dirname, '../../../config/templates') } =
   process.env;
 
 export class NunjucksScribe extends Scribe {
+  public readonly dossier = new Dossier({
+    name: 'Mira',
+    age: 26,
+    race: 'Human',
+    gender: 'female',
+    bio: 'Firmly convinced she is destined to become the greatest author in history. Temporarily tolerates clerical work while awaiting recognition of her genius.',
+  });
+
   private readonly env: nunjucks.Environment;
 
   constructor() {
@@ -24,6 +34,12 @@ export class NunjucksScribe extends Scribe {
     this.env = nunjucks.configure(ZOK_TEMPLATES_PATH, {
       autoescape: false,
     });
+
+    this.env.addFilter('time', (date: Date) => date.toTimeString().slice(0, 8));
+  }
+
+  public async renderRecord(plea: Plea): Promise<string> {
+    return this.env.render('plea-record.nj', { plea }).trim();
   }
 
   protected async fillDocumentContent(

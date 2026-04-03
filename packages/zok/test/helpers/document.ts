@@ -51,7 +51,7 @@ export async function listDocuments(
   zok: Zok,
   protocol: string,
 ): Promise<Document[]> {
-  const remark = await zok.handleTextPlea({
+  const { remark } = await zok.handleTextPlea({
     type: PleaType.List,
     protocol,
     values: {},
@@ -69,7 +69,7 @@ export async function createDocument(
   protocol: string,
   values: Record<string, unknown>,
 ): Promise<Document> {
-  const remark = await zok.handleTextPlea({
+  const { remark } = await zok.handleTextPlea({
     type: PleaType.Create,
     protocol,
     values,
@@ -102,7 +102,7 @@ export async function renameDocument(
   id: string,
   title: string,
 ): Promise<Document> {
-  const remark = await zok.handleTextPlea({
+  const { remark } = await zok.handleTextPlea({
     type: PleaType.Rename,
     protocol,
     values: { id, title },
@@ -121,7 +121,7 @@ export async function changeDocumentStatus(
   id: string,
   status: string,
 ): Promise<Document> {
-  const remark = await zok.handleTextPlea({
+  const { remark } = await zok.handleTextPlea({
     type: PleaType.ChangeStatus,
     protocol,
     values: { id, status },

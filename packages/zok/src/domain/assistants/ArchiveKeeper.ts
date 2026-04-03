@@ -3,6 +3,8 @@ import { Document, DocumentProtocol } from '../entities';
 import { Assistant } from './Assistant';
 
 export abstract class ArchiveKeeper extends Assistant {
+  public readonly title = 'Archive Keeper';
+
   protected readonly archive: Archive;
 
   constructor() {
@@ -15,8 +17,11 @@ export abstract class ArchiveKeeper extends Assistant {
     protocol: DocumentProtocol,
   ): Promise<string> {
     const serialNumber = await this.getSerialNumber(protocol);
+    const id = this.formatDocumentNumber(serialNumber, protocol);
 
-    return this.formatDocumentNumber(serialNumber, protocol);
+    this.report(`Reference number ${id} reserved.`);
+
+    return id;
   }
 
   public async find(options: DocumentQueryObject): Promise<Document[]> {
@@ -24,7 +29,11 @@ export abstract class ArchiveKeeper extends Assistant {
   }
 
   public async save(document: Document): Promise<Document> {
-    return this.archive.save(document);
+    const result = await this.archive.save(document);
+
+    this.report(`Document ${document.id || document.fileName} filed.`);
+
+    return result;
   }
 
   public async replace(

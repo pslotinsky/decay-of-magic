@@ -58,10 +58,7 @@ export class UpdateReadmeDutyInstruction extends DutyInstruction<UpdateReadmeDut
 
     await this.assistants.archiveKeeper.save(readme);
 
-    return this.assistants.humorAdvisor.remarkOnDocumentRelationsUpdate(
-      readme,
-      document,
-    );
+    return this.assistants.humorAdvisor.remarkOnReadmeUpdate(readme, document);
   }
 
   private async getDocuments(protocol: DocumentProtocol): Promise<Document[]> {
