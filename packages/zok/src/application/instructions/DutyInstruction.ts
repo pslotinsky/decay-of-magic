@@ -17,6 +17,10 @@ export abstract class DutyInstruction<
     this.params = params;
   }
 
+  public get plea(): Plea {
+    return this.params.plea;
+  }
+
   public get assistants(): ZokAssistants {
     return this.params.assistants;
   }

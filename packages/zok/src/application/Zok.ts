@@ -7,7 +7,6 @@ import {
   Scribe,
 } from '@zok/domain/assistants';
 import {
-  DocumentProtocol,
   Remark,
   Plea,
   PleaDraft,
@@ -18,6 +17,8 @@ import {
 import {
   ChangeStatusDutyInstruction,
   CreateDocumentDutyInstruction,
+  DutyInstruction,
+  DutyInstructionParams,
   ListDocumentsDutyInstruction,
   RenameDocumentDutyInstruction,
   UpdateDocumentRelationsDutyInstruction,
@@ -70,21 +71,31 @@ export class Zok {
   public async handlePlea<T extends PleaType>(
     plea: Typed<Plea, T>,
   ): Promise<PleaHandlingResult<T>> {
-    const protocol = this.assistants.protocolClerk.getProtocol(plea.protocol);
     let result;
+
+    const protocol = this.assistants.protocolClerk.getProtocol(plea.protocol);
+    const assistants = this.assistants;
 
     switch (plea.type) {
       case PleaType.Create:
-        result = this.createDocument(plea, protocol);
+        result = this.executeCommand(
+          new CreateDocumentDutyInstruction({ plea, protocol, assistants }),
+        );
         break;
       case PleaType.Rename:
-        result = this.renameDocument(plea, protocol);
+        result = this.executeCommand(
+          new RenameDocumentDutyInstruction({ plea, protocol, assistants }),
+        );
         break;
       case PleaType.ChangeStatus:
-        result = this.changeStatus(plea, protocol);
+        result = this.executeCommand(
+          new ChangeStatusDutyInstruction({ plea, protocol, assistants }),
+        );
         break;
       case PleaType.List:
-        result = this.listDocuments(plea, protocol);
+        result = this.executeQuery(
+          new ListDocumentsDutyInstruction({ plea, protocol, assistants }),
+        );
         break;
       default:
         result = this.assistants.humorAdvisor.makeDummyRemark();
@@ -108,71 +119,21 @@ export class Zok {
     }
   }
 
-  private async renameDocument(
-    plea: Plea,
-    protocol: DocumentProtocol,
+  private async executeCommand(
+    instruction: DutyInstruction<DutyInstructionParams, Document>,
   ): Promise<Remark<Document>> {
-    const instruction = new RenameDocumentDutyInstruction({
-      plea,
-      protocol,
-      assistants: this.assistants,
-    });
-
     const remark = await instruction.execute();
 
-    await this.updateDocumentRelations(plea, remark.result);
-    await this.updateReadme(plea, remark.result);
+    await this.updateDocumentRelations(instruction.plea, remark.result);
+    await this.updateReadme(instruction.plea, remark.result);
 
     return remark;
   }
 
-  private async createDocument(
-    plea: Plea,
-    protocol: DocumentProtocol,
-  ): Promise<Remark<Document>> {
-    const createDocumentDutyInstruction = new CreateDocumentDutyInstruction({
-      plea,
-      protocol,
-      assistants: this.assistants,
-    });
-
-    const remark = await createDocumentDutyInstruction.execute();
-
-    await this.updateDocumentRelations(plea, remark.result);
-    await this.updateReadme(plea, remark.result);
-
-    return remark;
-  }
-
-  private async listDocuments(
-    plea: Plea,
-    protocol: DocumentProtocol,
-  ): Promise<Remark<Document[]>> {
-    const instruction = new ListDocumentsDutyInstruction({
-      plea,
-      protocol,
-      assistants: this.assistants,
-    });
-
+  private executeQuery<T>(
+    instruction: DutyInstruction<DutyInstructionParams, T>,
+  ): Promise<Remark<T>> {
     return instruction.execute();
-  }
-
-  private async changeStatus(
-    plea: Plea,
-    protocol: DocumentProtocol,
-  ): Promise<Remark<Document>> {
-    const instruction = new ChangeStatusDutyInstruction({
-      plea,
-      protocol,
-      assistants: this.assistants,
-    });
-
-    const remark = await instruction.execute();
-
-    await this.updateDocumentRelations(plea, remark.result);
-    await this.updateReadme(plea, remark.result);
-
-    return remark;
   }
 
   private async updateDocumentRelations(

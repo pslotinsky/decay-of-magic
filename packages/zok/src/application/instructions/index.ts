@@ -1,4 +1,4 @@
-export { DutyInstruction } from './DutyInstruction';
+export { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
 export { ChangeStatusDutyInstruction } from './ChangeStatusDutyInstruction';
 export { RenameDocumentDutyInstruction } from './RenameDocumentDutyInstruction';
 export { CreateDocumentDutyInstruction } from './CreateDocumentDutyInstruction';
