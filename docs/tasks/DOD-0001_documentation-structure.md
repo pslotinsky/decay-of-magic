@@ -3,7 +3,7 @@
 | Field     | Value                                                                                              |
 | --------- | -------------------------------------------------------------------------------------------------- |
 | Status    | Done                                                                                               |
-| Milestone | [Infrastructure and documentation](../milestones/Milestone-001_infrastucture-and-documentation.md) |
+| Milestone | [Infrastructure and documentation](../milestones/Milestone-001_infrastructure-and-documentation.md) |
 | Created   | 2025-06-21                                                                                         |
 
 ## Description

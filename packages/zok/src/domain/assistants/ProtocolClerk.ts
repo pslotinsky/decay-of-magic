@@ -23,6 +23,14 @@ export abstract class ProtocolClerk extends Assistant {
     return this.protocols.has(id);
   }
 
+  public getChildProtocols(parentProtocolId: string): DocumentProtocol[] {
+    const protocols = Array.from(this.protocols.values());
+
+    return protocols.filter(
+      (protocol) => protocol.parentProtocolId === parentProtocolId,
+    );
+  }
+
   protected findByAlias(alias: string): DocumentProtocol | undefined {
     const protocols = Array.from(this.protocols.values());
 

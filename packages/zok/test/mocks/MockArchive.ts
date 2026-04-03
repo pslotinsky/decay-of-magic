@@ -31,4 +31,16 @@ export class MockArchive extends Archive {
 
     return document;
   }
+
+  public async replace(
+    query: DocumentQueryObject,
+    oldText: string,
+    newText: string,
+  ): Promise<void> {
+    const documents = await this.find(query);
+
+    for (const document of documents) {
+      document.content = document.content.replaceAll(oldText, newText);
+    }
+  }
 }

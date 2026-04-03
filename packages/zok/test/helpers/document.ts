@@ -23,6 +23,14 @@ export async function findTask(zok: Zok, id: string): Promise<Document> {
   return findDocument(zok, 'task', id);
 }
 
+export async function renameMilestone(
+  zok: Zok,
+  id: string,
+  title: string,
+): Promise<Document> {
+  return renameDocument(zok, 'milestone', id, title);
+}
+
 export async function renameTask(
   zok: Zok,
   id: string,

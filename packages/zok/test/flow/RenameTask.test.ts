@@ -11,6 +11,7 @@ import {
   createTask,
   findMilestone,
   findTask,
+  renameMilestone,
   renameTask,
 } from 'test/helpers/document';
 
@@ -58,6 +59,18 @@ test.describe('Flow: Rename task', () => {
           '<!-- TOC.END -->',
           '',
         ].join('\n'),
+      ),
+    );
+  });
+
+  test('Renaming a milestone updates parent link in tasks', async () => {
+    await renameMilestone(zok, milestone.id, 'Renamed milestone');
+
+    const updated = await findTask(zok, task.id);
+
+    assert.ok(
+      updated.content.includes(
+        '[Renamed milestone](../milestones/Milestone-001_renamed-milestone.md)',
       ),
     );
   });

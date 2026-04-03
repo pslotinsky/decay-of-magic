@@ -27,6 +27,14 @@ export abstract class ArchiveKeeper extends Assistant {
     return this.archive.save(document);
   }
 
+  public async replace(
+    query: DocumentQueryObject,
+    oldText: string,
+    newText: string,
+  ): Promise<void> {
+    return this.archive.replace(query, oldText, newText);
+  }
+
   protected async getSerialNumber(protocol: DocumentProtocol): Promise<number> {
     const count = await this.archive.count({
       protocol: protocol,
