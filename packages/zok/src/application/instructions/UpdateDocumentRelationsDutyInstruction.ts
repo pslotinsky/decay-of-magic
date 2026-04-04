@@ -45,7 +45,7 @@ export class UpdateDocumentRelationsDutyInstruction extends DutyInstruction<
       const parentProtocol =
         this.assistants.protocolClerk.getProtocol(parentProtocolId);
 
-      result = await this.getDocumentById(parentProtocol, parentId);
+      result = await this.assistants.archiveKeeper.findById(parentProtocol, parentId);
     }
 
     return result;
@@ -73,18 +73,6 @@ export class UpdateDocumentRelationsDutyInstruction extends DutyInstruction<
     await this.assistants.archiveKeeper.save(parent);
 
     return parent;
-  }
-
-  private async getDocumentById(
-    protocol: DocumentProtocol,
-    id: string,
-  ): Promise<Document | undefined> {
-    const [document] = await this.assistants.archiveKeeper.find({
-      protocol,
-      prefix: id,
-    });
-
-    return document;
   }
 
   private createToc(

@@ -17,7 +17,7 @@ export class RenameDocumentDutyInstruction extends DutyInstruction<
   Document
 > {
   public async execute(): Promise<Remark<Document>> {
-    const document = await this.getDocument();
+    const document = await this.getDocument(this.params.protocol);
     const title = this.params.plea.getValue<string>('title', document.title);
     const oldLink = DocumentLink.from(document);
 
@@ -27,21 +27,6 @@ export class RenameDocumentDutyInstruction extends DutyInstruction<
     await this.updateChildLinks(document, oldLink);
 
     return this.assistants.humorAdvisor.remarkOnDocumentRename(document);
-  }
-
-  private async getDocument(): Promise<Document> {
-    const { protocol, plea } = this.params;
-    const id = plea.getValue<string>('id');
-    const [document] = await this.assistants.archiveKeeper.find({
-      protocol,
-      prefix: id,
-    });
-
-    if (!document) {
-      throw new NotFoundError('Document', { id, protocol: protocol.id });
-    }
-
-    return document;
   }
 
   private rename(document: Document, newTitle: string): void {

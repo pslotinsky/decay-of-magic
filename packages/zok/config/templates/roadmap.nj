@@ -5,6 +5,6 @@
 
 ## Milestones
 
-<!-- <zok.list type=milestone roadmap={{ document.id }}> -->
-<!-- </zok.list> -->
+<!-- TOC.START: milestone -->
+<!-- TOC.END -->
 {% endblock %}

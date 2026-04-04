@@ -59,6 +59,12 @@ export class HumorAdvisor extends Assistant {
     return remark;
   }
 
+  public remarkOnDocumentMove(document: Document): Remark<Document> {
+    const remark = new Remark(`Document ${document.id} moved.`, document);
+    this.report(`Remark drafted: ${remark.text}.`);
+    return remark;
+  }
+
   public remarkOnDocumentStatusChange(document: Document): Remark<Document> {
     const status = document.getField('status');
     const remark = new Remark(

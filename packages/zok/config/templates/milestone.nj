@@ -3,6 +3,6 @@
 {% block content %}
 ## Tasks
 
-<!-- <zok.list type=task milestone={{ document.id }}> -->
-<!-- </zok.list> -->
+<!-- TOC.START: task -->
+<!-- TOC.END -->
 {% endblock %}

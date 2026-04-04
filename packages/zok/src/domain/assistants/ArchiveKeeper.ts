@@ -1,5 +1,6 @@
 import { Archive, DocumentQueryObject } from '../tools';
 import { Document, DocumentProtocol } from '../entities';
+import { NotFoundError } from '../errors';
 import { Assistant } from './Assistant';
 
 export abstract class ArchiveKeeper extends Assistant {
@@ -26,6 +27,28 @@ export abstract class ArchiveKeeper extends Assistant {
 
   public async find(options: DocumentQueryObject): Promise<Document[]> {
     return this.archive.find(options);
+  }
+
+  public async findById(
+    protocol: DocumentProtocol,
+    id: string | undefined,
+  ): Promise<Document | undefined> {
+    const [document] = await this.archive.find({ protocol, prefix: id });
+
+    return document;
+  }
+
+  public async findByIdOrFail(
+    protocol: DocumentProtocol,
+    id: string | undefined,
+  ): Promise<Document> {
+    const document = await this.findById(protocol, id);
+
+    if (!document) {
+      throw new NotFoundError('Document', { id, protocol: protocol.id });
+    }
+
+    return document;
   }
 
   public async save(document: Document): Promise<Document> {

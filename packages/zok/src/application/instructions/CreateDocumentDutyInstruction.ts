@@ -58,23 +58,11 @@ export class CreateDocumentDutyInstruction extends DutyInstruction<
       const parentId = this.params.plea.getValue<string>('parent');
 
       result = parentId
-        ? await this.getDocumentById(parentProtocol, parentId)
+        ? await this.assistants.archiveKeeper.findById(parentProtocol, parentId)
         : await this.getActiveDocument(parentProtocol);
     }
 
     return result;
-  }
-
-  private async getDocumentById(
-    protocol: DocumentProtocol,
-    id: string,
-  ): Promise<Document | undefined> {
-    const [document] = await this.assistants.archiveKeeper.find({
-      protocol,
-      prefix: id,
-    });
-
-    return document;
   }
 
   private async getActiveDocument(

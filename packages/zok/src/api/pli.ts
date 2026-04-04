@@ -127,6 +127,28 @@ program
   });
 
 program
+  .command('move <protocol> <id> <parent>')
+  .option('-r, --record', 'show official activity record')
+  .action(
+    async (
+      protocol: string,
+      id: string,
+      parent: string,
+      options: CommandOptions,
+    ) => {
+      await zok.init();
+
+      const result = await zok.handleTextPlea({
+        protocol,
+        type: PleaType.Move,
+        values: { id, parent },
+      });
+
+      await zok.announce(result, options.record);
+    },
+  );
+
+program
   .command('list <protocol>')
   .option('-r, --record', 'show official activity record')
   .action(async (protocol: string, options: CommandOptions) => {

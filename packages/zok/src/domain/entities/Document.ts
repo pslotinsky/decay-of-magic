@@ -72,6 +72,16 @@ export class Document {
     return this.metadata.fields[name] as T | undefined;
   }
 
+  public setField<T = unknown>(key: string, value: T): void {
+    const fieldName = this.protocol.getField(key).name;
+
+    this.metadata.fields[key] = value;
+    this.content = this.content.replace(
+      new RegExp(`(\\| ${fieldName}\\s*\\|)[^|]*(\\|)`),
+      `$1 ${String(value)} $2`,
+    );
+  }
+
   public followsProtocol(protocolId: string): boolean {
     const { protocol } = this.metadata;
 

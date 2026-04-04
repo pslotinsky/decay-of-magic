@@ -1,4 +1,4 @@
-import { Remark, Plea } from '@zok/domain/entities';
+import { Document, DocumentProtocol, Remark, Plea } from '@zok/domain/entities';
 
 import { ZokAssistants } from '../ZokAssistants';
 
@@ -26,4 +26,10 @@ export abstract class DutyInstruction<
   }
 
   public abstract execute(): Promise<Remark<TResult>>;
+
+  protected async getDocument(protocol: DocumentProtocol): Promise<Document> {
+    const id = this.params.plea.getValue<string>('id');
+
+    return this.assistants.archiveKeeper.findByIdOrFail(protocol, id);
+  }
 }

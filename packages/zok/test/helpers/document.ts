@@ -51,6 +51,24 @@ export async function changeTaskStatus(
   return changeDocumentStatus(zok, 'task', id, status);
 }
 
+export async function moveTask(
+  zok: Zok,
+  id: string,
+  parent: string,
+): Promise<Document> {
+  const { remark } = await zok.handleTextPlea({
+    type: PleaType.Move,
+    protocol: 'task',
+    values: { id, parent },
+  });
+
+  if (!remark.result) {
+    throw new Error('Remark suppose to contain document as result');
+  }
+
+  return remark.result;
+}
+
 export async function listDocuments(
   zok: Zok,
   protocol: string,
