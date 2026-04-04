@@ -60,7 +60,7 @@ test.describe('Flow: Task status change', () => {
       updatedMilestone.content.endsWith(
         [
           '<!-- TOC.START: task -->',
-          '~~- [ ] [DOD-0001: Hello task](../tasks/DOD-0001_hello-task.md)~~',
+          '- [ ] ~~[DOD-0001: Hello task](../tasks/DOD-0001_hello-task.md)~~',
           '<!-- TOC.END -->',
           '',
         ].join('\n'),

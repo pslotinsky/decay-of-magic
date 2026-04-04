@@ -90,9 +90,8 @@ export class Zok {
   ): Promise<ZokResult<T>> {
     return pleaContext.run(plea, async () => {
       const protocol = this.assistants.protocolClerk.getProtocol(plea.protocol);
-
       const assistants = this.assistants;
-      let remark;
+      let remark: Remark;
 
       switch (plea.type) {
         case PleaType.Create:
@@ -112,11 +111,7 @@ export class Zok {
           break;
         case PleaType.Move:
           remark = await this.executeCommand(
-            new MoveDocumentDutyInstruction({
-              plea,
-              protocol,
-              assistants,
-            }),
+            new MoveDocumentDutyInstruction({ plea, protocol, assistants }),
           );
           break;
         case PleaType.Delete:

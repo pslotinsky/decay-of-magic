@@ -41,7 +41,7 @@ export class DocumentTocRender {
       case DocumentStatus.Done:
         return `- [x] ${text}`;
       case DocumentStatus.Cancelled:
-        return `~~- [ ] ${text}~~`;
+        return `- [ ] ~~${text}~~`;
       default:
         return `- ${text}`;
     }

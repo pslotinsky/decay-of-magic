@@ -1,10 +1,10 @@
 # DOD-0005: Senior orc archivist Zok
 
-| Field     | Value                                                                                              |
-| --------- | -------------------------------------------------------------------------------------------------- |
-| Status    | In progress                                                                                        |
+| Field     | Value                                                                                               |
+| --------- | --------------------------------------------------------------------------------------------------- |
+| Status    | Done                                                                                                |
 | Milestone | [Infrastructure and documentation](../milestones/Milestone-001_infrastructure-and-documentation.md) |
-| Created   | 2025-06-21                                                                                         |
+| Created   | 2025-06-21                                                                                          |
 
 ## Description
 
@@ -18,9 +18,11 @@
   - [x] Create new entity: `zok create task "Senior orc archivist Zok"` // For now without attributes
   - [x] Change entity status: `zok close task DOD-0005` (also `reopen`, `cancel`) // Now list of commands is fixed. In future it may be customized
   - [x] Change entity name: `zok rename task DOD-0005 "Zok MVP"`
+  - [x] Delete entity: `zok delete task DOD-0005`
+  - [x] Move entity under a different parent: `zok move task DOD-0005 Milestone-002`
   - [x] List entities: `zok list tasks` // For now without filter and pagination
   - [x] Auto bind active milestones and roadmaps
-  - [ ] Change attributes `zok update task 'Milestone:Milestone-002'`
+  - [ ] ~~Change attributes `zok update task 'Milestone:Milestone-002'`~~
   - [x] Link fields render as markdown links `[Title](path/to/file.md)` instead of raw ID
 - [x] Entities must be configured from config files
   - [x] Directory (`docs/adr`, `docs/devlogs`, ...) // TODO: Think about a scope (README.md + docs)?
@@ -36,5 +38,11 @@
   - [x] Zok can generate `table of content` for entities and embed it into `README`
   - [x] If entity has status, it will be rendered differently in `table of content`
   - [x] If entity status changed, it will change appearance in `table of content` and relations
+- [x] CLI experience
+  - [x] Known errors handled gracefully — returned as a remark instead of crashing
+  - [x] `--record` flag shows the full activity log for a plea
+  - [x] `zok office` displays all staff members and their profiles
+- [x] Personality
+  - [x] `HumorAdvisor` (Selene) produces randomized in-character remarks for every operation
 
 Think about auto generation from package.json and \*.ts comments
