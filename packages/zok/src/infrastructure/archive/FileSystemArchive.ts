@@ -52,6 +52,14 @@ export class FileSystemArchive extends Archive {
     return document;
   }
 
+  public async delete(query: DocumentQueryObject): Promise<void> {
+    const files = await this.findFiles(query);
+
+    await Promise.all(
+      files.map((name) => this.deleteFile(query.protocol, name)),
+    );
+  }
+
   public async replace(
     query: DocumentQueryObject,
     oldText: string,

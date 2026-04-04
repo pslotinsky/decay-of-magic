@@ -32,6 +32,14 @@ export class MockArchive extends Archive {
     return document;
   }
 
+  public async delete(query: DocumentQueryObject): Promise<void> {
+    const documents = await this.find(query);
+
+    for (const document of documents) {
+      delete this.items[document.id];
+    }
+  }
+
   public async replace(
     query: DocumentQueryObject,
     oldText: string,

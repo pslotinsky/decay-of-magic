@@ -12,6 +12,12 @@ export class HumorAdvisor extends Assistant {
     bio: 'Perpetually unimpressed. Rarely entertained. Produces refined remarks balanced precisely between wit and professional safety.',
   });
 
+  public remarkOnDocumentDeletion(document: Document): Remark<Document> {
+    const remark = new Remark(`Document ${document.id} expunged.`, document);
+    this.report(`Remark drafted: ${remark.text}.`);
+    return remark;
+  }
+
   public remarkOnDocumentCreation(document: Document): Remark<Document> {
     const remark = new Remark(`Document ${document.id} created`, document);
     this.report(`Remark drafted: ${remark.text}.`);

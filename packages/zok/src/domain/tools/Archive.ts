@@ -13,6 +13,7 @@ export abstract class Archive {
   public abstract count(query: DocumentQueryObject): Promise<number>;
   public abstract find(query: DocumentQueryObject): Promise<Document[]>;
   public abstract save(document: Document): Promise<Document>;
+  public abstract delete(query: DocumentQueryObject): Promise<void>;
   public abstract replace(
     query: DocumentQueryObject,
     oldText: string,

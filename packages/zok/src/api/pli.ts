@@ -112,6 +112,21 @@ program
   );
 
 program
+  .command('delete <protocol> <id>')
+  .option('-r, --record', 'show official activity record')
+  .action(async (protocol: string, id: string, options: CommandOptions) => {
+    await zok.init();
+
+    const result = await zok.handleTextPlea({
+      protocol,
+      type: PleaType.Delete,
+      values: { id },
+    });
+
+    await zok.announce(result, options.record);
+  });
+
+program
   .command('list <protocol>')
   .option('-r, --record', 'show official activity record')
   .action(async (protocol: string, options: CommandOptions) => {

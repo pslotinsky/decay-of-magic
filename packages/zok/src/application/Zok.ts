@@ -18,6 +18,7 @@ import {
 import {
   ChangeStatusDutyInstruction,
   CreateDocumentDutyInstruction,
+  DeleteDocumentDutyInstruction,
   DutyInstruction,
   DutyInstructionParams,
   ListDocumentsDutyInstruction,
@@ -40,6 +41,7 @@ type PleaHandlingResultMap = {
   [PleaType.Create]: Remark<Document>;
   [PleaType.Rename]: Remark<Document>;
   [PleaType.ChangeStatus]: Remark<Document>;
+  [PleaType.Delete]: Remark<Document>;
   [PleaType.List]: Remark<Document[]>;
   [PleaType.Unknown]: Remark<unknown>;
 };
@@ -104,6 +106,11 @@ export class Zok {
         case PleaType.ChangeStatus:
           remark = await this.executeCommand(
             new ChangeStatusDutyInstruction({ plea, protocol, assistants }),
+          );
+          break;
+        case PleaType.Delete:
+          remark = await this.executeCommand(
+            new DeleteDocumentDutyInstruction({ plea, protocol, assistants }),
           );
           break;
         case PleaType.List:

@@ -36,6 +36,15 @@ export abstract class ArchiveKeeper extends Assistant {
     return result;
   }
 
+  public async delete(document: Document): Promise<void> {
+    await this.archive.delete({
+      protocol: document.metadata.protocol,
+      prefix: document.id,
+    });
+
+    this.report(`Document ${document.id} expunged from the archive.`);
+  }
+
   public async replace(
     query: DocumentQueryObject,
     oldText: string,

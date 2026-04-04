@@ -39,6 +39,10 @@ export async function renameTask(
   return renameDocument(zok, 'task', id, title);
 }
 
+export async function deleteTask(zok: Zok, id: string): Promise<Document> {
+  return deleteDocument(zok, 'task', id);
+}
+
 export async function changeTaskStatus(
   zok: Zok,
   id: string,
@@ -106,6 +110,24 @@ export async function renameDocument(
     type: PleaType.Rename,
     protocol,
     values: { id, title },
+  });
+
+  if (!remark.result) {
+    throw new Error('Remark suppose to contain document as result');
+  }
+
+  return remark.result;
+}
+
+export async function deleteDocument(
+  zok: Zok,
+  protocol: string,
+  id: string,
+): Promise<Document> {
+  const { remark } = await zok.handleTextPlea({
+    type: PleaType.Delete,
+    protocol,
+    values: { id },
   });
 
   if (!remark.result) {

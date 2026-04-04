@@ -10,6 +10,7 @@ export enum PleaType {
   Create = 'Create',
   Rename = 'Rename',
   ChangeStatus = 'ChangeStatus',
+  Delete = 'Delete',
   List = 'List',
   Unknown = 'Unknown',
 }
