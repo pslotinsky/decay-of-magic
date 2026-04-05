@@ -2,7 +2,7 @@
 
 | Field     | Value                                                                                              |
 | --------- | -------------------------------------------------------------------------------------------------- |
-| Status    | In progress                                                                                        |
+| Status    | Cancelled |
 | Milestone | [Infrastructure and documentation](../milestones/Milestone-001_infrastructure-and-documentation.md) |
 | Created   | 2025-06-21                                                                                         |
 
