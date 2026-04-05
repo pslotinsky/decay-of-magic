@@ -67,7 +67,7 @@ services:
       CODEX_SERVICE_URL: "http://codex:3001"
       VAULT_SERVICE_URL: "http://vault:3002"
     volumes:
-      - ./services/gateway-service:/app/services/gateway-service
+      - ./services/gateway-service/src:/app/services/gateway-service/src
 
   codex-migrate:
     build:
@@ -96,8 +96,8 @@ services:
       PORT: 3001
       DATABASE_URL: "postgresql://ruler:123qwe@db:5432/codex"
     volumes:
-      - ./services/codex-service:/app/services/codex-service
-      - ./packages/core:/app/packages/core
+      - ./services/codex-service/src:/app/services/codex-service/src
+      - ./packages/core/src:/app/packages/core/src
 
   vault:
     build:
@@ -117,7 +117,7 @@ services:
       S3_BUCKET: vault
       S3_REGION: default
     volumes:
-      - ./services/vault-service:/app/services/vault-service
+      - ./services/vault-service/src:/app/services/vault-service/src
 
   council:
     build:
@@ -132,7 +132,7 @@ services:
       PORT: 5175
       GATEWAY_URL: http://gateway:3000
     volumes:
-      - ./apps/council-web:/app/apps/council-web
+      - ./apps/council-web/src:/app/apps/council-web/src
 
 volumes:
   postgres_data:
