@@ -1,15 +1,27 @@
 # ================================
 # 👷 Stage: Build
 # ================================
-FROM node:22-alpine as build
+FROM node:22-alpine AS build
 
 WORKDIR /app
 
+# Monorepo root
 COPY package*.json ./
-COPY tsconfig*.json ./
-COPY src ./src
+COPY tsconfig.base.json ./
+
+# @dod/core
+COPY packages/core ./packages/core
+
+# codex-service
+COPY services/codex-service/package*.json ./services/codex-service/
+COPY services/codex-service/tsconfig*.json ./services/codex-service/
+COPY services/codex-service/src ./services/codex-service/src
 
 RUN npm ci
+
+RUN cd packages/core && npm run build
+
+WORKDIR /app/services/codex-service
 
 RUN npm run prisma:generate
 RUN npm run build
@@ -17,42 +29,56 @@ RUN npm run build
 # ================================
 # 👷 Stage: Production build
 # ================================
-FROM node:22-alpine as prod_build
+FROM node:22-alpine AS prod_build
 
 WORKDIR /app
 
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/tsconfig*.json ./tsconfig.json
-COPY --from=build /app/package*.json ./package.json
+COPY --from=build /app/tsconfig.base.json ./
 COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/packages/core/dist ./packages/core/dist
+COPY --from=build /app/packages/core/package.json ./packages/core/
+COPY --from=build /app/services/codex-service/dist ./services/codex-service/dist
+COPY --from=build /app/services/codex-service/package*.json ./services/codex-service/
+COPY --from=build /app/services/codex-service/tsconfig*.json ./services/codex-service/
+
+WORKDIR /app/services/codex-service
 
 RUN npm prune --production
 
 # ================================
 # 🚀 Stage: Development
 # ================================
-FROM node:22-alpine as dev
+FROM node:22-alpine AS dev
 
 WORKDIR /app
 
+COPY --from=build /app/tsconfig.base.json ./
 COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/package.json ./package.json
-COPY --from=build /app/tsconfig.json ./tsconfig.json
+COPY --from=build /app/packages/core/dist ./packages/core/dist
+COPY --from=build /app/packages/core/package.json ./packages/core/
+COPY --from=build /app/services/codex-service/dist ./services/codex-service/dist
+COPY --from=build /app/services/codex-service/package.json ./services/codex-service/
+COPY --from=build /app/services/codex-service/tsconfig*.json ./services/codex-service/
+
+WORKDIR /app/services/codex-service
 
 CMD ["npm", "run", "start:debug"]
 
 # ================================
 # 🚀 Stage: Production
 # ================================
-FROM node:22-alpine as prod
+FROM node:22-alpine AS prod
 
 WORKDIR /app
 
-COPY --from=prod_build /app/dist ./dist
-COPY --from=prod_build /app/tsconfig*.json ./tsconfig.json
-COPY --from=prod_build /app/package*.json ./package.json
+COPY --from=prod_build /app/tsconfig.base.json ./
 COPY --from=prod_build /app/node_modules ./node_modules
+COPY --from=prod_build /app/packages/core/dist ./packages/core/dist
+COPY --from=prod_build /app/packages/core/package.json ./packages/core/
+COPY --from=prod_build /app/services/codex-service/dist ./services/codex-service/dist
+COPY --from=prod_build /app/services/codex-service/package*.json ./services/codex-service/
+
+WORKDIR /app/services/codex-service
 
 ENV NODE_ENV=production
 EXPOSE 3001

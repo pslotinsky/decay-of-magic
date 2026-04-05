@@ -1,11 +1,12 @@
 import { Inject } from '@nestjs/common';
 import { Prisma, Card as CardModel } from '@prisma/client';
 
+import { PrismaRepository } from '@dod/core';
+
 import { Card } from '@service/domain/entities/card.entity';
 import { CardRepository } from '@service/domain/repositories/card.repository';
 
 import { PrismaService } from '../prisma/prisma.service';
-import { PrismaRepository } from './prisma.repository';
 
 export class PrismaCardRepository
   extends PrismaRepository<Card, CardModel>
