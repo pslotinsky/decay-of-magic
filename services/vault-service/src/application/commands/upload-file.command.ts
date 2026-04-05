@@ -20,9 +20,10 @@ export class UploadFileCommand extends Command<string> {
 }
 
 @CommandHandler(UploadFileCommand)
-export class UploadFileUseCase
-  implements ICommandHandler<UploadFileCommand, string>
-{
+export class UploadFileUseCase implements ICommandHandler<
+  UploadFileCommand,
+  string
+> {
   private bucket: string;
   private client: S3;
 

@@ -7,7 +7,9 @@ WORKDIR /app
 
 # Monorepo root
 COPY package*.json ./
-COPY tsconfig.base.json ./
+
+# @dod/config
+COPY packages/config ./packages/config
 
 # @dod/core
 COPY packages/core ./packages/core
@@ -33,7 +35,7 @@ FROM node:22-alpine AS prod_build
 
 WORKDIR /app
 
-COPY --from=build /app/tsconfig.base.json ./
+COPY --from=build /app/packages/config ./packages/config
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/packages/core/dist ./packages/core/dist
 COPY --from=build /app/packages/core/package.json ./packages/core/
@@ -52,7 +54,7 @@ FROM node:22-alpine AS dev
 
 WORKDIR /app
 
-COPY --from=build /app/tsconfig.base.json ./
+COPY --from=build /app/packages/config ./packages/config
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/packages/core/dist ./packages/core/dist
 COPY --from=build /app/packages/core/package.json ./packages/core/
@@ -71,7 +73,6 @@ FROM node:22-alpine AS prod
 
 WORKDIR /app
 
-COPY --from=prod_build /app/tsconfig.base.json ./
 COPY --from=prod_build /app/node_modules ./node_modules
 COPY --from=prod_build /app/packages/core/dist ./packages/core/dist
 COPY --from=prod_build /app/packages/core/package.json ./packages/core/

@@ -1,6 +1,6 @@
-import { Link } from "react-router";
+import { Link } from 'react-router';
 
-import { Page } from "../../components/Page";
+import { Page } from '../../components/Page';
 
 export const HomePage = () => {
   return (

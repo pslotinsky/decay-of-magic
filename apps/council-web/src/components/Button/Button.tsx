@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
-import styles from "./Button.module.scss";
+import styles from './Button.module.scss';
 
 export interface Props {
   children: ReactNode;

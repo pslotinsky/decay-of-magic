@@ -1,0 +1,11 @@
+{
+  "name": "@dod/config",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint/base": "./eslint/base.js",
+    "./eslint/nestjs": "./eslint/nestjs.js",
+    "./eslint/react": "./eslint/react.js"
+  }
+}

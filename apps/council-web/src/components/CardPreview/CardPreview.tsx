@@ -1,6 +1,6 @@
-import styles from "./CardPreview.module.scss";
+import styles from './CardPreview.module.scss';
 
-import dummy from "./dummy.png";
+import dummy from './dummy.png';
 
 export type CardDto = {
   id: string;

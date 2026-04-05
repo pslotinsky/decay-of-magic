@@ -1,8 +1,8 @@
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter, Route, Routes } from 'react-router';
 
-import { HomePage } from "./pages/HomePage";
-import { CardsPage } from "./pages/CardsPage";
-import { ManaPage } from "./pages/ManaPage";
+import { HomePage } from './pages/HomePage';
+import { CardsPage } from './pages/CardsPage';
+import { ManaPage } from './pages/ManaPage';
 
 function App() {
   return (

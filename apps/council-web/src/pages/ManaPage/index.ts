@@ -1,1 +1,1 @@
-export { ManaPage } from "./ManaPage";
+export { ManaPage } from './ManaPage';
