@@ -54,7 +54,8 @@ services:
 
   gateway:
     build:
-      context: ./services/gateway-service
+      context: .
+      dockerfile: services/gateway-service/Dockerfile
       target: dev
     depends_on:
       - codex
@@ -66,8 +67,7 @@ services:
       CODEX_SERVICE_URL: "http://codex:3001"
       VAULT_SERVICE_URL: "http://vault:3002"
     volumes:
-      - ./services/gateway-service:/app
-      - /app/node_modules
+      - ./services/gateway-service:/app/services/gateway-service
 
   codex-migrate:
     build:
@@ -101,7 +101,8 @@ services:
 
   vault:
     build:
-      context: ./services/vault-service
+      context: .
+      dockerfile: services/vault-service/Dockerfile
       target: dev
     depends_on:
       - s3
@@ -116,12 +117,12 @@ services:
       S3_BUCKET: vault
       S3_REGION: default
     volumes:
-      - ./services/vault-service:/app
-      - /app/node_modules
+      - ./services/vault-service:/app/services/vault-service
 
   council:
     build:
-      context: ./apps/council-web
+      context: .
+      dockerfile: apps/council-web/Dockerfile
       target: dev
     depends_on:
       - codex
@@ -131,8 +132,7 @@ services:
       PORT: 5175
       GATEWAY_URL: http://gateway:3000
     volumes:
-      - ./apps/council-web:/app
-      - /app/node_modules
+      - ./apps/council-web:/app/apps/council-web
 
 volumes:
   postgres_data:

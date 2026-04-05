@@ -10,21 +10,21 @@
   },
   "license": "UNLICENSED",
   "dependencies": {
-    "commander": "^14.0.0",
+    "commander": "^14.0.3",
     "date-fns": "^4.1.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.18.1",
     "nanoid": "^3.3.11",
     "nunjucks": "^3.2.4",
-    "prettier": "^3.6.2",
+    "prettier": "^3.8.1",
     "source-map-support": "^0.5.21",
-    "yaml": "^2.8.0"
+    "yaml": "^2.8.3"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.20",
-    "@types/node": "^24.0.3",
+    "@types/lodash": "^4.17.24",
+    "@types/node": "^25.5.2",
     "@types/nunjucks": "^3.2.6",
     "tsc-alias": "^1.8.16",
-    "tsx": "^4.20.3",
+    "tsx": "^4.21.0",
     "typescript": "^5.8.3"
   }
 }
