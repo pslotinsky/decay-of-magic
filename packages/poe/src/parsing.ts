@@ -65,10 +65,9 @@ function parseJsDoc(raw: string): string | undefined {
     .split('\n')
     .map((line) => line.replace(/^\s*\*\s?/, '').trim())
     .filter((line) => line.length > 0 && !line.startsWith('@'))
-    .join(' ')
-    .trim();
+    .join('<br>');
 
-  return comment || undefined;
+  return comment.length > 0 ? comment : undefined;
 }
 
 function parseInterfaces(raw: string): string[] {

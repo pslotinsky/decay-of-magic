@@ -30,52 +30,52 @@ npm run prisma:migrate:dev
 <!-- poe:class-table:start -->
 ### api
 
-| Entity | Description | Notes |
-| ------ | ----------- | ----- |
-| [CardController](src/api/controllers/card.controller.ts) |  |  |
-| [ManaController](src/api/controllers/mana.controller.ts) |  |  |
-| [CreateCardDto](src/api/dto/body/create-card.dto.ts) |  |  |
-| [CreateManaDto](src/api/dto/body/create-mana.dto.ts) |  |  |
-| [CardDto](src/api/dto/card.dto.ts) |  |  |
-| [ManaDto](src/api/dto/mana.dto.ts) |  |  |
-
-### root
-
-| Entity | Description | Notes |
-| ------ | ----------- | ----- |
-| [AppModule](src/app.module.ts) |  |  |
+| Entity |
+|--------|
+| controllers/[CardController](src/api/controllers/card.controller.ts) |
+| controllers/[ManaController](src/api/controllers/mana.controller.ts) |
+| dto/body/[CreateCardDto](src/api/dto/body/create-card.dto.ts) |
+| dto/body/[CreateManaDto](src/api/dto/body/create-mana.dto.ts) |
+| dto/[CardDto](src/api/dto/card.dto.ts) |
+| dto/[ManaDto](src/api/dto/mana.dto.ts) |
 
 ### application
 
-| Entity | Description | Notes |
-| ------ | ----------- | ----- |
-| [CreateCardCommand](src/application/commands/create-card.command.ts) |  |  |
-| [CreateCardHandler](src/application/commands/create-card.command.ts) |  | Implements ICommandHandler |
-| [CreateManaCommand](src/application/commands/create-mana.command.ts) |  |  |
-| [CreateManaHandler](src/application/commands/create-mana.command.ts) |  | Implements ICommandHandler |
-| [FindCardsQuery](src/application/queries/find-cards.query.ts) |  | Extends Query |
-| [FindCardsHandler](src/application/queries/find-cards.query.ts) |  | Implements IQueryHandler |
-| [FindManaQuery](src/application/queries/find-mana.query.ts) |  | Extends Query |
-| [FindManaHandler](src/application/queries/find-mana.query.ts) |  | Implements IQueryHandler |
-| [GetCardQuery](src/application/queries/get-card.query.ts) |  | Extends Query |
-| [GetCardHandler](src/application/queries/get-card.query.ts) |  | Implements IQueryHandler |
-| [GetManaQuery](src/application/queries/get-mana.query.ts) |  | Extends Query |
-| [GetManaHandler](src/application/queries/get-mana.query.ts) |  | Implements IQueryHandler |
+| Entity | Notes |
+|--------|-------|
+| commands/[CreateCardCommand](src/application/commands/create-card.command.ts) |  |
+| commands/[CreateCardHandler](src/application/commands/create-card.command.ts) | Implements `ICommandHandler` |
+| commands/[CreateManaCommand](src/application/commands/create-mana.command.ts) |  |
+| commands/[CreateManaHandler](src/application/commands/create-mana.command.ts) | Implements `ICommandHandler` |
+| queries/[FindCardsQuery](src/application/queries/find-cards.query.ts) | Extends `Query` |
+| queries/[FindCardsHandler](src/application/queries/find-cards.query.ts) | Implements `IQueryHandler` |
+| queries/[FindManaQuery](src/application/queries/find-mana.query.ts) | Extends `Query` |
+| queries/[FindManaHandler](src/application/queries/find-mana.query.ts) | Implements `IQueryHandler` |
+| queries/[GetCardQuery](src/application/queries/get-card.query.ts) | Extends `Query` |
+| queries/[GetCardHandler](src/application/queries/get-card.query.ts) | Implements `IQueryHandler` |
+| queries/[GetManaQuery](src/application/queries/get-mana.query.ts) | Extends `Query` |
+| queries/[GetManaHandler](src/application/queries/get-mana.query.ts) | Implements `IQueryHandler` |
 
 ### domain
 
 | Entity | Description | Notes |
-| ------ | ----------- | ----- |
-| [Card](src/domain/entities/card.entity.ts) |  |  |
-| [Mana](src/domain/entities/mana.entity.ts) |  |  |
-| [CardRepository](src/domain/repositories/card.repository.ts) |  | Abstract · Extends EntityRepository |
-| [ManaRepository](src/domain/repositories/mana.repository.ts) |  | Abstract · Extends EntityRepository |
+|--------|-------------|-------|
+| entities/[Card](src/domain/entities/card.entity.ts) | Spells and creatures. Each card belongs to one mana and may have multiple abilities |  |
+| entities/[Mana](src/domain/entities/mana.entity.ts) | • Core mana: Fire, Water, Earth, Air (common for all mages)<br>• Special mana: Necromancy, Demonology, Chaos, etc (specific to a particular mage) |  |
+| repositories/[CardRepository](src/domain/repositories/card.repository.ts) |  | Abstract · Extends `EntityRepository` |
+| repositories/[ManaRepository](src/domain/repositories/mana.repository.ts) |  | Abstract · Extends `EntityRepository` |
 
 ### infrastructure
 
-| Entity | Description | Notes |
-| ------ | ----------- | ----- |
-| [PrismaService](src/infrastructure/prisma/prisma.service.ts) |  | Extends PrismaClient · Implements OnModuleInit, OnModuleDestroy |
-| [PrismaCardRepository](src/infrastructure/repositories/prisma-card.repository.ts) |  | Extends PrismaRepository |
-| [PrismaManaRepository](src/infrastructure/repositories/prisma-mana.repository.ts) |  | Extends PrismaRepository |
+| Entity | Notes |
+|--------|-------|
+| prisma/[PrismaService](src/infrastructure/prisma/prisma.service.ts) | Extends `PrismaClient` · Implements `OnModuleInit`, `OnModuleDestroy` |
+| repositories/[PrismaCardRepository](src/infrastructure/repositories/prisma-card.repository.ts) | Extends `PrismaRepository` |
+| repositories/[PrismaManaRepository](src/infrastructure/repositories/prisma-mana.repository.ts) | Extends `PrismaRepository` |
+
+### root
+
+| Entity |
+|--------|
+| [AppModule](src/app.module.ts) |
 <!-- poe:class-table:end -->

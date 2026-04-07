@@ -8,9 +8,10 @@ export function renderClassTable(descriptors: ClassDescriptor[]): string {
   }
 
   const classMap = buildClassMap(descriptors);
-  const byLayer = groupByLayer(descriptors);
+  const { root = [], ...layers } = groupByLayer(descriptors);
 
-  return Object.entries(byLayer)
+  return Object.entries({ ...layers, root })
+    .filter(([, classes]) => classes.length > 0)
     .map(([layer, classes]) => renderLayer(layer, classes, classMap))
     .join('\n\n');
 }
@@ -38,21 +39,61 @@ function renderLayer(
   classes: ClassDescriptor[],
   classMap: ClassMap,
 ): string {
+  const hasDescriptions = classes.some((cls) => cls.description);
+  const hasNotes = classes.some((cls) => renderNotes(cls, classMap));
+
+  const header = buildHeader(hasDescriptions, hasNotes);
   const rows = [
-    '| Entity | Description | Notes |',
-    '| ------ | ----------- | ----- |',
-    ...classes.map((cls) => renderRow(cls, classMap)),
+    header,
+    header.replace(/[^|]/g, '-'),
+    ...classes.map((cls) =>
+      renderRow(cls, classMap, hasDescriptions, hasNotes),
+    ),
   ];
 
   return `### ${layer}\n\n${rows.join('\n')}`;
 }
 
-function renderRow(cls: ClassDescriptor, classMap: ClassMap): string {
-  const entity = `[${cls.name}](${cls.file})`;
-  const description = cls.description ?? '';
-  const notes = renderNotes(cls, classMap);
+function buildHeader(hasDescriptions: boolean, hasNotes: boolean): string {
+  const cols = ['Entity'];
 
-  return `| ${entity} | ${description} | ${notes} |`;
+  if (hasDescriptions) {
+    cols.push('Description');
+  }
+
+  if (hasNotes) {
+    cols.push('Notes');
+  }
+
+  return `| ${cols.join(' | ')} |`;
+}
+
+function renderRow(
+  cls: ClassDescriptor,
+  classMap: ClassMap,
+  hasDescriptions: boolean,
+  hasNotes: boolean,
+): string {
+  const prefix = getSubdirPrefix(cls.file);
+  const entity = `${prefix}[${cls.name}](${cls.file})`;
+  const cols = [entity];
+
+  if (hasDescriptions) {
+    cols.push(cls.description ?? '');
+  }
+
+  if (hasNotes) {
+    cols.push(renderNotes(cls, classMap));
+  }
+
+  return `| ${cols.join(' | ')} |`;
+}
+
+function getSubdirPrefix(file: string): string {
+  const parts = file.replace(/\\/g, '/').split('/');
+  const subdir = parts.slice(2, -1).join('/');
+
+  return subdir ? `${subdir}/` : '';
 }
 
 function renderNotes(cls: ClassDescriptor, classMap: ClassMap): string {
@@ -66,12 +107,18 @@ function renderNotes(cls: ClassDescriptor, classMap: ClassMap): string {
     const parentFile = classMap.get(cls.parent);
     const parentRef = parentFile
       ? `[${cls.parent}](${parentFile})`
-      : cls.parent;
+      : `\`${cls.parent}\``;
     parts.push(`Extends ${parentRef}`);
   }
 
   if (cls.interfaces?.length) {
-    parts.push(`Implements ${cls.interfaces.join(', ')}`);
+    const interfaces = cls.interfaces
+      .map((name) => {
+        const file = classMap.get(name);
+        return file ? `[${name}](${file})` : `\`${name}\``;
+      })
+      .join(', ');
+    parts.push(`Implements ${interfaces}`);
   }
 
   return parts.join(' · ');

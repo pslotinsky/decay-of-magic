@@ -9,6 +9,10 @@ export enum ManaType {
   Special = 'Special',
 }
 
+/**
+ * • Core mana: Fire, Water, Earth, Air (common for all mages)
+ * • Special mana: Necromancy, Demonology, Chaos, etc (specific to a particular mage)
+ */
 export class Mana {
   public static create(params: ManaParams): Mana {
     return new Mana(params);

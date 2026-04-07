@@ -8,6 +8,9 @@ export type CardParams = {
   manaId: string;
 };
 
+/**
+ * Spells and creatures. Each card belongs to one mana and may have multiple abilities
+ */
 export class Card {
   public static create(params: CardParams): Card {
     return new Card(params);
