@@ -4,10 +4,10 @@ import { resolve } from 'path';
 import { generateDocumentation } from './generation';
 
 async function main(): Promise<void> {
-  const paths = process.argv.slice(2);
+  const [command, ...paths] = process.argv.slice(2);
 
-  if (paths.length === 0) {
-    console.error('Usage: gena <package-path> [...]');
+  if (command !== 'inspect' || paths.length === 0) {
+    console.error('Usage: poe inspect <package-path> [...]');
     process.exit(1);
   }
 

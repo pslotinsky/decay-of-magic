@@ -111,6 +111,9 @@ idea:
   template: idea.nj
   aliases: ['ideas']
   fields:
+    tags:
+      name: Tags
+      type: text
     created:
       name: Created
       type: date

@@ -1,6 +1,6 @@
 # zok
 
-<!-- gendoc:class-table:start -->
+<!-- poe:class-table:start -->
 | Class|File|Description |
 | -----|----|----------- |
 | Zok|[`src/application/Zok.ts`](src/application/Zok.ts)| |
@@ -39,4 +39,4 @@
 | NanoPleaFormalist|[`src/infrastructure/assistants/NanoPleaFormalist.ts`](src/infrastructure/assistants/NanoPleaFormalist.ts)| |
 | NunjucksScribe|[`src/infrastructure/assistants/NunjucksScribe.ts`](src/infrastructure/assistants/NunjucksScribe.ts)| |
 | YamlProtocolClerk|[`src/infrastructure/assistants/YamlProtocolClerk.ts`](src/infrastructure/assistants/YamlProtocolClerk.ts)| |
-<!-- gendoc:class-table:end -->
+<!-- poe:class-table:end -->

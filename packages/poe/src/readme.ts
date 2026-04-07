@@ -8,8 +8,8 @@ export async function updateReadme(
 ): Promise<void> {
   const readmePath = resolve(path, 'README.md');
 
-  const startTag = `<!-- gendoc:${sectionId}:start -->`;
-  const endTag = `<!-- gendoc:${sectionId}:end -->`;
+  const startTag = `<!-- poe:${sectionId}:start -->`;
+  const endTag = `<!-- poe:${sectionId}:end -->`;
 
   let readme: string;
 

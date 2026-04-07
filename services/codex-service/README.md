@@ -27,7 +27,7 @@ npm run prisma:migrate:dev
 
 ## Classes
 
-<!-- gendoc:class-table:start -->
+<!-- poe:class-table:start -->
 | Class|File|Description |
 | -----|----|----------- |
 | CardController|[`src/api/controllers/card.controller.ts`](src/api/controllers/card.controller.ts)| |
@@ -56,4 +56,4 @@ npm run prisma:migrate:dev
 | PrismaService|[`src/infrastructure/prisma/prisma.service.ts`](src/infrastructure/prisma/prisma.service.ts)| |
 | PrismaCardRepository|[`src/infrastructure/repositories/prisma-card.repository.ts`](src/infrastructure/repositories/prisma-card.repository.ts)| |
 | PrismaManaRepository|[`src/infrastructure/repositories/prisma-mana.repository.ts`](src/infrastructure/repositories/prisma-mana.repository.ts)| |
-<!-- gendoc:class-table:end -->
+<!-- poe:class-table:end -->

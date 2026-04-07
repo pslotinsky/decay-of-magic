@@ -14,7 +14,7 @@
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "format": "turbo format",
-    "docs": "gendoc packages/core packages/zok services/codex-service services/gateway-service services/vault-service"
+    "docs": "poe inspect packages/core packages/zok services/codex-service services/gateway-service services/vault-service"
   },
   "devDependencies": {
     "turbo": "^2.9.3"
