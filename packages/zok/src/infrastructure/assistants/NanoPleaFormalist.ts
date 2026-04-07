@@ -14,7 +14,7 @@ export class NanoPleaFormalist extends PleaFormalist {
     bio: 'Lives for argument. Thrives on objection. Delights in prolonged disputes conducted in increasingly technical language. Ultimately ensures every petition is accepted — but only after sufficient resistance.',
   });
 
-  protected override async issueId(): Promise<string> {
-    return nanoid(NANOID_SIZE);
+  protected override issueId(): Promise<string> {
+    return Promise.resolve(nanoid(NANOID_SIZE));
   }
 }

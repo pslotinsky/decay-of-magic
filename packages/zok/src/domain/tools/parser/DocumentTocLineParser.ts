@@ -21,7 +21,7 @@ export class DocumentTocLineParser {
   public parse(): DocumentTocLine {
     let text = this.extractStatus(this.line);
     text = this.extractLabel(text);
-    text = this.extractLink(text);
+    this.extractLink(text);
 
     if (!this.label) {
       throw new MalformedDocumentError(

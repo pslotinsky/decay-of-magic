@@ -44,7 +44,7 @@ export abstract class Scribe extends Assistant {
     const defaultValues = this.getDefaultFieldValues();
     let value;
 
-    for (const [key, _fieldDefinition] of Object.entries(protocol.fields)) {
+    for (const key of Object.keys(protocol.fields)) {
       value = plea.getValue(key, defaultValues[key]);
 
       fields[key] = protocol.normalizeFieldValue(key, value);

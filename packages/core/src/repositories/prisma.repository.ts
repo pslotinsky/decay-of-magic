@@ -6,6 +6,10 @@ type Delegate<TModel extends { id: string }> = {
   upsert(args: any): Promise<any>;
 };
 
+/**
+ * Prisma-backed implementation of EntityRepository. Provides getById, find,
+ * and save via a model delegate, handling entity↔model mapping via subclasses.
+ */
 export abstract class PrismaRepository<
   TEntity extends { id: string },
   TModel extends { id: string },

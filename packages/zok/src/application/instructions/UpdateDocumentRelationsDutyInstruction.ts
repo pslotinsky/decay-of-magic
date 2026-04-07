@@ -9,8 +9,7 @@ import { DocumentTocRender } from '@zok/domain/tools';
 
 import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
 
-interface UpdateDocumentRelationsDutyInstructionParams
-  extends DutyInstructionParams {
+interface UpdateDocumentRelationsDutyInstructionParams extends DutyInstructionParams {
   document: Document;
 }
 
@@ -45,7 +44,10 @@ export class UpdateDocumentRelationsDutyInstruction extends DutyInstruction<
       const parentProtocol =
         this.assistants.protocolClerk.getProtocol(parentProtocolId);
 
-      result = await this.assistants.archiveKeeper.findById(parentProtocol, parentId);
+      result = await this.assistants.archiveKeeper.findById(
+        parentProtocol,
+        parentId,
+      );
     }
 
     return result;

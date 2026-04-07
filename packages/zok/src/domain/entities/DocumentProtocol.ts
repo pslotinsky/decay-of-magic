@@ -11,11 +11,6 @@ type DocumentProtocolParams = {
   fields: Record<string, FieldDefinition>;
 };
 
-type ResolvedDocument = {
-  id: string;
-  title: string;
-};
-
 export class DocumentProtocol {
   public static Name = DocumentProtocol.constructor.name;
 
@@ -64,7 +59,7 @@ export class DocumentProtocol {
 
   public findFieldKeyByName(name: string): string {
     const entry = Object.entries(this.fields).find(
-      ([_key, field]) => field.name === name,
+      ([, field]) => field.name === name,
     );
 
     if (!entry) {

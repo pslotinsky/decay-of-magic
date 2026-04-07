@@ -43,6 +43,6 @@ export class YamlProtocolClerk extends ProtocolClerk {
       : DEFAULT_CONFIG_PATH;
     const content = await fs.readFile(filePath, 'utf-8');
 
-    return yaml.parse(content);
+    return yaml.parse(content) as Protocols;
   }
 }
