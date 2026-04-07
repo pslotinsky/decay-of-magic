@@ -88,7 +88,7 @@ export class HumorAdvisor extends Assistant {
   }
 
   public remarkOnDocumentStatusChange(document: Document): Remark<Document> {
-    const status = document.getField('status');
+    const status = document.getField<string>('status');
     const joke = this.pickJoke([
       `Document ${document.id} is now "${status}". I'll believe it when the next plea comes in.`,
       `${document.id} updated. Whether the work reflects it is your concern, not mine.`,

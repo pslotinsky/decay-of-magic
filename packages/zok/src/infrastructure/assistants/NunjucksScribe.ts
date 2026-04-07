@@ -38,8 +38,8 @@ export class NunjucksScribe extends Scribe {
     this.env.addFilter('time', (date: Date) => date.toTimeString().slice(0, 8));
   }
 
-  public async renderRecord(plea: Plea): Promise<string> {
-    return this.env.render('plea-record.nj', { plea }).trim();
+  public renderRecord(plea: Plea): Promise<string> {
+    return Promise.resolve(this.env.render('plea-record.nj', { plea }).trim());
   }
 
   protected async fillDocumentContent(
@@ -56,7 +56,7 @@ export class NunjucksScribe extends Scribe {
       return prettier.format(raw, { parser: 'markdown' });
     } catch (error) {
       throw new Error(
-        `Failed to render document: ${metadata.id} with template: ${templateName} → ${error}`,
+        `Failed to render document: ${metadata.id} with template: ${templateName} → ${String(error)}`,
       );
     }
   }
@@ -65,7 +65,7 @@ export class NunjucksScribe extends Scribe {
     const entries = Object.entries(metadata.fields).map(([key, value]) => {
       const field = metadata.protocol.getField(key);
 
-      return [field.name, this.formatField(field, value)];
+      return [field.name, this.formatField(field, value)] as [string, string];
     });
 
     return Object.fromEntries(entries);
@@ -78,7 +78,7 @@ export class NunjucksScribe extends Scribe {
       case FieldType.Link:
         return value ? (value as DocumentLink).toString() : '';
       default:
-        return value ? String(value) : '';
+        return value ? (value as string) : '';
     }
   }
 }

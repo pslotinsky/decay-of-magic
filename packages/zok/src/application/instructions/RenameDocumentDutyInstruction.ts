@@ -4,7 +4,6 @@ import {
   DocumentProtocol,
   Remark,
 } from '@zok/domain/entities';
-import { NotFoundError } from '@zok/domain/errors';
 
 import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
 

@@ -1,0 +1,21 @@
+{
+  "name": "@dod/gendoc",
+  "version": "0.0.1",
+  "private": true,
+  "bin": "./dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && tsc-alias",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint \"src/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "devDependencies": {
+    "@dod/config": "*",
+    "@types/node": "^22.0.0",
+    "eslint": "^10.2.0",
+    "typescript": "^6.0.2",
+    "prettier": "^3.8.1",
+    "tsc-alias": "^1.8.16",
+    "typescript-eslint": "^8.58.0"
+  }
+}

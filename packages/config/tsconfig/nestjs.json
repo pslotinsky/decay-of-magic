@@ -1,16 +1,8 @@
 {
-  "extends": "./base.json",
+  "extends": "./node.json",
   "compilerOptions": {
-    "target": "ES2023",
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "incremental": true,
-    "strictNullChecks": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false

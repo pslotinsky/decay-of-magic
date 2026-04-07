@@ -1,5 +1,4 @@
 export class NotFoundError<
-  T,
   C extends Record<string, unknown> = Record<string, unknown>,
 > extends Error {
   public readonly entity: string;
