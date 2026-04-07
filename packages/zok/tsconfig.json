@@ -6,7 +6,8 @@
     "ignoreDeprecations": "6.0",
     "baseUrl": "./src",
     "paths": {
-      "@zok/*": ["./*"]
+      "@zok/*": ["./*"],
+      "test/*": ["../test/*"]
     },
     "outDir": "./dist",
     "esModuleInterop": true,
