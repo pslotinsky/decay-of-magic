@@ -12,12 +12,8 @@ async function main(): Promise<void> {
   }
 
   for (const path of paths) {
-    console.time(`Documentation generated for "${path}"`);
-
     const absolutePath = resolve(__dirname, '../../..', path);
     await generateDocumentation(absolutePath);
-
-    console.timeEnd(`Documentation generated for "${path}"`);
   }
 }
 
