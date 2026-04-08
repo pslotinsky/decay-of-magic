@@ -1,6 +1,6 @@
 import { basename, resolve } from 'path';
 
-import { ClassReport } from './ClassReport';
+import { PackageReport } from './PackageReport';
 import { ClassParser } from './ClassParser';
 import { ReadmeWriter } from './ReadmeWriter';
 import { Scanner } from './Scanner';
@@ -28,10 +28,13 @@ export class InspectorPoe {
     console.info(`classes found: ${classes.items.length}`);
 
     const readmeWriter = new ReadmeWriter(packagePath);
-    const classReportContent = new ClassReport(classes).render();
-    await readmeWriter.write(classReportContent, 'class-table');
 
-    console.info('class table generated');
+    const content = new PackageReport(classes).render();
+
+    await readmeWriter.write(content, 'classes');
+
+    console.info('classes generated');
+
     console.timeEnd('inspection completed');
   }
 }

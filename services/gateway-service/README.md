@@ -2,10 +2,20 @@
 
 A classical gateway proxy that sits between clients and services.
 
-<!-- poe:class-table:start -->
+<!-- poe:classes:start -->
+## Classes
+
 ### root
+
+```mermaid
+classDiagram
+  namespace root {
+    class AppModule
+  }
+
+```
 
 | Entity |
 |--------|
 | [AppModule](src/app.module.ts) |
-<!-- poe:class-table:end -->
+<!-- poe:classes:end -->
