@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 import { resolve } from 'path';
-import { generateDocumentation } from './generation';
+
+import { InspectorPoe } from './InspectorPoe';
 
 async function main(): Promise<void> {
   const [command, ...paths] = process.argv.slice(2);
@@ -11,9 +12,11 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  const basePath = resolve(__dirname, '../../..');
+  const poe = new InspectorPoe(basePath);
+
   for (const path of paths) {
-    const absolutePath = resolve(__dirname, '../../..', path);
-    await generateDocumentation(absolutePath);
+    await poe.inspect(path);
   }
 }
 
