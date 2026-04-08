@@ -1,4 +1,3 @@
-import { InspectedClass } from './InspectedClass';
 import { ClassRegistry } from './ClassRegistry';
 import { LayerReport } from './LayerReport';
 
@@ -17,24 +16,13 @@ export class ClassReport {
       return 'No classes found.';
     }
 
-    const layers = this.groupByLayer();
-    return Object.entries(layers)
+    const content = Object.entries(this.classRegistry.layers)
       .filter(([, classes]) => classes.length > 0)
       .map(([layer, classes]) =>
         new LayerReport(layer, classes, this.classRegistry).render(),
       )
       .join('\n\n');
-  }
 
-  private groupByLayer(): Record<string, InspectedClass[]> {
-    const groups: Record<string, InspectedClass[]> = {};
-
-    for (const cls of this.classRegistry.items) {
-      (groups[cls.layer] ??= []).push(cls);
-    }
-
-    const { root = [], ...layers } = groups;
-
-    return { ...layers, root };
+    return `## Classes\n\n${content}`;
   }
 }

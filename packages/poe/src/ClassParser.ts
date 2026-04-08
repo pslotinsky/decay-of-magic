@@ -7,6 +7,21 @@ import { ClassRegistry } from './ClassRegistry';
 const CLASS_PATTERN =
   /^\s*(?:\/\*\*([\s\S]*?)\*\/\s*)?(?:export\s+)?(?:default\s+)?(abstract\s+)?class\s+(\w+)(?:\s+extends\s+(\w+))?(?:\s+implements\s+([\w,\s]+))?/gm;
 
+const PRIMITIVE_TYPES = new Set([
+  'string',
+  'number',
+  'boolean',
+  'void',
+  'null',
+  'undefined',
+  'any',
+  'never',
+  'unknown',
+  'object',
+  'symbol',
+  'bigint',
+]);
+
 /**
  * Parses source files and extracts inspected classes
  */
@@ -36,19 +51,24 @@ export class ClassParser {
     let match: RegExpExecArray | null;
 
     while ((match = pattern.exec(content)) !== null) {
-      const [, jsdoc, abstractKeyword, name, parent, implementsStr] = match;
+      const [fullMatch, jsdoc, abstractKeyword, name, parent, implementsStr] =
+        match;
+      const bodyStart = match.index + fullMatch.length;
+      const body = this.extractClassBody(content, bodyStart);
 
       results.push(
         new InspectedClass({
           name,
           file,
           layer,
+          body,
           abstract: !!abstractKeyword,
           description: jsdoc ? this.parseJsDoc(jsdoc) : undefined,
           parent: parent ?? undefined,
           interfaces: implementsStr
             ? this.parseInterfaces(implementsStr)
             : undefined,
+          fields: this.extractFieldTypes(body),
         }),
       );
     }
@@ -78,5 +98,45 @@ export class ClassParser {
       .split(',')
       .map((part) => part.trim())
       .filter(Boolean);
+  }
+
+  private extractClassBody(content: string, fromIndex: number): string {
+    let pos = fromIndex;
+
+    while (pos < content.length && content[pos] !== '{') {
+      pos++;
+    }
+
+    const bodyStart = pos + 1;
+    let depth = 1;
+    pos++;
+
+    while (pos < content.length && depth > 0) {
+      if (content[pos] === '{') {
+        depth++;
+      } else if (content[pos] === '}') {
+        depth--;
+      }
+      pos++;
+    }
+
+    return content.slice(bodyStart, pos - 1);
+  }
+
+  private extractFieldTypes(body: string): string[] {
+    const FIELD_PATTERN =
+      /(?:private|protected|public|readonly)\s+(?:readonly\s+)?(?:\w+)\s*[?!]?\s*:\s*([\w]+)/g;
+    const types = new Set<string>();
+    let fieldMatch: RegExpExecArray | null;
+
+    while ((fieldMatch = FIELD_PATTERN.exec(body)) !== null) {
+      const type = fieldMatch[1];
+
+      if (!PRIMITIVE_TYPES.has(type)) {
+        types.add(type);
+      }
+    }
+
+    return [...types];
   }
 }

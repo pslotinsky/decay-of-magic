@@ -25,9 +25,9 @@ npm run prisma:generate migration_name
 npm run prisma:migrate:dev
 ```
 
+<!-- poe:class-table:start -->
 ## Classes
 
-<!-- poe:class-table:start -->
 ### api
 
 | Entity |
@@ -79,3 +79,92 @@ npm run prisma:migrate:dev
 |--------|
 | [AppModule](src/app.module.ts) |
 <!-- poe:class-table:end -->
+
+<!-- poe:class-diagram:start -->
+## Class Diagram
+
+```mermaid
+classDiagram
+  namespace api {
+    class CardController
+    class ManaController
+    class CreateCardDto
+    class CreateManaDto
+    class CardDto
+    class ManaDto
+  }
+
+  namespace application {
+    class CreateCardCommand
+    class CreateCardHandler
+    class CreateManaCommand
+    class CreateManaHandler
+    class FindCardsQuery
+    class FindCardsHandler
+    class FindManaQuery
+    class FindManaHandler
+    class GetCardQuery
+    class GetCardHandler
+    class GetManaQuery
+    class GetManaHandler
+  }
+
+  namespace domain {
+    class Card
+    class Mana
+    class CardRepository
+    class ManaRepository
+  }
+
+  namespace infrastructure {
+    class PrismaService
+    class PrismaCardRepository
+    class PrismaManaRepository
+  }
+
+  namespace root {
+    class AppModule
+  }
+
+  CardController --> CreateCardDto
+  CardController --> CardDto
+  CardController --> CreateCardCommand
+  CardController --> FindCardsQuery
+  CardController --> GetCardQuery
+  CardController --> Card
+  ManaController --> CreateManaDto
+  ManaController --> ManaDto
+  ManaController --> CreateManaCommand
+  ManaController --> FindManaQuery
+  ManaController --> GetManaQuery
+  ManaController --> Mana
+  CreateManaDto --> Mana
+  ManaDto --> Mana
+  CreateCardCommand *-- CreateCardDto
+  CreateCardCommand --> CardDto
+  CreateCardCommand --> Card
+  CreateCardHandler *-- CardRepository
+  CreateCardHandler --> CreateCardCommand
+  CreateCardHandler --> Card
+  CreateManaCommand *-- CreateManaDto
+  CreateManaCommand --> ManaDto
+  CreateManaCommand --> Mana
+  CreateManaHandler *-- ManaRepository
+  CreateManaHandler --> CreateManaCommand
+  CreateManaHandler --> Mana
+  FindCardsHandler *-- CardRepository
+  FindCardsHandler --> Card
+  FindManaHandler *-- ManaRepository
+  FindManaHandler --> Mana
+  GetCardHandler *-- CardRepository
+  GetCardHandler --> GetCardQuery
+  GetCardHandler --> Card
+  GetManaHandler *-- ManaRepository
+  GetManaHandler --> GetManaQuery
+  GetManaHandler --> Mana
+  PrismaCardRepository *-- PrismaService
+  PrismaCardRepository --> Card
+  PrismaManaRepository *-- PrismaService
+  PrismaManaRepository --> Mana
+```
+<!-- poe:class-diagram:end -->

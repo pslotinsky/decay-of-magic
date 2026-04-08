@@ -1,6 +1,7 @@
 import { basename, resolve } from 'path';
 
 import { ClassReport } from './ClassReport';
+import { ClassDiagram } from './ClassDiagram';
 import { ClassParser } from './ClassParser';
 import { ReadmeWriter } from './ReadmeWriter';
 import { Scanner } from './Scanner';
@@ -32,6 +33,14 @@ export class InspectorPoe {
     await readmeWriter.write(classReportContent, 'class-table');
 
     console.info('class table generated');
+
+    const classDiagramContent = new ClassDiagram(classes).render();
+
+    if (classDiagramContent) {
+      await readmeWriter.write(classDiagramContent, 'class-diagram');
+      console.info('class diagram generated');
+    }
+
     console.timeEnd('inspection completed');
   }
 }

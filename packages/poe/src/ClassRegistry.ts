@@ -17,4 +17,16 @@ export class ClassRegistry {
   public get(name: string): InspectedClass | undefined {
     return this.classMap.get(name);
   }
+
+  public get layers(): Record<string, InspectedClass[]> {
+    const groups: Record<string, InspectedClass[]> = {};
+
+    for (const cls of this.items) {
+      (groups[cls.layer] ??= []).push(cls);
+    }
+
+    const { root = [], ...layers } = groups;
+
+    return { ...layers, root };
+  }
 }
