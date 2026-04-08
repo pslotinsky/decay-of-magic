@@ -25,10 +25,49 @@ npm run prisma:generate migration_name
 npm run prisma:migrate:dev
 ```
 
-<!-- poe:class-table:start -->
+<!-- poe:classes:start -->
 ## Classes
 
 ### api
+
+```mermaid
+classDiagram
+  namespace api {
+    class CardController
+    class ManaController
+    class CreateCardDto
+    class CreateManaDto
+    class CardDto
+    class ManaDto
+  }
+  namespace application {
+    class CreateCardCommand
+    class FindCardsQuery
+    class GetCardQuery
+    class CreateManaCommand
+    class FindManaQuery
+    class GetManaQuery
+  }
+  namespace domain {
+    class Card
+    class Mana
+  }
+
+  CardController --> CreateCardDto
+  CardController --> CardDto
+  CardController --> CreateCardCommand
+  CardController --> FindCardsQuery
+  CardController --> GetCardQuery
+  CardController --> Card
+  ManaController --> CreateManaDto
+  ManaController --> ManaDto
+  ManaController --> CreateManaCommand
+  ManaController --> FindManaQuery
+  ManaController --> GetManaQuery
+  ManaController --> Mana
+  CreateManaDto --> Mana
+  ManaDto --> Mana
+```
 
 | Entity |
 |--------|
@@ -40,6 +79,72 @@ npm run prisma:migrate:dev
 | dto/[ManaDto](src/api/dto/mana.dto.ts) |
 
 ### application
+
+```mermaid
+classDiagram
+  namespace application {
+    class CreateCardCommand
+    class CreateCardHandler
+    class CreateManaCommand
+    class CreateManaHandler
+    class FindCardsQuery
+    class FindCardsHandler
+    class FindManaQuery
+    class FindManaHandler
+    class GetCardQuery
+    class GetCardHandler
+    class GetManaQuery
+    class GetManaHandler
+  }
+  namespace api {
+    class CreateCardDto
+    class CardDto
+    class CreateManaDto
+    class ManaDto
+  }
+  namespace domain {
+    class Card
+    class CardRepository
+    class Mana
+    class ManaRepository
+  }
+  namespace nestjs_cqrs {
+    class Query
+  }
+
+  CreateCardCommand *-- CreateCardDto
+  CreateCardCommand --> CardDto
+  CreateCardCommand --> Card
+  CreateCardHandler *-- CardRepository
+  CreateCardHandler --> CreateCardCommand
+  CreateCardHandler --> Card
+  CreateManaCommand *-- CreateManaDto
+  CreateManaCommand --> ManaDto
+  CreateManaCommand --> Mana
+  CreateManaHandler *-- ManaRepository
+  CreateManaHandler --> CreateManaCommand
+  CreateManaHandler --> Mana
+  FindCardsQuery --|> Query
+  FindCardsQuery --> Card
+  FindCardsHandler *-- CardRepository
+  FindCardsHandler --> FindCardsQuery
+  FindCardsHandler --> Card
+  FindManaQuery --|> Query
+  FindManaQuery --> Mana
+  FindManaHandler *-- ManaRepository
+  FindManaHandler --> FindManaQuery
+  FindManaHandler --> Mana
+  GetCardQuery --|> Query
+  GetCardQuery --> Card
+  GetCardHandler *-- CardRepository
+  GetCardHandler --> GetCardQuery
+  GetCardHandler --> Card
+  GetManaQuery --|> Query
+  GetManaQuery --> Mana
+  GetManaHandler *-- ManaRepository
+  GetManaHandler --> GetManaQuery
+  GetManaHandler --> Mana
+```
 
 | Entity | Notes |
 |--------|-------|
@@ -58,6 +163,24 @@ npm run prisma:migrate:dev
 
 ### domain
 
+```mermaid
+classDiagram
+  namespace domain {
+    class Card
+    class Mana
+    class CardRepository
+    class ManaRepository
+  }
+  namespace dod_core {
+    class EntityRepository
+  }
+
+  CardRepository --|> EntityRepository
+  CardRepository --> Card
+  ManaRepository --|> EntityRepository
+  ManaRepository --> Mana
+```
+
 | Entity | Description | Notes |
 |--------|-------------|-------|
 | entities/[Card](src/domain/entities/card.entity.ts) | Spells and creatures. Each card belongs to one mana and may have multiple abilities |  |
@@ -67,6 +190,37 @@ npm run prisma:migrate:dev
 
 ### infrastructure
 
+```mermaid
+classDiagram
+  namespace infrastructure {
+    class PrismaService
+    class PrismaCardRepository
+    class PrismaManaRepository
+  }
+  namespace domain {
+    class Card
+    class CardRepository
+    class Mana
+    class ManaRepository
+  }
+  namespace prisma_client {
+    class PrismaClient
+  }
+  namespace dod_core {
+    class PrismaRepository
+  }
+
+  PrismaService --|> PrismaClient
+  PrismaCardRepository --|> PrismaRepository
+  PrismaCardRepository *-- PrismaService
+  PrismaCardRepository --> Card
+  PrismaCardRepository --> CardRepository
+  PrismaManaRepository --|> PrismaRepository
+  PrismaManaRepository *-- PrismaService
+  PrismaManaRepository --> Mana
+  PrismaManaRepository --> ManaRepository
+```
+
 | Entity | Notes |
 |--------|-------|
 | prisma/[PrismaService](src/infrastructure/prisma/prisma.service.ts) | Extends `PrismaClient` · Implements `OnModuleInit`, `OnModuleDestroy` |
@@ -75,96 +229,15 @@ npm run prisma:migrate:dev
 
 ### root
 
-| Entity |
-|--------|
-| [AppModule](src/app.module.ts) |
-<!-- poe:class-table:end -->
-
-<!-- poe:class-diagram:start -->
-## Class Diagram
-
 ```mermaid
 classDiagram
-  namespace api {
-    class CardController
-    class ManaController
-    class CreateCardDto
-    class CreateManaDto
-    class CardDto
-    class ManaDto
-  }
-
-  namespace application {
-    class CreateCardCommand
-    class CreateCardHandler
-    class CreateManaCommand
-    class CreateManaHandler
-    class FindCardsQuery
-    class FindCardsHandler
-    class FindManaQuery
-    class FindManaHandler
-    class GetCardQuery
-    class GetCardHandler
-    class GetManaQuery
-    class GetManaHandler
-  }
-
-  namespace domain {
-    class Card
-    class Mana
-    class CardRepository
-    class ManaRepository
-  }
-
-  namespace infrastructure {
-    class PrismaService
-    class PrismaCardRepository
-    class PrismaManaRepository
-  }
-
   namespace root {
     class AppModule
   }
 
-  CardController --> CreateCardDto
-  CardController --> CardDto
-  CardController --> CreateCardCommand
-  CardController --> FindCardsQuery
-  CardController --> GetCardQuery
-  CardController --> Card
-  ManaController --> CreateManaDto
-  ManaController --> ManaDto
-  ManaController --> CreateManaCommand
-  ManaController --> FindManaQuery
-  ManaController --> GetManaQuery
-  ManaController --> Mana
-  CreateManaDto --> Mana
-  ManaDto --> Mana
-  CreateCardCommand *-- CreateCardDto
-  CreateCardCommand --> CardDto
-  CreateCardCommand --> Card
-  CreateCardHandler *-- CardRepository
-  CreateCardHandler --> CreateCardCommand
-  CreateCardHandler --> Card
-  CreateManaCommand *-- CreateManaDto
-  CreateManaCommand --> ManaDto
-  CreateManaCommand --> Mana
-  CreateManaHandler *-- ManaRepository
-  CreateManaHandler --> CreateManaCommand
-  CreateManaHandler --> Mana
-  FindCardsHandler *-- CardRepository
-  FindCardsHandler --> Card
-  FindManaHandler *-- ManaRepository
-  FindManaHandler --> Mana
-  GetCardHandler *-- CardRepository
-  GetCardHandler --> GetCardQuery
-  GetCardHandler --> Card
-  GetManaHandler *-- ManaRepository
-  GetManaHandler --> GetManaQuery
-  GetManaHandler --> Mana
-  PrismaCardRepository *-- PrismaService
-  PrismaCardRepository --> Card
-  PrismaManaRepository *-- PrismaService
-  PrismaManaRepository --> Mana
 ```
-<!-- poe:class-diagram:end -->
+
+| Entity |
+|--------|
+| [AppModule](src/app.module.ts) |
+<!-- poe:classes:end -->

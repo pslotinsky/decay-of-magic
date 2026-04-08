@@ -30,14 +30,21 @@ export class ClassParser {
 
   public async parse(files: string[]): Promise<ClassRegistry> {
     const result: InspectedClass[] = [];
+    const externalSources = new Map<string, string>();
 
     for (const file of files) {
       const content = await this.readContent(file);
       const classes = this.extractClasses(content, file);
+      const imports = this.extractExternalImports(content);
+
       result.push(...classes);
+
+      for (const [name, source] of imports) {
+        externalSources.set(name, source);
+      }
     }
 
-    return new ClassRegistry(result);
+    return new ClassRegistry(result, externalSources);
   }
 
   private async readContent(file: string): Promise<string> {
@@ -54,7 +61,9 @@ export class ClassParser {
       const [fullMatch, jsdoc, abstractKeyword, name, parent, implementsStr] =
         match;
       const bodyStart = match.index + fullMatch.length;
-      const body = this.extractClassBody(content, bodyStart);
+      const body =
+        this.extractDeclarationTail(content, bodyStart) +
+        this.extractClassBody(content, bodyStart);
 
       results.push(
         new InspectedClass({
@@ -98,6 +107,34 @@ export class ClassParser {
       .split(',')
       .map((part) => part.trim())
       .filter(Boolean);
+  }
+
+  private extractExternalImports(content: string): Map<string, string> {
+    const IMPORT_PATTERN = /import\s+\{([^}]+)\}\s+from\s+['"]([^'"]+)['"]/g;
+    const imports = new Map<string, string>();
+    let importMatch: RegExpExecArray | null;
+
+    while ((importMatch = IMPORT_PATTERN.exec(content)) !== null) {
+      const [, names, source] = importMatch;
+
+      if (source.startsWith('.')) continue;
+
+      for (const raw of names.split(',')) {
+        const name = raw
+          .trim()
+          .split(/\s+as\s+/)[0]
+          .trim();
+
+        if (name) imports.set(name, source);
+      }
+    }
+
+    return imports;
+  }
+
+  private extractDeclarationTail(content: string, fromIndex: number): string {
+    const bracePos = content.indexOf('{', fromIndex);
+    return bracePos !== -1 ? content.slice(fromIndex, bracePos) : '';
   }
 
   private extractClassBody(content: string, fromIndex: number): string {

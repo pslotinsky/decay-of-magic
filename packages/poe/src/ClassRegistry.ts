@@ -5,9 +5,18 @@ import { InspectedClass } from './InspectedClass';
  */
 export class ClassRegistry {
   private readonly classMap: Map<string, InspectedClass>;
+  private readonly externalSources: Map<string, string>;
 
-  constructor(public readonly items: InspectedClass[]) {
+  constructor(
+    public readonly items: InspectedClass[],
+    externalSources: Map<string, string> = new Map(),
+  ) {
     this.classMap = new Map(items.map((cls) => [cls.name, cls]));
+    this.externalSources = externalSources;
+  }
+
+  public getExternalSource(name: string): string | undefined {
+    return this.externalSources.get(name);
   }
 
   public get isEmpty(): boolean {
@@ -25,8 +34,8 @@ export class ClassRegistry {
       (groups[cls.layer] ??= []).push(cls);
     }
 
-    const { root = [], ...layers } = groups;
+    const { root, ...layers } = groups;
 
-    return { ...layers, root };
+    return root ? { ...layers, root } : layers;
   }
 }

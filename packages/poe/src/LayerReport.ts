@@ -24,6 +24,10 @@ export class LayerReport {
   }
 
   public render(): string {
+    return `### ${this.layer}\n\n${this.renderContent()}`;
+  }
+
+  public renderContent(): string {
     const header = this.buildHeader();
     const rows = [
       header,
@@ -31,7 +35,7 @@ export class LayerReport {
       ...this.classes.map((cls) => this.buildRow(cls)),
     ];
 
-    return `### ${this.layer}\n\n${rows.join('\n')}`;
+    return rows.join('\n');
   }
 
   private buildHeader(): string {
