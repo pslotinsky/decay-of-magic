@@ -2,6 +2,7 @@ export enum FieldType {
   Enum = 'enum',
   Link = 'link',
   Date = 'date',
+  Text = 'text',
 }
 
 type BaseFieldDefinition = {
@@ -22,7 +23,12 @@ type DateFieldDefinition = BaseFieldDefinition & {
   type: FieldType.Date;
 };
 
+type TextFieldDefinition = BaseFieldDefinition & {
+  type: FieldType.Text;
+};
+
 export type FieldDefinition =
   | EnumFieldDefinition
   | LinkFieldDefinition
-  | DateFieldDefinition;
+  | DateFieldDefinition
+  | TextFieldDefinition;

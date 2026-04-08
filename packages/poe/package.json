@@ -1,5 +1,5 @@
 {
-  "name": "@dod/gendoc",
+  "name": "@dod/poe",
   "version": "0.0.1",
   "private": true,
   "bin": "./dist/index.js",

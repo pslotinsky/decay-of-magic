@@ -4,9 +4,10 @@
     "target": "es2024",
     "rootDir": "./src",
     "ignoreDeprecations": "6.0",
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "paths": {
-      "@zok/*": ["src/*"]
+      "@zok/*": ["./*"],
+      "test/*": ["../test/*"]
     },
     "outDir": "./dist",
     "esModuleInterop": true,

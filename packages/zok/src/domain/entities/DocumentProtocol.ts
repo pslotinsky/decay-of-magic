@@ -82,6 +82,8 @@ export class DocumentProtocol {
         return this.normalizeDocumentEnumField(value, field.values);
       case FieldType.Link:
         return value; // TODO: Link on document
+      case FieldType.Text:
+        return value ?? '';
       default:
         throw new UnexpectedValueError(field, 'Impossible filed');
     }
