@@ -1,18 +1,15 @@
-import { InspectedClass } from './InspectedClass';
+import { InspectedClass } from '../InspectedClass/InspectedClass';
 
 /**
  * Collection of inspected classes
  */
 export class ClassRegistry {
   private readonly classMap: Map<string, InspectedClass>;
-  private readonly externalSources: Map<string, string>;
-
   constructor(
     public readonly items: InspectedClass[],
-    externalSources: Map<string, string> = new Map(),
+    public readonly externalSources: Map<string, string> = new Map(),
   ) {
     this.classMap = new Map(items.map((cls) => [cls.name, cls]));
-    this.externalSources = externalSources;
   }
 
   public getExternalSource(name: string): string | undefined {

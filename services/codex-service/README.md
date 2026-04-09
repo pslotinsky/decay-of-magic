@@ -33,24 +33,80 @@ npm run prisma:migrate:dev
 ```mermaid
 classDiagram
   namespace api {
-    class CardController
-    class ManaController
-    class CreateCardDto
-    class CreateManaDto
-    class CardDto
-    class ManaDto
+    class CardController {
+      -CommandBus commandBus
+      -QueryBus queryBus
+      +create()
+      +getById()
+      +find()
+    }
+    class ManaController {
+      -CommandBus commandBus
+      -QueryBus queryBus
+      +create()
+      +getById()
+      +find()
+    }
+    class CreateCardDto {
+      +string id
+      +string name
+      +string imageUrl
+      +string description
+      +number level
+      +number cost
+      +string manaId
+    }
+    class CreateManaDto {
+      +string id
+      +string name
+      +ManaType type
+    }
+    class CardDto {
+      +string id
+      +string name
+      +string imageUrl
+      +string description
+      +number level
+      +number cost
+      +string manaId
+    }
+    class ManaDto {
+      +string id
+      +string name
+      +ManaType type
+    }
   }
   namespace application {
-    class CreateCardCommand
+    class CreateCardCommand {
+      +CreateCardDto payload
+    }
     class FindCardsQuery
-    class GetCardQuery
-    class CreateManaCommand
+    class GetCardQuery {
+      +string id
+    }
+    class CreateManaCommand {
+      +CreateManaDto payload
+    }
     class FindManaQuery
-    class GetManaQuery
+    class GetManaQuery {
+      +string id
+    }
   }
   namespace domain {
-    class Card
-    class Mana
+    class Card {
+      +string id
+      +string name
+      +string imageUrl
+      +string description
+      +number level
+      +number cost
+      +string manaId
+    }
+    class Mana {
+      +string id
+      +string name
+      +ManaType type
+    }
   }
 
   CardController --> CreateCardDto
@@ -83,29 +139,85 @@ classDiagram
 ```mermaid
 classDiagram
   namespace application {
-    class CreateCardCommand
-    class CreateCardHandler
-    class CreateManaCommand
-    class CreateManaHandler
+    class CreateCardCommand {
+      +CreateCardDto payload
+    }
+    class CreateCardHandler {
+      +execute()
+    }
+    class CreateManaCommand {
+      +CreateManaDto payload
+    }
+    class CreateManaHandler {
+      +execute()
+    }
     class FindCardsQuery
-    class FindCardsHandler
+    class FindCardsHandler {
+      +execute()
+    }
     class FindManaQuery
-    class FindManaHandler
-    class GetCardQuery
-    class GetCardHandler
-    class GetManaQuery
-    class GetManaHandler
+    class FindManaHandler {
+      +execute()
+    }
+    class GetCardQuery {
+      +string id
+    }
+    class GetCardHandler {
+      +execute()
+    }
+    class GetManaQuery {
+      +string id
+    }
+    class GetManaHandler {
+      +execute()
+    }
   }
   namespace api {
-    class CreateCardDto
-    class CardDto
-    class CreateManaDto
-    class ManaDto
+    class CreateCardDto {
+      +string id
+      +string name
+      +string imageUrl
+      +string description
+      +number level
+      +number cost
+      +string manaId
+    }
+    class CardDto {
+      +string id
+      +string name
+      +string imageUrl
+      +string description
+      +number level
+      +number cost
+      +string manaId
+    }
+    class CreateManaDto {
+      +string id
+      +string name
+      +ManaType type
+    }
+    class ManaDto {
+      +string id
+      +string name
+      +ManaType type
+    }
   }
   namespace domain {
-    class Card
+    class Card {
+      +string id
+      +string name
+      +string imageUrl
+      +string description
+      +number level
+      +number cost
+      +string manaId
+    }
     class CardRepository
-    class Mana
+    class Mana {
+      +string id
+      +string name
+      +ManaType type
+    }
     class ManaRepository
   }
   namespace nestjs_cqrs {
@@ -166,8 +278,20 @@ classDiagram
 ```mermaid
 classDiagram
   namespace domain {
-    class Card
-    class Mana
+    class Card {
+      +string id
+      +string name
+      +string imageUrl
+      +string description
+      +number level
+      +number cost
+      +string manaId
+    }
+    class Mana {
+      +string id
+      +string name
+      +ManaType type
+    }
     class CardRepository
     class ManaRepository
   }
@@ -194,13 +318,31 @@ classDiagram
 classDiagram
   namespace infrastructure {
     class PrismaService
-    class PrismaCardRepository
-    class PrismaManaRepository
+    class PrismaCardRepository {
+      #toEntity()
+      #toModel()
+    }
+    class PrismaManaRepository {
+      #toEntity()
+      #toModel()
+    }
   }
   namespace domain {
-    class Card
+    class Card {
+      +string id
+      +string name
+      +string imageUrl
+      +string description
+      +number level
+      +number cost
+      +string manaId
+    }
     class CardRepository
-    class Mana
+    class Mana {
+      +string id
+      +string name
+      +ManaType type
+    }
     class ManaRepository
   }
   namespace prisma_client {
@@ -234,7 +376,6 @@ classDiagram
   namespace root {
     class AppModule
   }
-
 ```
 
 | Entity |

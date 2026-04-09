@@ -1,6 +1,8 @@
 import { type Dirent } from 'fs';
-import { readdir } from 'fs/promises';
+import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
+
+import { ScannedFile } from './ScannedFile';
 
 /**
  * Searches the project for classes worthy of inspection
@@ -12,11 +14,11 @@ export class Scanner {
     this.basePath = basePath;
   }
 
-  public async scan(): Promise<string[]> {
+  public async scan(): Promise<ScannedFile[]> {
     return this.scanDir().catch(() => []);
   }
 
-  private async scanDir(dir: string = 'src'): Promise<string[]> {
+  private async scanDir(dir: string = 'src'): Promise<ScannedFile[]> {
     const items = await this.readItems(dir);
 
     const nested = await Promise.all(
@@ -32,18 +34,35 @@ export class Scanner {
     return readdir(dirPath, { withFileTypes: true });
   }
 
-  private async scanItem(item: Dirent<string>, dir: string): Promise<string[]> {
+  private async scanItem(
+    item: Dirent<string>,
+    dir: string,
+  ): Promise<ScannedFile[]> {
+    let files: ScannedFile[];
+
     const path = join(dir, item.name);
 
     if (item.isDirectory()) {
-      return this.scanDir(path);
+      files = await this.scanDir(path);
+    } else {
+      const file = await this.scanFile(path);
+
+      files = file ? [file] : [];
     }
 
-    if (item.isFile() && this.isTsFile(item.name)) {
-      return [path];
+    return files;
+  }
+
+  private async scanFile(path: string): Promise<ScannedFile | undefined> {
+    let file: ScannedFile | undefined;
+
+    if (this.isTsFile(path)) {
+      const absolutePath = join(this.basePath, path);
+      const content = await readFile(absolutePath, 'utf-8');
+      file = new ScannedFile(path, content);
     }
 
-    return [];
+    return file?.contains('class') ? file : undefined;
   }
 
   private isTsFile(name: string): boolean {

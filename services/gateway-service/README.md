@@ -12,7 +12,6 @@ classDiagram
   namespace root {
     class AppModule
   }
-
 ```
 
 | Entity |

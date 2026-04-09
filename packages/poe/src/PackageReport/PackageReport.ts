@@ -1,5 +1,5 @@
 import { ClassDiagram } from './ClassDiagram';
-import { ClassRegistry } from './ClassRegistry';
+import { ClassRegistry } from '../ClassRegistryParser/ClassRegistry';
 import { LayerReport } from './LayerReport';
 
 /**
