@@ -1,5 +1,5 @@
-import { InspectedClass } from './InspectedClass/InspectedClass';
-import { ClassRegistry } from './ClassRegistry';
+import { InspectedClass } from '../InspectedClass/InspectedClass';
+import { ClassRegistry } from '../ClassRegistryParser/ClassRegistry';
 
 /**
  * Describes classes belonging to a specific layer

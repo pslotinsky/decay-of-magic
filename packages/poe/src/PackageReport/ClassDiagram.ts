@@ -1,7 +1,7 @@
 import { snakeCase } from 'lodash';
 
-import { ClassRegistry } from './ClassRegistry';
-import { InspectedClass } from './InspectedClass/InspectedClass';
+import { ClassRegistry } from '../ClassRegistryParser/ClassRegistry';
+import { InspectedClass } from '../InspectedClass/InspectedClass';
 
 /**
  * Generates a Mermaid class diagram from inspected classes

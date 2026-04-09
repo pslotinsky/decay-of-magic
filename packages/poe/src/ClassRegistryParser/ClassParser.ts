@@ -1,13 +1,9 @@
-import { readFile } from 'fs/promises';
-import { resolve } from 'path';
-
 import {
   InspectedClassMember,
   Visibility,
 } from '../InspectedClass/InspectedClassMember';
 import { InspectedClass } from '../InspectedClass/InspectedClass';
-import { ClassRegistry } from '../ClassRegistry';
-import { RelationBuilder } from './RelationBuilder';
+import { ScannedFile } from '../Scanner/ScannedFile';
 
 const CLASS_PATTERN =
   /^\s*(?:\/\*\*([\s\S]*?)\*\/\s*)?(?:export\s+)?(?:default\s+)?(abstract\s+)?class\s+(\w+)(?:\s+extends\s+(\w+))?(?:\s+implements\s+([\w,\s]+))?/gm;
@@ -28,54 +24,29 @@ const PRIMITIVE_TYPES = new Set([
 ]);
 
 /**
- * Parses source files and extracts inspected classes
+ * Parses a single scanned file and extracts class definitions and imports
  */
 export class ClassParser {
-  constructor(private readonly packagePath: string) {}
+  constructor(private readonly file: ScannedFile) {}
 
-  public async parse(files: string[]): Promise<ClassRegistry> {
-    const result: InspectedClass[] = [];
-    const externalSources = new Map<string, string>();
-
-    for (const file of files) {
-      const content = await this.readContent(file);
-      const classes = this.extractClasses(content, file);
-      const imports = this.extractExternalImports(content);
-
-      result.push(...classes);
-
-      for (const [name, source] of imports) {
-        externalSources.set(name, source);
-      }
-    }
-
-    const registry = new ClassRegistry(result, externalSources);
-
-    return new RelationBuilder(registry).buildRelations();
-  }
-
-  private async readContent(file: string): Promise<string> {
-    return readFile(resolve(this.packagePath, file), 'utf-8');
-  }
-
-  private extractClasses(content: string, file: string): InspectedClass[] {
+  public classes(): InspectedClass[] {
     const pattern = new RegExp(CLASS_PATTERN.source, 'gm');
-    const layer = this.getLayer(file);
+    const layer = this.getLayer(this.file.path);
     const results: InspectedClass[] = [];
     let match: RegExpExecArray | null;
 
-    while ((match = pattern.exec(content)) !== null) {
+    while ((match = pattern.exec(this.file.content)) !== null) {
       const [fullMatch, jsdoc, abstractKeyword, name, parent, implementsStr] =
         match;
       const bodyStart = match.index + fullMatch.length;
       const body =
-        this.extractDeclarationTail(content, bodyStart) +
-        this.extractClassBody(content, bodyStart);
+        this.extractDeclarationTail(this.file.content, bodyStart) +
+        this.extractClassBody(this.file.content, bodyStart);
 
       results.push(
         new InspectedClass({
           name,
-          file,
+          file: this.file.path,
           layer,
           body,
           abstract: !!abstractKeyword,
@@ -91,6 +62,29 @@ export class ClassParser {
     }
 
     return results;
+  }
+
+  public imports(): Map<string, string> {
+    const IMPORT_PATTERN = /import\s+\{([^}]+)\}\s+from\s+['"]([^'"]+)['"]/g;
+    const result = new Map<string, string>();
+    let match: RegExpExecArray | null;
+
+    while ((match = IMPORT_PATTERN.exec(this.file.content)) !== null) {
+      const [, names, source] = match;
+
+      if (source.startsWith('.')) continue;
+
+      for (const raw of names.split(',')) {
+        const name = raw
+          .trim()
+          .split(/\s+as\s+/)[0]
+          .trim();
+
+        if (name) result.set(name, source);
+      }
+    }
+
+    return result;
   }
 
   private getLayer(file: string): string {
@@ -115,29 +109,6 @@ export class ClassParser {
       .split(',')
       .map((part) => part.trim())
       .filter(Boolean);
-  }
-
-  private extractExternalImports(content: string): Map<string, string> {
-    const IMPORT_PATTERN = /import\s+\{([^}]+)\}\s+from\s+['"]([^'"]+)['"]/g;
-    const imports = new Map<string, string>();
-    let importMatch: RegExpExecArray | null;
-
-    while ((importMatch = IMPORT_PATTERN.exec(content)) !== null) {
-      const [, names, source] = importMatch;
-
-      if (source.startsWith('.')) continue;
-
-      for (const raw of names.split(',')) {
-        const name = raw
-          .trim()
-          .split(/\s+as\s+/)[0]
-          .trim();
-
-        if (name) imports.set(name, source);
-      }
-    }
-
-    return imports;
   }
 
   private findClassBodyStart(content: string, fromIndex: number): number {

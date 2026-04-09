@@ -1,9 +1,9 @@
 import { basename, resolve } from 'path';
 
-import { PackageReport } from './PackageReport';
-import { ClassParser } from './ClassParser/ClassParser';
+import { PackageReport } from './PackageReport/PackageReport';
+import { ClassRegistryParser } from './ClassRegistryParser/ClassRegistryParser';
 import { ReadmeWriter } from './ReadmeWriter';
-import { Scanner } from './Scanner';
+import { Scanner } from './Scanner/Scanner';
 
 /**
  * Inspector Poe himself. Coordinates the inspection process
@@ -23,7 +23,7 @@ export class InspectorPoe {
     console.time('inspection completed');
 
     const files = await new Scanner(packagePath).scan();
-    const classes = await new ClassParser(packagePath).parse(files);
+    const classes = new ClassRegistryParser().parse(files);
 
     console.info(`classes found: ${classes.items.length}`);
 

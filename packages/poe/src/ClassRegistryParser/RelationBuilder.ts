@@ -1,4 +1,4 @@
-import { ClassRegistry } from '../ClassRegistry';
+import { ClassRegistry } from './ClassRegistry';
 import { InspectedClass } from '../InspectedClass/InspectedClass';
 import { InspectedClassRelation } from '../InspectedClass/InspectedClassRelation';
 

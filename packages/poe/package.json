@@ -5,6 +5,7 @@
   "bin": "./dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.build.json && tsc-alias",
+    "test": "tsx --test 'test/**/*.test.ts'",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts\"",
     "format": "prettier --write \"src/**/*.ts\""

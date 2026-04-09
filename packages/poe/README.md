@@ -3,20 +3,27 @@
 <!-- poe:classes:start -->
 ## Classes
 
-### ClassParser
+### ClassRegistryParser
 
 ```mermaid
 classDiagram
-  namespace class_parser {
+  namespace class_registry_parser {
     class ClassParser {
-      -string packagePath
+      -ScannedFile file
+      +classes()
+      +imports()
+    }
+    class ClassRegistry {
+      -Map classMap
+      +InspectedClass items
+      +Map externalSources
+      +boolean isEmpty
+      +Record layers
+      +getExternalSource()
+    }
+    class ClassRegistryParser {
       +parse()
-      -readContent()
-      -extractClasses()
-      -getLayer()
-      -parseJsDoc()
-      -parseInterfaces()
-      -extractExternalImports()
+      -mergeImports()
     }
     class RelationBuilder {
       -ClassRegistry registry
@@ -27,14 +34,11 @@ classDiagram
       -isKnownRelation()
     }
   }
-  namespace root {
-    class ClassRegistry {
-      -Map classMap
-      +InspectedClass items
-      +Map externalSources
-      +boolean isEmpty
-      +Record layers
-      +getExternalSource()
+  namespace scanner {
+    class ScannedFile {
+      +string path
+      +string content
+      +contains()
     }
   }
   namespace inspected_class {
@@ -51,9 +55,13 @@ classDiagram
     }
   }
 
-  ClassParser --> RelationBuilder
-  ClassParser --> ClassRegistry
+  ClassParser *-- ScannedFile
   ClassParser --> InspectedClass
+  ClassRegistry *-- InspectedClass
+  ClassRegistryParser --> ClassParser
+  ClassRegistryParser --> ClassRegistry
+  ClassRegistryParser --> RelationBuilder
+  ClassRegistryParser --> ScannedFile
   RelationBuilder *-- ClassRegistry
   RelationBuilder --> InspectedClass
   RelationBuilder --> InspectedClassRelation
@@ -61,8 +69,10 @@ classDiagram
 
 | Entity | Description |
 |--------|-------------|
-| [ClassParser](src/ClassParser/ClassParser.ts) | Parses source files and extracts inspected classes |
-| [RelationBuilder](src/ClassParser/RelationBuilder.ts) | Builds relations between inspected classes and enriches them with the results |
+| [ClassParser](src/ClassRegistryParser/ClassParser.ts) | Parses a single scanned file and extracts class definitions and imports |
+| [ClassRegistry](src/ClassRegistryParser/ClassRegistry.ts) | Collection of inspected classes |
+| [ClassRegistryParser](src/ClassRegistryParser/ClassRegistryParser.ts) | Parses a collection of scanned files into a ClassRegistry |
+| [RelationBuilder](src/ClassRegistryParser/RelationBuilder.ts) | Builds relations between inspected classes and enriches them with the results |
 
 ### InspectedClass
 
@@ -100,11 +110,11 @@ classDiagram
 | [InspectedClassMember](src/InspectedClass/InspectedClassMember.ts) |  |
 | [InspectedClassRelation](src/InspectedClass/InspectedClassRelation.ts) |  |
 
-### root
+### PackageReport
 
 ```mermaid
 classDiagram
-  namespace root {
+  namespace package_report {
     class ClassDiagram {
       -ClassRegistry classRegistry
       -Set knownNames
@@ -123,22 +133,6 @@ classDiagram
       -isKnownName()
       -clearLines()
       -addLine()
-    }
-    class ClassRegistry {
-      -Map classMap
-      +InspectedClass items
-      +Map externalSources
-      +boolean isEmpty
-      +Record layers
-      +getExternalSource()
-    }
-    class ClassReport {
-      -ClassRegistry classRegistry
-      +render()
-    }
-    class InspectorPoe {
-      -string basePath
-      +inspect()
     }
     class LayerReport {
       -string layer
@@ -159,22 +153,15 @@ classDiagram
       -ClassDiagram diagram
       +render()
     }
-    class ReadmeWriter {
-      -string basePath
-      -string readmePath
-      +write()
-      -save()
-      -load()
-      -updateContent()
-      -readPackageName()
-    }
-    class Scanner {
-      -string basePath
-      +scan()
-      -scanDir()
-      -readItems()
-      -scanItem()
-      -isTsFile()
+  }
+  namespace class_registry_parser {
+    class ClassRegistry {
+      -Map classMap
+      +InspectedClass items
+      +Map externalSources
+      +boolean isEmpty
+      +Record layers
+      +getExternalSource()
     }
   }
   namespace inspected_class {
@@ -184,28 +171,9 @@ classDiagram
       +toString()
     }
   }
-  namespace class_parser {
-    class ClassParser {
-      -string packagePath
-      +parse()
-      -readContent()
-      -extractClasses()
-      -getLayer()
-      -parseJsDoc()
-      -parseInterfaces()
-      -extractExternalImports()
-    }
-  }
 
   ClassDiagram *-- ClassRegistry
   ClassDiagram --> InspectedClass
-  ClassRegistry *-- InspectedClass
-  ClassReport *-- ClassRegistry
-  ClassReport --> LayerReport
-  InspectorPoe --> ClassParser
-  InspectorPoe --> PackageReport
-  InspectorPoe --> ReadmeWriter
-  InspectorPoe --> Scanner
   LayerReport *-- InspectedClass
   LayerReport *-- ClassRegistry
   PackageReport *-- ClassRegistry
@@ -215,12 +183,100 @@ classDiagram
 
 | Entity | Description |
 |--------|-------------|
-| [ClassDiagram](src/ClassDiagram.ts) | Generates a Mermaid class diagram from inspected classes |
-| [ClassRegistry](src/ClassRegistry.ts) | Collection of inspected classes |
-| [ClassReport](src/ClassReport.ts) | Aggregated report describing inspected classes |
+| [ClassDiagram](src/PackageReport/ClassDiagram.ts) | Generates a Mermaid class diagram from inspected classes |
+| [LayerReport](src/PackageReport/LayerReport.ts) | Describes classes belonging to a specific layer |
+| [PackageReport](src/PackageReport/PackageReport.ts) | Combined report grouping class tables and diagrams by layer |
+
+### Scanner
+
+```mermaid
+classDiagram
+  namespace scanner {
+    class ScannedFile {
+      +string path
+      +string content
+      +contains()
+    }
+    class Scanner {
+      -string basePath
+      +scan()
+      -scanDir()
+      -readItems()
+      -scanItem()
+      -scanFile()
+      -isTsFile()
+    }
+  }
+
+  Scanner --> ScannedFile
+```
+
+| Entity | Description |
+|--------|-------------|
+| [ScannedFile](src/Scanner/ScannedFile.ts) |  |
+| [Scanner](src/Scanner/Scanner.ts) | Searches the project for classes worthy of inspection |
+
+### root
+
+```mermaid
+classDiagram
+  namespace root {
+    class InspectorPoe {
+      -string basePath
+      +inspect()
+    }
+    class ReadmeWriter {
+      -string basePath
+      -string readmePath
+      +write()
+      -save()
+      -load()
+      -updateContent()
+      -readPackageName()
+    }
+  }
+  namespace class_registry_parser {
+    class ClassRegistry {
+      -Map classMap
+      +InspectedClass items
+      +Map externalSources
+      +boolean isEmpty
+      +Record layers
+      +getExternalSource()
+    }
+    class ClassRegistryParser {
+      +parse()
+      -mergeImports()
+    }
+  }
+  namespace package_report {
+    class PackageReport {
+      -ClassRegistry classRegistry
+      -ClassDiagram diagram
+      +render()
+    }
+  }
+  namespace scanner {
+    class Scanner {
+      -string basePath
+      +scan()
+      -scanDir()
+      -readItems()
+      -scanItem()
+      -scanFile()
+      -isTsFile()
+    }
+  }
+
+  InspectorPoe --> ClassRegistry
+  InspectorPoe --> ClassRegistryParser
+  InspectorPoe --> PackageReport
+  InspectorPoe --> ReadmeWriter
+  InspectorPoe --> Scanner
+```
+
+| Entity | Description |
+|--------|-------------|
 | [InspectorPoe](src/InspectorPoe.ts) | Inspector Poe himself. Coordinates the inspection process |
-| [LayerReport](src/LayerReport.ts) | Describes classes belonging to a specific layer |
-| [PackageReport](src/PackageReport.ts) | Combined report grouping class tables and diagrams by layer |
 | [ReadmeWriter](src/ReadmeWriter.ts) | Updates README files with generated class tables |
-| [Scanner](src/Scanner.ts) | Searches the project for classes worthy of inspection |
 <!-- poe:classes:end -->
