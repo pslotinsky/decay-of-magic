@@ -8,28 +8,154 @@
 ```mermaid
 classDiagram
   namespace application {
-    class Zok
-    class ChangeStatusDutyInstruction
-    class CreateDocumentDutyInstruction
-    class DeleteDocumentDutyInstruction
-    class DutyInstruction
-    class ListDocumentsDutyInstruction
-    class MoveDocumentDutyInstruction
-    class RenameDocumentDutyInstruction
-    class UpdateDocumentRelationsDutyInstruction
-    class UpdateReadmeDutyInstruction
+    class Zok {
+      +ZokAssistants assistants
+      +handleTextPlea()
+      +handlePlea()
+      +announce()
+      +findDocuments()
+      +init()
+      -executeCommand()
+      -executeQuery()
+      -updateDocumentRelations()
+      -updateReadme()
+      -report()
+    }
+    class ChangeStatusDutyInstruction {
+      +execute()
+      -resolveStatusValue()
+    }
+    class CreateDocumentDutyInstruction {
+      +execute()
+      -enrichParams()
+      -resolveParentDocument()
+      -getActiveDocument()
+    }
+    class DeleteDocumentDutyInstruction {
+      +execute()
+    }
+    class DutyInstruction {
+      #TParams params
+      +Plea plea
+      +ZokAssistants assistants
+      +execute()
+      #getDocument()
+    }
+    class ListDocumentsDutyInstruction {
+      +execute()
+      -getDocuments()
+    }
+    class MoveDocumentDutyInstruction {
+      +execute()
+      -resolveParentLink()
+      -cleanOldParentToc()
+    }
+    class RenameDocumentDutyInstruction {
+      +execute()
+      -rename()
+      -updateChildLinks()
+      -replaceTitleInContent()
+      -buildHeading()
+    }
+    class UpdateDocumentRelationsDutyInstruction {
+      +execute()
+      -getDocumentParent()
+      -updateToc()
+      -createToc()
+      -replaceTocContent()
+    }
+    class UpdateReadmeDutyInstruction {
+      +execute()
+      -getReadmeForProtocol()
+      -createReadmeForProtocol()
+      -updateReadme()
+      -getDocuments()
+      -createToc()
+      -replaceTocContent()
+    }
   }
   namespace domain {
-    class Assistant
-    class HumorAdvisor
-    class Document
-    class Dossier
-    class Plea
-    class Remark
-    class UnexpectedValueError
-    class DocumentLink
-    class DocumentProtocol
-    class DocumentTocRender
+    class Assistant {
+      #report()
+      +init()
+    }
+    class HumorAdvisor {
+      +remarkOnDocumentDeletion()
+      +remarkOnDocumentCreation()
+      +remarkOnDocumentRelationsUpdate()
+      +remarkOnDocumentList()
+      +remarkOnDocumentRename()
+      +remarkOnDocumentMove()
+      +remarkOnDocumentStatusChange()
+      +remarkOnReadmeUpdate()
+      +remarkOnError()
+      +makeDummyRemark()
+      -pickJoke()
+    }
+    class Document {
+      +DocumentMetadata metadata
+      +string content
+      +string id
+      +string title
+      +DocumentProtocol protocol
+      +string fileName
+      +string relativePath
+      +getField()
+      +setField()
+      +followsProtocol()
+    }
+    class Dossier {
+      +string name
+      +number age
+      +string race
+      +string gender
+      +string bio
+    }
+    class Plea {
+      +string id
+      #PleaForm form
+      #PleaReport reports
+      +PleaType type
+      +string protocol
+      +Date creationTime
+      +getValue()
+      +setValue()
+      +addReport()
+    }
+    class Remark {
+      +string text
+      +TResult result
+      +toString()
+    }
+    class UnexpectedValueError {
+      +unknown value
+    }
+    class DocumentLink {
+      +string id
+      +string text
+      +string path
+      +toString()
+    }
+    class DocumentProtocol {
+      +string id
+      +string prefix
+      +number idDigits
+      +string path
+      +string template
+      +string aliases
+      +Record fields
+      +string parentProtocolId
+      +getField()
+      +findFieldKeyByName()
+      +normalizeFieldValue()
+      #normalizeDocumentDateField()
+      #normalizeDocumentEnumField()
+    }
+    class DocumentTocRender {
+      -DocumentToc toc
+      +render()
+      -renderLine()
+    }
   }
 
   Zok --> ChangeStatusDutyInstruction
@@ -109,27 +235,173 @@ classDiagram
 ```mermaid
 classDiagram
   namespace domain {
-    class ArchiveKeeper
-    class Assistant
-    class HumorAdvisor
-    class PleaFormalist
-    class ProtocolClerk
-    class Scribe
-    class Document
-    class DocumentLink
-    class DocumentProtocol
-    class Dossier
-    class Plea
-    class Remark
+    class ArchiveKeeper {
+      #Archive archive
+      +issueDocumentNumber()
+      +find()
+      +findById()
+      +findByIdOrFail()
+      +save()
+      +delete()
+      +replace()
+      #getSerialNumber()
+      #formatDocumentNumber()
+      #createArchive()
+    }
+    class Assistant {
+      #report()
+      +init()
+    }
+    class HumorAdvisor {
+      +remarkOnDocumentDeletion()
+      +remarkOnDocumentCreation()
+      +remarkOnDocumentRelationsUpdate()
+      +remarkOnDocumentList()
+      +remarkOnDocumentRename()
+      +remarkOnDocumentMove()
+      +remarkOnDocumentStatusChange()
+      +remarkOnReadmeUpdate()
+      +remarkOnError()
+      +makeDummyRemark()
+      -pickJoke()
+    }
+    class PleaFormalist {
+      +formalizePlea()
+      #issueId()
+    }
+    class ProtocolClerk {
+      #Map protocols
+      +getProtocol()
+      +hasProtocol()
+      +getChildProtocols()
+      #findByAlias()
+    }
+    class Scribe {
+      +createDocument()
+      #fillDocumentFields()
+      #getDefaultFieldValues()
+      +renderRecord()
+      #fillDocumentContent()
+    }
+    class Document {
+      +DocumentMetadata metadata
+      +string content
+      +string id
+      +string title
+      +DocumentProtocol protocol
+      +string fileName
+      +string relativePath
+      +getField()
+      +setField()
+      +followsProtocol()
+    }
+    class DocumentLink {
+      +string id
+      +string text
+      +string path
+      +toString()
+    }
+    class DocumentProtocol {
+      +string id
+      +string prefix
+      +number idDigits
+      +string path
+      +string template
+      +string aliases
+      +Record fields
+      +string parentProtocolId
+      +getField()
+      +findFieldKeyByName()
+      +normalizeFieldValue()
+      #normalizeDocumentDateField()
+      #normalizeDocumentEnumField()
+    }
+    class Dossier {
+      +string name
+      +number age
+      +string race
+      +string gender
+      +string bio
+    }
+    class Plea {
+      +string id
+      #PleaForm form
+      #PleaReport reports
+      +PleaType type
+      +string protocol
+      +Date creationTime
+      +getValue()
+      +setValue()
+      +addReport()
+    }
+    class Remark {
+      +string text
+      +TResult result
+      +toString()
+    }
     class MalformedDocumentError
-    class NotFoundError
-    class UnexpectedValueError
-    class Archive
-    class DocumentParser
-    class DocumentTocLineParser
-    class DocumentTocParser
-    class TextExtractor
-    class DocumentTocRender
+    class NotFoundError {
+      +string entity
+      +C criteria
+    }
+    class UnexpectedValueError {
+      +unknown value
+    }
+    class Archive {
+      #DocumentParser documentParser
+      +count()
+      +find()
+      +save()
+      +delete()
+      +replace()
+    }
+    class DocumentParser {
+      +parse()
+      -parseMetadata()
+      -parseIdAndTitle()
+      -parseFields()
+      -parseToc()
+      -parseField()
+      -parseDateField()
+      -splitOnSections()
+      -fetchTitleSection()
+      -fetchFieldsSection()
+    }
+    class DocumentTocLineParser {
+      -string line
+      -DocumentStatus status
+      -string label
+      -string link
+      +parse()
+      -extractStatus()
+      -extractLabel()
+      -extractLink()
+    }
+    class DocumentTocParser {
+      -string content
+      +parse()
+      -parseTocProtocolName()
+    }
+    class TextExtractor {
+      -string text
+      -boolean isSameTokens
+      -Token startToken
+      -Token endToken
+      -string remainingText
+      -boolean isFinalTokenFound
+      -string extractedText
+      +execute()
+      -isTokenMatched()
+      -updateStartToken()
+      -updateEndToken()
+      -updateRemainingText()
+      -initToken()
+    }
+    class DocumentTocRender {
+      -DocumentToc toc
+      +render()
+      -renderLine()
+    }
   }
 
   ArchiveKeeper --|> Assistant
@@ -206,23 +478,133 @@ classDiagram
 ```mermaid
 classDiagram
   namespace infrastructure {
-    class FileSystemArchive
-    class FileSystemArchiveKeeper
-    class NanoPleaFormalist
-    class NunjucksScribe
-    class YamlProtocolClerk
+    class FileSystemArchive {
+      -string path
+      +count()
+      +find()
+      +save()
+      +delete()
+      +replace()
+      -findFileName()
+      -deleteFile()
+      -findFiles()
+      -filterByContent()
+      -fileContains()
+      -readFile()
+      -writeFile()
+      -readDir()
+      -resolveFilePath()
+      -resolveDirPath()
+    }
+    class FileSystemArchiveKeeper {
+      #createArchive()
+    }
+    class NanoPleaFormalist {
+      #issueId()
+    }
+    class NunjucksScribe {
+      -nunjucks env
+      +renderRecord()
+      #fillDocumentContent()
+      -formatFields()
+      -formatField()
+    }
+    class YamlProtocolClerk {
+      +init()
+      -loadProtocols()
+    }
   }
   namespace domain {
-    class Archive
-    class Document
-    class DocumentProtocol
-    class ArchiveKeeper
-    class Dossier
-    class PleaFormalist
-    class Scribe
-    class DocumentLink
-    class Plea
-    class ProtocolClerk
+    class Archive {
+      #DocumentParser documentParser
+      +count()
+      +find()
+      +save()
+      +delete()
+      +replace()
+    }
+    class Document {
+      +DocumentMetadata metadata
+      +string content
+      +string id
+      +string title
+      +DocumentProtocol protocol
+      +string fileName
+      +string relativePath
+      +getField()
+      +setField()
+      +followsProtocol()
+    }
+    class DocumentProtocol {
+      +string id
+      +string prefix
+      +number idDigits
+      +string path
+      +string template
+      +string aliases
+      +Record fields
+      +string parentProtocolId
+      +getField()
+      +findFieldKeyByName()
+      +normalizeFieldValue()
+      #normalizeDocumentDateField()
+      #normalizeDocumentEnumField()
+    }
+    class ArchiveKeeper {
+      #Archive archive
+      +issueDocumentNumber()
+      +find()
+      +findById()
+      +findByIdOrFail()
+      +save()
+      +delete()
+      +replace()
+      #getSerialNumber()
+      #formatDocumentNumber()
+      #createArchive()
+    }
+    class Dossier {
+      +string name
+      +number age
+      +string race
+      +string gender
+      +string bio
+    }
+    class PleaFormalist {
+      +formalizePlea()
+      #issueId()
+    }
+    class Scribe {
+      +createDocument()
+      #fillDocumentFields()
+      #getDefaultFieldValues()
+      +renderRecord()
+      #fillDocumentContent()
+    }
+    class DocumentLink {
+      +string id
+      +string text
+      +string path
+      +toString()
+    }
+    class Plea {
+      +string id
+      #PleaForm form
+      #PleaReport reports
+      +PleaType type
+      +string protocol
+      +Date creationTime
+      +getValue()
+      +setValue()
+      +addReport()
+    }
+    class ProtocolClerk {
+      #Map protocols
+      +getProtocol()
+      +hasProtocol()
+      +getChildProtocols()
+      #findByAlias()
+    }
   }
 
   FileSystemArchive --|> Archive

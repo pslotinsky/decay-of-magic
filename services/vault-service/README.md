@@ -10,14 +10,29 @@ Manages files: upload, storage, etc
 ```mermaid
 classDiagram
   namespace api {
-    class FileController
-    class UploadFileDto
+    class FileController {
+      -CommandBus commandBus
+      +upload()
+    }
+    class UploadFileDto {
+      +string id
+      +string category
+      +string file
+    }
   }
   namespace application {
-    class UploadFileCommand
+    class UploadFileCommand {
+      +File file
+    }
   }
   namespace domain {
-    class File
+    class File {
+      +string id
+      +string category
+      +string name
+      +Buffer buffer
+      +string mimetype
+    }
   }
 
   FileController --> UploadFileDto
@@ -35,11 +50,27 @@ classDiagram
 ```mermaid
 classDiagram
   namespace application {
-    class UploadFileCommand
-    class UploadFileUseCase
+    class UploadFileCommand {
+      +File file
+    }
+    class UploadFileUseCase {
+      -string bucket
+      -S3 client
+      +execute()
+      -createPath()
+      -createAbsolutePath()
+      -createBucket()
+      -createClient()
+    }
   }
   namespace domain {
-    class File
+    class File {
+      +string id
+      +string category
+      +string name
+      +Buffer buffer
+      +string mimetype
+    }
   }
   namespace nestjs_cqrs {
     class Command
@@ -61,9 +92,14 @@ classDiagram
 ```mermaid
 classDiagram
   namespace domain {
-    class File
+    class File {
+      +string id
+      +string category
+      +string name
+      +Buffer buffer
+      +string mimetype
+    }
   }
-
 ```
 
 | Entity |
@@ -77,7 +113,6 @@ classDiagram
   namespace root {
     class AppModule
   }
-
 ```
 
 | Entity |

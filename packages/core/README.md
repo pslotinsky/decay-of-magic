@@ -8,10 +8,21 @@
 ```mermaid
 classDiagram
   namespace repositories {
-    class EntityRepository
-    class PrismaRepository
+    class EntityRepository {
+      +getById()
+      +getByIdOrFail()
+      +find()
+      +save()
+    }
+    class PrismaRepository {
+      +getById()
+      +getByIdOrFail()
+      +find()
+      +save()
+      #toEntity()
+      #toModel()
+    }
   }
-
 ```
 
 | Entity | Description | Notes |

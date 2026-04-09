@@ -1,8 +1,13 @@
 import { readFile } from 'fs/promises';
 import { resolve } from 'path';
 
-import { InspectedClass } from './InspectedClass';
-import { ClassRegistry } from './ClassRegistry';
+import {
+  InspectedClassMember,
+  Visibility,
+} from '../InspectedClass/InspectedClassMember';
+import { InspectedClass } from '../InspectedClass/InspectedClass';
+import { ClassRegistry } from '../ClassRegistry';
+import { RelationBuilder } from './RelationBuilder';
 
 const CLASS_PATTERN =
   /^\s*(?:\/\*\*([\s\S]*?)\*\/\s*)?(?:export\s+)?(?:default\s+)?(abstract\s+)?class\s+(\w+)(?:\s+extends\s+(\w+))?(?:\s+implements\s+([\w,\s]+))?/gm;
@@ -44,7 +49,9 @@ export class ClassParser {
       }
     }
 
-    return new ClassRegistry(result, externalSources);
+    const registry = new ClassRegistry(result, externalSources);
+
+    return new RelationBuilder(registry).buildRelations();
   }
 
   private async readContent(file: string): Promise<string> {
@@ -78,6 +85,7 @@ export class ClassParser {
             ? this.parseInterfaces(implementsStr)
             : undefined,
           fields: this.extractFieldTypes(body),
+          members: this.extractMembers(body),
         }),
       );
     }
@@ -132,21 +140,34 @@ export class ClassParser {
     return imports;
   }
 
+  private findClassBodyStart(content: string, fromIndex: number): number {
+    let pos = fromIndex;
+    let angleDepth = 0;
+
+    while (pos < content.length) {
+      const ch = content[pos];
+      if (ch === '<') angleDepth++;
+      else if (ch === '>') angleDepth--;
+      else if (ch === '{' && angleDepth === 0) return pos;
+      pos++;
+    }
+
+    return -1;
+  }
+
   private extractDeclarationTail(content: string, fromIndex: number): string {
-    const bracePos = content.indexOf('{', fromIndex);
+    const bracePos = this.findClassBodyStart(content, fromIndex);
     return bracePos !== -1 ? content.slice(fromIndex, bracePos) : '';
   }
 
   private extractClassBody(content: string, fromIndex: number): string {
-    let pos = fromIndex;
+    const bodyOpen = this.findClassBodyStart(content, fromIndex);
 
-    while (pos < content.length && content[pos] !== '{') {
-      pos++;
-    }
+    if (bodyOpen === -1) return '';
 
-    const bodyStart = pos + 1;
+    let pos = bodyOpen + 1;
+    const bodyStart = pos;
     let depth = 1;
-    pos++;
 
     while (pos < content.length && depth > 0) {
       if (content[pos] === '{') {
@@ -158,6 +179,69 @@ export class ClassParser {
     }
 
     return content.slice(bodyStart, pos - 1);
+  }
+
+  private extractMembers(body: string): InspectedClassMember[] {
+    const members: InspectedClassMember[] = [];
+    const seen = new Set<string>();
+    let match: RegExpExecArray | null;
+
+    // Fields: [public|protected|private] [readonly] name[?!]: Type
+    const FIELD_PATTERN =
+      /^\s*(public|protected|private)\s+(?:readonly\s+)?(\w+)\s*[?!]?\s*:\s*(\w+)/gm;
+
+    while ((match = FIELD_PATTERN.exec(body)) !== null) {
+      const [, vis, name, type] = match;
+      if (!seen.has(name)) {
+        seen.add(name);
+        members.push(
+          new InspectedClassMember(name, vis as Visibility, false, type),
+        );
+      }
+    }
+
+    // Constructor parameter properties: constructor(public readonly name: Type, ...)
+    const CTOR_PROP_PATTERN =
+      /[,(]\s*(public|protected|private)\s+(?:readonly\s+)?(\w+)\s*[?!]?\s*:\s*(\w+)/g;
+
+    while ((match = CTOR_PROP_PATTERN.exec(body)) !== null) {
+      const [, vis, name, type] = match;
+      if (!seen.has(name)) {
+        seen.add(name);
+        members.push(
+          new InspectedClassMember(name, vis as Visibility, false, type),
+        );
+      }
+    }
+
+    // Getters: [public|protected|private] get name()[: Type]
+    const GETTER_PATTERN =
+      /^\s*(public|protected|private)\s+get\s+(\w+)\s*\(\)\s*(?::\s*(\w+))?/gm;
+
+    while ((match = GETTER_PATTERN.exec(body)) !== null) {
+      const [, vis, name, type] = match;
+      if (!seen.has(name)) {
+        seen.add(name);
+        members.push(
+          new InspectedClassMember(name, vis as Visibility, false, type),
+        );
+      }
+    }
+
+    // Methods: [public|protected|private] [abstract] [override] [async] name<T>([...])
+    const METHOD_PATTERN =
+      /^\s*(public|protected|private)\s+(?:abstract\s+)?(?:override\s+)?(?:async\s+)?(\w+)\s*(?:<[^>]*>)?\s*\(/gm;
+
+    while ((match = METHOD_PATTERN.exec(body)) !== null) {
+      const [, vis, name] = match;
+      if (name === 'constructor' || name === 'get' || name === 'set') continue;
+      if (!seen.has(name)) {
+        seen.add(name);
+        members.push(new InspectedClassMember(name, vis as Visibility, true));
+      }
+    }
+
+    return members;
   }
 
   private extractFieldTypes(body: string): string[] {

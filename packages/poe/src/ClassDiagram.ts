@@ -1,10 +1,21 @@
+import { snakeCase } from 'lodash';
+
 import { ClassRegistry } from './ClassRegistry';
-import { InspectedClass } from './InspectedClass';
+import { InspectedClass } from './InspectedClass/InspectedClass';
 
 /**
  * Generates a Mermaid class diagram from inspected classes
  */
 export class ClassDiagram {
+  private static addTextPadding(text: string, padding: number = 2): string {
+    const indent = ' '.repeat(padding);
+
+    return text
+      .split('\n')
+      .map((line) => `${indent}${line}`)
+      .join('\n');
+  }
+
   private readonly classRegistry: ClassRegistry;
   private readonly knownNames: Set<string>;
   private lines: string[] = [];
@@ -61,16 +72,23 @@ export class ClassDiagram {
     this.addLine('```');
   }
 
-  private addExternalNamespace(pkg: string, names: string[]): void {
-    const namespace = pkg.replace(/^@/, '').replace(/[/-]/g, '_');
+  private collectForeignClasses(classes: InspectedClass[]): InspectedClass[] {
+    const layerNames = new Set(classes.map((cls) => cls.name));
+    const foreign = new Map<string, InspectedClass>();
 
-    this.addLine(`  namespace ${namespace} {`);
+    for (const cls of classes) {
+      for (const name of this.getRelatedNames(cls)) {
+        if (!layerNames.has(name)) {
+          const foreignClass = this.classRegistry.get(name);
 
-    for (const name of names) {
-      this.addLine(`    class ${name}`);
+          if (foreignClass) {
+            foreign.set(name, foreignClass);
+          }
+        }
+      }
     }
 
-    this.addLine('  }');
+    return [...foreign.values()];
   }
 
   private collectExternalParents(
@@ -94,56 +112,28 @@ export class ClassDiagram {
   }
 
   private addNamespace(layer: string, classes: InspectedClass[]): void {
-    this.addLine(`  namespace ${layer} {`);
+    const namespace = snakeCase(layer);
+    const content = classes.map((cls) => cls.toString()).join('\n');
+    const contentWithPadding = ClassDiagram.addTextPadding(content);
+    const namespaceString = `namespace ${namespace} {\n${contentWithPadding}\n}`;
 
-    for (const cls of classes) {
-      this.addLine(`    class ${cls.name}`);
-    }
-
-    this.addLine('  }');
+    this.addLine(ClassDiagram.addTextPadding(namespaceString));
   }
 
-  private collectForeignClasses(classes: InspectedClass[]): InspectedClass[] {
-    const layerNames = new Set(classes.map((cls) => cls.name));
-    const foreign = new Map<string, InspectedClass>();
+  private addExternalNamespace(pkg: string, names: string[]): void {
+    const namespace = pkg.replace(/^@/, '').replace(/[/-]/g, '_');
 
-    for (const cls of classes) {
-      for (const name of this.getRelatedNames(cls)) {
-        if (!layerNames.has(name)) {
-          const foreignClass = this.classRegistry.get(name);
+    const content = names.map((name) => `class ${name}`).join('\n');
+    const contentWithPadding = ClassDiagram.addTextPadding(content);
+    const namespaceString = `namespace ${namespace} {\n${contentWithPadding}\n}`;
 
-          if (foreignClass) {
-            foreign.set(name, foreignClass);
-          }
-        }
-      }
-    }
-
-    return [...foreign.values()];
+    this.addLine(ClassDiagram.addTextPadding(namespaceString));
   }
 
   private getRelatedNames(cls: InspectedClass): string[] {
-    const names: string[] = [];
-
-    if (cls.parent && this.isKnownName(cls.parent)) {
-      names.push(cls.parent);
-    }
-
-    for (const iface of cls.interfaces ?? []) {
-      if (this.isKnownName(iface)) names.push(iface);
-    }
-
-    for (const field of cls.fields ?? []) {
-      if (this.isKnownName(field)) names.push(field);
-    }
-
-    for (const other of this.classRegistry.items) {
-      if (!other.isEqual(cls) && this.hasUsageRelation(cls, other)) {
-        names.push(other.name);
-      }
-    }
-
-    return names;
+    return (cls.relations ?? [])
+      .map((rel) => rel.to)
+      .filter((name) => this.isKnownName(name));
   }
 
   private groupByLayer(
@@ -159,30 +149,13 @@ export class ClassDiagram {
   }
 
   private addRelations(classes: InspectedClass[]): void {
-    this.addLine();
+    const relations = classes.flatMap((cls) => cls.relations ?? []);
 
-    for (const cls of classes) {
-      if (cls.parent) {
-        this.addRelation(cls.name, cls.parent, '--|>');
-      }
+    if (relations.length > 0) {
+      const content = relations.join('\n');
 
-      for (const iface of cls.interfaces ?? []) {
-        if (this.isKnownName(iface)) {
-          this.addRelation(cls.name, iface, '..|>');
-        }
-      }
-
-      for (const fieldType of cls.fields ?? []) {
-        if (this.isKnownName(fieldType)) {
-          this.addRelation(cls.name, fieldType, '*--');
-        }
-      }
-
-      for (const other of this.classRegistry.items) {
-        if (!other.isEqual(cls) && this.hasUsageRelation(cls, other)) {
-          this.addRelation(cls.name, other.name, '-->');
-        }
-      }
+      this.addLine();
+      this.addLine(ClassDiagram.addTextPadding(content));
     }
   }
 
@@ -190,29 +163,8 @@ export class ClassDiagram {
     return this.knownNames.has(name);
   }
 
-  private hasUsageRelation(
-    cls: InspectedClass,
-    other: InspectedClass,
-  ): boolean {
-    return (
-      !this.isKnownRelation(cls, other.name) && cls.body.includes(other.name)
-    );
-  }
-
-  private isKnownRelation(cls: InspectedClass, name: string): boolean {
-    return (
-      name === cls.parent ||
-      (cls.interfaces ?? []).includes(name) ||
-      (cls.fields ?? []).includes(name)
-    );
-  }
-
   private clearLines(): void {
     this.lines = [];
-  }
-
-  private addRelation(from: string, to: string, arrow: string): void {
-    this.addLine(`  ${from} ${arrow} ${to}`);
   }
 
   private addLine(content = ''): void {
