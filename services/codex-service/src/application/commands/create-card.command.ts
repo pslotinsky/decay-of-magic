@@ -11,7 +11,7 @@ export class CreateCardCommand {
 
 @CommandHandler(CreateCardCommand)
 export class CreateCardHandler implements ICommandHandler<CreateCardCommand> {
-  @Inject() private readonly cardRepository: CardRepository;
+  @Inject() private readonly cardRepository!: CardRepository;
 
   public async execute({ payload }: CreateCardCommand): Promise<void> {
     const card = Card.create(payload);

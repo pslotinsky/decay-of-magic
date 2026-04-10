@@ -1,81 +1,63 @@
 # ================================
-# 👷 Stage: Build
+# 🔍 Stage: Prune
 # ================================
-FROM node:22-alpine AS build
+FROM node:24-alpine AS pruner
+RUN npm install -g turbo@2
+WORKDIR /app
+COPY . .
+RUN turbo prune gateway-service --docker
 
+# ================================
+# 📦 Stage: Install
+# ================================
+FROM node:24-alpine AS installer
 WORKDIR /app
 
-# Monorepo root
-COPY package*.json ./
-
-# Workspace package.json stubs (required for npm ci at root)
-COPY packages/config/package.json ./packages/config/
-COPY packages/core/package.json ./packages/core/
-COPY packages/zok/package.json ./packages/zok/
-COPY apps/council-web/package.json ./apps/council-web/
-COPY services/codex-service/package.json ./services/codex-service/
-COPY services/vault-service/package.json ./services/vault-service/
-
-# @dod/config tsconfig files needed for build
-COPY packages/config/tsconfig ./packages/config/tsconfig
-
-# gateway-service
-COPY services/gateway-service/package.json ./services/gateway-service/
-COPY services/gateway-service/tsconfig*.json ./services/gateway-service/
-COPY services/gateway-service/src ./services/gateway-service/src
-
+COPY --from=pruner /app/out/json/ .
+COPY --from=pruner /app/out/package-lock.json ./package-lock.json
 RUN npm ci
 
-WORKDIR /app/services/gateway-service
+# ================================
+# 🔨 Stage: Builder
+# ================================
+FROM installer AS builder
+WORKDIR /app
+COPY --from=pruner /app/packages/config ./packages/config
+COPY --from=pruner /app/out/full/services/gateway-service/tsconfig*.json ./services/gateway-service/
+COPY --from=pruner /app/out/full/services/gateway-service/src ./services/gateway-service/src
 
+WORKDIR /app/services/gateway-service
 RUN npm run build
 
 # ================================
-# 👷 Stage: Production build
-# ================================
-FROM node:22-alpine AS prod_build
-
-WORKDIR /app
-
-COPY --from=build /app/packages/config/tsconfig ./packages/config/tsconfig
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/services/gateway-service/dist ./services/gateway-service/dist
-COPY --from=build /app/services/gateway-service/package*.json ./services/gateway-service/
-COPY --from=build /app/services/gateway-service/tsconfig*.json ./services/gateway-service/
-
-WORKDIR /app/services/gateway-service
-
-RUN npm prune --production
-
-# ================================
 # 🚀 Stage: Development
+# Source is volume-mounted by docker-compose
 # ================================
-FROM node:22-alpine AS dev
-
+FROM node:24-alpine AS dev
 WORKDIR /app
 
-COPY --from=build /app/packages/config/tsconfig ./packages/config/tsconfig
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/services/gateway-service/dist ./services/gateway-service/dist
-COPY --from=build /app/services/gateway-service/package.json ./services/gateway-service/
-COPY --from=build /app/services/gateway-service/tsconfig*.json ./services/gateway-service/
+COPY --from=installer /app/node_modules ./node_modules
+COPY --from=installer /app/services/gateway-service/node_modules ./services/gateway-service/node_modules
+COPY --from=pruner /app/packages/config ./packages/config
+COPY --from=installer /app/services/gateway-service/package.json ./services/gateway-service/
+COPY --from=pruner /app/out/full/services/gateway-service/tsconfig*.json ./services/gateway-service/
 
 WORKDIR /app/services/gateway-service
-
 CMD ["npm", "run", "start:debug"]
 
 # ================================
 # 🚀 Stage: Production
 # ================================
-FROM node:22-alpine AS prod
-
+FROM node:24-alpine AS prod
 WORKDIR /app
 
-COPY --from=prod_build /app/node_modules ./node_modules
-COPY --from=prod_build /app/services/gateway-service/dist ./services/gateway-service/dist
-COPY --from=prod_build /app/services/gateway-service/package*.json ./services/gateway-service/
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/services/gateway-service/node_modules ./services/gateway-service/node_modules
+COPY --from=builder /app/services/gateway-service/dist ./services/gateway-service/dist
+COPY --from=builder /app/services/gateway-service/package.json ./services/gateway-service/
 
 WORKDIR /app/services/gateway-service
+RUN npm prune --production
 
 ENV NODE_ENV=production
 EXPOSE 3000

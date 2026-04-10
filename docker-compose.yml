@@ -2,16 +2,16 @@ services:
   db:
     image: postgres:17
     environment:
-      POSTGRES_USER: ruler
-      POSTGRES_PASSWORD: 123qwe
-      POSTGRES_DB: codex
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_PORT: 5432
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ruler -d codex"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -22,29 +22,32 @@ services:
       - "9000:9000"
       - "9001:9001"
     environment:
-      MINIO_ROOT_USER: ruler
-      MINIO_ROOT_PASSWORD: 12345qwe
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
       - minio_data:/data
     command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   s3-init:
     image: minio/mc
     depends_on:
-      - s3
+      s3:
+        condition: service_healthy
     environment:
-      MINIO_ROOT_USER: ruler
-      MINIO_ROOT_PASSWORD: 12345qwe
-      MINIO_BUCKET_NAME: vault
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
     entrypoint: >
       /bin/sh -c "
-      until /usr/bin/mc alias set local http://s3:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD}; do
-        echo 'Waiting for MinIO to become available...';
-        sleep 2;
-      done;
+      /usr/bin/mc alias set local http://s3:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD};
 
       echo 'Creating bucket...';
-      /usr/bin/mc mb local/$${MINIO_BUCKET_NAME};
+      /usr/bin/mc mb --ignore-existing local/$${MINIO_BUCKET_NAME};
 
       echo 'Making bucket public...';
       /usr/bin/mc anonymous set download local/$${MINIO_BUCKET_NAME};
@@ -73,12 +76,12 @@ services:
     build:
       context: .
       dockerfile: services/codex-service/Dockerfile
-      target: build
+      target: installer
     depends_on:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: "postgresql://ruler:123qwe@db:5432/codex"
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
     working_dir: /app/services/codex-service
     command: npm run prisma:migrate:deploy
 
@@ -94,7 +97,7 @@ services:
       - "3001:3001"
     environment:
       PORT: 3001
-      DATABASE_URL: "postgresql://ruler:123qwe@db:5432/codex"
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
     volumes:
       - ./services/codex-service/src:/app/services/codex-service/src
       - ./packages/core/src:/app/packages/core/src
@@ -105,16 +108,17 @@ services:
       dockerfile: services/vault-service/Dockerfile
       target: dev
     depends_on:
-      - s3
+      s3-init:
+        condition: service_completed_successfully
     ports:
       - "3002:3002"
     environment:
       PORT: 3002
-      PUBLIC_ENDPOINT: http://localhost:9000
+      PUBLIC_ENDPOINT: ${MINIO_PUBLIC_ENDPOINT}
       S3_ENDPOINT: http://s3:9000
-      S3_ACCESS_KEY: ruler
-      S3_SECRET_KEY: 12345qwe
-      S3_BUCKET: vault
+      S3_ACCESS_KEY: ${MINIO_ROOT_USER}
+      S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      S3_BUCKET: ${MINIO_BUCKET_NAME}
       S3_REGION: default
     volumes:
       - ./services/vault-service/src:/app/services/vault-service/src
@@ -125,7 +129,7 @@ services:
       dockerfile: apps/council-web/Dockerfile
       target: dev
     depends_on:
-      - codex
+      - gateway
     ports:
       - "5175:5175"
     environment:

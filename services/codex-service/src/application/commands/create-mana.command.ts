@@ -11,7 +11,7 @@ export class CreateManaCommand {
 
 @CommandHandler(CreateManaCommand)
 export class CreateManaHandler implements ICommandHandler<CreateManaCommand> {
-  @Inject() private readonly manaRepository: ManaRepository;
+  @Inject() private readonly manaRepository!: ManaRepository;
 
   public async execute({ payload }: CreateManaCommand): Promise<void> {
     const entity = Mana.create(payload);

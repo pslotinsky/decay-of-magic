@@ -12,7 +12,7 @@ export class GetManaQuery extends Query<Mana> {
 
 @QueryHandler(GetManaQuery)
 export class GetManaHandler implements IQueryHandler<GetManaQuery> {
-  @Inject() private readonly manaRepository: ManaRepository;
+  @Inject() private readonly manaRepository!: ManaRepository;
 
   public async execute({ id }: GetManaQuery): Promise<Mana> {
     return this.manaRepository.getByIdOrFail(id);

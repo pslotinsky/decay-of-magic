@@ -5,13 +5,13 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Mana {
   id   String @id
   name String
   type String
+
   Mage Mage[]
   Card Card[]
 
@@ -24,7 +24,8 @@ model Mage {
   imageUrl    String  @map("image_url")
   description String?
   manaId      String  @map("mana_id")
-  mana        Mana    @relation(fields: [manaId], references: [id])
+
+  mana Mana @relation(fields: [manaId], references: [id])
 
   @@map("mage")
 }
@@ -37,7 +38,8 @@ model Card {
   level       Int
   cost        Int
   manaId      String @map("mana_id")
-  mana        Mana   @relation(fields: [manaId], references: [id])
+
+  mana Mana @relation(fields: [manaId], references: [id])
 
   @@map("card")
 }

@@ -8,7 +8,7 @@ export class FindManaQuery extends Query<Mana[]> {}
 
 @QueryHandler(FindManaQuery)
 export class FindManaHandler implements IQueryHandler<FindManaQuery> {
-  @Inject() private readonly schoolRepository: ManaRepository;
+  @Inject() private readonly schoolRepository!: ManaRepository;
 
   public async execute(): Promise<Mana[]> {
     return this.schoolRepository.find();

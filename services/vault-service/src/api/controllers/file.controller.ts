@@ -19,7 +19,7 @@ import { UploadFileDto } from '../dto/upload-file.dto';
 @ApiTags('File')
 export class FileController {
   @Inject()
-  private commandBus: CommandBus;
+  private commandBus!: CommandBus;
 
   @Post('/')
   @UseInterceptors(FileInterceptor('file'))
