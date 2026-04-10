@@ -5,8 +5,6 @@ Manages files: upload, storage, etc
 <!-- poe:classes:start -->
 ## Classes
 
-### api
-
 ```mermaid
 classDiagram
   namespace api {
@@ -20,35 +18,6 @@ classDiagram
       +string file
     }
   }
-  namespace application {
-    class UploadFileCommand {
-      +File file
-    }
-  }
-  namespace domain {
-    class File {
-      +string id
-      +string category
-      +string name
-      +Buffer buffer
-      +string mimetype
-    }
-  }
-
-  FileController --> UploadFileDto
-  FileController --> UploadFileCommand
-  FileController --> File
-```
-
-| Entity |
-|--------|
-| controllers/[FileController](src/api/controllers/file.controller.ts) |
-| dto/[UploadFileDto](src/api/dto/upload-file.dto.ts) |
-
-### application
-
-```mermaid
-classDiagram
   namespace application {
     class UploadFileCommand {
       +File file
@@ -72,10 +41,16 @@ classDiagram
       +string mimetype
     }
   }
+  namespace root {
+    class AppModule
+  }
   namespace nestjs_cqrs {
     class Command
   }
 
+  FileController --> UploadFileDto
+  FileController --> UploadFileCommand
+  FileController --> File
   UploadFileCommand --|> Command
   UploadFileCommand *-- File
   UploadFileUseCase --> UploadFileCommand
@@ -84,38 +59,10 @@ classDiagram
 
 | Entity | Notes |
 |--------|-------|
-| commands/[UploadFileCommand](src/application/commands/upload-file.command.ts) | Extends `Command` |
-| commands/[UploadFileUseCase](src/application/commands/upload-file.command.ts) | Implements `ICommandHandler` |
-
-### domain
-
-```mermaid
-classDiagram
-  namespace domain {
-    class File {
-      +string id
-      +string category
-      +string name
-      +Buffer buffer
-      +string mimetype
-    }
-  }
-```
-
-| Entity |
-|--------|
-| [File](src/domain/file.entity.ts) |
-
-### root
-
-```mermaid
-classDiagram
-  namespace root {
-    class AppModule
-  }
-```
-
-| Entity |
-|--------|
-| [AppModule](src/app.module.ts) |
+| api/controllers/[FileController](src/api/controllers/file.controller.ts) |  |
+| api/dto/[UploadFileDto](src/api/dto/upload-file.dto.ts) |  |
+| application/commands/[UploadFileCommand](src/application/commands/upload-file.command.ts) | Extends `Command` |
+| application/commands/[UploadFileUseCase](src/application/commands/upload-file.command.ts) | Implements `ICommandHandler` |
+| domain/[File](src/domain/file.entity.ts) |  |
+| [AppModule](src/app.module.ts) |  |
 <!-- poe:classes:end -->

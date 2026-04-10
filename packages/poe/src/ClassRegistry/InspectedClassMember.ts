@@ -1,5 +1,8 @@
 export type Visibility = 'public' | 'protected' | 'private';
 
+/**
+ * Represents a single field, getter, or method of an inspected class
+ */
 export class InspectedClassMember {
   constructor(
     public readonly name: string,

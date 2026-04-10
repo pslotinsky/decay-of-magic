@@ -1,3 +1,6 @@
+/**
+ * Represents a directed relation between two classes in a diagram
+ */
 export class InspectedClassRelation {
   constructor(
     public readonly from: string,

@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert';
 
-import { InspectedClass } from '../src/InspectedClass/InspectedClass';
-import { InspectedClassMember } from '../src/InspectedClass/InspectedClassMember';
-import { InspectedClassRelation } from '../src/InspectedClass/InspectedClassRelation';
+import { InspectedClass } from '../src/ClassRegistry/InspectedClass';
+import { InspectedClassMember } from '../src/ClassRegistry/InspectedClassMember';
+import { InspectedClassRelation } from '../src/ClassRegistry/InspectedClassRelation';
 
 function cls(name: string, members?: InspectedClassMember[]): InspectedClass {
   return new InspectedClass({
@@ -101,7 +101,9 @@ test.describe('Unit: InspectedClass', () => {
 
   test('class with one method', () => {
     assert.strictEqual(
-      cls('Foo', [new InspectedClassMember('greet', 'public', true)]).toString(),
+      cls('Foo', [
+        new InspectedClassMember('greet', 'public', true),
+      ]).toString(),
       'class Foo {\n  +greet()\n}',
     );
   });
