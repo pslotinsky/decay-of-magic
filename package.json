@@ -14,6 +14,7 @@
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "format": "turbo format",
+    "check": "turbo format:check && turbo lint && turbo typecheck",
     "docs": "poe inspect packages/core packages/zok packages/poe services/codex-service services/gateway-service services/vault-service"
   },
   "devDependencies": {

@@ -20,6 +20,9 @@
     "typecheck": {},
     "format": {
       "cache": false
+    },
+    "format:check": {
+      "cache": false
     }
   }
 }
