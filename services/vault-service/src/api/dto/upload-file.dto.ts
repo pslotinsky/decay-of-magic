@@ -8,5 +8,5 @@ export class UploadFileDto {
   public category?: string;
 
   @ApiProperty({ format: 'binary' })
-  public file: string;
+  public file!: string;
 }

@@ -1,12 +1,10 @@
 {
   "extends": "../../packages/config/tsconfig/nestjs.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src",
     "paths": {
       "@service/*": ["./src/*"],
       "@prisma/client": ["../../node_modules/.prisma/client"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "prisma.config.ts"]
 }

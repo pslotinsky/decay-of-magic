@@ -8,7 +8,7 @@ export class FindCardsQuery extends Query<Card[]> {}
 
 @QueryHandler(FindCardsQuery)
 export class FindCardsHandler implements IQueryHandler<FindCardsQuery> {
-  @Inject() private readonly cardRepository: CardRepository;
+  @Inject() private readonly cardRepository!: CardRepository;
 
   public async execute(): Promise<Card[]> {
     return this.cardRepository.find();

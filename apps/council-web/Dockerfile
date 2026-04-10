@@ -1,7 +1,7 @@
 # ================================
 # 👷 Stage: Static
 # ================================
-FROM node:22-alpine AS static
+FROM node:24-alpine AS static
 
 WORKDIR /app
 
@@ -12,6 +12,7 @@ COPY package*.json ./
 COPY packages/config/package.json ./packages/config/
 COPY packages/core/package.json ./packages/core/
 COPY packages/zok/package.json ./packages/zok/
+COPY packages/poe/package.json ./packages/poe/
 COPY services/codex-service/package.json ./services/codex-service/
 COPY services/vault-service/package.json ./services/vault-service/
 COPY services/gateway-service/package.json ./services/gateway-service/
@@ -32,7 +33,7 @@ RUN npm run build
 # ================================
 # 🚀 Stage: Development
 # ================================
-FROM node:22-alpine AS dev
+FROM node:24-alpine AS dev
 
 WORKDIR /app
 
@@ -43,6 +44,7 @@ COPY package*.json ./
 COPY packages/config/package.json ./packages/config/
 COPY packages/core/package.json ./packages/core/
 COPY packages/zok/package.json ./packages/zok/
+COPY packages/poe/package.json ./packages/poe/
 COPY services/codex-service/package.json ./services/codex-service/
 COPY services/vault-service/package.json ./services/vault-service/
 COPY services/gateway-service/package.json ./services/gateway-service/

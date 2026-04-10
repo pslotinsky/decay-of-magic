@@ -26,6 +26,7 @@ export const nestjs = (tsconfigRootDir) =>
         '@typescript-eslint/no-explicit-any': 'warn',
         '@typescript-eslint/no-floating-promises': 'warn',
         '@typescript-eslint/no-unsafe-argument': 'warn',
+        '@typescript-eslint/no-unsafe-assignment': 'warn',
       },
     },
   );

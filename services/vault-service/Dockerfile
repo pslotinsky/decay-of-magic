@@ -1,7 +1,7 @@
 # ================================
 # 👷 Stage: Build
 # ================================
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 
 WORKDIR /app
 
@@ -12,6 +12,7 @@ COPY package*.json ./
 COPY packages/config/package.json ./packages/config/
 COPY packages/core/package.json ./packages/core/
 COPY packages/zok/package.json ./packages/zok/
+COPY packages/poe/package.json ./packages/poe/
 COPY apps/council-web/package.json ./apps/council-web/
 COPY services/codex-service/package.json ./services/codex-service/
 COPY services/gateway-service/package.json ./services/gateway-service/
@@ -33,7 +34,7 @@ RUN npm run build
 # ================================
 # 👷 Stage: Production build
 # ================================
-FROM node:22-alpine AS prod_build
+FROM node:24-alpine AS prod_build
 
 WORKDIR /app
 
@@ -50,12 +51,13 @@ RUN npm prune --production
 # ================================
 # 🚀 Stage: Development
 # ================================
-FROM node:22-alpine AS dev
+FROM node:24-alpine AS dev
 
 WORKDIR /app
 
 COPY --from=build /app/packages/config/tsconfig ./packages/config/tsconfig
 COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/services/vault-service/node_modules ./services/vault-service/node_modules
 COPY --from=build /app/services/vault-service/dist ./services/vault-service/dist
 COPY --from=build /app/services/vault-service/package.json ./services/vault-service/
 COPY --from=build /app/services/vault-service/tsconfig*.json ./services/vault-service/
@@ -67,7 +69,7 @@ CMD ["npm", "run", "start:debug"]
 # ================================
 # 🚀 Stage: Production
 # ================================
-FROM node:22-alpine AS prod
+FROM node:24-alpine AS prod
 
 WORKDIR /app
 

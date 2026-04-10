@@ -14,13 +14,13 @@
   "devDependencies": {
     "@dod/config": "*",
     "@types/lodash": "^4.17.24",
-    "@types/node": "^22.0.0",
+    "@types/node": "^25.6.0",
     "eslint": "^10.2.0",
-    "prettier": "^3.8.1",
+    "prettier": "^3.8.2",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.0"
+    "typescript-eslint": "^8.58.1"
   },
   "dependencies": {
     "lodash": "^4.18.1"
