@@ -25,5 +25,6 @@
 ## Milestones
 
 <!-- TOC.START: milestone -->
-- [ ] [Milestone-001: Infrastructure and documentation](../milestones/Milestone-001_infrastructure-and-documentation.md)
+- [x] [Milestone-001: Infrastructure and documentation](../milestones/Milestone-001_infrastructure-and-documentation.md)
+- [ ] [Milestone-002: Citizen](../milestones/Milestone-002_citizen.md)
 <!-- TOC.END -->

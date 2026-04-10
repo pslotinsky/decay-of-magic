@@ -4,6 +4,10 @@
 - [x] [DOD-0001: Documentation structure](./DOD-0001_documentation-structure.md)
 - [x] [DOD-0002: Monorepo](./DOD-0002_monorepo.md)
 - [ ] ~~[DOD-0003: Draft services](./DOD-0003_draft-services.md)~~
-- [ ] [DOD-0004: Basic CI](./DOD-0004_basic-ci.md)
+- [x] [DOD-0004: Basic CI](./DOD-0004_basic-ci.md)
 - [x] [DOD-0005: Senior orc archivist Zok](./DOD-0005_senior-orc-archivist-zok.md)
+- [ ] [DOD-0006: Describe Citizen realm API and tests](./DOD-0006_describe-citizen-realm-api-and-tests.md)
+- [ ] [DOD-0007: Implement Citizen and Permit](./DOD-0007_implement-citizen-and-permit.md)
+- [ ] [DOD-0008: Implement authentication](./DOD-0008_implement-authentication.md)
+- [ ] [DOD-0009: Citizen UI](./DOD-0009_citizen-ui.md)
 <!-- TOC.END -->
