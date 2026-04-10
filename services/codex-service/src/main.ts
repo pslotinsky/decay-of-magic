@@ -27,4 +27,4 @@ function setupSwagger(app: INestApplication): void {
   SwaggerModule.setup('api', app, documentFactory);
 }
 
-bootstrap();
+void bootstrap();

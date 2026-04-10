@@ -19,8 +19,7 @@
     "prettier": "^3.8.2",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.21.0",
-    "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.1"
+    "typescript": "^6.0.2"
   },
   "dependencies": {
     "lodash": "^4.18.1"

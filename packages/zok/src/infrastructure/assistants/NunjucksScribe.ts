@@ -57,6 +57,7 @@ export class NunjucksScribe extends Scribe {
     } catch (error) {
       throw new Error(
         `Failed to render document: ${metadata.id} with template: ${templateName} → ${String(error)}`,
+        { cause: error },
       );
     }
   }
