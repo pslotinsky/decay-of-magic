@@ -1,26 +1,29 @@
-import { InspectedClass } from '../InspectedClass/InspectedClass';
-import { ClassRegistry } from '../ClassRegistryParser/ClassRegistry';
+import { InspectedClass } from '../ClassRegistry/InspectedClass';
+import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
 
 /**
- * Describes classes belonging to a specific layer
+ * Renders a markdown table of inspected classes
  */
-export class LayerReport {
+export class ClassTable {
   private readonly layer: string;
   private readonly classes: InspectedClass[];
   private readonly classRegistry: ClassRegistry;
   private readonly hasDescriptions: boolean;
   private readonly hasNotes: boolean;
+  private readonly flat: boolean;
 
   constructor(
     layer: string,
     classes: InspectedClass[],
     classRegistry: ClassRegistry,
+    flat: boolean = false,
   ) {
     this.layer = layer;
     this.classes = classes;
     this.classRegistry = classRegistry;
     this.hasDescriptions = classes.some((cls) => cls.description);
     this.hasNotes = classes.some((cls) => this.renderNotes(cls));
+    this.flat = flat;
   }
 
   public render(): string {
@@ -72,7 +75,7 @@ export class LayerReport {
 
   private entityCell(cls: InspectedClass): string {
     const parts = cls.file.replace(/\\/g, '/').split('/');
-    const subdir = parts.slice(2, -1).join('/');
+    const subdir = parts.slice(this.flat ? 1 : 2, -1).join('/');
     const prefix = subdir ? `${subdir}/` : '';
 
     return `${prefix}${cls.link}`;

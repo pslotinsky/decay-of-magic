@@ -1,8 +1,8 @@
 import {
   InspectedClassMember,
   Visibility,
-} from '../InspectedClass/InspectedClassMember';
-import { InspectedClass } from '../InspectedClass/InspectedClass';
+} from '../ClassRegistry/InspectedClassMember';
+import { InspectedClass } from '../ClassRegistry/InspectedClass';
 import { ScannedFile } from '../Scanner/ScannedFile';
 
 const CLASS_PATTERN =

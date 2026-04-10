@@ -35,7 +35,7 @@ jobs:
             node_modules/.prisma/client
 
   lint:
-    name: Lint
+    name: Check
     runs-on: ubuntu-latest
     needs: build
 
@@ -54,14 +54,8 @@ jobs:
         with:
           name: dist
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Typecheck
-        run: npm run typecheck
-
-      - name: Format
-        run: npm run format && git diff --exit-code
+      - name: Check
+        run: npm run check
 
   test:
     name: Test

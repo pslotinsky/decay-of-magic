@@ -1,3 +1,6 @@
+/**
+ * Holds the raw content of a scanned source file
+ */
 export class ScannedFile {
   constructor(
     public readonly path: string,

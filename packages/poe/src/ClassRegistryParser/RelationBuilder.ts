@@ -1,9 +1,9 @@
-import { ClassRegistry } from './ClassRegistry';
-import { InspectedClass } from '../InspectedClass/InspectedClass';
-import { InspectedClassRelation } from '../InspectedClass/InspectedClassRelation';
+import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
+import { InspectedClass } from '../ClassRegistry/InspectedClass';
+import { InspectedClassRelation } from '../ClassRegistry/InspectedClassRelation';
 
 /**
- * Builds relations between inspected classes and enriches them with the results
+ * Builds relations between inspected classes
  */
 export class RelationBuilder {
   private readonly registry: ClassRegistry;

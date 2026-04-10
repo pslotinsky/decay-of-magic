@@ -3,7 +3,7 @@ import assert from 'node:assert';
 
 import { ClassRegistryParser } from '../src/ClassRegistryParser/ClassRegistryParser';
 import { ScannedFile } from '../src/Scanner/ScannedFile';
-import { InspectedClassMember } from '../src/InspectedClass/InspectedClassMember';
+import { InspectedClassMember } from '../src/ClassRegistry/InspectedClassMember';
 
 function file(path: string, content: string): ScannedFile {
   return new ScannedFile(path, content);
@@ -11,7 +11,9 @@ function file(path: string, content: string): ScannedFile {
 
 test.describe('Unit: ClassParser', () => {
   test('extracts class name', () => {
-    const registry = new ClassRegistryParser().parse([file('Foo.ts', `export class Foo {}`)]);
+    const registry = new ClassRegistryParser().parse([
+      file('Foo.ts', `export class Foo {}`),
+    ]);
 
     assert.strictEqual(registry.items.length, 1);
     assert.strictEqual(registry.items[0].name, 'Foo');
@@ -111,7 +113,10 @@ test.describe('Unit: ClassParser', () => {
       ),
     ]);
 
-    assert.strictEqual(registry.getExternalSource('Injectable'), '@nestjs/common');
+    assert.strictEqual(
+      registry.getExternalSource('Injectable'),
+      '@nestjs/common',
+    );
   });
 
   test.describe('members', () => {

@@ -1,7 +1,7 @@
 import { snakeCase } from 'lodash';
 
-import { ClassRegistry } from '../ClassRegistryParser/ClassRegistry';
-import { InspectedClass } from '../InspectedClass/InspectedClass';
+import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
+import { InspectedClass } from '../ClassRegistry/InspectedClass';
 
 /**
  * Generates a Mermaid class diagram from inspected classes
@@ -27,6 +27,29 @@ export class ClassDiagram {
 
   public render(): string {
     return this.classRegistry.isEmpty ? '' : this.renderDiagram();
+  }
+
+  public renderAll(): string {
+    this.clearLines();
+
+    const allClasses = this.classRegistry.items;
+    const external = this.collectExternalParents(allClasses);
+
+    this.addLine('```mermaid');
+    this.addLine('classDiagram');
+
+    for (const [layer, classes] of Object.entries(this.classRegistry.layers)) {
+      this.addNamespace(layer, classes);
+    }
+
+    for (const [pkg, names] of Object.entries(external)) {
+      this.addExternalNamespace(pkg, names);
+    }
+
+    this.addRelations(allClasses);
+    this.addLine('```');
+
+    return this.lines.join('\n');
   }
 
   public renderLayer(layer: string, classes: InspectedClass[]): string {

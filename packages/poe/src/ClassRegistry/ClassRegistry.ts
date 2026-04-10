@@ -1,4 +1,4 @@
-import { InspectedClass } from '../InspectedClass/InspectedClass';
+import { InspectedClass } from './InspectedClass';
 
 /**
  * Collection of inspected classes
