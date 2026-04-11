@@ -15,7 +15,7 @@
     "typecheck": "turbo typecheck",
     "format": "turbo format",
     "check": "turbo format:check && turbo lint && turbo typecheck",
-    "docs": "poe inspect packages/core packages/zok packages/poe realms/codex-realm realms/gateway-realm realms/vault-realm"
+    "docs": "poe inspect packages/core packages/zok packages/poe realms/codex realms/gateway realms/vault"
   },
   "devDependencies": {
     "turbo": "^2.9.6"
