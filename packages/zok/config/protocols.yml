@@ -78,6 +78,10 @@ adr:
         done: Accepted
         inProgress: In progress
         cancelled: Deprecated
+    related:
+      name: Related
+      type: link
+      protocol: adr
     created:
       name: Created
       type: date
