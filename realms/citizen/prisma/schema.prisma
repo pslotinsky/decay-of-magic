@@ -1,0 +1,28 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "./generated"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Citizen {
+  id       String @id @default(uuid(7))
+  nickname String @unique
+
+  permit CitizenPermit?
+
+  @@map("citizen")
+}
+
+model CitizenPermit {
+  id       String   @id @map("citizen_id")
+  secret   String
+  issuedAt DateTime @map("issued_at")
+
+  citizen Citizen @relation(fields: [id], references: [id])
+
+  @@map("citizen_permit")
+}

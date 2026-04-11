@@ -11,7 +11,7 @@ import { CreateCardHandler } from './law/commands/create-card.command';
 import { CreateManaHandler } from './law/commands/create-mana.command';
 import { CardRepository } from './lore/repositories/card.repository';
 import { ManaRepository } from './lore/repositories/mana.repository';
-import { PrismaService } from './ground/prisma/prisma.service';
+import { PrismaService } from './ground/prisma.service';
 import { PrismaCardRepository } from './ground/repositories/prisma-card.repository';
 import { PrismaManaRepository } from './ground/repositories/prisma-mana.repository';
 

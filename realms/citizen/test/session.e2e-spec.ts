@@ -22,28 +22,28 @@ describe('SessionGate (e2e)', () => {
     await app.close();
   });
 
-  describe('POST /api/v1/sessions', () => {
+  describe('POST /api/v1/session', () => {
     it.todo('returns JWT access token for valid credentials');
     it.todo('returns 401 when nickname is not found');
     it.todo('returns 401 when secret is invalid');
 
     it('returns 400 when nickname is missing', () => {
       return request(app.getHttpServer())
-        .post('/api/v1/sessions')
+        .post('/api/v1/session')
         .send({ secret: 'some-secret' })
         .expect(400);
     });
 
     it('returns 400 when secret is missing', () => {
       return request(app.getHttpServer())
-        .post('/api/v1/sessions')
+        .post('/api/v1/session')
         .send({ nickname: 'Zog' })
         .expect(400);
     });
 
     it('returns 400 when body is empty', () => {
       return request(app.getHttpServer())
-        .post('/api/v1/sessions')
+        .post('/api/v1/session')
         .send({})
         .expect(400);
     });

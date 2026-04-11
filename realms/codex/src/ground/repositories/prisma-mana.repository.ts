@@ -1,12 +1,12 @@
 import { Inject } from '@nestjs/common';
-import { Prisma, Mana as ManaModel } from '@prisma/client';
 
 import { PrismaRepository } from '@dod/core';
 
 import { Mana, ManaType } from '@/lore/entities/mana.entity';
 import { ManaRepository } from '@/lore/repositories/mana.repository';
+import { Prisma, Mana as ManaModel } from '../../../prisma/generated';
 
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
 
 export class PrismaManaRepository
   extends PrismaRepository<Mana, ManaModel>

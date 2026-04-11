@@ -1,5 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 
+import { EntityRepository } from './entity.repository';
+
 type Delegate<TModel extends { id: string }> = {
   findFirst(args: any): Promise<TModel | null>;
   findMany(args?: any): Promise<TModel[]>;
@@ -13,7 +15,8 @@ type Delegate<TModel extends { id: string }> = {
 export abstract class PrismaRepository<
   TEntity extends { id: string },
   TModel extends { id: string },
-> {
+  TFindOptions = Partial<TEntity>,
+> extends EntityRepository<TEntity, TFindOptions> {
   public async getById(id: string): Promise<TEntity | undefined> {
     const model = await this.delegate.findFirst({ where: { id } });
 
@@ -30,8 +33,10 @@ export abstract class PrismaRepository<
     return entity;
   }
 
-  public async find(): Promise<TEntity[]> {
-    const models = await this.delegate.findMany();
+  public async find(filter?: TFindOptions): Promise<TEntity[]> {
+    const models = await this.delegate.findMany(
+      filter ? { where: filter } : undefined,
+    );
 
     return models.map((model) => this.toEntity(model));
   }
