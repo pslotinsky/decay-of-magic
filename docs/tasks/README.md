@@ -10,4 +10,5 @@
 - [ ] [DOD-0007: Implement Citizen and Permit](./DOD-0007_implement-citizen-and-permit.md)
 - [ ] [DOD-0008: Implement authentication](./DOD-0008_implement-authentication.md)
 - [ ] [DOD-0009: Citizen UI](./DOD-0009_citizen-ui.md)
+- [x] [DOD-0010: Enforce ADR-004 on existed services](./DOD-0010_enforce-adr-004-on-existed-services.md)
 <!-- TOC.END -->
