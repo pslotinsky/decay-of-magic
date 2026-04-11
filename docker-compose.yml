@@ -58,37 +58,39 @@ services:
   gateway:
     build:
       context: .
-      dockerfile: realms/gateway-realm/Dockerfile
+      dockerfile: realms/gateway/Dockerfile
       target: dev
     depends_on:
       - codex
       - vault
+      - citizen
     ports:
       - "3000:3000"
     environment:
       PORT: 3000
       CODEX_REALM_URL: "http://codex:3001"
       VAULT_REALM_URL: "http://vault:3002"
+      CITIZEN_REALM_URL: "http://citizen:3003"
     volumes:
-      - ./realms/gateway-realm/src:/app/realms/gateway-realm/src
+      - ./realms/gateway/src:/app/realms/gateway/src
 
   codex-migrate:
     build:
       context: .
-      dockerfile: realms/codex-realm/Dockerfile
+      dockerfile: realms/codex/Dockerfile
       target: installer
     depends_on:
       db:
         condition: service_healthy
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
-    working_dir: /app/realms/codex-realm
+    working_dir: /app/realms/codex
     command: npm run prisma:migrate:deploy
 
   codex:
     build:
       context: .
-      dockerfile: realms/codex-realm/Dockerfile
+      dockerfile: realms/codex/Dockerfile
       target: dev
     depends_on:
       codex-migrate:
@@ -99,13 +101,13 @@ services:
       PORT: 3001
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
     volumes:
-      - ./realms/codex-realm/src:/app/realms/codex-realm/src
+      - ./realms/codex/src:/app/realms/codex/src
       - ./packages/core/src:/app/packages/core/src
 
   vault:
     build:
       context: .
-      dockerfile: realms/vault-realm/Dockerfile
+      dockerfile: realms/vault/Dockerfile
       target: dev
     depends_on:
       s3-init:
@@ -121,7 +123,19 @@ services:
       S3_BUCKET: ${MINIO_BUCKET_NAME}
       S3_REGION: default
     volumes:
-      - ./realms/vault-realm/src:/app/realms/vault-realm/src
+      - ./realms/vault/src:/app/realms/vault/src
+
+  citizen:
+    build:
+      context: .
+      dockerfile: realms/citizen/Dockerfile
+      target: dev
+    ports:
+      - "3003:3003"
+    environment:
+      PORT: 3003
+    volumes:
+      - ./realms/citizen/src:/app/realms/citizen/src
 
   council:
     build:

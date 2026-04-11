@@ -2,13 +2,13 @@
 
 | Field     | Value                                             |
 | --------- | ------------------------------------------------- |
-| Status    | In progress                                       |
+| Status    | Done |
 | Milestone | [Citizen](../milestones/Milestone-002_citizen.md) |
 | Created   | 2026-04-11                                        |
 
 ## Description
 
-Define API contract and expected behaviour for the Citizen realm.
+Define API contract and expected behavior for the Citizen realm.
 
 ## Scope
 
