@@ -3,7 +3,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { AppModule } from './app.module';
 
-const { CODEX_REALM_URL, VAULT_REALM_URL } = process.env;
+const { CODEX_REALM_URL, VAULT_REALM_URL, CITIZEN_REALM_URL } = process.env;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +12,8 @@ async function bootstrap() {
     '/api/v1/card': `${CODEX_REALM_URL}/api/v1/card`,
     '/api/v1/mana': `${CODEX_REALM_URL}/api/v1/mana`,
     '/api/v1/file': `${VAULT_REALM_URL}/api/v1/file`,
+    '/api/v1/citizens': `${CITIZEN_REALM_URL}/api/v1/citizens`,
+    '/api/v1/sessions': `${CITIZEN_REALM_URL}/api/v1/sessions`,
   };
 
   for (const [route, target] of Object.entries(proxies)) {
@@ -28,4 +30,4 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 3000);
 }
 
-bootstrap();
+void bootstrap();

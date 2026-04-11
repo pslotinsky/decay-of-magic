@@ -63,12 +63,14 @@ services:
     depends_on:
       - codex
       - vault
+      - citizen
     ports:
       - "3000:3000"
     environment:
       PORT: 3000
       CODEX_REALM_URL: "http://codex:3001"
       VAULT_REALM_URL: "http://vault:3002"
+      CITIZEN_REALM_URL: "http://citizen:3003"
     volumes:
       - ./realms/gateway-realm/src:/app/realms/gateway-realm/src
 
@@ -122,6 +124,18 @@ services:
       S3_REGION: default
     volumes:
       - ./realms/vault-realm/src:/app/realms/vault-realm/src
+
+  citizen:
+    build:
+      context: .
+      dockerfile: realms/citizen-realm/Dockerfile
+      target: dev
+    ports:
+      - "3003:3003"
+    environment:
+      PORT: 3003
+    volumes:
+      - ./realms/citizen-realm/src:/app/realms/citizen-realm/src
 
   council:
     build:

@@ -24,7 +24,7 @@ The system should be able to register citizens, store their pseudonyms, and auth
 ## Tasks
 
 <!-- TOC.START: task -->
-- [ ] [DOD-0006: Describe Citizen realm API and tests](../tasks/DOD-0006_describe-citizen-realm-api-and-tests.md)
+- [x] [DOD-0006: Describe Citizen realm API and tests](../tasks/DOD-0006_describe-citizen-realm-api-and-tests.md)
 - [ ] [DOD-0007: Implement Citizen and Permit](../tasks/DOD-0007_implement-citizen-and-permit.md)
 - [ ] [DOD-0008: Implement authentication](../tasks/DOD-0008_implement-authentication.md)
 - [ ] [DOD-0009: Citizen UI](../tasks/DOD-0009_citizen-ui.md)
