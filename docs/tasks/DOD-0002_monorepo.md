@@ -14,7 +14,7 @@ Set up the monorepo infrastructure for the **Days of Decay (DoD)** platform — 
 
 ```
 apps/       # client applications (e.g. council-web)
-services/   # microservices (e.g. codex-service, vault-service)
+realms/     # microservices / realms (e.g. codex-realm, vault-realm)
 packages/   # shared platform libraries
 ```
 

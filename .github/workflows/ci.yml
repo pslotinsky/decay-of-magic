@@ -31,7 +31,7 @@ jobs:
           path: |
             packages/*/dist
             apps/*/dist
-            services/*/dist
+            realms/*/dist
             node_modules/.prisma/client
 
   lint:

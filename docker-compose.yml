@@ -58,7 +58,7 @@ services:
   gateway:
     build:
       context: .
-      dockerfile: services/gateway-service/Dockerfile
+      dockerfile: realms/gateway-realm/Dockerfile
       target: dev
     depends_on:
       - codex
@@ -67,28 +67,28 @@ services:
       - "3000:3000"
     environment:
       PORT: 3000
-      CODEX_SERVICE_URL: "http://codex:3001"
-      VAULT_SERVICE_URL: "http://vault:3002"
+      CODEX_REALM_URL: "http://codex:3001"
+      VAULT_REALM_URL: "http://vault:3002"
     volumes:
-      - ./services/gateway-service/src:/app/services/gateway-service/src
+      - ./realms/gateway-realm/src:/app/realms/gateway-realm/src
 
   codex-migrate:
     build:
       context: .
-      dockerfile: services/codex-service/Dockerfile
+      dockerfile: realms/codex-realm/Dockerfile
       target: installer
     depends_on:
       db:
         condition: service_healthy
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
-    working_dir: /app/services/codex-service
+    working_dir: /app/realms/codex-realm
     command: npm run prisma:migrate:deploy
 
   codex:
     build:
       context: .
-      dockerfile: services/codex-service/Dockerfile
+      dockerfile: realms/codex-realm/Dockerfile
       target: dev
     depends_on:
       codex-migrate:
@@ -99,13 +99,13 @@ services:
       PORT: 3001
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
     volumes:
-      - ./services/codex-service/src:/app/services/codex-service/src
+      - ./realms/codex-realm/src:/app/realms/codex-realm/src
       - ./packages/core/src:/app/packages/core/src
 
   vault:
     build:
       context: .
-      dockerfile: services/vault-service/Dockerfile
+      dockerfile: realms/vault-realm/Dockerfile
       target: dev
     depends_on:
       s3-init:
@@ -121,7 +121,7 @@ services:
       S3_BUCKET: ${MINIO_BUCKET_NAME}
       S3_REGION: default
     volumes:
-      - ./services/vault-service/src:/app/services/vault-service/src
+      - ./realms/vault-realm/src:/app/realms/vault-realm/src
 
   council:
     build:
