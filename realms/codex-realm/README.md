@@ -33,20 +33,6 @@ npm run prisma:migrate:dev
 ```mermaid
 classDiagram
   namespace frontier {
-    class CardGate {
-      -CommandBus commandBus
-      -QueryBus queryBus
-      +create()
-      +getById()
-      +find()
-    }
-    class ManaGate {
-      -CommandBus commandBus
-      -QueryBus queryBus
-      +create()
-      +getById()
-      +find()
-    }
     class CreateCardDto {
       +string id
       +string name
@@ -75,6 +61,36 @@ classDiagram
       +string name
       +ManaType type
     }
+    class CardGate {
+      -CommandBus commandBus
+      -QueryBus queryBus
+      +create()
+      +getById()
+      +find()
+    }
+    class ManaGate {
+      -CommandBus commandBus
+      -QueryBus queryBus
+      +create()
+      +getById()
+      +find()
+    }
+  }
+  namespace lore {
+    class Mana {
+      +string id
+      +string name
+      +ManaType type
+    }
+    class Card {
+      +string id
+      +string name
+      +string imageUrl
+      +string description
+      +number level
+      +number cost
+      +string manaId
+    }
   }
   namespace law {
     class CreateCardCommand {
@@ -92,23 +108,9 @@ classDiagram
       +string id
     }
   }
-  namespace lore {
-    class Card {
-      +string id
-      +string name
-      +string imageUrl
-      +string description
-      +number level
-      +number cost
-      +string manaId
-    }
-    class Mana {
-      +string id
-      +string name
-      +ManaType type
-    }
-  }
 
+  CreateManaDto --> Mana
+  ManaDto --> Mana
   CardGate --> CreateCardDto
   CardGate --> CardDto
   CardGate --> CreateCardCommand
@@ -121,18 +123,16 @@ classDiagram
   ManaGate --> FindManaQuery
   ManaGate --> GetManaQuery
   ManaGate --> Mana
-  CreateManaDto --> Mana
-  ManaDto --> Mana
 ```
 
 | Entity |
 |--------|
-| controllers/[CardGate](src/frontier/controllers/card.gate.ts) |
-| controllers/[ManaGate](src/frontier/controllers/mana.gate.ts) |
 | dto/body/[CreateCardDto](src/frontier/dto/body/create-card.dto.ts) |
 | dto/body/[CreateManaDto](src/frontier/dto/body/create-mana.dto.ts) |
 | dto/[CardDto](src/frontier/dto/card.dto.ts) |
 | dto/[ManaDto](src/frontier/dto/mana.dto.ts) |
+| gates/[CardGate](src/frontier/gates/card.gate.ts) |
+| gates/[ManaGate](src/frontier/gates/mana.gate.ts) |
 
 ### ground
 

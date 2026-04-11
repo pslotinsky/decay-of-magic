@@ -8,14 +8,14 @@ Manages files: upload, storage, etc
 ```mermaid
 classDiagram
   namespace frontier {
-    class FileGate {
-      -CommandBus commandBus
-      +upload()
-    }
     class UploadFileDto {
       +string id
       +string category
       +string file
+    }
+    class FileGate {
+      -CommandBus commandBus
+      +upload()
     }
   }
   namespace law {
@@ -59,8 +59,8 @@ classDiagram
 
 | Entity | Notes |
 |--------|-------|
-| frontier/controllers/[FileGate](src/frontier/controllers/file.gate.ts) |  |
 | frontier/dto/[UploadFileDto](src/frontier/dto/upload-file.dto.ts) |  |
+| frontier/gates/[FileGate](src/frontier/gates/file.gate.ts) |  |
 | law/commands/[UploadFileCommand](src/law/commands/upload-file.command.ts) | Extends `Command` |
 | law/commands/[UploadFileUseCase](src/law/commands/upload-file.command.ts) | Implements `ICommandHandler` |
 | lore/[File](src/lore/file.entity.ts) |  |

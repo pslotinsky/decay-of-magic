@@ -1,8 +1,8 @@
 import { CqrsModule } from '@nestjs/cqrs';
 import { Module } from '@nestjs/common';
 
-import { CardGate } from './frontier/controllers/card.gate';
-import { ManaGate } from './frontier/controllers/mana.gate';
+import { CardGate } from './frontier/gates/card.gate';
+import { ManaGate } from './frontier/gates/mana.gate';
 import { GetCardHandler } from './law/queries/get-card.query';
 import { FindCardsHandler } from './law/queries/find-cards.query';
 import { GetManaHandler } from './law/queries/get-mana.query';
