@@ -3,8 +3,8 @@ import { Prisma, Card as CardModel } from '@prisma/client';
 
 import { PrismaRepository } from '@dod/core';
 
-import { Card } from '@service/lore/entities/card.entity';
-import { CardRepository } from '@service/lore/repositories/card.repository';
+import { Card } from '@/lore/entities/card.entity';
+import { CardRepository } from '@/lore/repositories/card.repository';
 
 import { PrismaService } from '../prisma/prisma.service';
 

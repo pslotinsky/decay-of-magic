@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { ManaType } from '@service/lore/entities/mana.entity';
+import { ManaType } from '@/lore/entities/mana.entity';
 
 export class ManaDto {
   @ApiProperty({ format: 'uuid' })

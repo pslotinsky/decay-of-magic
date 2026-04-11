@@ -5,7 +5,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "paths": {
-      "@service/*": ["./src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src/**/*"]

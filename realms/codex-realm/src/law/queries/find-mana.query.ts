@@ -1,8 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, Query, QueryHandler } from '@nestjs/cqrs';
 
-import { Mana } from '@service/lore/entities/mana.entity';
-import { ManaRepository } from '@service/lore/repositories/mana.repository';
+import { Mana } from '@/lore/entities/mana.entity';
+import { ManaRepository } from '@/lore/repositories/mana.repository';
 
 export class FindManaQuery extends Query<Mana[]> {}
 

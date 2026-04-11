@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsString } from 'class-validator';
 
-import { ManaType } from '@service/lore/entities/mana.entity';
+import { ManaType } from '@/lore/entities/mana.entity';
 
 export class CreateManaDto {
   @IsString()

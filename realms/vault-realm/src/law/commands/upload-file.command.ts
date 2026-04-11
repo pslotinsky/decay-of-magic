@@ -2,7 +2,7 @@ import { S3 } from '@aws-sdk/client-s3';
 import { BadRequestException } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { File } from '@service/lore/file.entity';
+import { File } from '@/lore/file.entity';
 
 const {
   PUBLIC_ENDPOINT,

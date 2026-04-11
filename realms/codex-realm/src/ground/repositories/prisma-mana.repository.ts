@@ -3,8 +3,8 @@ import { Prisma, Mana as ManaModel } from '@prisma/client';
 
 import { PrismaRepository } from '@dod/core';
 
-import { Mana, ManaType } from '@service/lore/entities/mana.entity';
-import { ManaRepository } from '@service/lore/repositories/mana.repository';
+import { Mana, ManaType } from '@/lore/entities/mana.entity';
+import { ManaRepository } from '@/lore/repositories/mana.repository';
 
 import { PrismaService } from '../prisma/prisma.service';
 

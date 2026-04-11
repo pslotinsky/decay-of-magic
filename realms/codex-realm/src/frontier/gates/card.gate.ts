@@ -2,10 +2,10 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
-import { CreateCardDto } from '@service/frontier/dto/body/create-card.dto';
-import { CreateCardCommand } from '@service/law/commands/create-card.command';
-import { GetCardQuery } from '@service/law/queries/get-card.query';
-import { FindCardsQuery } from '@service/law/queries/find-cards.query';
+import { CreateCardDto } from '@/frontier/dto/body/create-card.dto';
+import { CreateCardCommand } from '@/law/commands/create-card.command';
+import { GetCardQuery } from '@/law/queries/get-card.query';
+import { FindCardsQuery } from '@/law/queries/find-cards.query';
 
 import { CardDto } from '../dto/card.dto';
 

@@ -1,9 +1,9 @@
 import { Inject } from '@nestjs/common';
 import { ICommandHandler, CommandHandler } from '@nestjs/cqrs';
 
-import { CreateCardDto } from '@service/frontier/dto/body/create-card.dto';
-import { Card } from '@service/lore/entities/card.entity';
-import { CardRepository } from '@service/lore/repositories/card.repository';
+import { CreateCardDto } from '@/frontier/dto/body/create-card.dto';
+import { Card } from '@/lore/entities/card.entity';
+import { CardRepository } from '@/lore/repositories/card.repository';
 
 export class CreateCardCommand {
   constructor(public readonly payload: CreateCardDto) {}

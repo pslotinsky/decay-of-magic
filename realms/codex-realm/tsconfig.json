@@ -2,7 +2,7 @@
   "extends": "../../packages/config/tsconfig/nestjs.json",
   "compilerOptions": {
     "paths": {
-      "@service/*": ["./src/*"],
+      "@/*": ["./src/*"],
       "@prisma/client": ["../../node_modules/.prisma/client"]
     }
   },

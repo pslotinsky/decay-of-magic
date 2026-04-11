@@ -10,8 +10,8 @@ import { CommandBus } from '@nestjs/cqrs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
-import { UploadFileCommand } from '@service/law/commands/upload-file.command';
-import { File } from '@service/lore/file.entity';
+import { UploadFileCommand } from '@/law/commands/upload-file.command';
+import { File } from '@/lore/file.entity';
 
 import { UploadFileDto } from '../dto/upload-file.dto';
 
