@@ -7,8 +7,8 @@ import { CreateSessionCommand } from '@/law/commands/create-session.command';
 
 import { SessionDto } from '../dto/session.dto';
 
-@Controller('/v1/sessions')
-@ApiTags('Sessions')
+@Controller('/v1/session')
+@ApiTags('Session')
 export class SessionGate {
   constructor(private readonly commandBus: CommandBus) {}
 

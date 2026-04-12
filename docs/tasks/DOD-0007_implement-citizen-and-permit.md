@@ -2,7 +2,7 @@
 
 | Field     | Value                                             |
 | --------- | ------------------------------------------------- |
-| Status    | In progress                                       |
+| Status    | Done |
 | Milestone | [Citizen](../milestones/Milestone-002_citizen.md) |
 | Created   | 2026-04-11                                        |
 
@@ -34,3 +34,12 @@ Implement use cases:
 - Update citizen
 - Get citizen by id
 - List citizens
+
+## API
+
+| Method | Path              | Description       |
+| ------ | ----------------- | ----------------- |
+| POST   | /v1/citizen       | Register citizen  |
+| PATCH  | /v1/citizen/:id   | Update citizen    |
+| GET    | /v1/citizen/:id   | Get citizen by id |
+| GET    | /v1/citizen       | List citizens     |

@@ -15,20 +15,18 @@ WORKDIR /app
 
 COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/package-lock.json ./package-lock.json
+
+# Copy Prisma schema before npm ci so postinstall (prisma generate) can run
+COPY --from=pruner /app/out/full/realms/codex/prisma ./realms/codex/prisma
+COPY --from=pruner /app/out/full/realms/codex/prisma.config.ts ./realms/codex/prisma.config.ts
+COPY --from=pruner /app/out/full/realms/codex/tsconfig*.json ./realms/codex/
+
 RUN npm ci
 
 # Build @dod/core (internal dep used at compile and runtime)
 COPY --from=pruner /app/packages/config ./packages/config
 COPY --from=pruner /app/out/full/packages/core ./packages/core
 RUN npm run build -w packages/core
-
-# Generate Prisma client (schema + config needed, not full src)
-COPY --from=pruner /app/out/full/realms/codex/src/ground/prisma ./realms/codex/src/ground/prisma
-COPY --from=pruner /app/out/full/realms/codex/prisma.config.ts ./realms/codex/prisma.config.ts
-COPY --from=pruner /app/out/full/realms/codex/tsconfig*.json ./realms/codex/
-
-WORKDIR /app/realms/codex
-RUN npm run prisma:generate
 
 # ================================
 # 🔨 Stage: Builder
@@ -55,6 +53,7 @@ COPY --from=installer /app/packages/core/package.json ./packages/core/
 COPY --from=pruner /app/packages/config ./packages/config
 COPY --from=installer /app/realms/codex/package.json ./realms/codex/
 COPY --from=installer /app/realms/codex/tsconfig*.json ./realms/codex/
+COPY --from=installer /app/realms/codex/prisma/generated ./realms/codex/prisma/generated
 
 WORKDIR /app/realms/codex
 CMD ["npm", "run", "start:debug"]

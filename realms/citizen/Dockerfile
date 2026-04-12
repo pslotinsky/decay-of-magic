@@ -15,15 +15,25 @@ WORKDIR /app
 
 COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/package-lock.json ./package-lock.json
+
+# Copy Prisma schema before npm ci so postinstall (prisma generate) can run
+COPY --from=pruner /app/out/full/realms/citizen/prisma ./realms/citizen/prisma
+COPY --from=pruner /app/out/full/realms/citizen/prisma.config.ts ./realms/citizen/prisma.config.ts
+COPY --from=pruner /app/out/full/realms/citizen/tsconfig*.json ./realms/citizen/
+
 RUN npm ci
+
+# Build @dod/core (internal dep used at compile and runtime)
+COPY --from=pruner /app/packages/config ./packages/config
+COPY --from=pruner /app/out/full/packages/core ./packages/core
+RUN npm run build -w packages/core
 
 # ================================
 # 🔨 Stage: Builder
+# Used for production build and as migration runner
 # ================================
 FROM installer AS builder
 WORKDIR /app
-COPY --from=pruner /app/packages/config ./packages/config
-COPY --from=pruner /app/out/full/realms/citizen/tsconfig*.json ./realms/citizen/
 COPY --from=pruner /app/out/full/realms/citizen/src ./realms/citizen/src
 
 WORKDIR /app/realms/citizen
@@ -38,9 +48,12 @@ WORKDIR /app
 
 COPY --from=installer /app/node_modules ./node_modules
 COPY --from=installer /app/realms/citizen/node_modules ./realms/citizen/node_modules
+COPY --from=installer /app/packages/core/dist ./packages/core/dist
+COPY --from=installer /app/packages/core/package.json ./packages/core/
 COPY --from=pruner /app/packages/config ./packages/config
 COPY --from=installer /app/realms/citizen/package.json ./realms/citizen/
-COPY --from=pruner /app/out/full/realms/citizen/tsconfig*.json ./realms/citizen/
+COPY --from=installer /app/realms/citizen/tsconfig*.json ./realms/citizen/
+COPY --from=installer /app/realms/citizen/prisma/generated ./realms/citizen/prisma/generated
 
 WORKDIR /app/realms/citizen
 CMD ["npm", "run", "start:debug"]
@@ -53,6 +66,8 @@ WORKDIR /app
 
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/realms/citizen/node_modules ./realms/citizen/node_modules
+COPY --from=builder /app/packages/core/dist ./packages/core/dist
+COPY --from=builder /app/packages/core/package.json ./packages/core/
 COPY --from=builder /app/realms/citizen/dist ./realms/citizen/dist
 COPY --from=builder /app/realms/citizen/package.json ./realms/citizen/
 

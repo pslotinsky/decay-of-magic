@@ -19,8 +19,8 @@ import { ListCitizensQuery } from '@/law/queries/list-citizens.query';
 
 import { CitizenDto } from '../dto/citizen.dto';
 
-@Controller('/v1/citizens')
-@ApiTags('Citizens')
+@Controller('/v1/citizen')
+@ApiTags('Citizen')
 export class CitizenGate {
   constructor(
     private readonly commandBus: CommandBus,
