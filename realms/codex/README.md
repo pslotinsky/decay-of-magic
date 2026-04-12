@@ -167,9 +167,6 @@ classDiagram
     }
     class ManaRepository
   }
-  namespace prisma_client {
-    class PrismaClient
-  }
   namespace dod_core {
     class PrismaRepository
   }
@@ -187,7 +184,7 @@ classDiagram
 
 | Entity | Notes |
 |--------|-------|
-| prisma/[PrismaService](src/ground/prisma/prisma.service.ts) | Extends `PrismaClient` · Implements `OnModuleInit`, `OnModuleDestroy` |
+| [PrismaService](src/ground/prisma.service.ts) | Extends `PrismaClient` · Implements `OnModuleInit`, `OnModuleDestroy` |
 | repositories/[PrismaCardRepository](src/ground/repositories/prisma-card.repository.ts) | Extends `PrismaRepository` |
 | repositories/[PrismaManaRepository](src/ground/repositories/prisma-mana.repository.ts) | Extends `PrismaRepository` |
 
