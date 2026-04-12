@@ -2,7 +2,7 @@
 
 | Field     | Value                                             |
 | --------- | ------------------------------------------------- |
-| Status    | In progress                                       |
+| Status    | Done |
 | Milestone | [Citizen](../milestones/Milestone-002_citizen.md) |
 | Created   | 2026-04-11                                        |
 
