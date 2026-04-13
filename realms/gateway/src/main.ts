@@ -12,8 +12,8 @@ async function bootstrap() {
     '/api/v1/card': `${CODEX_REALM_URL}/api/v1/card`,
     '/api/v1/mana': `${CODEX_REALM_URL}/api/v1/mana`,
     '/api/v1/file': `${VAULT_REALM_URL}/api/v1/file`,
-    '/api/v1/citizens': `${CITIZEN_REALM_URL}/api/v1/citizens`,
-    '/api/v1/sessions': `${CITIZEN_REALM_URL}/api/v1/sessions`,
+    '/api/v1/citizen': `${CITIZEN_REALM_URL}/api/v1/citizen`,
+    '/api/v1/session': `${CITIZEN_REALM_URL}/api/v1/session`,
   };
 
   for (const [route, target] of Object.entries(proxies)) {

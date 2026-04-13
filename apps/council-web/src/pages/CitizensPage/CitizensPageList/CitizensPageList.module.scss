@@ -1,0 +1,75 @@
+.card {
+  background: var(--parchment);
+  border: 1px solid var(--border-light);
+  padding: 0 24px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    font-size: 0.75rem;
+    font-variant: small-caps;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-align: left;
+    padding: 16px 20px 14px 0;
+    border-bottom: 1px solid var(--border-light);
+    font-weight: 400;
+  }
+
+  td {
+    padding: 14px 20px 14px 0;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 1rem;
+    color: var(--dark);
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.id {
+  font-size: 0.875rem;
+  color: var(--muted);
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  white-space: nowrap;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.action {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: inherit;
+  color: var(--muted);
+  padding: 0;
+  letter-spacing: 0;
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--dark);
+  }
+}
+
+.muted {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.error {
+  color: var(--rust);
+  font-style: italic;
+}

@@ -1,0 +1,35 @@
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.crumb {
+  display: flex;
+  align-items: center;
+}
+
+.sep {
+  font-size: 0.75rem;
+  color: var(--light-muted);
+  margin: 0 6px;
+}
+
+.link {
+  font-size: 0.75rem;
+  font-variant: small-caps;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--gold);
+  }
+}
+
+.text {
+  font-size: 0.75rem;
+  font-variant: small-caps;
+  letter-spacing: 0.15em;
+  color: var(--light-muted);
+}

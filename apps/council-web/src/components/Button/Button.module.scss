@@ -1,18 +1,36 @@
-.button {
-  background-color: #4a90e2;
-  color: #fff;
-  padding: $spacing-sm 24px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+.base {
+  display: inline-block;
+  padding: 12px 32px;
+  font-size: 0.875rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
 
-  &:hover {
-    background-color: lighten(#4a90e2, 10%);
+  &:hover:not(:disabled) {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--dark);
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.45;
     cursor: not-allowed;
   }
+}
+
+.primary {
+  composes: base;
+  background: var(--dark);
+  border: 1px solid var(--dark);
+  color: var(--bg);
+}
+
+.secondary {
+  composes: base;
+  background: var(--gold);
+  border: 1px solid var(--gold);
+  color: var(--bg);
 }

@@ -1,0 +1,89 @@
+.nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: 220px;
+  min-height: 100vh;
+  padding: 0;
+  background: var(--dark);
+  flex-shrink: 0;
+}
+
+.logo {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+
+  img {
+    width: 100%;
+    display: block;
+  }
+
+  &:hover .logoName {
+    color: var(--gold);
+  }
+}
+
+.logoName {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.6875rem;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+  text-align: center;
+  transition: color 0.15s;
+}
+
+.inner {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px 20px;
+  gap: 0;
+}
+
+.links {
+  list-style: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  a {
+    display: block;
+    padding: 7px 0;
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 1rem;
+    color: var(--bg);
+    transition: color 0.15s;
+
+    &:hover {
+      color: var(--gold);
+    }
+  }
+}
+
+.active {
+  color: var(--gold) !important;
+}
+
+.logout {
+  margin-top: auto;
+  padding-top: 28px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-align: left;
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--gold);
+  }
+}

@@ -1,0 +1,85 @@
+.backdrop {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  padding: 40px 20px;
+}
+
+.card {
+  width: 100%;
+  max-width: 440px;
+  padding: 52px 48px 56px;
+  background: var(--parchment);
+  border: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  font-variant: small-caps;
+  letter-spacing: 0.35em;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+.tagline {
+  font-style: italic;
+  font-size: 1.375rem;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.title {
+  font-size: 5.5rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--dark);
+  line-height: 0.9;
+  margin-bottom: 32px;
+}
+
+.sub {
+  font-size: 0.75rem;
+  font-variant: small-caps;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+  margin-bottom: 40px;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  text-align: left;
+
+  button {
+    width: 100%;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-variant: small-caps;
+  letter-spacing: 0.25em;
+  color: var(--muted);
+}
+
+.error {
+  color: var(--rust);
+  font-style: italic;
+  font-size: 0.875rem;
+  text-align: center;
+}
