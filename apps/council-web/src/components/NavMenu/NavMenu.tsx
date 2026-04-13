@@ -5,7 +5,7 @@ import { useAuth } from '../../context/useAuth';
 import styles from './NavMenu.module.scss';
 
 export function NavMenu() {
-  const { logout } = useAuth();
+  const { citizen, logout } = useAuth();
 
   return (
     <nav className={styles.nav}>
@@ -46,7 +46,8 @@ export function NavMenu() {
             </NavLink>
           </li>
         </ul>
-        <button className={styles.logout} onClick={logout}>
+        <span className={styles.citizen}>{citizen?.nickname}</span>
+        <button className={styles.logout} onClick={() => void logout()}>
           Dismiss
         </button>
       </div>

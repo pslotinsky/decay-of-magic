@@ -12,7 +12,6 @@ import { RegisterCitizenHandler } from './law/commands/register-citizen.command'
 import { UpdateCitizenHandler } from './law/commands/update-citizen.command';
 import { GetCitizenHandler } from './law/queries/get-citizen.query';
 import { ListCitizensHandler } from './law/queries/list-citizens.query';
-import { ValidateTokenHandler } from './law/queries/validate-token.query';
 import { CitizenPermitRepository } from './lore/repositories/citizen-permit.repository';
 import { CitizenRepository } from './lore/repositories/citizen.repository';
 
@@ -21,11 +20,7 @@ const commandHandlers = [
   UpdateCitizenHandler,
   CreateSessionHandler,
 ];
-const queryHandlers = [
-  GetCitizenHandler,
-  ListCitizensHandler,
-  ValidateTokenHandler,
-];
+const queryHandlers = [GetCitizenHandler, ListCitizensHandler];
 const repositories = [
   { provide: CitizenRepository, useClass: PrismaCitizenRepository },
   { provide: CitizenPermitRepository, useClass: PrismaCitizenPermitRepository },

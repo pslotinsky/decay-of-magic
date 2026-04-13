@@ -1,29 +1,54 @@
-import { useCallback, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 
+import type { CitizenDto } from '../queries/citizen';
 import { AuthContext } from './context';
 
-const TOKEN_KEY = 'council_token';
-
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(() =>
-    localStorage.getItem(TOKEN_KEY),
-  );
+  const [citizen, setCitizen] = useState<CitizenDto | undefined>(undefined);
+  const [ready, setReady] = useState(false);
 
-  const login = useCallback((newToken: string) => {
-    localStorage.setItem(TOKEN_KEY, newToken);
-    setToken(newToken);
+  useEffect(() => {
+    fetchMe()
+      .then(setCitizen)
+      .catch(() => setCitizen(undefined))
+      .finally(() => setReady(true));
   }, []);
 
-  const logout = useCallback(() => {
-    localStorage.removeItem(TOKEN_KEY);
-    setToken(null);
+  const login = useCallback(async () => {
+    setCitizen(await fetchMe());
   }, []);
+
+  const logout = useCallback(async () => {
+    await fetch('/api/v1/session', {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    setCitizen(undefined);
+  }, []);
+
+  useEffect(() => {
+    const handle = () => {
+      void logout();
+    };
+
+    window.addEventListener('unauthorized', handle);
+
+    return () => window.removeEventListener('unauthorized', handle);
+  }, [logout]);
+
+  if (!ready) return null;
 
   return (
-    <AuthContext.Provider
-      value={{ token, login, logout, isAuthenticated: token !== null }}
-    >
+    <AuthContext.Provider value={{ citizen, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
+}
+
+async function fetchMe(): Promise<CitizenDto | undefined> {
+  const response = await fetch('/api/v1/citizen/me', {
+    credentials: 'include',
+  });
+
+  return response.ok ? (response.json() as Promise<CitizenDto>) : undefined;
 }

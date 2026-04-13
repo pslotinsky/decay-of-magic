@@ -20,15 +20,14 @@ export function LoginPage() {
     setError(null);
     setLoading(true);
     try {
-      const { accessToken } = await req<{ accessToken: string }>(
-        '/api/v1/session',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nickname, secret }),
-        },
-      );
-      login(accessToken);
+      await req('/api/v1/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nickname, secret }),
+      });
+
+      await login();
+
       void navigate('/citizens');
     } catch {
       setError('Invalid credentials. Try again.');

@@ -26,7 +26,7 @@ export class CreateSessionHandler implements ICommandHandler<CreateSessionComman
 
     await this.verifySecret(payload.secret, permit.secret);
 
-    const accessToken = this.jwtService.sign({ sub: citizen.id });
+    const accessToken = await this.jwtService.signAsync({ sub: citizen.id });
 
     return { accessToken };
   }

@@ -72,9 +72,16 @@
   color: var(--gold) !important;
 }
 
-.logout {
+.citizen {
   margin-top: auto;
   padding-top: 28px;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--bg);
+}
+
+.logout {
+  padding-top: 8px;
   background: none;
   border: none;
   color: var(--muted);
