@@ -6,9 +6,7 @@ export default function globalSetup() {
   dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
   const { POSTGRES_USER, POSTGRES_PASSWORD } = process.env;
-  const databaseUrl =
-    process.env['DATABASE_URL'] ??
-    `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/citizen_test`;
+  const databaseUrl = `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/citizen_test`;
 
   try {
     execSync(

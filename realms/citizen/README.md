@@ -1,7 +1,69 @@
 # citizen
 
+## CLI
+
+Run administrative commands via the NestJS application context (requires `DATABASE_URL` in `.env` or environment):
+
+```bash
+npm run cli -- <command> [options]
+```
+
+### Commands
+
+#### `citizen:create`
+
+Register a new citizen with a hashed password.
+
+```bash
+npm run cli -- citizen:create --nickname <name> --password <secret>
+```
+
+| Option | Required | Description |
+|--------|----------|-------------|
+| `--nickname` | yes | Citizen nickname |
+| `--password` | yes | Citizen password (min 8 characters) |
+
 <!-- poe:classes:start -->
 ## Classes
+
+### cli
+
+```mermaid
+classDiagram
+  namespace cli {
+    class CliModule
+    class CreateCitizenCli {
+      -CommandBus commandBus
+      +create()
+    }
+  }
+  namespace frontier {
+    class CitizenDto {
+      +string id
+      +string nickname
+    }
+  }
+  namespace law {
+    class RegisterCitizenCommand {
+      +RegisterCitizenDto payload
+    }
+  }
+  namespace lore {
+    class Citizen {
+      +string id
+      +string nickname
+    }
+  }
+
+  CreateCitizenCli --> CitizenDto
+  CreateCitizenCli --> RegisterCitizenCommand
+  CreateCitizenCli --> Citizen
+```
+
+| Entity |
+|--------|
+| [CliModule](src/cli/cli.module.ts) |
+| [CreateCitizenCli](src/cli/create-citizen.cli.ts) |
 
 ### frontier
 
