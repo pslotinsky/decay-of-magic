@@ -1,5 +1,5 @@
 :root {
-  /* illetterista-inspired palette */
+  /* Color palette */
   --bg: #f0eadd;
   --parchment: #e6dece;
   --dark: #141826;
@@ -17,11 +17,143 @@
   --nav-border: rgba(20, 24, 38, 0.15);
   --nav-active: #c79851;
 
-  font-family: 'EB Garamond', Georgia, serif;
+  /* ─── Spacing scale (Material Design 3, 4px base grid) ────────────────────
+   * All spacing must be a multiple of 4px. Never use off-grid values (6px, 7px,
+   * 52px, etc.). Snap to the nearest token when migrating existing code.
+   *
+   *   --space-1   4px   — hairline gap, micro nudge
+   *   --space-2   8px   — tight gap, icon padding, small inset
+   *   --space-3   12px  — compact element padding
+   *   --space-4   16px  — default component padding, standard gap
+   *   --space-5   20px  — medium inset
+   *   --space-6   24px  — comfortable gap, section spacing
+   *   --space-7   28px  — between related groups
+   *   --space-8   32px  — large gap, card padding
+   *   --space-9   36px  — drawer / panel inset
+   *   --space-10  40px  — page section spacing
+   *   --space-12  48px  — large section gap
+   *   --space-14  56px  — hero spacing
+   *   --space-16  64px  — page horizontal padding
+   * ─────────────────────────────────────────────────────────────────────────*/
+  --space-1: 0.25rem;   /* 4px  */
+  --space-2: 0.5rem;    /* 8px  */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-7: 1.75rem;   /* 28px */
+  --space-8: 2rem;      /* 32px */
+  --space-9: 2.25rem;   /* 36px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-14: 3.5rem;   /* 56px */
+  --space-16: 4rem;     /* 64px */
+
+  /* ─── Type scale (Material Design 3) ───────────────────────────────────────
+   * Two fonts in use:
+   *   --font-heading  Raleway      — headings, titles, labels, nav
+   *   --font-body     Lora         — body copy, inputs
+   *
+   * Roles map to HTML elements:
+   *   Display         — hero / splash text (apply class manually)
+   *   Headline Large  → h1    32px  700  lh 1.25
+   *   Headline Medium → h2    28px  700  lh 1.29
+   *   Headline Small  → h3    24px  700  lh 1.33
+   *   Title Large     → h4    22px  400  lh 1.27
+   *   Title Medium    → h5    16px  500  lh 1.50
+   *   Title Small     → h6    14px  500  lh 1.43
+   *   Body Large      → :root 16px  400  lh 1.50  (default)
+   *   Body Medium         —   14px  400  lh 1.43
+   *   Body Small          —   12px  400  lh 1.33
+   *   Label Large         —   14px  500  lh 1.43
+   *   Label Medium        —   12px  500  lh 1.33
+   *   Label Small         —   11px  500  lh 1.45
+   * ─────────────────────────────────────────────────────────────────────────*/
+  --font-heading: 'Raleway', Arial, sans-serif;
+  --font-body: 'Lora', Georgia, serif;
+
+  --type-display-large-size: 3.5625rem;        /* 57px */
+  --type-display-large-weight: 400;
+  --type-display-large-line-height: 1.12;
+  --type-display-large-tracking: -0.015625rem; /* -0.25px */
+
+  --type-display-medium-size: 2.8125rem;       /* 45px */
+  --type-display-medium-weight: 400;
+  --type-display-medium-line-height: 1.16;
+  --type-display-medium-tracking: 0rem;
+
+  --type-display-small-size: 2.25rem;          /* 36px */
+  --type-display-small-weight: 400;
+  --type-display-small-line-height: 1.22;
+  --type-display-small-tracking: 0rem;
+
+  --type-headline-large-size: 2rem;      /* 32px */
+  --type-headline-large-weight: 700;
+  --type-headline-large-line-height: 1.25;
+  --type-headline-large-tracking: 0rem;
+
+  --type-headline-medium-size: 1.75rem;  /* 28px */
+  --type-headline-medium-weight: 700;
+  --type-headline-medium-line-height: 1.29;
+  --type-headline-medium-tracking: 0rem;
+
+  --type-headline-small-size: 1.5rem;    /* 24px */
+  --type-headline-small-weight: 700;
+  --type-headline-small-line-height: 1.33;
+  --type-headline-small-tracking: 0rem;
+
+  --type-title-large-size: 1.375rem;     /* 22px */
+  --type-title-large-weight: 400;
+  --type-title-large-line-height: 1.27;
+  --type-title-large-tracking: 0rem;
+
+  --type-title-medium-size: 1rem;        /* 16px */
+  --type-title-medium-weight: 500;
+  --type-title-medium-line-height: 1.5;
+  --type-title-medium-tracking: 0.009375rem; /* 0.15px */
+
+  --type-title-small-size: 0.875rem;     /* 14px */
+  --type-title-small-weight: 500;
+  --type-title-small-line-height: 1.43;
+  --type-title-small-tracking: 0.00625rem;   /* 0.1px */
+
+  --type-body-large-size: 1rem;          /* 16px */
+  --type-body-large-weight: 400;
+  --type-body-large-line-height: 1.5;
+  --type-body-large-tracking: 0.03125rem;    /* 0.5px */
+
+  --type-body-medium-size: 0.875rem;     /* 14px */
+  --type-body-medium-weight: 400;
+  --type-body-medium-line-height: 1.43;
+  --type-body-medium-tracking: 0.015625rem;  /* 0.25px */
+
+  --type-body-small-size: 0.75rem;       /* 12px */
+  --type-body-small-weight: 400;
+  --type-body-small-line-height: 1.33;
+  --type-body-small-tracking: 0.025rem;      /* 0.4px */
+
+  --type-label-large-size: 0.875rem;     /* 14px */
+  --type-label-large-weight: 500;
+  --type-label-large-line-height: 1.43;
+  --type-label-large-tracking: 0.00625rem;   /* 0.1px */
+
+  --type-label-medium-size: 0.75rem;     /* 12px */
+  --type-label-medium-weight: 500;
+  --type-label-medium-line-height: 1.33;
+  --type-label-medium-tracking: 0.03125rem;  /* 0.5px */
+
+  --type-label-small-size: 0.6875rem;    /* 11px */
+  --type-label-small-weight: 500;
+  --type-label-small-line-height: 1.45;
+  --type-label-small-tracking: 0.03125rem;   /* 0.5px */
+
+  font-family: var(--font-body);
+  font-size: var(--type-body-large-size);
+  font-weight: var(--type-body-large-weight);
+  line-height: var(--type-body-large-line-height);
+  letter-spacing: var(--type-body-large-tracking);
   color: var(--dark);
   background-color: var(--bg);
-  font-size: 16px;
-  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -40,17 +172,57 @@ body {
   min-height: 100vh;
 }
 
-h1, h2, h3 {
-  font-family: 'Cinzel', Georgia, serif;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+h1 {
+  font-family: var(--font-heading);
+  font-size: var(--type-headline-large-size);
+  font-weight: var(--type-headline-large-weight);
+  line-height: var(--type-headline-large-line-height);
+  letter-spacing: var(--type-headline-large-tracking);
   color: var(--dark);
-  line-height: 1.1;
 }
 
-h4, h5, h6 {
-  font-family: 'Cinzel', Georgia, serif;
-  font-weight: 400;
+h2 {
+  font-family: var(--font-heading);
+  font-size: var(--type-headline-medium-size);
+  font-weight: var(--type-headline-medium-weight);
+  line-height: var(--type-headline-medium-line-height);
+  letter-spacing: var(--type-headline-medium-tracking);
+  color: var(--dark);
+}
+
+h3 {
+  font-family: var(--font-heading);
+  font-size: var(--type-headline-small-size);
+  font-weight: var(--type-headline-small-weight);
+  line-height: var(--type-headline-small-line-height);
+  letter-spacing: var(--type-headline-small-tracking);
+  color: var(--dark);
+}
+
+h4 {
+  font-family: var(--font-heading);
+  font-size: var(--type-title-large-size);
+  font-weight: var(--type-title-large-weight);
+  line-height: var(--type-title-large-line-height);
+  letter-spacing: var(--type-title-large-tracking);
+  color: var(--gold);
+}
+
+h5 {
+  font-family: var(--font-heading);
+  font-size: var(--type-title-medium-size);
+  font-weight: var(--type-title-medium-weight);
+  line-height: var(--type-title-medium-line-height);
+  letter-spacing: var(--type-title-medium-tracking);
+  color: var(--gold);
+}
+
+h6 {
+  font-family: var(--font-heading);
+  font-size: var(--type-title-small-size);
+  font-weight: var(--type-title-small-weight);
+  line-height: var(--type-title-small-line-height);
+  letter-spacing: var(--type-title-small-tracking);
   color: var(--gold);
 }
 
@@ -65,13 +237,14 @@ a {
 }
 
 input {
-  font-family: 'EB Garamond', Georgia, serif;
+  font-family: var(--font-body);
+  font-size: var(--type-body-large-size);
+  font-weight: var(--type-body-large-weight);
   background: transparent;
   border: none;
   border-bottom: 1px solid var(--border);
   color: var(--dark);
-  padding: 8px 0;
-  font-size: 1.05rem;
+  padding: var(--space-2) 0;
   width: 100%;
   outline: none;
   transition: border-color 0.2s;

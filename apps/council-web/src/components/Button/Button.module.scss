@@ -1,7 +1,8 @@
 .base {
   display: inline-block;
-  padding: 12px 32px;
-  font-size: 0.875rem;
+  padding: var(--space-3) var(--space-8);
+  font-size: var(--type-label-large-size);
+  font-weight: var(--type-label-large-weight);
   letter-spacing: 0.15em;
   text-transform: uppercase;
   transition:

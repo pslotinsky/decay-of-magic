@@ -36,22 +36,24 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 36px 36px 28px;
+  padding: var(--space-9) var(--space-9) var(--space-7);
   border-bottom: 1px solid var(--border-light);
 }
 
 .title {
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-family: var(--font-heading);
+  font-size: var(--type-headline-medium-size);
+  font-weight: var(--type-headline-medium-weight);
+  line-height: var(--type-headline-medium-line-height);
   color: var(--dark);
-  line-height: 1;
 }
 
 .close {
   background: none;
   border: none;
   font-family: inherit;
-  font-size: 1.2rem;
+  font-size: var(--type-title-large-size);
+  font-weight: var(--type-title-large-weight);
   color: var(--muted);
   padding: 0;
   line-height: 1;
@@ -66,5 +68,5 @@
 .body {
   flex: 1;
   overflow-y: auto;
-  padding: 36px;
+  padding: var(--space-9);
 }
