@@ -1,6 +1,6 @@
 import styles from './CitizensPageList.module.scss';
 
-import { type CitizenDto } from '../../../api/citizen';
+import { type CitizenDto } from '../../../queries/citizen';
 
 interface Props {
   citizens: CitizenDto[];

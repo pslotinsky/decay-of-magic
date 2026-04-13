@@ -11,12 +11,26 @@ export class CreateCitizenCli {
 
   @Command({ command: 'citizen:create', describe: 'Register a new citizen' })
   public async create(
-    @Option({ name: 'nickname', describe: 'Citizen nickname', type: 'string', demandOption: true }) nickname: string,
-    @Option({ name: 'password', describe: 'Citizen password', type: 'string', demandOption: true }) password: string,
+    @Option({
+      name: 'nickname',
+      describe: 'Citizen nickname',
+      type: 'string',
+      demandOption: true,
+    })
+    nickname: string,
+    @Option({
+      name: 'password',
+      describe: 'Citizen password',
+      type: 'string',
+      demandOption: true,
+    })
+    password: string,
   ): Promise<void> {
     const citizen = await this.commandBus.execute<CitizenDto>(
       new RegisterCitizenCommand({ nickname, password }),
     );
-    console.log(`Citizen created — id: ${citizen.id}, nickname: ${citizen.nickname}`);
+    console.log(
+      `Citizen created — id: ${citizen.id}, nickname: ${citizen.nickname}`,
+    );
   }
 }
