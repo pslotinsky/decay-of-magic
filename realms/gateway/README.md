@@ -7,12 +7,36 @@ A classical gateway proxy that sits between clients and services.
 
 ```mermaid
 classDiagram
-  namespace root {
-    class AppModule
+  namespace auth {
+    class JwtMiddleware {
+      -JwtService jwtService
+      +use()
+    }
   }
+  namespace citizen {
+    class CitizenController {
+      +me()
+    }
+  }
+  namespace session {
+    class SessionController {
+      +create()
+      +logout()
+    }
+  }
+  namespace root {
+    class AppModule {
+      +configure()
+    }
+  }
+
+  AppModule --> JwtMiddleware
 ```
 
-| Entity |
-|--------|
-| [AppModule](src/app.module.ts) |
+| Entity | Notes |
+|--------|-------|
+| auth/[JwtMiddleware](src/auth/jwt.middleware.ts) | Implements `NestMiddleware` |
+| citizen/[CitizenController](src/citizen/citizen.controller.ts) |  |
+| session/[SessionController](src/session/session.controller.ts) |  |
+| [AppModule](src/app.module.ts) | Implements `NestModule` |
 <!-- poe:classes:end -->

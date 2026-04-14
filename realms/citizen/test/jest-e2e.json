@@ -10,5 +10,6 @@
     "@/(.*)": "<rootDir>/../src/$1"
   },
   "setupFiles": ["<rootDir>/setup.ts"],
-  "globalSetup": "<rootDir>/global-setup.ts"
+  "globalSetup": "<rootDir>/global-setup.ts",
+  "maxWorkers": 1
 }

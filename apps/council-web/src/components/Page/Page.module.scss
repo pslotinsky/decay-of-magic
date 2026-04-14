@@ -1,3 +1,31 @@
-.page {
-  padding: 24px;
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+  padding: var(--space-10) var(--space-16);
+  overflow-y: auto;
+  background: var(--bg);
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: var(--space-12);
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: var(--type-display-medium-size);
+  font-weight: var(--type-headline-large-weight);
+  letter-spacing: 0.04em;
+  color: var(--dark);
+  line-height: var(--type-display-medium-line-height);
+}
+
+.action {
+  padding-bottom: var(--space-1);
 }

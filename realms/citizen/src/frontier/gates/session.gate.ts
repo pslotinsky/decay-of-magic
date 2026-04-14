@@ -1,11 +1,10 @@
-import { CommandBus } from '@nestjs/cqrs';
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 
 import { CreateSessionDto } from '@/frontier/dto/body/create-session.dto';
+import { SessionDto } from '@/frontier/dto/session.dto';
 import { CreateSessionCommand } from '@/law/commands/create-session.command';
-
-import { SessionDto } from '../dto/session.dto';
 
 @Controller('/v1/session')
 @ApiTags('Session')

@@ -15,8 +15,7 @@ export const CardsPage = () => {
   }, []);
 
   return (
-    <Page>
-      <h1>Cards</h1>
+    <Page title="Cards" breadcrumbs={[{ label: 'Home', to: '/' }]}>
       <div className={styles.grid}>
         {cards.map((card) => (
           <CardPreview key={card.id} {...card} />

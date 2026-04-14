@@ -1,5 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalEnv": ["DATABASE_URL"],
   "tasks": {
     "build": {
       "dependsOn": ["^build", "prisma:generate"],
@@ -11,6 +12,13 @@
     "dev": {
       "dependsOn": ["^build"],
       "persistent": true,
+      "cache": false
+    },
+    "test:unit": {
+      "dependsOn": ["^build"]
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
       "cache": false
     },
     "test": {

@@ -8,5 +8,5 @@ export class RegisterCitizenDto {
 
   @IsString()
   @MinLength(8)
-  public password!: string;
+  public secret!: string;
 }

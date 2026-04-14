@@ -1,0 +1,37 @@
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.crumb {
+  display: flex;
+  align-items: center;
+}
+
+.sep {
+  font-size: var(--type-label-medium-size);
+  color: var(--light-muted);
+  margin: 0 var(--space-2);
+}
+
+.link {
+  font-size: var(--type-label-medium-size);
+  font-weight: var(--type-label-medium-weight);
+  font-variant: small-caps;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--gold);
+  }
+}
+
+.text {
+  font-size: var(--type-label-medium-size);
+  font-weight: var(--type-label-medium-weight);
+  font-variant: small-caps;
+  letter-spacing: 0.15em;
+  color: var(--light-muted);
+}

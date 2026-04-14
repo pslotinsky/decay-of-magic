@@ -33,7 +33,7 @@ describe('CitizenGate (e2e)', () => {
       const citizen = (
         await request(app.getHttpServer())
           .post('/api/v1/citizen')
-          .send({ nickname: 'Zog', password: 'secret123' })
+          .send({ nickname: 'Zog', secret: 'secret123' })
           .expect(201)
       ).body as CitizenDto;
 
@@ -45,7 +45,7 @@ describe('CitizenGate (e2e)', () => {
       const citizen = (
         await request(app.getHttpServer())
           .post('/api/v1/citizen')
-          .send({ nickname: 'Zog', password: 'secret123' })
+          .send({ nickname: 'Zog', secret: 'secret123' })
           .expect(201)
       ).body as CitizenDto;
 
@@ -59,47 +59,47 @@ describe('CitizenGate (e2e)', () => {
     it('returns 409 when nickname already exists', async () => {
       await request(app.getHttpServer())
         .post('/api/v1/citizen')
-        .send({ nickname: 'Zog', password: 'secret123' })
+        .send({ nickname: 'Zog', secret: 'secret123' })
         .expect(201);
 
       await request(app.getHttpServer())
         .post('/api/v1/citizen')
-        .send({ nickname: 'Zog', password: 'another123' })
+        .send({ nickname: 'Zog', secret: 'another123' })
         .expect(409);
     });
 
     it('returns 400 when nickname is missing', () => {
       return request(app.getHttpServer())
         .post('/api/v1/citizen')
-        .send({ password: 'secret123' })
+        .send({ secret: 'secret123' })
         .expect(400);
     });
 
     it('returns 400 when nickname is not a string', () => {
       return request(app.getHttpServer())
         .post('/api/v1/citizen')
-        .send({ nickname: 42, password: 'secret123' })
+        .send({ nickname: 42, secret: 'secret123' })
         .expect(400);
     });
 
     it('returns 400 when nickname is empty', () => {
       return request(app.getHttpServer())
         .post('/api/v1/citizen')
-        .send({ nickname: '', password: 'secret123' })
+        .send({ nickname: '', secret: 'secret123' })
         .expect(400);
     });
 
-    it('returns 400 when password is missing', () => {
+    it('returns 400 when secret is missing', () => {
       return request(app.getHttpServer())
         .post('/api/v1/citizen')
         .send({ nickname: 'Zog' })
         .expect(400);
     });
 
-    it('returns 400 when password is too short', () => {
+    it('returns 400 when secret is too short', () => {
       return request(app.getHttpServer())
         .post('/api/v1/citizen')
-        .send({ nickname: 'Zog', password: 'short' })
+        .send({ nickname: 'Zog', secret: 'short' })
         .expect(400);
     });
   });
@@ -109,7 +109,7 @@ describe('CitizenGate (e2e)', () => {
       const citizen = (
         await request(app.getHttpServer())
           .post('/api/v1/citizen')
-          .send({ nickname: 'Zog', password: 'secret123' })
+          .send({ nickname: 'Zog', secret: 'secret123' })
           .expect(201)
       ).body as CitizenDto;
 
@@ -127,7 +127,7 @@ describe('CitizenGate (e2e)', () => {
       const citizen = (
         await request(app.getHttpServer())
           .post('/api/v1/citizen')
-          .send({ nickname: 'Zog', password: 'secret123' })
+          .send({ nickname: 'Zog', secret: 'secret123' })
           .expect(201)
       ).body as CitizenDto;
 
@@ -168,7 +168,7 @@ describe('CitizenGate (e2e)', () => {
       const citizen = (
         await request(app.getHttpServer())
           .post('/api/v1/citizen')
-          .send({ nickname: 'Zog', password: 'secret123' })
+          .send({ nickname: 'Zog', secret: 'secret123' })
           .expect(201)
       ).body as CitizenDto;
 
@@ -193,12 +193,12 @@ describe('CitizenGate (e2e)', () => {
     it('returns collection of citizens', async () => {
       await request(app.getHttpServer())
         .post('/api/v1/citizen')
-        .send({ nickname: 'Zog', password: 'secret123' })
+        .send({ nickname: 'Zog', secret: 'secret123' })
         .expect(201);
 
       await request(app.getHttpServer())
         .post('/api/v1/citizen')
-        .send({ nickname: 'Mog', password: 'secret123' })
+        .send({ nickname: 'Mog', secret: 'secret123' })
         .expect(201);
 
       const citizens = (
