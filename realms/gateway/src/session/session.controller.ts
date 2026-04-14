@@ -42,6 +42,7 @@ export class SessionController {
     res.cookie(COOKIE_NAME, accessToken, {
       httpOnly: true,
       sameSite: 'strict',
+      secure: process.env['NODE_ENV'] === 'production',
       maxAge: COOKIE_TTL_MS,
       path: '/',
     });

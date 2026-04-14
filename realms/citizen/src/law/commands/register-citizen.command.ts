@@ -31,7 +31,7 @@ export class RegisterCitizenHandler implements ICommandHandler<RegisterCitizenCo
     const citizen = Citizen.create({ id, nickname: payload.nickname });
     await this.citizenRepository.save(citizen);
 
-    const secret = await bcrypt.hash(payload.password, 10);
+    const secret = await bcrypt.hash(payload.secret, 10);
     const permit = CitizenPermit.create({ id, secret, issuedAt: new Date() });
     await this.citizenPermitRepository.save(permit);
 

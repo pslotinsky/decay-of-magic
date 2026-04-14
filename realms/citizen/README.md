@@ -76,7 +76,7 @@ classDiagram
     }
     class RegisterCitizenDto {
       +string nickname
-      +string password
+      +string secret
     }
     class UpdateCitizenDto {
       +string nickname
@@ -101,9 +101,7 @@ classDiagram
     }
     class SessionGate {
       -CommandBus commandBus
-      -QueryBus queryBus
       +create()
-      +validate()
     }
   }
   namespace lore {
@@ -127,9 +125,6 @@ classDiagram
     class CreateSessionCommand {
       +CreateSessionDto payload
     }
-    class ValidateTokenQuery {
-      +string token
-    }
   }
 
   CitizenDto --> Citizen
@@ -143,9 +138,7 @@ classDiagram
   CitizenGate --> Citizen
   SessionGate --> CreateSessionDto
   SessionGate --> SessionDto
-  SessionGate --> TokenPayloadDto
   SessionGate --> CreateSessionCommand
-  SessionGate --> ValidateTokenQuery
 ```
 
 | Entity |
@@ -247,12 +240,6 @@ classDiagram
     class ListCitizensHandler {
       +execute()
     }
-    class ValidateTokenQuery {
-      +string token
-    }
-    class ValidateTokenHandler {
-      +execute()
-    }
   }
   namespace frontier {
     class CreateSessionDto {
@@ -264,7 +251,7 @@ classDiagram
     }
     class RegisterCitizenDto {
       +string nickname
-      +string password
+      +string secret
     }
     class CitizenDto {
       +string id
@@ -272,9 +259,6 @@ classDiagram
     }
     class UpdateCitizenDto {
       +string nickname
-    }
-    class TokenPayloadDto {
-      +string citizenId
     }
   }
   namespace lore {
@@ -336,10 +320,6 @@ classDiagram
   ListCitizensHandler --> CitizenDto
   ListCitizensHandler --> ListCitizensQuery
   ListCitizensHandler --> Citizen
-  ValidateTokenQuery --|> Query
-  ValidateTokenQuery --> TokenPayloadDto
-  ValidateTokenHandler --> TokenPayloadDto
-  ValidateTokenHandler --> ValidateTokenQuery
 ```
 
 | Entity | Notes |
@@ -354,8 +334,6 @@ classDiagram
 | queries/[GetCitizenHandler](src/law/queries/get-citizen.query.ts) | Implements `IQueryHandler` |
 | queries/[ListCitizensQuery](src/law/queries/list-citizens.query.ts) | Extends `Query` |
 | queries/[ListCitizensHandler](src/law/queries/list-citizens.query.ts) | Implements `IQueryHandler` |
-| queries/[ValidateTokenQuery](src/law/queries/validate-token.query.ts) | Extends `Query` |
-| queries/[ValidateTokenHandler](src/law/queries/validate-token.query.ts) | Implements `IQueryHandler` |
 
 ### lore
 

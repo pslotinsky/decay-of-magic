@@ -117,4 +117,4 @@ jobs:
       - name: E2E Tests
         run: npx turbo test:e2e
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/citizen_test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/citizen

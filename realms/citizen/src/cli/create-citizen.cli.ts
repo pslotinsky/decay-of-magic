@@ -19,15 +19,15 @@ export class CreateCitizenCli {
     })
     nickname: string,
     @Option({
-      name: 'password',
-      describe: 'Citizen password',
+      name: 'secret',
+      describe: 'Citizen secret',
       type: 'string',
       demandOption: true,
     })
-    password: string,
+    secret: string,
   ): Promise<void> {
     const citizen = await this.commandBus.execute<CitizenDto>(
-      new RegisterCitizenCommand({ nickname, password }),
+      new RegisterCitizenCommand({ nickname, secret }),
     );
     console.log(
       `Citizen created — id: ${citizen.id}, nickname: ${citizen.nickname}`,

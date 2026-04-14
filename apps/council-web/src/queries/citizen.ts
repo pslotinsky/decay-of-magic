@@ -18,17 +18,11 @@ export function useCitizens() {
 export function useRegisterCitizen() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      nickname,
-      password,
-    }: {
-      nickname: string;
-      password: string;
-    }) =>
+    mutationFn: ({ nickname, secret }: { nickname: string; secret: string }) =>
       req<CitizenDto>('/api/v1/citizen', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nickname, password }),
+        body: JSON.stringify({ nickname, secret }),
       }),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: citizenKeys.all }),

@@ -36,11 +36,11 @@ describe('SessionGate (e2e)', () => {
 
   async function registerCitizen(
     nickname: string,
-    password: string,
+    secret: string,
   ): Promise<CitizenDto> {
     const res = await request(server())
       .post('/api/v1/citizen')
-      .send({ nickname, password })
+      .send({ nickname, secret })
       .expect(201);
     return res.body as CitizenDto;
   }

@@ -12,17 +12,17 @@ interface Props {
 
 export function CitizensPageCitizenRegistration({ open, onClose }: Props) {
   const [nickname, setNickname] = useState('');
-  const [password, setPassword] = useState('');
+  const [secret, setSecret] = useState('');
   const { mutate, error, isPending } = useRegisterCitizen();
 
   function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
     mutate(
-      { nickname, password },
+      { nickname, secret },
       {
         onSuccess: () => {
           setNickname('');
-          setPassword('');
+          setSecret('');
           onClose();
         },
       },
@@ -42,11 +42,11 @@ export function CitizensPageCitizenRegistration({ open, onClose }: Props) {
           />
         </div>
         <div className={styles.field}>
-          <span className={styles.label}>Password</span>
+          <span className={styles.label}>Secret</span>
           <input
             type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            value={secret}
+            onChange={(event) => setSecret(event.target.value)}
             placeholder="At least 8 characters"
             minLength={8}
             required
