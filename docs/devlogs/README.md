@@ -6,4 +6,5 @@
 - [DevLog-003: Zok still in progress](./DevLog-003_zok-still-in-progress.md)
 - [DevLog-004: First Zok's devlog](./DevLog-004_first-zoks-devlog.md)
 - [DevLog-005: It's been long-long time](./DevLog-005_its-been-long-long-time.md)
+- [DevLog-006: First Zok, now Poe!](./DevLog-006_first-zok-now-poe.md)
 <!-- TOC.END -->
