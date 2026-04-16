@@ -1,3 +1,4 @@
+import { Card } from '../Card';
 import styles from './CardPreview.module.scss';
 
 import dummy from './dummy.png';
@@ -12,9 +13,9 @@ export type CardDto = {
 };
 
 export const CardPreview = ({ name, description, image = dummy }: CardDto) => (
-  <div className={styles.card}>
-    <img src={image} alt={name} />
+  <Card interactive className={styles.card}>
+    <img className={styles.image} src={image} alt={name} />
     <div className={styles.title}>{name}</div>
     <div className={styles.description}>{description}</div>
-  </div>
+  </Card>
 );

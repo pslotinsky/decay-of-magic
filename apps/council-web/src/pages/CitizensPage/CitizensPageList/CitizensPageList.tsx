@@ -1,6 +1,6 @@
-import styles from './CitizensPageList.module.scss';
-
+import { Card } from '../../../components/Card';
 import { type CitizenDto } from '../../../queries/citizen';
+import styles from './CitizensPageList.module.scss';
 
 interface Props {
   citizens: CitizenDto[];
@@ -19,7 +19,7 @@ export function CitizensPageList({ citizens, error, onEdit }: Props) {
   }
 
   return (
-    <div className={styles.card}>
+    <Card className={styles.card}>
       <table className={styles.table}>
         <thead>
           <tr>
@@ -45,6 +45,6 @@ export function CitizensPageList({ citizens, error, onEdit }: Props) {
           ))}
         </tbody>
       </table>
-    </div>
+    </Card>
   );
 }

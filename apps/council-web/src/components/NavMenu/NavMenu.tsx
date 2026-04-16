@@ -1,3 +1,4 @@
+import { LogOut, Scroll, Sparkles, Users } from 'lucide-react';
 import { Link, NavLink } from 'react-router';
 
 import rostraImg from '../../assets/rostra.webp';
@@ -22,6 +23,7 @@ export function NavMenu() {
                 isActive ? styles.active : undefined
               }
             >
+              <Users />
               Register of Citizens
             </NavLink>
           </li>
@@ -32,6 +34,7 @@ export function NavMenu() {
                 isActive ? styles.active : undefined
               }
             >
+              <Scroll />
               Cards
             </NavLink>
           </li>
@@ -42,12 +45,14 @@ export function NavMenu() {
                 isActive ? styles.active : undefined
               }
             >
+              <Sparkles />
               Mana
             </NavLink>
           </li>
         </ul>
         <span className={styles.citizen}>{citizen?.nickname}</span>
         <button className={styles.logout} onClick={() => void logout()}>
+          <LogOut />
           Dismiss
         </button>
       </div>

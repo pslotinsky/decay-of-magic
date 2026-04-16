@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { req } from '../../lib/http';
 import { useAuth } from '../../context/useAuth';
 import { Button } from '../../components/Button';
+import { Card } from '../../components/Card';
 import styles from './LoginPage.module.scss';
 
 export function LoginPage() {
@@ -38,7 +39,7 @@ export function LoginPage() {
 
   return (
     <div className={styles.backdrop}>
-      <div className={styles.card}>
+      <Card className={styles.card}>
         <p className={styles.eyebrow}>Days of Decay</p>
         <p className={styles.tagline}>Administrative</p>
         <h1 className={styles.title}>Council</h1>
@@ -74,7 +75,7 @@ export function LoginPage() {
             {loading ? 'Verifying…' : 'Authenticate'}
           </Button>
         </form>
-      </div>
+      </Card>
     </div>
   );
 }
