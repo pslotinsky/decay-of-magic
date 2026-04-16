@@ -1,0 +1,24 @@
+import {
+  IsOptional,
+  IsString,
+  IsUrl,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
+
+export class UpdateUniverseDto {
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  @MaxLength(100)
+  public name?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  public description?: string;
+
+  @IsOptional()
+  @IsUrl()
+  public cover?: string;
+}

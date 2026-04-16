@@ -26,7 +26,7 @@ This milestone includes:
 ## Tasks
 
 <!-- TOC.START: task -->
-- [ ] [DOD-0011: Describe Universe API and tests](../tasks/DOD-0011_describe-universe-api-and-tests.md)
+- [x] [DOD-0011: Describe Universe API and tests](../tasks/DOD-0011_describe-universe-api-and-tests.md)
 - [ ] [DOD-0012: Implement Universe realm](../tasks/DOD-0012_implement-universe-realm.md)
 - [ ] [DOD-0013: Create Universe admin UI](../tasks/DOD-0013_create-universe-admin-ui.md)
 <!-- TOC.END -->

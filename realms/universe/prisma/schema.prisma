@@ -1,0 +1,18 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "./generated"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Universe {
+  id          String  @id
+  name        String  @unique
+  description String?
+  cover       String?
+
+  @@map("universe")
+}

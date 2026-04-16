@@ -11,7 +11,7 @@
 - [x] [DOD-0008: Implement authentication](./DOD-0008_implement-authentication.md)
 - [x] [DOD-0009: Citizen UI](./DOD-0009_citizen-ui.md)
 - [x] [DOD-0010: Enforce ADR-004 on existed services](./DOD-0010_enforce-adr-004-on-existed-services.md)
-- [ ] [DOD-0011: Describe Universe API and tests](./DOD-0011_describe-universe-api-and-tests.md)
+- [x] [DOD-0011: Describe Universe API and tests](./DOD-0011_describe-universe-api-and-tests.md)
 - [ ] [DOD-0012: Implement Universe realm](./DOD-0012_implement-universe-realm.md)
 - [ ] [DOD-0013: Create Universe admin UI](./DOD-0013_create-universe-admin-ui.md)
 <!-- TOC.END -->
