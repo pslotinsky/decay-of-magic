@@ -10,6 +10,11 @@ export class CreateUniverseDto {
   @IsString()
   @MinLength(1)
   @MaxLength(100)
+  public id!: string;
+
+  @IsString()
+  @MinLength(1)
+  @MaxLength(100)
   public name!: string;
 
   @IsOptional()

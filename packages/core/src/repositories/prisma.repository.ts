@@ -3,7 +3,7 @@ import { NotFoundException } from '@nestjs/common';
 import { EntityRepository } from './entity.repository';
 
 type Delegate<TModel extends { id: string }> = {
-  findFirst(args: any): Promise<TModel | null>;
+  findFirst(args?: any): Promise<TModel | null>;
   findMany(args?: any): Promise<TModel[]>;
   upsert(args: any): Promise<any>;
 };
@@ -39,6 +39,14 @@ export abstract class PrismaRepository<
     );
 
     return models.map((model) => this.toEntity(model));
+  }
+
+  public async findOne(filter?: TFindOptions): Promise<TEntity | undefined> {
+    const model = await this.delegate.findFirst(
+      filter ? { where: filter } : undefined,
+    );
+
+    return model ? this.toEntity(model) : undefined;
   }
 
   public async save(entity: TEntity): Promise<void> {

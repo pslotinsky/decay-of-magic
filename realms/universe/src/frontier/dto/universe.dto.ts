@@ -9,6 +9,6 @@ export class UniverseDto {
 
   public id!: string;
   public name!: string;
-  public description!: string | null;
-  public cover!: string | null;
+  public description?: string;
+  public cover?: string;
 }
