@@ -240,7 +240,8 @@ a {
   }
 }
 
-input {
+input,
+textarea {
   font-family: var(--font-body);
   font-size: var(--type-body-large-size);
   font-weight: var(--type-body-large-weight);
@@ -261,6 +262,12 @@ input {
     color: var(--light-muted);
     font-style: italic;
   }
+}
+
+textarea {
+  resize: none;
+  overflow: hidden;
+  line-height: var(--type-body-large-line-height);
 }
 
 button {

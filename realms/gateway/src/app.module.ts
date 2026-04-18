@@ -1,4 +1,5 @@
 import cookieParser from 'cookie-parser';
+import { json } from 'express';
 import {
   MiddlewareConsumer,
   Module,
@@ -12,7 +13,12 @@ import { JwtMiddleware } from './auth/jwt.middleware';
 import { CitizenController } from './citizen/citizen.controller';
 import { SessionController } from './session/session.controller';
 
-const { CODEX_REALM_URL, VAULT_REALM_URL, CITIZEN_REALM_URL } = process.env;
+const {
+  CODEX_REALM_URL,
+  VAULT_REALM_URL,
+  CITIZEN_REALM_URL,
+  UNIVERSE_REALM_URL,
+} = process.env;
 
 @Module({
   imports: [
@@ -25,6 +31,8 @@ const { CODEX_REALM_URL, VAULT_REALM_URL, CITIZEN_REALM_URL } = process.env;
 export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
     consumer.apply(cookieParser()).forRoutes('*');
+
+    consumer.apply(json()).forRoutes(SessionController);
 
     consumer
       .apply(JwtMiddleware)
@@ -70,5 +78,14 @@ export class AppModule implements NestModule {
         }),
       )
       .forRoutes('/api/v1/file');
+
+    consumer
+      .apply(
+        createProxyMiddleware({
+          target: `${UNIVERSE_REALM_URL}/api/v1/universe`,
+          changeOrigin: true,
+        }),
+      )
+      .forRoutes('/api/v1/universe');
   }
 }

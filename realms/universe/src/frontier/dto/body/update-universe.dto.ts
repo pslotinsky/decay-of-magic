@@ -19,6 +19,6 @@ export class UpdateUniverseDto {
   public description?: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsUrl({ require_tld: false, require_protocol: true })
   public cover?: string;
 }

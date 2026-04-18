@@ -4,6 +4,10 @@
   border: 1px solid var(--border-light);
 }
 
+.noPadding {
+  padding: 0;
+}
+
 .interactive {
   cursor: pointer;
   transition:

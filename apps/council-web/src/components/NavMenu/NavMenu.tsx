@@ -1,4 +1,4 @@
-import { LogOut, Scroll, Sparkles, Users } from 'lucide-react';
+import { Globe, LogOut, Scroll, Sparkles, Users } from 'lucide-react';
 import { Link, NavLink } from 'react-router';
 
 import rostraImg from '../../assets/rostra.webp';
@@ -18,7 +18,18 @@ export function NavMenu() {
         <ul className={styles.links}>
           <li>
             <NavLink
-              to="/citizens"
+              to="/universe"
+              className={({ isActive }) =>
+                isActive ? styles.active : undefined
+              }
+            >
+              <Globe />
+              Universes
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/citizen"
               className={({ isActive }) =>
                 isActive ? styles.active : undefined
               }

@@ -13,5 +13,5 @@
 - [x] [DOD-0010: Enforce ADR-004 on existed services](./DOD-0010_enforce-adr-004-on-existed-services.md)
 - [x] [DOD-0011: Describe Universe API and tests](./DOD-0011_describe-universe-api-and-tests.md)
 - [x] [DOD-0012: Implement Universe realm](./DOD-0012_implement-universe-realm.md)
-- [ ] [DOD-0013: Create Universe admin UI](./DOD-0013_create-universe-admin-ui.md)
+- [x] [DOD-0013: Create Universe admin UI](./DOD-0013_create-universe-admin-ui.md)
 <!-- TOC.END -->

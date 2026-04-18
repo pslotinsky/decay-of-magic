@@ -5,6 +5,8 @@ import { CardsPage } from './pages/CardsPage';
 import { CitizensPage } from './pages/CitizensPage';
 import { LoginPage } from './pages/LoginPage';
 import { ManaPage } from './pages/ManaPage';
+import { UniversePage } from './pages/UniversePage';
+import { UniversesPage } from './pages/UniversesPage';
 
 function App() {
   return (
@@ -12,7 +14,23 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route
-          path="/citizens"
+          path="/universe"
+          element={
+            <ProtectedRoute>
+              <UniversesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/universe/:id"
+          element={
+            <ProtectedRoute>
+              <UniversePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/citizen"
           element={
             <ProtectedRoute>
               <CitizensPage />
@@ -35,7 +53,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/" element={<Navigate to="/citizens" replace />} />
+        <Route path="/" element={<Navigate to="/universe" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 
-import type { CitizenDto } from '../queries/citizen';
+import type { CitizenDto } from '@/queries/citizen';
+
 import { AuthContext } from './context';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
