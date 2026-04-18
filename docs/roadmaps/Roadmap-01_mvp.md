@@ -27,5 +27,5 @@
 <!-- TOC.START: milestone -->
 - [x] [Milestone-001: Infrastructure and documentation](../milestones/Milestone-001_infrastructure-and-documentation.md)
 - [x] [Milestone-002: Citizen Realm](../milestones/Milestone-002_citizen-realm.md)
-- [ ] [Milestone-003: Universe Realm](../milestones/Milestone-003_universe-realm.md)
+- [x] [Milestone-003: Universe Realm](../milestones/Milestone-003_universe-realm.md)
 <!-- TOC.END -->

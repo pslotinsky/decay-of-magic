@@ -2,7 +2,7 @@
 
 | Field   | Value                                |
 | ------- | ------------------------------------ |
-| Status  | In progress                          |
+| Status  | Done                                 |
 | Roadmap | [MVP](../roadmaps/Roadmap-01_mvp.md) |
 | Created | 2026-04-16                           |
 
