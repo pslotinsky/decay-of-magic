@@ -18,7 +18,7 @@ The goal is to keep architectural clarity while forming a cohesive and memorable
 Each service can be seen as its own world.
 Its structure should feel natural within that world, not purely technical.
 
-![OOP](../assets/oop-small.webp)
+<img alt="OOP" src="../assets/oop-small.webp" style="background: #fff; border-radius: 8px">
 
 ## Decision
 
