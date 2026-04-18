@@ -6,4 +6,5 @@
 - [ADR-003: Git Only](./ADR-003_git-only.md)
 - [ADR-004: OOP — Ork Oriented Programming](./ADR-004_oop-ork-oriented-programming.md)
 - [ADR-005: REST In Peace](./ADR-005_rest-in-peace.md)
+- [ADR-006: Git Doublethink](./ADR-006_git-doublethink.md)
 <!-- TOC.END -->
