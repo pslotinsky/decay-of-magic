@@ -1,19 +1,20 @@
-import test, { beforeEach } from 'node:test';
 import assert from 'node:assert';
+import test, { beforeEach } from 'node:test';
 
-import { Zok } from '@zok/application/Zok';
-import { Document, DocumentLink } from '@zok/domain/entities';
+import { Zok } from '@/application/Zok';
+import { Document, DocumentLink } from '@/domain/entities';
 
-import { MockFactory } from 'test/mocks/MockFactory';
 import {
   createMilestone,
   createTask,
   findMilestone,
-} from 'test/helpers/document';
+} from '../helpers/document';
+import { MockFactory } from '../mocks/MockFactory';
 
 test.describe('Flow: Task creation', () => {
   let zok!: Zok;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let doneMilestone!: Document;
   let plannedMilestone!: Document;
   let inProgressMilestone!: Document;
@@ -30,7 +31,10 @@ test.describe('Flow: Task creation', () => {
 
   test(`Task automatically binds to the active milestone`, async () => {
     const task = await createTask(zok, { title: 'Hello task' });
-    assert.equal(task.getField<DocumentLink>('parent')?.id, inProgressMilestone.id);
+    assert.equal(
+      task.getField<DocumentLink>('parent')?.id,
+      inProgressMilestone.id,
+    );
 
     const milestone = await findMilestone(zok, inProgressMilestone.id);
     const { toc } = milestone.metadata;
@@ -58,7 +62,10 @@ test.describe('Flow: Task creation', () => {
       title: 'Hello task',
       parent: plannedMilestone.id,
     });
-    assert.equal(task.getField<DocumentLink>('parent')?.id, plannedMilestone.id);
+    assert.equal(
+      task.getField<DocumentLink>('parent')?.id,
+      plannedMilestone.id,
+    );
 
     const milestone = await findMilestone(zok, plannedMilestone.id);
 

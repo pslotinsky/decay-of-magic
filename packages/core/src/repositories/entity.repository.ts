@@ -9,5 +9,6 @@ export abstract class EntityRepository<
   public abstract getById(id: string): Promise<TEntity | undefined>;
   public abstract getByIdOrFail(id: string): Promise<TEntity>;
   public abstract find(filter?: TFindOptions): Promise<TEntity[]>;
+  public abstract findOne(filter?: TFindOptions): Promise<TEntity | undefined>;
   public abstract save(entity: TEntity): Promise<void>;
 }

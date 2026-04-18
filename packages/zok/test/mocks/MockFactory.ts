@@ -1,9 +1,9 @@
-import { Assistant } from '@zok/domain/assistants';
-import { Zok } from '@zok/application/Zok';
+import { Zok } from '@/application/Zok';
+import { Assistant } from '@/domain/assistants';
 
+import { MockArchiveKeeper } from './MockArchiveKeeper';
 import { MockPleaFormalist } from './MockPleaFormalist';
 import { MockProtocolClerk } from './MockProtocolClerk';
-import { MockArchiveKeeper } from './MockArchiveKeeper';
 import { MockScribe } from './MockScribe';
 
 export class MockFactory {

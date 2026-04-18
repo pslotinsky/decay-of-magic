@@ -1,19 +1,19 @@
 import {
-  Dossier,
-  Remark,
-  Plea,
-  PleaDraft,
-  PleaType,
-  Document,
-} from '@zok/domain/entities';
-import { pleaContext } from '@zok/domain/PleaContext';
-import {
   ArchiveKeeper,
   HumorAdvisor,
   PleaFormalist,
   ProtocolClerk,
   Scribe,
-} from '@zok/domain/assistants';
+} from '@/domain/assistants';
+import {
+  Document,
+  Dossier,
+  Plea,
+  PleaDraft,
+  PleaType,
+  Remark,
+} from '@/domain/entities';
+import { pleaContext } from '@/domain/PleaContext';
 
 import {
   ChangeStatusDutyInstruction,
@@ -22,8 +22,8 @@ import {
   DutyInstruction,
   DutyInstructionParams,
   ListDocumentsDutyInstruction,
-  RenameDocumentDutyInstruction,
   MoveDocumentDutyInstruction,
+  RenameDocumentDutyInstruction,
   UpdateDocumentRelationsDutyInstruction,
   UpdateReadmeDutyInstruction,
 } from './instructions';

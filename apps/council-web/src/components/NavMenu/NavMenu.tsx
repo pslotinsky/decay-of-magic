@@ -1,7 +1,9 @@
+import { Globe, LogOut, Scroll, Sparkles, Users } from 'lucide-react';
 import { Link, NavLink } from 'react-router';
 
 import rostraImg from '../../assets/rostra.webp';
 import { useAuth } from '../../context/useAuth';
+
 import styles from './NavMenu.module.scss';
 
 export function NavMenu() {
@@ -17,11 +19,23 @@ export function NavMenu() {
         <ul className={styles.links}>
           <li>
             <NavLink
-              to="/citizens"
+              to="/universe"
               className={({ isActive }) =>
                 isActive ? styles.active : undefined
               }
             >
+              <Globe />
+              Universes
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/citizen"
+              className={({ isActive }) =>
+                isActive ? styles.active : undefined
+              }
+            >
+              <Users />
               Register of Citizens
             </NavLink>
           </li>
@@ -32,6 +46,7 @@ export function NavMenu() {
                 isActive ? styles.active : undefined
               }
             >
+              <Scroll />
               Cards
             </NavLink>
           </li>
@@ -42,12 +57,14 @@ export function NavMenu() {
                 isActive ? styles.active : undefined
               }
             >
+              <Sparkles />
               Mana
             </NavLink>
           </li>
         </ul>
         <span className={styles.citizen}>{citizen?.nickname}</span>
         <button className={styles.logout} onClick={() => void logout()}>
+          <LogOut />
           Dismiss
         </button>
       </div>

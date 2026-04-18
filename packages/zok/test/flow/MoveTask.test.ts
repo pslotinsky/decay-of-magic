@@ -1,17 +1,17 @@
-import test, { beforeEach } from 'node:test';
 import assert from 'node:assert';
+import test, { beforeEach } from 'node:test';
 
-import { Zok } from '@zok/application/Zok';
-import { Document, DocumentLink } from '@zok/domain/entities';
-import { NotFoundError } from '@zok/domain/errors';
+import { Zok } from '@/application/Zok';
+import { Document, DocumentLink } from '@/domain/entities';
+import { NotFoundError } from '@/domain/errors';
 
-import { MockFactory } from 'test/mocks/MockFactory';
 import {
   createMilestone,
   createTask,
   findMilestone,
   moveTask,
-} from 'test/helpers/document';
+} from '../helpers/document';
+import { MockFactory } from '../mocks/MockFactory';
 
 test.describe('Flow: Move task', () => {
   let zok!: Zok;

@@ -1,5 +1,6 @@
-import { DocumentStatus, DocumentTocLine } from '@zok/domain/entities';
-import { MalformedDocumentError } from '@zok/domain/errors';
+import { DocumentStatus, DocumentTocLine } from '@/domain/entities';
+import { MalformedDocumentError } from '@/domain/errors';
+
 import { TextExtractor } from './TextExtractor';
 
 export class DocumentTocLineParser {

@@ -1,14 +1,14 @@
 import { format } from 'date-fns';
 
+import { Scribe } from '@/domain/assistants';
 import {
-  Dossier,
   DocumentLink,
   DocumentMetadata,
+  Dossier,
   FieldDefinition,
   FieldType,
   Plea,
-} from '@zok/domain/entities';
-import { Scribe } from '@zok/domain/assistants';
+} from '@/domain/entities';
 
 export class MockScribe extends Scribe {
   public readonly dossier = new Dossier({
@@ -19,10 +19,12 @@ export class MockScribe extends Scribe {
     bio: 'A mechanical arm with a quill attached. Writes exactly what it is told. Does not embellish.',
   });
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async renderRecord(_plea: Plea): Promise<string> {
     return '';
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   protected override async fillDocumentContent(
     metadata: DocumentMetadata,
   ): Promise<string> {

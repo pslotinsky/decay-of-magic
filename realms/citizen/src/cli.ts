@@ -1,8 +1,7 @@
-import path from 'node:path';
-
 import { config } from 'dotenv';
-import { NestFactory } from '@nestjs/core';
 import { CommandService } from 'nestjs-command';
+import path from 'node:path';
+import { NestFactory } from '@nestjs/core';
 
 import { CliModule } from './cli/cli.module';
 

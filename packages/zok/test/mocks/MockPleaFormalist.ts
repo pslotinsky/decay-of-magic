@@ -1,5 +1,5 @@
-import { Dossier } from '@zok/domain/entities';
-import { PleaFormalist } from '@zok/domain/assistants';
+import { PleaFormalist } from '@/domain/assistants';
+import { Dossier } from '@/domain/entities';
 
 export class MockPleaFormalist extends PleaFormalist {
   public readonly dossier = new Dossier({
@@ -12,6 +12,7 @@ export class MockPleaFormalist extends PleaFormalist {
 
   private count: number = 0;
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   protected override async issueId(): Promise<string> {
     this.count += 1;
 

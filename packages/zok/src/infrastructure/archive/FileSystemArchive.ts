@@ -1,10 +1,10 @@
 import { createReadStream } from 'node:fs';
 import { mkdir, readdir, readFile, unlink, writeFile } from 'node:fs/promises';
-import { createInterface } from 'node:readline';
 import { resolve } from 'node:path';
+import { createInterface } from 'node:readline';
 
-import { Archive, DocumentQueryObject } from '@zok/domain/tools';
-import { Document, DocumentProtocol } from '@zok/domain/entities';
+import { Document, DocumentProtocol } from '@/domain/entities';
+import { Archive, DocumentQueryObject } from '@/domain/tools';
 
 const { DOC_PATH } = process.env;
 const DEFAULT_DOC_PATH = resolve(__dirname, '../../../../../docs');

@@ -5,8 +5,8 @@ import {
   DocumentProtocol,
   DocumentToc,
   Remark,
-} from '@zok/domain/entities';
-import { DocumentTocRender } from '@zok/domain/tools';
+} from '@/domain/entities';
+import { DocumentTocRender } from '@/domain/tools';
 
 import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
 

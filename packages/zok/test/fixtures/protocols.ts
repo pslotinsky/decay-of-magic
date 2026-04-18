@@ -1,4 +1,4 @@
-import { DocumentProtocol, FieldType } from '@zok/domain/entities';
+import { DocumentProtocol, FieldType } from '@/domain/entities';
 
 export const roadmap = DocumentProtocol.init({
   id: 'roadmap',

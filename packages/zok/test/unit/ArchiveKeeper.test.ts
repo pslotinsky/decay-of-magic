@@ -1,9 +1,10 @@
-import test from 'node:test';
 import assert from 'node:assert';
+import test from 'node:test';
 
-import * as protocols from 'test/fixtures/protocols';
-import { MockFactory } from 'test/mocks/MockFactory';
-import { Document } from '@zok/domain/entities';
+import { Document } from '@/domain/entities';
+
+import * as protocols from '../fixtures/protocols';
+import { MockFactory } from '../mocks/MockFactory';
 
 test.describe('Unit: ArchiveKeeper', () => {
   test(`issues correct number for task`, async () => {

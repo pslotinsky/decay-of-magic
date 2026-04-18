@@ -3,12 +3,12 @@
 | Field     | Value                                             |
 | --------- | ------------------------------------------------- |
 | Status    | Done |
-| Milestone | [Citizen](../milestones/Milestone-002_citizen.md) |
+| Milestone | [Citizen Realm](../milestones/Milestone-002_citizen-realm.md) |
 | Created   | 2026-04-11                                        |
 
 ## Description
 
-Apply [ADR-004](../adr/ADR-004_oop-ork-oriented-programming.md) conventions to all existing services: rename services to realms, rename architectural layers, and rename structural components to match the ubiquitous language.
+Apply [ADR-004: OOP — Ork Oriented Programming](../adr/ADR-004_oop-ork-oriented-programming.md) conventions to all existing services: rename services to realms, rename architectural layers, and rename structural components to match the ubiquitous language.
 
 ## Scope
 

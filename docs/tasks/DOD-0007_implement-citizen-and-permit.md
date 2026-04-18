@@ -3,7 +3,7 @@
 | Field     | Value                                             |
 | --------- | ------------------------------------------------- |
 | Status    | Done |
-| Milestone | [Citizen](../milestones/Milestone-002_citizen.md) |
+| Milestone | [Citizen Realm](../milestones/Milestone-002_citizen-realm.md) |
 | Created   | 2026-04-11                                        |
 
 ## Description

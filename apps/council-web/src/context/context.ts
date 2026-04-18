@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-import type { CitizenDto } from '../queries/citizen';
+import type { CitizenDto } from '@/queries/citizen';
 
 export type { CitizenDto };
 

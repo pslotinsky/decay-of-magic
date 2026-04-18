@@ -1,7 +1,7 @@
 import { basename, resolve } from 'path';
 
-import { PackageReport } from './ReadmeWriter/PackageReport';
 import { ClassRegistryParser } from './ClassRegistryParser/ClassRegistryParser';
+import { PackageReport } from './ReadmeWriter/PackageReport';
 import { ReadmeWriter } from './ReadmeWriter/ReadmeWriter';
 import { Scanner } from './Scanner/Scanner';
 

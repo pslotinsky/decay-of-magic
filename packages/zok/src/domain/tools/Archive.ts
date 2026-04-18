@@ -1,4 +1,4 @@
-import { Document, DocumentProtocol } from '@zok/domain/entities';
+import { Document, DocumentProtocol } from '@/domain/entities';
 
 import { DocumentParser } from './parser/DocumentParser';
 

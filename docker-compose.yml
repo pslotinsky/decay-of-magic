@@ -64,6 +64,7 @@ services:
       - codex
       - vault
       - citizen
+      - universe
     ports:
       - "3000:3000"
     environment:
@@ -71,6 +72,7 @@ services:
       CODEX_REALM_URL: "http://codex:3001"
       VAULT_REALM_URL: "http://vault:3002"
       CITIZEN_REALM_URL: "http://citizen:3003"
+      UNIVERSE_REALM_URL: "http://universe:3004"
       JWT_SECRET: ${JWT_SECRET:-dev-secret}
     volumes:
       - ./realms/gateway/src:/app/realms/gateway/src
@@ -91,6 +93,10 @@ services:
       psql -h db -U $${POSTGRES_USER} -d postgres -c 'CREATE DATABASE citizen';
       psql -h db -U $${POSTGRES_USER} -d postgres -lqt | cut -d'|' -f1 | grep -qw citizen_test ||
       psql -h db -U $${POSTGRES_USER} -d postgres -c 'CREATE DATABASE citizen_test';
+      psql -h db -U $${POSTGRES_USER} -d postgres -lqt | cut -d'|' -f1 | grep -qw universe ||
+      psql -h db -U $${POSTGRES_USER} -d postgres -c 'CREATE DATABASE universe';
+      psql -h db -U $${POSTGRES_USER} -d postgres -lqt | cut -d'|' -f1 | grep -qw universe_test ||
+      psql -h db -U $${POSTGRES_USER} -d postgres -c 'CREATE DATABASE universe_test';
       "
 
   codex-migrate:
@@ -173,6 +179,36 @@ services:
       JWT_SECRET: ${JWT_SECRET:-dev-secret}
     volumes:
       - ./realms/citizen/src:/app/realms/citizen/src
+
+  universe-migrate:
+    build:
+      context: .
+      dockerfile: realms/universe/Dockerfile
+      target: installer
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/universe"
+    working_dir: /app/realms/universe
+    command: npm run prisma:migrate:deploy
+
+  universe:
+    build:
+      context: .
+      dockerfile: realms/universe/Dockerfile
+      target: dev
+    depends_on:
+      universe-migrate:
+        condition: service_completed_successfully
+    ports:
+      - "3004:3004"
+    environment:
+      PORT: 3004
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/universe"
+    volumes:
+      - ./realms/universe/src:/app/realms/universe/src
+      - ./packages/core/src:/app/packages/core/src
 
   council:
     build:

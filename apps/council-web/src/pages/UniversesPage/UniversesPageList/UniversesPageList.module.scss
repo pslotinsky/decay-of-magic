@@ -1,0 +1,85 @@
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 320px;
+  cursor: pointer;
+}
+
+.coverPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% + 2 * var(--space-4));
+  margin: calc(-1 * var(--space-4)) calc(-1 * var(--space-4)) var(--space-4);
+  height: 180px;
+  background: var(--border-light);
+  color: var(--muted);
+}
+
+.cover {
+  width: calc(100% + 2 * var(--space-4));
+  margin: calc(-1 * var(--space-4)) calc(-1 * var(--space-4)) var(--space-4);
+  height: 180px;
+  object-fit: cover;
+}
+
+.body {
+  flex-grow: 1;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+.name {
+  flex: 1;
+  font-family: var(--font-heading);
+  font-size: var(--type-title-large-size);
+  font-weight: var(--type-title-large-weight);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.description {
+  color: var(--muted);
+  font-size: var(--type-body-medium-size);
+  font-weight: var(--type-body-medium-weight);
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.edit {
+  flex-shrink: 0;
+  opacity: 0;
+  transition:
+    opacity 0.15s,
+    color 0.15s;
+}
+
+.card:hover .edit {
+  opacity: 1;
+}
+
+.muted {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.error {
+  color: var(--rust);
+  font-style: italic;
+}

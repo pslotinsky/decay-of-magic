@@ -1,7 +1,5 @@
 .card {
-  background: var(--parchment);
-  border: 1px solid var(--border-light);
-  padding: 0 var(--space-6);
+  padding: 0 var(--space-4);
 }
 
 .table {
@@ -15,12 +13,12 @@
     letter-spacing: 0.15em;
     color: var(--muted);
     text-align: left;
-    padding: var(--space-4) var(--space-5) var(--space-4) 0;
+    padding: var(--space-4) var(--space-4) var(--space-4) 0;
     border-bottom: 1px solid var(--border-light);
   }
 
   td {
-    padding: var(--space-4) var(--space-5) var(--space-4) 0;
+    padding: var(--space-4) var(--space-4) var(--space-4) 0;
     border-bottom: 1px solid var(--border-light);
     font-size: var(--type-body-large-size);
     font-weight: var(--type-body-large-weight);

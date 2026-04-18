@@ -1,5 +1,5 @@
-import { ScannedFile } from '../Scanner/ScannedFile';
 import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
+import { ScannedFile } from '../Scanner/ScannedFile';
 import { ClassParser } from './ClassParser';
 import { RelationBuilder } from './RelationBuilder';
 

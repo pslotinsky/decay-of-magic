@@ -1,6 +1,7 @@
-import { Dossier } from '@zok/domain/entities';
-import { ArchiveKeeper } from '@zok/domain/assistants';
-import { Archive } from '@zok/domain/tools';
+import { ArchiveKeeper } from '@/domain/assistants';
+import { Dossier } from '@/domain/entities';
+import { Archive } from '@/domain/tools';
+
 import { MockArchive } from './MockArchive';
 
 export class MockArchiveKeeper extends ArchiveKeeper {

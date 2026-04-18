@@ -1,6 +1,6 @@
 import { sample } from 'lodash';
 
-import { Dossier, Document, Remark } from '../entities';
+import { Document, Dossier, Remark } from '../entities';
 import { Assistant } from './Assistant';
 
 export class HumorAdvisor extends Assistant {

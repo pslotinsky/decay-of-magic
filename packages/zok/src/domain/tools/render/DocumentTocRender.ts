@@ -2,7 +2,7 @@ import {
   DocumentStatus,
   DocumentToc,
   DocumentTocLine,
-} from '@zok/domain/entities';
+} from '@/domain/entities';
 
 export class DocumentTocRender {
   public static render(toc: DocumentToc): string {

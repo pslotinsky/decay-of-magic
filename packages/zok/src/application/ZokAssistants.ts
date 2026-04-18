@@ -4,7 +4,7 @@ import {
   PleaFormalist,
   ProtocolClerk,
   Scribe,
-} from '@zok/domain/assistants';
+} from '@/domain/assistants';
 
 export type ZokAssistants = {
   pleaFormalist: PleaFormalist;

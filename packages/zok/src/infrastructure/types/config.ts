@@ -1,4 +1,4 @@
-import { FieldDefinition } from '@zok/domain/entities';
+import { FieldDefinition } from '@/domain/entities';
 
 export type Protocols = Record<string, ProtocolConfig>;
 

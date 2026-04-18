@@ -1,7 +1,7 @@
-import test from 'node:test';
 import assert from 'node:assert';
+import test from 'node:test';
 
-import { YamlProtocolClerk } from '@zok/infrastructure/assistants';
+import { YamlProtocolClerk } from '@/infrastructure/assistants';
 
 test.describe('Integration: YamlProtocolClerk', () => {
   test(`loads protocols from yaml`, async () => {

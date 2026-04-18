@@ -3,8 +3,8 @@ import {
   DocumentLink,
   DocumentProtocol,
   Remark,
-} from '@zok/domain/entities';
-import { UnexpectedValueError } from '@zok/domain/errors';
+} from '@/domain/entities';
+import { UnexpectedValueError } from '@/domain/errors';
 
 import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
 import { UpdateDocumentRelationsDutyInstruction } from './UpdateDocumentRelationsDutyInstruction';

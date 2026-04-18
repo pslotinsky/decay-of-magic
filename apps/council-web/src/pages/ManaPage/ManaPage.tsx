@@ -1,5 +1,11 @@
-import { Page } from '../../components/Page';
+import { Page, PageHeader } from '@/components/Page';
 
 export const ManaPage = () => {
-  return <Page title="Mana" breadcrumbs={[{ label: 'Home', to: '/' }]}></Page>;
+  return (
+    <Page
+      header={
+        <PageHeader title="Mana" breadcrumbs={[{ label: 'Home', to: '/' }]} />
+      }
+    />
+  );
 };

@@ -8,7 +8,7 @@
 
 ## Context
 
-![Git Only](../assets/git-only.webp)
+![Git is watching you](../assets/git-is-watching-you.webp)
 
 Although I'm currently the sole developer on this project, I've developed a habit of thinking in terms of tasks and documenting features before writing any code. I enjoy taking time to reflect, design, and plan. Naturally, I'd like to keep the results of these sessions somewhere accessible and versioned.
 

@@ -1,12 +1,12 @@
+import bcrypt from 'bcryptjs';
 import { Inject, UnauthorizedException } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
-import bcrypt from 'bcryptjs';
 
 import { CreateSessionDto } from '@/frontier/dto/body/create-session.dto';
 import { SessionDto } from '@/frontier/dto/session.dto';
-import { CitizenPermitRepository } from '@/lore/repositories/citizen-permit.repository';
 import { CitizenRepository } from '@/lore/repositories/citizen.repository';
+import { CitizenPermitRepository } from '@/lore/repositories/citizen-permit.repository';
 
 export class CreateSessionCommand extends Command<SessionDto> {
   constructor(public readonly payload: CreateSessionDto) {

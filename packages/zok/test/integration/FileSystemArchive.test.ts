@@ -1,13 +1,13 @@
-import test, { afterEach, beforeEach } from 'node:test';
 import assert from 'node:assert';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import test, { afterEach, beforeEach } from 'node:test';
 
-import { FileSystemArchive } from '@zok/infrastructure/archive';
-import { Document } from '@zok/domain/entities';
+import { Document } from '@/domain/entities';
+import { FileSystemArchive } from '@/infrastructure/archive';
 
-import * as protocols from 'test/fixtures/protocols';
+import * as protocols from '../fixtures/protocols';
 
 let tmpDir: string;
 

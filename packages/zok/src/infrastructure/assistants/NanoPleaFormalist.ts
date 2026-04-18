@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 
-import { Dossier } from '@zok/domain/entities';
-import { PleaFormalist } from '@zok/domain/assistants';
+import { PleaFormalist } from '@/domain/assistants';
+import { Dossier } from '@/domain/entities';
 
 const NANOID_SIZE = 6;
 

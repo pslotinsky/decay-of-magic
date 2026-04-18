@@ -1,8 +1,9 @@
 import { type SyntheticEvent, useState } from 'react';
 
-import { useUpdateCitizen, type CitizenDto } from '../../../queries/citizen';
-import { Button } from '../../../components/Button';
-import { Drawer } from '../../../components/Drawer';
+import { Button } from '@/components/Button';
+import { Drawer } from '@/components/Drawer';
+import { type CitizenDto, useUpdateCitizen } from '@/queries/citizen';
+
 import styles from './CitizensPageCitizenEditing.module.scss';
 
 interface Props {

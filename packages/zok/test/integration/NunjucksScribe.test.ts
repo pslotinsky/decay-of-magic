@@ -1,10 +1,10 @@
-import { describe, it } from 'node:test';
 import assert from 'node:assert';
+import { describe, it } from 'node:test';
 
-import { DocumentProtocol, Plea, PleaType } from '@zok/domain/entities';
-import { NunjucksScribe } from '@zok/infrastructure/assistants';
+import { DocumentProtocol, Plea, PleaType } from '@/domain/entities';
+import { NunjucksScribe } from '@/infrastructure/assistants';
 
-import * as protocols from 'test/fixtures/protocols';
+import * as protocols from '../fixtures/protocols';
 
 describe('Integration: NunjucksScribe', () => {
   it('renders document', async () => {

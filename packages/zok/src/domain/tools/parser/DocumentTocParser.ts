@@ -1,5 +1,6 @@
-import { DocumentToc } from '@zok/domain/entities';
-import { MalformedDocumentError } from '@zok/domain/errors';
+import { DocumentToc } from '@/domain/entities';
+import { MalformedDocumentError } from '@/domain/errors';
+
 import { DocumentTocLineParser } from './DocumentTocLineParser';
 
 export class DocumentTocParser {

@@ -1,5 +1,5 @@
-import { Archive, DocumentQueryObject } from '@zok/domain/tools';
-import { Document } from '@zok/domain/entities';
+import { Document } from '@/domain/entities';
+import { Archive, DocumentQueryObject } from '@/domain/tools';
 
 export class MockArchive extends Archive {
   private items: Record<string, Document> = {};
@@ -10,6 +10,7 @@ export class MockArchive extends Archive {
     return items.length;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async find(query: DocumentQueryObject): Promise<Document[]> {
     const { protocol, prefix } = query;
 
@@ -26,6 +27,7 @@ export class MockArchive extends Archive {
     return documents;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async save(document: Document): Promise<Document> {
     this.items[document.id] = document;
 

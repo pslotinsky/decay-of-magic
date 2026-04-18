@@ -1,8 +1,9 @@
 import { type SyntheticEvent, useState } from 'react';
 
-import { useRegisterCitizen } from '../../../queries/citizen';
-import { Button } from '../../../components/Button';
-import { Drawer } from '../../../components/Drawer';
+import { Button } from '@/components/Button';
+import { Drawer } from '@/components/Drawer';
+import { useRegisterCitizen } from '@/queries/citizen';
+
 import styles from './CitizensPageCitizenRegistration.module.scss';
 
 interface Props {

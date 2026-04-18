@@ -3,7 +3,7 @@ import {
   DocumentLink,
   DocumentProtocol,
   Remark,
-} from '@zok/domain/entities';
+} from '@/domain/entities';
 
 import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
 
