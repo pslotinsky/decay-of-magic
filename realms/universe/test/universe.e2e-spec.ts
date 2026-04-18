@@ -1,6 +1,6 @@
+import request from 'supertest';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import request from 'supertest';
 
 import { AppModule } from '../src/app.module';
 import { UniverseDto } from '../src/frontier/dto/universe.dto';

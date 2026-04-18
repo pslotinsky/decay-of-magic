@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert';
 
-import { NanoPleaFormalist } from '@zok/infrastructure/assistants';
+import { NanoPleaFormalist } from '@/infrastructure/assistants';
 
 test.describe('Integration: NanoPleaFormalist', () => {
   test(`issues unique ids`, async () => {

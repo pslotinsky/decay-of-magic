@@ -1,10 +1,10 @@
-import test from 'node:test';
 import assert from 'node:assert';
+import test from 'node:test';
 
-import * as protocols from 'test/fixtures/protocols';
-import { MockFactory } from 'test/mocks/MockFactory';
+import { NotFoundError } from '@/domain/errors';
 
-import { NotFoundError } from '@zok/domain/errors';
+import * as protocols from '../fixtures/protocols';
+import { MockFactory } from '../mocks/MockFactory';
 
 test.describe('Unit: ProtocolClerk', () => {
   test(`returns protocol when it exists`, async () => {

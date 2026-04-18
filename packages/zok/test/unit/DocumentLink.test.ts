@@ -1,7 +1,7 @@
-import test from 'node:test';
 import assert from 'node:assert';
+import test from 'node:test';
 
-import { DocumentLink } from '@zok/domain/entities';
+import { DocumentLink } from '@/domain/entities';
 
 test.describe('Unit: DocumentLink', () => {
   test('parses markdown link into DocumentLink', () => {
@@ -9,11 +9,14 @@ test.describe('Unit: DocumentLink', () => {
       '[Hello task](../tasks/DOD-0001_hello-task.md)',
     );
 
-    assert.deepStrictEqual(link, new DocumentLink(
-      'DOD-0001',
-      'Hello task',
-      '../tasks/DOD-0001_hello-task.md',
-    ));
+    assert.deepStrictEqual(
+      link,
+      new DocumentLink(
+        'DOD-0001',
+        'Hello task',
+        '../tasks/DOD-0001_hello-task.md',
+      ),
+    );
   });
 
   test('returns undefined for plain string', () => {
@@ -29,7 +32,10 @@ test.describe('Unit: DocumentLink', () => {
       '../tasks/DOD-0001_hello-task.md',
     );
 
-    assert.equal(link.toString(), '[Hello task](../tasks/DOD-0001_hello-task.md)');
+    assert.equal(
+      link.toString(),
+      '[Hello task](../tasks/DOD-0001_hello-task.md)',
+    );
   });
 
   test('parse and toString are inverse operations', () => {

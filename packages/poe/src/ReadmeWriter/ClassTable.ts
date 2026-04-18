@@ -1,5 +1,5 @@
-import { InspectedClass } from '../ClassRegistry/InspectedClass';
 import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
+import { InspectedClass } from '../ClassRegistry/InspectedClass';
 
 /**
  * Renders a markdown table of inspected classes

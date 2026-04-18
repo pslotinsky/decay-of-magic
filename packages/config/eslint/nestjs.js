@@ -31,4 +31,10 @@ export const nestjs = (tsconfigRootDir) =>
         '@typescript-eslint/no-unsafe-return': 'warn',
       },
     },
+    {
+      files: ['**/*.test.ts', '**/*.spec.ts'],
+      rules: {
+        '@typescript-eslint/no-floating-promises': 'off',
+      },
+    },
   );

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { NavMenu } from '../NavMenu';
+
 import styles from './Page.module.scss';
 
 interface Props {

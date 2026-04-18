@@ -1,5 +1,5 @@
-import { join } from 'node:path';
 import { kebabCase } from 'lodash';
+import { join } from 'node:path';
 
 import { DocumentProtocol } from './DocumentProtocol';
 

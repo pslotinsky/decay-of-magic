@@ -1,6 +1,6 @@
+import { CommandModule } from 'nestjs-command';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { CommandModule } from 'nestjs-command';
 
 import { AppModule } from '@/app.module';
 

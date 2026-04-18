@@ -1,14 +1,11 @@
-import test from 'node:test';
 import assert from 'node:assert';
+import test from 'node:test';
 
-import { DocumentStatus } from '@zok/domain/entities';
-import { DocumentParser } from '@zok/domain/tools';
-import {
-  MalformedDocumentError,
-  UnexpectedValueError,
-} from '@zok/domain/errors';
+import { DocumentStatus } from '@/domain/entities';
+import { MalformedDocumentError, UnexpectedValueError } from '@/domain/errors';
+import { DocumentParser } from '@/domain/tools';
 
-import * as protocols from 'test/fixtures/protocols';
+import * as protocols from '../fixtures/protocols';
 
 test.describe('Unit: DocumentParser', () => {
   test('parses correct markdown document', () => {

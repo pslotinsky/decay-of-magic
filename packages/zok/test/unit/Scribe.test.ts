@@ -1,11 +1,11 @@
-import { describe, it } from 'node:test';
-import assert from 'node:assert';
 import { isEqual } from 'date-fns';
+import assert from 'node:assert';
+import { describe, it } from 'node:test';
 
-import { Plea, PleaType } from '@zok/domain/entities';
+import { Plea, PleaType } from '@/domain/entities';
 
-import * as protocols from 'test/fixtures/protocols';
-import { MockFactory } from 'test/mocks/MockFactory';
+import * as protocols from '../fixtures/protocols';
+import { MockFactory } from '../mocks/MockFactory';
 
 describe('Unit: Scribe', () => {
   it('creates a Document from Plea', async () => {

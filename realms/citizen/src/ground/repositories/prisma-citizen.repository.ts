@@ -1,10 +1,11 @@
 import { Inject } from '@nestjs/common';
+
 import { PrismaRepository } from '@dod/core';
-import { Prisma, Citizen as CitizenModel } from '../../../prisma/generated';
 
 import { Citizen } from '@/lore/entities/citizen.entity';
 import { CitizenRepository } from '@/lore/repositories/citizen.repository';
 
+import { Citizen as CitizenModel, Prisma } from '../../../prisma/generated';
 import { PrismaService } from '../prisma.service';
 
 export class PrismaCitizenRepository

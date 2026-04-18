@@ -1,10 +1,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-
 import yaml from 'yaml';
 
-import { Dossier, DocumentProtocol, PleaType } from '@zok/domain/entities';
-import { ProtocolClerk } from '@zok/domain/assistants';
+import { ProtocolClerk } from '@/domain/assistants';
+import { DocumentProtocol, Dossier, PleaType } from '@/domain/entities';
 
 import { Protocols } from '../types/config';
 

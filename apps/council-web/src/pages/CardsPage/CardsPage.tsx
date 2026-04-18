@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import styles from './CardsPage.module.scss';
-
-import { CardPreview, type CardDto } from '@/components/CardPreview';
+import { type CardDto, CardPreview } from '@/components/CardPreview';
 import { Page, PageHeader } from '@/components/Page';
+
+import styles from './CardsPage.module.scss';
 
 export const CardsPage = () => {
   const [cards, setCards] = useState<CardDto[]>([]);

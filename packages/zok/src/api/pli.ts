@@ -1,20 +1,19 @@
+import { program } from 'commander';
 import { exit } from 'node:process';
 
-import { program } from 'commander';
-
-import { Zok } from '@zok/application/Zok';
+import { Zok } from '@/application/Zok';
+import { PleaType } from '@/domain/entities';
+import {
+  MalformedDocumentError,
+  NotFoundError,
+  UnexpectedValueError,
+} from '@/domain/errors';
 import {
   FileSystemArchiveKeeper,
   NanoPleaFormalist,
   NunjucksScribe,
   YamlProtocolClerk,
-} from '@zok/infrastructure/assistants';
-import { PleaType } from '@zok/domain/entities';
-import {
-  MalformedDocumentError,
-  NotFoundError,
-  UnexpectedValueError,
-} from '@zok/domain/errors';
+} from '@/infrastructure/assistants';
 
 type CommandOptions = {
   record?: boolean;

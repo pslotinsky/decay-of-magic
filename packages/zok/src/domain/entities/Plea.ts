@@ -1,5 +1,5 @@
-import { Dossier } from './Dossier';
 import { DocumentProtocol } from './DocumentProtocol';
+import { Dossier } from './Dossier';
 
 export type Official = {
   title: string;

@@ -1,13 +1,14 @@
 import { Inject } from '@nestjs/common';
+
 import { PrismaRepository } from '@dod/core';
-import {
-  Prisma,
-  CitizenPermit as CitizenPermitModel,
-} from '../../../prisma/generated';
 
 import { CitizenPermit } from '@/lore/entities/citizen-permit.entity';
 import { CitizenPermitRepository } from '@/lore/repositories/citizen-permit.repository';
 
+import {
+  CitizenPermit as CitizenPermitModel,
+  Prisma,
+} from '../../../prisma/generated';
 import { PrismaService } from '../prisma.service';
 
 export class PrismaCitizenPermitRepository

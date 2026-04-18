@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
-import { Breadcrumbs, type Breadcrumb } from '../Breadcrumbs';
+import { type Breadcrumb, Breadcrumbs } from '../Breadcrumbs';
+
 import styles from './Page.module.scss';
 
 interface Props {

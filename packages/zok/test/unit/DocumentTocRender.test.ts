@@ -1,8 +1,8 @@
-import test from 'node:test';
 import assert from 'node:assert';
+import test from 'node:test';
 
-import { DocumentStatus, DocumentToc } from '@zok/domain/entities';
-import { DocumentTocRender } from '@zok/domain/tools';
+import { DocumentStatus, DocumentToc } from '@/domain/entities';
+import { DocumentTocRender } from '@/domain/tools';
 
 test.describe('Unit: DocumentTocRender', () => {
   test('rendered table of content', () => {

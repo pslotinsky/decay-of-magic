@@ -1,7 +1,7 @@
 import { Card } from '../Card';
-import styles from './CardPreview.module.scss';
-
 import dummy from './dummy.png';
+
+import styles from './CardPreview.module.scss';
 
 export type CardDto = {
   id: string;

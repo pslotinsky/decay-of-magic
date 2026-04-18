@@ -1,6 +1,6 @@
-import { Dossier } from '@zok/domain/entities';
-import { Archive } from '@zok/domain/tools';
-import { ArchiveKeeper } from '@zok/domain/assistants';
+import { ArchiveKeeper } from '@/domain/assistants';
+import { Dossier } from '@/domain/entities';
+import { Archive } from '@/domain/tools';
 
 import { FileSystemArchive } from '../archive';
 

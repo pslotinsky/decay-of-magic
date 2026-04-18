@@ -2,16 +2,14 @@
   "extends": "../config/tsconfig/node.json",
   "compilerOptions": {
     "target": "es2024",
-    "rootDir": "./src",
     "ignoreDeprecations": "6.0",
     "baseUrl": "./src",
     "paths": {
-      "@zok/*": ["./*"],
-      "test/*": ["../test/*"]
+      "@/*": ["./*"]
     },
     "outDir": "./dist",
     "esModuleInterop": true,
     "strict": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "test/**/*"]
 }

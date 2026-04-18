@@ -1,10 +1,11 @@
 import { Inject } from '@nestjs/common';
+
 import { PrismaRepository } from '@dod/core';
-import { Prisma, Universe as UniverseModel } from '../../../prisma/generated';
 
 import { Universe } from '@/lore/entities/universe.entity';
 import { UniverseRepository } from '@/lore/repositories/universe.repository';
 
+import { Prisma, Universe as UniverseModel } from '../../../prisma/generated';
 import { PrismaService } from '../prisma.service';
 
 export class PrismaUniverseRepository

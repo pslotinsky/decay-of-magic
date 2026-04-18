@@ -1,5 +1,5 @@
-import { Dossier } from '@zok/domain/entities';
-import { ProtocolClerk } from '@zok/domain/assistants';
+import { ProtocolClerk } from '@/domain/assistants';
+import { Dossier } from '@/domain/entities';
 
 import * as protocols from '../fixtures/protocols';
 
@@ -12,6 +12,7 @@ export class MockProtocolClerk extends ProtocolClerk {
     bio: 'A large binder with googly eyes. Does not read the protocols it contains. Purely decorative during test runs.',
   });
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public override async init(): Promise<void> {
     this.protocols = new Map();
 

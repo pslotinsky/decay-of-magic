@@ -1,4 +1,4 @@
-import { Document, DocumentProtocol, Remark } from '@zok/domain/entities';
+import { Document, DocumentProtocol, Remark } from '@/domain/entities';
 
 import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
 

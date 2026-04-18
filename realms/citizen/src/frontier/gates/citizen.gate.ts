@@ -1,4 +1,3 @@
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
   Body,
   Controller,
@@ -8,6 +7,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { RegisterCitizenDto } from '@/frontier/dto/body/register-citizen.dto';

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-import { useCitizens, type CitizenDto } from '@/queries/citizen';
 import { Button } from '@/components/Button';
 import { Page, PageHeader } from '@/components/Page';
+import { type CitizenDto, useCitizens } from '@/queries/citizen';
 
 import { CitizensPageCitizenEditing } from './CitizensPageCitizenEditing';
 import { CitizensPageCitizenRegistration } from './CitizensPageCitizenRegistration';

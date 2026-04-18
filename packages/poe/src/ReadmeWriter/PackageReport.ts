@@ -1,5 +1,5 @@
-import { ClassDiagram } from './ClassDiagram';
 import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
+import { ClassDiagram } from './ClassDiagram';
 import { ClassTable } from './ClassTable';
 
 const LAYER_SPLIT_THRESHOLD = 25;

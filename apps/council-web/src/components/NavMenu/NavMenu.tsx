@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router';
 
 import rostraImg from '../../assets/rostra.webp';
 import { useAuth } from '../../context/useAuth';
+
 import styles from './NavMenu.module.scss';
 
 export function NavMenu() {

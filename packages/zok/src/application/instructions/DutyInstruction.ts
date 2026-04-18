@@ -1,4 +1,4 @@
-import { Document, DocumentProtocol, Remark, Plea } from '@zok/domain/entities';
+import { Document, DocumentProtocol, Plea, Remark } from '@/domain/entities';
 
 import { ZokAssistants } from '../ZokAssistants';
 

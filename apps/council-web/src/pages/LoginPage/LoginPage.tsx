@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 
-import { req } from '../../lib/http';
 import { useAuth } from '../../context/useAuth';
+import { req } from '../../lib/http';
+
 import styles from './LoginPage.module.scss';
 
 export function LoginPage() {
