@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
-import { type UniverseDto, useUniverses } from '@/api/universe';
+import type { UniverseDto } from '@dod/api-contract';
+
+import { useUniverses } from '@/api/universe';
 import { Button } from '@/components/Button';
 import { Page, PageHeader } from '@/components/Page';
 

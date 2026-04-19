@@ -1,4 +1,5 @@
-import { type UniverseDto } from '@/api/universe';
+import type { UniverseDto } from '@dod/api-contract';
+
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 
 import styles from './UniversePageHeader.module.scss';

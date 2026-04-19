@@ -1,27 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import type {
+  CreateUniverseDto,
+  UniverseDto,
+  UpdateUniverseDto,
+} from '@dod/api-contract';
+
 import { client } from './client';
-
-export type UniverseDto = {
-  id: string;
-  name: string;
-  description?: string;
-  cover?: string;
-};
-
-export type CreateUniverseInput = {
-  id: string;
-  name: string;
-  description?: string;
-  cover?: string;
-};
-
-export type UpdateUniverseInput = {
-  id: string;
-  name?: string;
-  description?: string;
-  cover?: string;
-};
 
 const universeKeys = {
   all: ['universes'] as const,
@@ -47,10 +32,10 @@ export function useUniverse(id: string) {
 export function useCreateUniverse() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (input: CreateUniverseInput) => {
+    mutationFn: async (payload: CreateUniverseDto) => {
       const envelope = await client.post<UniverseDto>(
         '/api/v1/universe',
-        input,
+        payload,
       );
       return envelope.data;
     },
@@ -62,10 +47,13 @@ export function useCreateUniverse() {
 export function useUpdateUniverse() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, ...input }: UpdateUniverseInput) => {
+    mutationFn: async ({
+      id,
+      ...payload
+    }: UpdateUniverseDto & { id: string }) => {
       const envelope = await client.patch<UniverseDto>(
         `/api/v1/universe/${id}`,
-        input,
+        payload,
       );
       return envelope.data;
     },

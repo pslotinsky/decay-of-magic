@@ -3,10 +3,9 @@ import { Inject } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
 
+import { CreateSessionDto, SessionDto } from '@dod/api-contract';
 import { UnauthenticatedError } from '@dod/core';
 
-import { CreateSessionDto } from '@/frontier/dto/body/create-session.dto';
-import { SessionDto } from '@/frontier/dto/session.dto';
 import { CitizenRepository } from '@/lore/repositories/citizen.repository';
 import { CitizenPermitRepository } from '@/lore/repositories/citizen-permit.repository';
 

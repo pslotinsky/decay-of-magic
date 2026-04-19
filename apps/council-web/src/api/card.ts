@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
-import type { CardDto } from '../components/CardPreview';
+import type { CardDto } from '@dod/api-contract';
+
 import { client } from './client';
 
 const cardKeys = {

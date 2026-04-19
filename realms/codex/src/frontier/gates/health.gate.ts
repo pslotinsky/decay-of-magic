@@ -1,5 +1,4 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import {
   HealthCheck,
   HealthCheckResult,
@@ -12,7 +11,6 @@ import { NoEnvelope } from '@dod/core';
 import { PrismaService } from '@/ground/prisma.service';
 
 @Controller('/v1/health')
-@ApiTags('Health')
 export class HealthGate {
   constructor(
     private readonly health: HealthCheckService,

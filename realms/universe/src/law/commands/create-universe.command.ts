@@ -1,10 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
+import {
+  CreateUniverseDto,
+  UniverseDto,
+  UniverseSchema,
+} from '@dod/api-contract';
 import { ConflictError } from '@dod/core';
 
-import { CreateUniverseDto } from '@/frontier/dto/body/create-universe.dto';
-import { UniverseDto } from '@/frontier/dto/universe.dto';
 import { Universe } from '@/lore/entities/universe.entity';
 import { UniverseRepository } from '@/lore/repositories/universe.repository';
 
@@ -27,7 +30,7 @@ export class CreateUniverseHandler implements ICommandHandler<CreateUniverseComm
 
     await this.universeRepository.save(universe);
 
-    return UniverseDto.from(universe);
+    return UniverseSchema.parse(universe);
   }
 
   private async assertNameAvailable(name: string): Promise<void> {

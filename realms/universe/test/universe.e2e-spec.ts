@@ -3,15 +3,10 @@ import { INestApplication } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { unwrap } from '@dod/api-contract';
-import {
-  createValidationPipe,
-  EnvelopeInterceptor,
-  ErrorFilter,
-} from '@dod/core';
+import { UniverseDto, unwrap } from '@dod/api-contract';
+import { EnvelopeInterceptor, ErrorFilter } from '@dod/core';
 
 import { AppModule } from '../src/app.module';
-import { UniverseDto } from '../src/frontier/dto/universe.dto';
 import { PrismaService } from '../src/ground/prisma.service';
 
 describe('UniverseGate (e2e)', () => {
@@ -25,7 +20,6 @@ describe('UniverseGate (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('/api');
-    app.useGlobalPipes(createValidationPipe());
     app.useGlobalInterceptors(new EnvelopeInterceptor(app.get(Reflector)));
     app.useGlobalFilters(new ErrorFilter());
     await app.init();

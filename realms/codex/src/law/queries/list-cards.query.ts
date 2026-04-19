@@ -1,7 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, Query, QueryHandler } from '@nestjs/cqrs';
 
-import { CardDto } from '@/frontier/dto/card.dto';
+import { CardDto, CardSchema } from '@dod/api-contract';
+
 import { CardRepository } from '@/lore/repositories/card.repository';
 
 export class ListCardsQuery extends Query<CardDto[]> {}
@@ -12,6 +13,6 @@ export class ListCardsHandler implements IQueryHandler<ListCardsQuery> {
 
   public async execute(): Promise<CardDto[]> {
     const cards = await this.cardRepository.find();
-    return cards.map((card) => CardDto.from(card));
+    return cards.map((card) => CardSchema.parse(card));
   }
 }

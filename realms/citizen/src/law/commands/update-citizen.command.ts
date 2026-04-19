@@ -1,8 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { UpdateCitizenDto } from '@/frontier/dto/body/update-citizen.dto';
-import { CitizenDto } from '@/frontier/dto/citizen.dto';
+import { CitizenDto, CitizenSchema, UpdateCitizenDto } from '@dod/api-contract';
+
 import { CitizenRepository } from '@/lore/repositories/citizen.repository';
 
 export class UpdateCitizenCommand extends Command<CitizenDto> {
@@ -28,6 +28,6 @@ export class UpdateCitizenHandler implements ICommandHandler<UpdateCitizenComman
 
     await this.citizenRepository.save(citizen);
 
-    return CitizenDto.from(citizen);
+    return CitizenSchema.parse(citizen);
   }
 }

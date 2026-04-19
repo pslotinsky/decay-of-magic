@@ -1,6 +1,8 @@
 import { type SyntheticEvent, useState } from 'react';
 
-import { type UniverseDto, useUpdateUniverse } from '@/api/universe';
+import type { UniverseDto } from '@dod/api-contract';
+
+import { useUpdateUniverse } from '@/api/universe';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
 import { ImageInput } from '@/components/ImageInput';

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
-import { type CitizenDto, useCitizens } from '@/api/citizen';
+import type { CitizenDto } from '@dod/api-contract';
+
+import { useCitizens } from '@/api/citizen';
 import { Button } from '@/components/Button';
 import { Page, PageHeader } from '@/components/Page';
 

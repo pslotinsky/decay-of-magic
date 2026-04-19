@@ -1,8 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { CreateCardDto } from '@/frontier/dto/body/create-card.dto';
-import { CardDto } from '@/frontier/dto/card.dto';
+import { CardDto, CardSchema, CreateCardDto } from '@dod/api-contract';
+
 import { Card } from '@/lore/entities/card.entity';
 import { CardRepository } from '@/lore/repositories/card.repository';
 
@@ -19,6 +19,6 @@ export class CreateCardHandler implements ICommandHandler<CreateCardCommand> {
   public async execute({ payload }: CreateCardCommand): Promise<CardDto> {
     const card = Card.create(payload);
     await this.cardRepository.save(card);
-    return CardDto.from(card);
+    return CardSchema.parse(card);
   }
 }

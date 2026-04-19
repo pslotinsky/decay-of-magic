@@ -1,7 +1,8 @@
 import { Globe, Pencil } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
-import { type UniverseDto } from '@/api/universe';
+import type { UniverseDto } from '@dod/api-contract';
+
 import { Card } from '@/components/Card';
 import { IconButton } from '@/components/IconButton';
 

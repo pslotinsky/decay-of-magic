@@ -1,8 +1,6 @@
 import { createContext } from 'react';
 
-import type { CitizenDto } from '@/api/citizen';
-
-export type { CitizenDto };
+import type { CitizenDto } from '@dod/api-contract';
 
 export interface AuthContextValue {
   citizen?: CitizenDto;

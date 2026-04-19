@@ -1,14 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { client } from './client';
+import type { FileDto } from '@dod/api-contract';
 
-export type FileDto = {
-  id: string;
-  category: string;
-  name: string;
-  mimetype: string;
-  url: string;
-};
+import { client } from './client';
 
 export function useUploadFile() {
   return useMutation({

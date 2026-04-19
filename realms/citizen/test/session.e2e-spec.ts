@@ -4,16 +4,10 @@ import { INestApplication } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { unwrap } from '@dod/api-contract';
-import {
-  createValidationPipe,
-  EnvelopeInterceptor,
-  ErrorFilter,
-} from '@dod/core';
+import { CitizenDto, SessionDto, unwrap } from '@dod/api-contract';
+import { EnvelopeInterceptor, ErrorFilter } from '@dod/core';
 
 import { AppModule } from '../src/app.module';
-import { CitizenDto } from '../src/frontier/dto/citizen.dto';
-import { SessionDto } from '../src/frontier/dto/session.dto';
 import { PrismaService } from '../src/ground/prisma.service';
 
 describe('SessionGate (e2e)', () => {
@@ -27,7 +21,6 @@ describe('SessionGate (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('/api');
-    app.useGlobalPipes(createValidationPipe());
     app.useGlobalInterceptors(new EnvelopeInterceptor(app.get(Reflector)));
     app.useGlobalFilters(new ErrorFilter());
     await app.init();

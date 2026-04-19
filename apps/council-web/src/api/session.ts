@@ -1,11 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import type { CitizenDto, CreateSessionDto } from '@dod/api-contract';
 import { unwrap } from '@dod/api-contract';
 
-import type { CitizenDto } from './citizen';
 import { client } from './client';
-
-export type LoginCredentials = { nickname: string; secret: string };
 
 export const sessionKeys = {
   me: ['me'] as const,
@@ -31,8 +29,8 @@ export function useMeQuery() {
 export function useLoginMutation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ nickname, secret }: LoginCredentials) =>
-      client.postEmpty('/api/v1/session', { nickname, secret }),
+    mutationFn: (credentials: CreateSessionDto) =>
+      client.postEmpty('/api/v1/session', credentials),
     onSuccess: () => queryClient.refetchQueries({ queryKey: sessionKeys.me }),
   });
 }
