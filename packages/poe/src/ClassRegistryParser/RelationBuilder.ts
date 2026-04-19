@@ -23,6 +23,7 @@ export class RelationBuilder {
       enriched,
       this.registry.externalSources,
       this.registry.endpoints,
+      this.registry.schema,
     );
   }
 

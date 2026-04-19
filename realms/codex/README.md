@@ -110,54 +110,29 @@ classDiagram
 ### Ground
 
 ```mermaid
-classDiagram
-  namespace ground {
-    class PrismaService
-    class PrismaCardRepository {
-      #toEntity()
-      #toModel()
-    }
-    class PrismaManaRepository {
-      #toEntity()
-      #toModel()
-    }
+erDiagram
+  Mana {
+    string id PK
+    string name
+    string type
   }
-  namespace lore {
-    class CardRepository
-    class Card {
-      +string id
-      +string name
-      +string imageUrl
-      +string description
-      +number level
-      +number cost
-      +string manaId
-    }
-    class ManaRepository
-    class Mana {
-      +string id
-      +string name
-      +ManaType type
-    }
+  Mage {
+    string id PK
+    string name
+    string imageUrl
+    string description
+    string manaId
   }
-  namespace dod_core {
-    class PrismaRepository
+  Card {
+    string id PK
+    string name
+    string imageUrl
+    string description
+    int level
+    int cost
+    string manaId
   }
-
-  PrismaService --|> PrismaClient
-  PrismaCardRepository --|> PrismaRepository
-  PrismaCardRepository ..|> CardRepository
-  PrismaCardRepository *-- PrismaService
-  PrismaCardRepository --> Card
-  PrismaManaRepository --|> PrismaRepository
-  PrismaManaRepository ..|> ManaRepository
-  PrismaManaRepository *-- PrismaService
-  PrismaManaRepository --> Mana
+  Mage }o--|| Mana : mana
+  Card }o--|| Mana : mana
 ```
-
-| Entity | Description |
-|--------|-------------|
-| [PrismaService](src/ground/prisma.service.ts) | Extends `PrismaClient` · Implements `OnModuleInit`, `OnModuleDestroy` |
-| repositories/[PrismaCardRepository](src/ground/repositories/prisma-card.repository.ts) | Extends `PrismaRepository` · Implements [CardRepository](src/lore/repositories/card.repository.ts) |
-| repositories/[PrismaManaRepository](src/ground/repositories/prisma-mana.repository.ts) | Extends `PrismaRepository` · Implements [ManaRepository](src/lore/repositories/mana.repository.ts) |
 <!-- poe:classes:end -->

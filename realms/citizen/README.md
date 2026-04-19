@@ -104,50 +104,16 @@ classDiagram
 ### Ground
 
 ```mermaid
-classDiagram
-  namespace ground {
-    class PrismaService
-    class PrismaCitizenPermitRepository {
-      #toEntity()
-      #toModel()
-    }
-    class PrismaCitizenRepository {
-      #toEntity()
-      #toModel()
-    }
+erDiagram
+  Citizen {
+    string id PK
+    string nickname UK
   }
-  namespace lore {
-    class CitizenPermitRepository
-    class CitizenPermit {
-      +string id
-      +string secret
-      +Date issuedAt
-    }
-    class Citizen {
-      +string id
-      +string nickname
-    }
-    class CitizenRepository
+  CitizenPermit {
+    string id PK
+    string secret
+    datetime issuedAt
   }
-  namespace dod_core {
-    class PrismaRepository
-  }
-
-  PrismaService --|> PrismaClient
-  PrismaCitizenPermitRepository --|> PrismaRepository
-  PrismaCitizenPermitRepository ..|> CitizenPermitRepository
-  PrismaCitizenPermitRepository *-- PrismaService
-  PrismaCitizenPermitRepository --> CitizenPermit
-  PrismaCitizenPermitRepository --> Citizen
-  PrismaCitizenRepository --|> PrismaRepository
-  PrismaCitizenRepository ..|> CitizenRepository
-  PrismaCitizenRepository *-- PrismaService
-  PrismaCitizenRepository --> Citizen
+  CitizenPermit ||--|| Citizen : citizen
 ```
-
-| Entity | Description |
-|--------|-------------|
-| [PrismaService](src/ground/prisma.service.ts) | Extends `PrismaClient` · Implements `OnModuleInit`, `OnModuleDestroy` |
-| repositories/[PrismaCitizenPermitRepository](src/ground/repositories/prisma-citizen-permit.repository.ts) | Extends `PrismaRepository` · Implements [CitizenPermitRepository](src/lore/repositories/citizen-permit.repository.ts) |
-| repositories/[PrismaCitizenRepository](src/ground/repositories/prisma-citizen.repository.ts) | Extends `PrismaRepository` · Implements [CitizenRepository](src/lore/repositories/citizen.repository.ts) |
 <!-- poe:classes:end -->

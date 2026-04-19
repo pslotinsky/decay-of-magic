@@ -61,36 +61,12 @@ classDiagram
 ### Ground
 
 ```mermaid
-classDiagram
-  namespace ground {
-    class PrismaService
-    class PrismaUniverseRepository {
-      #toEntity()
-      #toModel()
-    }
+erDiagram
+  Universe {
+    string id PK
+    string name UK
+    string description
+    string cover
   }
-  namespace lore {
-    class UniverseRepository
-    class Universe {
-      +string id
-      +string name
-      +string description
-      +string cover
-    }
-  }
-  namespace dod_core {
-    class PrismaRepository
-  }
-
-  PrismaService --|> PrismaClient
-  PrismaUniverseRepository --|> PrismaRepository
-  PrismaUniverseRepository ..|> UniverseRepository
-  PrismaUniverseRepository *-- PrismaService
-  PrismaUniverseRepository --> Universe
 ```
-
-| Entity | Description |
-|--------|-------------|
-| [PrismaService](src/ground/prisma.service.ts) | Extends `PrismaClient` · Implements `OnModuleInit`, `OnModuleDestroy` |
-| repositories/[PrismaUniverseRepository](src/ground/repositories/prisma-universe.repository.ts) | Extends `PrismaRepository` · Implements [UniverseRepository](src/lore/repositories/universe.repository.ts) |
 <!-- poe:classes:end -->

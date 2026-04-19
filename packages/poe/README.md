@@ -13,6 +13,7 @@ classDiagram
       +InspectedClass items
       +Map externalSources
       +Endpoint endpoints
+      +PrismaSchema schema
       +boolean isEmpty
       +Record layers
       +getExternalSource()
@@ -90,6 +91,7 @@ classDiagram
     class InspectorPoe {
       -string basePath
       -ConfigLoader configLoader
+      -SchemaReader schemaReader
       +inspect()
     }
     class ClassDiagram {
@@ -165,10 +167,19 @@ classDiagram
     class DomainRenderer {
       +render()
     }
+    class InfrastructureRenderer {
+      +render()
+      -renderDiagram()
+      -renderModelBlock()
+      -renderField()
+      -renderRelation()
+      -relationConnector()
+    }
     class RendererRegistry {
       -Renderer domain
       -Renderer application
       -Renderer api
+      -Renderer infrastructure
       +resolve()
     }
     class ScannedFile {
@@ -188,10 +199,27 @@ classDiagram
       -scanFile()
       -isTsFile()
     }
+    class PrismaModel {
+      +string name
+      +string tableName
+      +PrismaField fields
+      +PrismaRelation relations
+    }
+    class PrismaSchema {
+      +PrismaModel models
+      +boolean isEmpty
+    }
+    class SchemaParser {
+      +parse()
+    }
+    class SchemaReader {
+      +read()
+    }
   }
 
   ClassRegistry *-- InspectedClass
   ClassRegistry *-- Endpoint
+  ClassRegistry *-- PrismaSchema
   InspectedClass *-- InspectedClassMember
   InspectedClass *-- InspectedClassRelation
   ClassParser *-- ScannedFile
@@ -202,12 +230,14 @@ classDiagram
   ClassRegistryParser --> Endpoint
   ClassRegistryParser --> EndpointExtractor
   ClassRegistryParser --> ScannedFile
+  ClassRegistryParser --> PrismaSchema
   RelationBuilder *-- ClassRegistry
   RelationBuilder --> InspectedClass
   RelationBuilder --> InspectedClassRelation
   EndpointExtractor --> Endpoint
   EndpointExtractor --> ScannedFile
   InspectorPoe *-- ConfigLoader
+  InspectorPoe *-- SchemaReader
   InspectorPoe --> ClassRegistry
   InspectorPoe --> ClassRegistryParser
   InspectorPoe --> PackageReport
@@ -227,15 +257,25 @@ classDiagram
   DomainRenderer --> InspectedClass
   DomainRenderer --> ClassDiagram
   DomainRenderer --> ClassTable
+  InfrastructureRenderer --> ClassRegistry
+  InfrastructureRenderer --> InspectedClass
+  InfrastructureRenderer --> PrismaModel
+  InfrastructureRenderer --> PrismaSchema
   RendererRegistry --> ApiRenderer
   RendererRegistry --> ApplicationRenderer
   RendererRegistry --> DomainRenderer
+  RendererRegistry --> InfrastructureRenderer
   Scanner --> ScannedFile
+  PrismaSchema *-- PrismaModel
+  SchemaParser --> PrismaModel
+  SchemaParser --> PrismaSchema
+  SchemaReader --> PrismaSchema
+  SchemaReader --> SchemaParser
 ```
 
 | Entity | Description |
 |--------|-------------|
-| ClassRegistry/[ClassRegistry](src/ClassRegistry/ClassRegistry.ts) | Collection of inspected classes plus any extracted endpoints |
+| ClassRegistry/[ClassRegistry](src/ClassRegistry/ClassRegistry.ts) | Collection of inspected classes plus any extracted endpoints and schema |
 | ClassRegistry/[InspectedClass](src/ClassRegistry/InspectedClass.ts) | Represents a single class discovered during inspection |
 | ClassRegistry/[InspectedClassMember](src/ClassRegistry/InspectedClassMember.ts) | Represents a single field, getter, or method of an inspected class |
 | ClassRegistry/[InspectedClassRelation](src/ClassRegistry/InspectedClassRelation.ts) | Represents a directed relation between two classes in a diagram |
@@ -253,7 +293,12 @@ classDiagram
 | Renderers/[ApiRenderer](src/Renderers/ApiRenderer.ts) | Renders a layer as per-controller endpoint tables<br><br>Implements `Renderer` |
 | Renderers/[ApplicationRenderer](src/Renderers/ApplicationRenderer.ts) | Renders a layer as a use-case table. Entry points (facades without a<br>parent base) get a separate section. Handlers and abstract bases are<br>hidden as implementation detail.<br><br>Implements `Renderer` |
 | Renderers/[DomainRenderer](src/Renderers/DomainRenderer.ts) | Renders a layer as a Mermaid class diagram plus a table of its classes<br><br>Implements `Renderer` |
-| Renderers/[RendererRegistry](src/Renderers/RendererRegistry.ts) | Resolves a renderer by kind. Kinds without a dedicated renderer<br>fall back to the domain renderer until their step lands. |
+| Renderers/[InfrastructureRenderer](src/Renderers/InfrastructureRenderer.ts) | Renders a layer as an ER diagram derived from the Prisma schema<br><br>Implements `Renderer` |
+| Renderers/[RendererRegistry](src/Renderers/RendererRegistry.ts) | Resolves a renderer by kind |
 | Scanner/[ScannedFile](src/Scanner/ScannedFile.ts) | Holds the raw content of a scanned source file |
 | Scanner/[Scanner](src/Scanner/Scanner.ts) | Searches the project for classes worthy of inspection |
+| Schema/[PrismaModel](src/Schema/PrismaSchema.ts) |  |
+| Schema/[PrismaSchema](src/Schema/PrismaSchema.ts) |  |
+| Schema/[SchemaParser](src/Schema/SchemaParser.ts) | Parses a Prisma schema file into a PrismaSchema |
+| Schema/[SchemaReader](src/Schema/SchemaReader.ts) | Reads and parses the Prisma schema for a package, if present |
 <!-- poe:classes:end -->

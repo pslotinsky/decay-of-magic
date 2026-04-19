@@ -1,8 +1,9 @@
 import { Endpoint } from '../Endpoints/Endpoint';
+import { PrismaSchema } from '../Schema/PrismaSchema';
 import { InspectedClass } from './InspectedClass';
 
 /**
- * Collection of inspected classes plus any extracted endpoints
+ * Collection of inspected classes plus any extracted endpoints and schema
  */
 export class ClassRegistry {
   private readonly classMap: Map<string, InspectedClass>;
@@ -10,6 +11,7 @@ export class ClassRegistry {
     public readonly items: InspectedClass[],
     public readonly externalSources: Map<string, string> = new Map(),
     public readonly endpoints: Endpoint[] = [],
+    public readonly schema: PrismaSchema | undefined = undefined,
   ) {
     this.classMap = new Map(items.map((cls) => [cls.name, cls]));
   }

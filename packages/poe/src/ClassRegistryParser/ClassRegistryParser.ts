@@ -2,6 +2,7 @@ import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
 import { Endpoint } from '../Endpoints/Endpoint';
 import { EndpointExtractor } from '../Endpoints/EndpointExtractor';
 import { ScannedFile } from '../Scanner/ScannedFile';
+import { PrismaSchema } from '../Schema/PrismaSchema';
 import { ClassParser } from './ClassParser';
 import { RelationBuilder } from './RelationBuilder';
 
@@ -11,12 +12,17 @@ import { RelationBuilder } from './RelationBuilder';
 export class ClassRegistryParser {
   private readonly endpointExtractor = new EndpointExtractor();
 
-  public parse(files: ScannedFile[]): ClassRegistry {
+  public parse(files: ScannedFile[], schema?: PrismaSchema): ClassRegistry {
     const parsers = files.map((file) => new ClassParser(file));
     const result = parsers.flatMap((parser) => parser.classes());
     const externalSources = this.mergeImports(parsers);
     const endpoints = this.extractEndpoints(files);
-    const registry = new ClassRegistry(result, externalSources, endpoints);
+    const registry = new ClassRegistry(
+      result,
+      externalSources,
+      endpoints,
+      schema,
+    );
 
     return new RelationBuilder(registry).buildRelations();
   }
