@@ -4,11 +4,11 @@ import { INestApplication } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { unwrap } from '@dod/api-contract';
 import {
   createValidationPipe,
   EnvelopeInterceptor,
   ErrorFilter,
-  unwrap,
 } from '@dod/core';
 
 import { AppModule } from '../src/app.module';

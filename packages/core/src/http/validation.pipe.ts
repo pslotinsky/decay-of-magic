@@ -1,7 +1,8 @@
 import { ValidationError } from 'class-validator';
 import { ValidationPipe } from '@nestjs/common';
 
-import { ErrorDetail } from '../errors/domain.error';
+import { ErrorDetail } from '@dod/api-contract';
+
 import { ValidationFailedError } from '../errors/validation-failed.error';
 
 const CONSTRAINT_CODES: Record<string, string> = {

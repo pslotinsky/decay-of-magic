@@ -9,7 +9,7 @@ import {
   Res,
 } from '@nestjs/common';
 
-import { SuccessEnvelope } from '@dod/core';
+import { SuccessEnvelope } from '@dod/api-contract';
 
 const COOKIE_NAME = 'token';
 const COOKIE_TTL_MS = 7 * 24 * 60 * 60 * 1000;

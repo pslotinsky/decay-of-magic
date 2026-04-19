@@ -10,7 +10,8 @@ const cardKeys = {
 export function useCards() {
   return useQuery({
     queryKey: cardKeys.all,
-    queryFn: () => client.get('/api/v1/card').json<CardDto[]>(),
-    initialData: [],
+    queryFn: () => client.get<CardDto[]>('/api/v1/card'),
+    select: (envelope) => envelope.data,
+    initialData: { data: [] as CardDto[] },
   });
 }

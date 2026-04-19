@@ -1,5 +1,5 @@
 {
-  "name": "@dod/core",
+  "name": "@dod/api-contract",
   "version": "0.0.1",
   "private": true,
   "main": "./dist/index.js",
@@ -12,23 +12,10 @@
     "typecheck": "tsc --noEmit",
     "docs": "poe inspect"
   },
-  "dependencies": {
-    "@dod/api-contract": "*"
-  },
-  "peerDependencies": {
-    "@nestjs/common": "^11.0.0",
-    "@nestjs/core": "^11.0.0",
-    "class-validator": "^0.14.0",
-    "rxjs": "^7.0.0"
-  },
   "devDependencies": {
     "@dod/config": "*",
-    "@nestjs/common": "^11.1.18",
-    "@nestjs/core": "^11.1.18",
-    "class-validator": "^0.15.0",
     "eslint": "^10.2.0",
     "prettier": "^3.8.2",
-    "rxjs": "^7.8.2",
     "typescript": "^6.0.2"
   }
 }

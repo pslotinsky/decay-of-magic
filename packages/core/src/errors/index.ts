@@ -1,5 +1,4 @@
 export * from './bad-request.error';
-export * from './codes';
 export * from './conflict.error';
 export * from './domain.error';
 export * from './forbidden.error';

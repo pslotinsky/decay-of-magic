@@ -6,20 +6,13 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 
-import { ErrorCode } from '../errors/codes';
-import { DomainError, ErrorDetail } from '../errors/domain.error';
+import { ErrorCode, ErrorDetail, ErrorEnvelope } from '@dod/api-contract';
+
+import { DomainError } from '../errors/domain.error';
 
 type ResponseLike = {
   status(code: number): ResponseLike;
   json(body: unknown): void;
-};
-
-export type ErrorEnvelope = {
-  error: {
-    code: ErrorCode | string;
-    message: string;
-    details?: ErrorDetail[];
-  };
 };
 
 const CODE_TO_STATUS: Record<ErrorCode, number> = {

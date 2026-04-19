@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@dod/api-contract": "*",
     "@tanstack/react-query": "^5.99.0",
     "clsx": "^2.1.1",
     "ky": "^2.0.1",

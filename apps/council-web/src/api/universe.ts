@@ -31,22 +31,29 @@ const universeKeys = {
 export function useUniverses() {
   return useQuery({
     queryKey: universeKeys.all,
-    queryFn: () => client.get('/api/v1/universe').json<UniverseDto[]>(),
+    queryFn: () => client.get<UniverseDto[]>('/api/v1/universe'),
+    select: (envelope) => envelope.data,
   });
 }
 
 export function useUniverse(id: string) {
   return useQuery({
     queryKey: universeKeys.detail(id),
-    queryFn: () => client.get(`/api/v1/universe/${id}`).json<UniverseDto>(),
+    queryFn: () => client.get<UniverseDto>(`/api/v1/universe/${id}`),
+    select: (envelope) => envelope.data,
   });
 }
 
 export function useCreateUniverse() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: CreateUniverseInput) =>
-      client.post('/api/v1/universe', { json: data }).json<UniverseDto>(),
+    mutationFn: async (input: CreateUniverseInput) => {
+      const envelope = await client.post<UniverseDto>(
+        '/api/v1/universe',
+        input,
+      );
+      return envelope.data;
+    },
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: universeKeys.all }),
   });
@@ -55,10 +62,13 @@ export function useCreateUniverse() {
 export function useUpdateUniverse() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, ...data }: UpdateUniverseInput) =>
-      client
-        .patch(`/api/v1/universe/${id}`, { json: data })
-        .json<UniverseDto>(),
+    mutationFn: async ({ id, ...input }: UpdateUniverseInput) => {
+      const envelope = await client.patch<UniverseDto>(
+        `/api/v1/universe/${id}`,
+        input,
+      );
+      return envelope.data;
+    },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: universeKeys.all });
       queryClient.invalidateQueries({

@@ -11,6 +11,5 @@ export function unwrap<TData>(body: unknown): TData {
   if (typeof body !== 'object' || body === null || !('data' in body)) {
     throw new TypeError('Response body is not a success envelope');
   }
-
   return (body as { data: TData }).data;
 }

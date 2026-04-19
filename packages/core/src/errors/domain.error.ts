@@ -1,10 +1,4 @@
-import { ErrorCode } from './codes';
-
-export type ErrorDetail = {
-  code: string;
-  field?: string;
-  message: string;
-};
+import { ErrorCode, ErrorDetail } from '@dod/api-contract';
 
 /**
  * Base class for errors raised by the domain and application layers.
