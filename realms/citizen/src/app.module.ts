@@ -2,8 +2,10 @@ import { z } from 'zod';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { JwtModule } from '@nestjs/jwt';
+import { TerminusModule } from '@nestjs/terminus';
 
 import { CitizenGate } from './frontier/gates/citizen.gate';
+import { HealthGate } from './frontier/gates/health.gate';
 import { SessionGate } from './frontier/gates/session.gate';
 import { PrismaService } from './ground/prisma.service';
 import { PrismaCitizenRepository } from './ground/repositories/prisma-citizen.repository';
@@ -35,12 +37,13 @@ const { JWT_SECRET } = z
 @Module({
   imports: [
     CqrsModule,
+    TerminusModule,
     JwtModule.register({
       secret: JWT_SECRET,
       signOptions: { expiresIn: '7d' },
     }),
   ],
-  controllers: [CitizenGate, SessionGate],
+  controllers: [CitizenGate, HealthGate, SessionGate],
   providers: [
     ...commandHandlers,
     ...queryHandlers,

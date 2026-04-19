@@ -9,9 +9,11 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { TerminusModule } from '@nestjs/terminus';
 
 import { JwtMiddleware } from './auth/jwt.middleware';
 import { CitizenController } from './citizen/citizen.controller';
+import { HealthController } from './health/health.controller';
 import { SessionController } from './session/session.controller';
 
 const env = z
@@ -33,8 +35,8 @@ const {
 } = env;
 
 @Module({
-  imports: [JwtModule.register({ secret: JWT_SECRET })],
-  controllers: [CitizenController, SessionController],
+  imports: [JwtModule.register({ secret: JWT_SECRET }), TerminusModule],
+  controllers: [CitizenController, HealthController, SessionController],
 })
 export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
@@ -45,6 +47,7 @@ export class AppModule implements NestModule {
     consumer
       .apply(JwtMiddleware)
       .exclude(
+        { path: '/api/health', method: RequestMethod.GET },
         { path: '/api/v1/session', method: RequestMethod.POST },
         { path: '/api/v1/session', method: RequestMethod.DELETE },
       )
