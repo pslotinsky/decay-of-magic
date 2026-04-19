@@ -12,10 +12,12 @@ classDiagram
       -Map classMap
       +InspectedClass items
       +Map externalSources
+      +Endpoint endpoints
       +boolean isEmpty
       +Record layers
       +getExternalSource()
       +getLayer()
+      +getLayerEndpoints()
     }
     class InspectedClass {
       +string link
@@ -44,6 +46,7 @@ classDiagram
     class ClassRegistryParser {
       +parse()
       -mergeImports()
+      -extractEndpoints()
     }
     class RelationBuilder {
       -ClassRegistry registry
@@ -56,6 +59,33 @@ classDiagram
     class ConfigLoader {
       +load()
       -assertExists()
+    }
+    class Endpoint {
+      +string file
+      +string layer
+      +string className
+      +string method
+      +string path
+      +string handler
+      +string params
+      +string returns
+      +string description
+    }
+    class EndpointExtractor {
+      +extract()
+      -findControllers()
+      -extractFromController()
+      -findMethodSignature()
+      -stripParams()
+      -stripParamAnnotations()
+      -extractReturnType()
+      -unwrapPromise()
+      -findPrecedingJsdoc()
+      -parseJsdoc()
+      -joinPath()
+      -findMatchingParen()
+      -extractBracedBlock()
+      -splitTopLevel()
     }
     class InspectorPoe {
       -string basePath
@@ -108,10 +138,21 @@ classDiagram
       -updateContent()
       -readPackageName()
     }
+    class ApiRenderer {
+      +render()
+      -groupByController()
+      -renderController()
+      -row()
+      -descriptionCell()
+      -escape()
+      -controllerTitle()
+    }
     class ApplicationRenderer {
       +render()
-      -renderUseCases()
-      -renderEntryPoints()
+      -groupByEntity()
+      -entityName()
+      -renderEntitySection()
+      -renderEntryPointsSection()
       -isVisible()
       -useCaseRow()
       -descriptionCell()
@@ -127,6 +168,7 @@ classDiagram
     class RendererRegistry {
       -Renderer domain
       -Renderer application
+      -Renderer api
       +resolve()
     }
     class ScannedFile {
@@ -149,6 +191,7 @@ classDiagram
   }
 
   ClassRegistry *-- InspectedClass
+  ClassRegistry *-- Endpoint
   InspectedClass *-- InspectedClassMember
   InspectedClass *-- InspectedClassRelation
   ClassParser *-- ScannedFile
@@ -156,10 +199,14 @@ classDiagram
   ClassRegistryParser --> ClassRegistry
   ClassRegistryParser --> ClassParser
   ClassRegistryParser --> RelationBuilder
+  ClassRegistryParser --> Endpoint
+  ClassRegistryParser --> EndpointExtractor
   ClassRegistryParser --> ScannedFile
   RelationBuilder *-- ClassRegistry
   RelationBuilder --> InspectedClass
   RelationBuilder --> InspectedClassRelation
+  EndpointExtractor --> Endpoint
+  EndpointExtractor --> ScannedFile
   InspectorPoe *-- ConfigLoader
   InspectorPoe --> ClassRegistry
   InspectorPoe --> ClassRegistryParser
@@ -172,11 +219,15 @@ classDiagram
   ClassTable *-- ClassRegistry
   PackageReport *-- ClassRegistry
   PackageReport *-- RendererRegistry
+  ApiRenderer --> ClassRegistry
+  ApiRenderer --> InspectedClass
+  ApiRenderer --> Endpoint
   ApplicationRenderer --> InspectedClass
   DomainRenderer --> ClassRegistry
   DomainRenderer --> InspectedClass
   DomainRenderer --> ClassDiagram
   DomainRenderer --> ClassTable
+  RendererRegistry --> ApiRenderer
   RendererRegistry --> ApplicationRenderer
   RendererRegistry --> DomainRenderer
   Scanner --> ScannedFile
@@ -184,7 +235,7 @@ classDiagram
 
 | Entity | Description |
 |--------|-------------|
-| ClassRegistry/[ClassRegistry](src/ClassRegistry/ClassRegistry.ts) | Collection of inspected classes |
+| ClassRegistry/[ClassRegistry](src/ClassRegistry/ClassRegistry.ts) | Collection of inspected classes plus any extracted endpoints |
 | ClassRegistry/[InspectedClass](src/ClassRegistry/InspectedClass.ts) | Represents a single class discovered during inspection |
 | ClassRegistry/[InspectedClassMember](src/ClassRegistry/InspectedClassMember.ts) | Represents a single field, getter, or method of an inspected class |
 | ClassRegistry/[InspectedClassRelation](src/ClassRegistry/InspectedClassRelation.ts) | Represents a directed relation between two classes in a diagram |
@@ -192,11 +243,14 @@ classDiagram
 | ClassRegistryParser/[ClassRegistryParser](src/ClassRegistryParser/ClassRegistryParser.ts) | Parses a collection of scanned files into a ClassRegistry |
 | ClassRegistryParser/[RelationBuilder](src/ClassRegistryParser/RelationBuilder.ts) | Builds relations between inspected classes |
 | Config/[ConfigLoader](src/Config/ConfigLoader.ts) | Resolves and loads the Poe configuration for a target package |
+| Endpoints/[Endpoint](src/Endpoints/Endpoint.ts) | A single HTTP endpoint exposed by a controller |
+| Endpoints/[EndpointExtractor](src/Endpoints/EndpointExtractor.ts) | Parses controller source files and extracts HTTP endpoints |
 | [InspectorPoe](src/InspectorPoe.ts) | Inspector Poe himself. Coordinates the inspection process |
 | ReadmeWriter/[ClassDiagram](src/ReadmeWriter/ClassDiagram.ts) | Generates a Mermaid class diagram for a single layer |
 | ReadmeWriter/[ClassTable](src/ReadmeWriter/ClassTable.ts) | Renders a markdown table of inspected classes |
 | ReadmeWriter/[PackageReport](src/ReadmeWriter/PackageReport.ts) | Renders the full package report by dispatching each configured<br>layer to its matching renderer |
 | ReadmeWriter/[ReadmeWriter](src/ReadmeWriter/ReadmeWriter.ts) | Updates README files with generated class tables |
+| Renderers/[ApiRenderer](src/Renderers/ApiRenderer.ts) | Renders a layer as per-controller endpoint tables<br><br>Implements `Renderer` |
 | Renderers/[ApplicationRenderer](src/Renderers/ApplicationRenderer.ts) | Renders a layer as a use-case table. Entry points (facades without a<br>parent base) get a separate section. Handlers and abstract bases are<br>hidden as implementation detail.<br><br>Implements `Renderer` |
 | Renderers/[DomainRenderer](src/Renderers/DomainRenderer.ts) | Renders a layer as a Mermaid class diagram plus a table of its classes<br><br>Implements `Renderer` |
 | Renderers/[RendererRegistry](src/Renderers/RendererRegistry.ts) | Resolves a renderer by kind. Kinds without a dedicated renderer<br>fall back to the domain renderer until their step lands. |

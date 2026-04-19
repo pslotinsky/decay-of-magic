@@ -28,78 +28,43 @@ npm run cli -- citizen:create --nickname <name> --password <secret>
 
 ### Frontier
 
-```mermaid
-classDiagram
-  namespace frontier {
-    class CitizenGate {
-      -CommandBus commandBus
-      -QueryBus queryBus
-      +register()
-      +update()
-      +getById()
-      +list()
-    }
-    class HealthGate {
-      -HealthCheckService health
-      -PrismaHealthIndicator prismaHealth
-      -PrismaService prisma
-      +check()
-    }
-    class SessionGate {
-      -CommandBus commandBus
-      +create()
-    }
-  }
-  namespace law {
-    class RegisterCitizenCommand {
-      +RegisterCitizenDto payload
-    }
-    class UpdateCitizenCommand {
-      +string id
-      +UpdateCitizenDto payload
-    }
-    class GetCitizenQuery {
-      +string id
-    }
-    class ListCitizensQuery
-    class CreateSessionCommand {
-      +CreateSessionDto payload
-    }
-  }
-  namespace lore {
-    class Citizen {
-      +string id
-      +string nickname
-    }
-  }
-  namespace ground {
-    class PrismaService
-  }
+#### [Citizen](src/frontier/gates/citizen.gate.ts)
 
-  CitizenGate --> RegisterCitizenCommand
-  CitizenGate --> UpdateCitizenCommand
-  CitizenGate --> GetCitizenQuery
-  CitizenGate --> ListCitizensQuery
-  CitizenGate --> Citizen
-  HealthGate *-- PrismaService
-  SessionGate --> CreateSessionCommand
-```
+| Endpoint | Description |
+|----------|-------------|
+| POST /v1/citizen | Params: `(dto: RegisterCitizenDto)`<br>Returns: `CitizenDto` |
+| PATCH /v1/citizen/:id | Params: `(id: string, dto: UpdateCitizenDto)`<br>Returns: `CitizenDto` |
+| GET /v1/citizen/:id | Params: `(id: string)`<br>Returns: `CitizenDto` |
+| GET /v1/citizen | Returns: `CitizenDto[]` |
 
-| Entity |
-|--------|
-| gates/[CitizenGate](src/frontier/gates/citizen.gate.ts) |
-| gates/[HealthGate](src/frontier/gates/health.gate.ts) |
-| gates/[SessionGate](src/frontier/gates/session.gate.ts) |
+#### [Health](src/frontier/gates/health.gate.ts)
+
+| Endpoint | Description |
+|----------|-------------|
+| GET /v1/health | Returns: `HealthCheckResult` |
+
+#### [Session](src/frontier/gates/session.gate.ts)
+
+| Endpoint | Description |
+|----------|-------------|
+| POST /v1/session | Params: `(dto: CreateSessionDto)`<br>Returns: `SessionDto` |
 
 ### Law
 
+#### Citizen
+
 | Use case | Description |
 |----------|-------------|
-| [CreateSessionCommand](src/law/commands/create-session.command.ts) | Params: `(payload: CreateSessionDto)`<br>Returns: `SessionDto` |
 | [RegisterCitizenCommand](src/law/commands/register-citizen.command.ts) | Params: `(payload: RegisterCitizenDto)`<br>Returns: `CitizenDto` |
 | [UpdateCitizenCommand](src/law/commands/update-citizen.command.ts) | Params: `(id: string, payload: UpdateCitizenDto)`<br>Returns: `CitizenDto` |
 | [GetCitizenQuery](src/law/queries/get-citizen.query.ts) | Params: `(id: string)`<br>Returns: `CitizenDto` |
 | [ListCitizensQuery](src/law/queries/list-citizens.query.ts) | Returns: `CitizenDto[]` |
+
+#### Session
+
+| Use case | Description |
+|----------|-------------|
+| [CreateSessionCommand](src/law/commands/create-session.command.ts) | Params: `(payload: CreateSessionDto)`<br>Returns: `SessionDto` |
 
 ### Lore
 

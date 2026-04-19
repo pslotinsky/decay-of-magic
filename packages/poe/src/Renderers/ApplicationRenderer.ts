@@ -4,6 +4,8 @@ import { Renderer } from './Renderer';
 
 const HANDLER_INTERFACES = new Set(['ICommandHandler', 'IQueryHandler']);
 
+const OTHER_GROUP = 'Other';
+
 /**
  * Renders a layer as a use-case table. Entry points (facades without a
  * parent base) get a separate section. Handlers and abstract bases are
@@ -19,40 +21,76 @@ export class ApplicationRenderer implements Renderer {
       return '';
     }
 
-    const labelled = useCases.length > 0 && entryPoints.length > 0;
-    const parts: string[] = [];
+    const sections: string[] = [];
 
     if (entryPoints.length > 0) {
-      if (labelled) parts.push('**Entry points**');
-      parts.push(this.renderEntryPoints(entryPoints));
+      sections.push(this.renderEntryPointsSection(entryPoints));
     }
 
-    if (useCases.length > 0) {
-      if (labelled) parts.push('**Use cases**');
-      parts.push(this.renderUseCases(useCases));
+    for (const [entity, group] of this.groupByEntity(useCases)) {
+      sections.push(this.renderEntitySection(entity, group));
     }
 
-    return parts.join('\n\n');
+    return sections.join('\n\n');
   }
 
-  private renderUseCases(useCases: InspectedClass[]): string {
+  private groupByEntity(
+    useCases: InspectedClass[],
+  ): Array<[string, InspectedClass[]]> {
+    const groups = new Map<string, InspectedClass[]>();
+
+    for (const cls of useCases) {
+      const entity = this.entityName(cls);
+      const bucket = groups.get(entity) ?? [];
+      bucket.push(cls);
+      groups.set(entity, bucket);
+    }
+
+    return [...groups.entries()].sort(([a], [b]) => {
+      if (a === OTHER_GROUP) return 1;
+      if (b === OTHER_GROUP) return -1;
+      return a.localeCompare(b);
+    });
+  }
+
+  private entityName(cls: InspectedClass): string {
+    const ret = this.returnType(cls);
+
+    if (!ret) {
+      return OTHER_GROUP;
+    }
+
+    return ret
+      .trim()
+      .split('|')[0]
+      .trim()
+      .replace(/\[\]$/, '')
+      .replace(/Dto$/, '');
+  }
+
+  private renderEntitySection(
+    entity: string,
+    useCases: InspectedClass[],
+  ): string {
     const rows = [
       '| Use case | Description |',
       '|----------|-------------|',
       ...useCases.map((cls) => this.useCaseRow(cls)),
     ];
 
-    return rows.join('\n');
+    return `#### ${entity}\n\n${rows.join('\n')}`;
   }
 
-  private renderEntryPoints(entryPoints: InspectedClass[]): string {
-    return entryPoints
+  private renderEntryPointsSection(entryPoints: InspectedClass[]): string {
+    const list = entryPoints
       .map((cls) =>
         cls.description
           ? `- ${cls.link} — ${cls.description}`
           : `- ${cls.link}`,
       )
       .join('\n');
+
+    return `#### Entry points\n\n${list}`;
   }
 
   private isVisible(cls: InspectedClass): boolean {

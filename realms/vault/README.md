@@ -7,43 +7,21 @@ Manages files: upload, storage, etc
 
 ### Frontier
 
-```mermaid
-classDiagram
-  namespace frontier {
-    class FileGate {
-      -CommandBus commandBus
-      +upload()
-    }
-    class HealthGate {
-      -HealthCheckService health
-      +check()
-    }
-  }
-  namespace law {
-    class UploadFileCommand {
-      +File file
-    }
-  }
-  namespace lore {
-    class File {
-      +string id
-      +string category
-      +string name
-      +Buffer buffer
-      +string mimetype
-    }
-  }
+#### [File](src/frontier/gates/file.gate.ts)
 
-  FileGate --> UploadFileCommand
-  FileGate --> File
-```
+| Endpoint | Description |
+|----------|-------------|
+| POST /v1/file | Params: `(body: UploadFileDto, uploadedFile: Express.Multer.File)`<br>Returns: `FileDto` |
 
-| Entity |
-|--------|
-| gates/[FileGate](src/frontier/gates/file.gate.ts) |
-| gates/[HealthGate](src/frontier/gates/health.gate.ts) |
+#### [Health](src/frontier/gates/health.gate.ts)
+
+| Endpoint | Description |
+|----------|-------------|
+| GET /v1/health | Returns: `HealthCheckResult` |
 
 ### Law
+
+#### File
 
 | Use case | Description |
 |----------|-------------|

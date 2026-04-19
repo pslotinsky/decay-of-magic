@@ -1,4 +1,5 @@
 import { RendererKind } from '../Config/PoeConfig';
+import { ApiRenderer } from './ApiRenderer';
 import { ApplicationRenderer } from './ApplicationRenderer';
 import { DomainRenderer } from './DomainRenderer';
 import { Renderer } from './Renderer';
@@ -10,10 +11,12 @@ import { Renderer } from './Renderer';
 export class RendererRegistry {
   private readonly domain: Renderer;
   private readonly application: Renderer;
+  private readonly api: Renderer;
 
   constructor() {
     this.domain = new DomainRenderer();
     this.application = new ApplicationRenderer();
+    this.api = new ApiRenderer();
   }
 
   public resolve(kind: RendererKind): Renderer {
@@ -23,6 +26,7 @@ export class RendererRegistry {
       case 'application':
         return this.application;
       case 'api':
+        return this.api;
       case 'infrastructure':
         return this.domain;
     }

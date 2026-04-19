@@ -1,13 +1,15 @@
+import { Endpoint } from '../Endpoints/Endpoint';
 import { InspectedClass } from './InspectedClass';
 
 /**
- * Collection of inspected classes
+ * Collection of inspected classes plus any extracted endpoints
  */
 export class ClassRegistry {
   private readonly classMap: Map<string, InspectedClass>;
   constructor(
     public readonly items: InspectedClass[],
     public readonly externalSources: Map<string, string> = new Map(),
+    public readonly endpoints: Endpoint[] = [],
   ) {
     this.classMap = new Map(items.map((cls) => [cls.name, cls]));
   }
@@ -36,5 +38,9 @@ export class ClassRegistry {
 
   public getLayer(title: string): InspectedClass[] {
     return this.items.filter((cls) => cls.layer === title);
+  }
+
+  public getLayerEndpoints(title: string): Endpoint[] {
+    return this.endpoints.filter((endpoint) => endpoint.layer === title);
   }
 }

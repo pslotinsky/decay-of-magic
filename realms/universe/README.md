@@ -5,63 +5,24 @@
 
 ### Frontier
 
-```mermaid
-classDiagram
-  namespace frontier {
-    class HealthGate {
-      -HealthCheckService health
-      -PrismaHealthIndicator prismaHealth
-      -PrismaService prisma
-      +check()
-    }
-    class UniverseGate {
-      -CommandBus commandBus
-      -QueryBus queryBus
-      +create()
-      +update()
-      +getById()
-      +list()
-    }
-  }
-  namespace ground {
-    class PrismaService
-  }
-  namespace law {
-    class CreateUniverseCommand {
-      +CreateUniverseDto payload
-    }
-    class UpdateUniverseCommand {
-      +string id
-      +UpdateUniverseDto payload
-    }
-    class GetUniverseQuery {
-      +string id
-    }
-    class ListUniversesQuery
-  }
-  namespace lore {
-    class Universe {
-      +string id
-      +string name
-      +string description
-      +string cover
-    }
-  }
+#### [Health](src/frontier/gates/health.gate.ts)
 
-  HealthGate *-- PrismaService
-  UniverseGate --> CreateUniverseCommand
-  UniverseGate --> UpdateUniverseCommand
-  UniverseGate --> GetUniverseQuery
-  UniverseGate --> ListUniversesQuery
-  UniverseGate --> Universe
-```
+| Endpoint | Description |
+|----------|-------------|
+| GET /v1/health | Returns: `HealthCheckResult` |
 
-| Entity |
-|--------|
-| gates/[HealthGate](src/frontier/gates/health.gate.ts) |
-| gates/[UniverseGate](src/frontier/gates/universe.gate.ts) |
+#### [Universe](src/frontier/gates/universe.gate.ts)
+
+| Endpoint | Description |
+|----------|-------------|
+| POST /v1/universe | Params: `(dto: CreateUniverseDto)`<br>Returns: `UniverseDto` |
+| PATCH /v1/universe/:id | Params: `(id: string, dto: UpdateUniverseDto)`<br>Returns: `UniverseDto` |
+| GET /v1/universe/:id | Params: `(id: string)`<br>Returns: `UniverseDto` |
+| GET /v1/universe | Returns: `UniverseDto[]` |
 
 ### Law
+
+#### Universe
 
 | Use case | Description |
 |----------|-------------|

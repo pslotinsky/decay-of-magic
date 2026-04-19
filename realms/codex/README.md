@@ -30,92 +30,44 @@ npm run prisma:migrate:dev
 
 ### Frontier
 
-```mermaid
-classDiagram
-  namespace frontier {
-    class CardGate {
-      -CommandBus commandBus
-      -QueryBus queryBus
-      +create()
-      +getById()
-      +list()
-    }
-    class HealthGate {
-      -HealthCheckService health
-      -PrismaHealthIndicator prismaHealth
-      -PrismaService prisma
-      +check()
-    }
-    class ManaGate {
-      -CommandBus commandBus
-      -QueryBus queryBus
-      +create()
-      +getById()
-      +list()
-    }
-  }
-  namespace law {
-    class CreateCardCommand {
-      +CreateCardDto payload
-    }
-    class GetCardQuery {
-      +string id
-    }
-    class ListCardsQuery
-    class CreateManaCommand {
-      +CreateManaDto payload
-    }
-    class GetManaQuery {
-      +string id
-    }
-    class ListManaQuery
-  }
-  namespace lore {
-    class Card {
-      +string id
-      +string name
-      +string imageUrl
-      +string description
-      +number level
-      +number cost
-      +string manaId
-    }
-    class Mana {
-      +string id
-      +string name
-      +ManaType type
-    }
-  }
-  namespace ground {
-    class PrismaService
-  }
+#### [Card](src/frontier/gates/card.gate.ts)
 
-  CardGate --> CreateCardCommand
-  CardGate --> GetCardQuery
-  CardGate --> ListCardsQuery
-  CardGate --> Card
-  HealthGate *-- PrismaService
-  ManaGate --> CreateManaCommand
-  ManaGate --> GetManaQuery
-  ManaGate --> ListManaQuery
-  ManaGate --> Mana
-```
+| Endpoint | Description |
+|----------|-------------|
+| POST /v1/card | Params: `(dto: CreateCardDto)`<br>Returns: `CardDto` |
+| GET /v1/card/:id | Params: `(id: string)`<br>Returns: `CardDto` |
+| GET /v1/card | Returns: `CardDto[]` |
 
-| Entity |
-|--------|
-| gates/[CardGate](src/frontier/gates/card.gate.ts) |
-| gates/[HealthGate](src/frontier/gates/health.gate.ts) |
-| gates/[ManaGate](src/frontier/gates/mana.gate.ts) |
+#### [Health](src/frontier/gates/health.gate.ts)
+
+| Endpoint | Description |
+|----------|-------------|
+| GET /v1/health | Returns: `HealthCheckResult` |
+
+#### [Mana](src/frontier/gates/mana.gate.ts)
+
+| Endpoint | Description |
+|----------|-------------|
+| POST /v1/mana | Params: `(dto: CreateManaDto)`<br>Returns: `ManaDto` |
+| GET /v1/mana/:id | Params: `(id: string)`<br>Returns: `ManaDto` |
+| GET /v1/mana | Returns: `ManaDto[]` |
 
 ### Law
+
+#### Card
 
 | Use case | Description |
 |----------|-------------|
 | [CreateCardCommand](src/law/commands/create-card.command.ts) | Params: `(payload: CreateCardDto)`<br>Returns: `CardDto` |
-| [CreateManaCommand](src/law/commands/create-mana.command.ts) | Params: `(payload: CreateManaDto)`<br>Returns: `ManaDto` |
 | [GetCardQuery](src/law/queries/get-card.query.ts) | Params: `(id: string)`<br>Returns: `CardDto` |
-| [GetManaQuery](src/law/queries/get-mana.query.ts) | Params: `(id: string)`<br>Returns: `ManaDto` |
 | [ListCardsQuery](src/law/queries/list-cards.query.ts) | Returns: `CardDto[]` |
+
+#### Mana
+
+| Use case | Description |
+|----------|-------------|
+| [CreateManaCommand](src/law/commands/create-mana.command.ts) | Params: `(payload: CreateManaDto)`<br>Returns: `ManaDto` |
+| [GetManaQuery](src/law/queries/get-mana.query.ts) | Params: `(id: string)`<br>Returns: `ManaDto` |
 | [ListManaQuery](src/law/queries/list-mana.query.ts) | Returns: `ManaDto[]` |
 
 ### Lore

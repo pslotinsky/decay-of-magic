@@ -5,11 +5,11 @@
 
 ### Application
 
-**Entry points**
+#### Entry points
 
 - [Zok](src/application/Zok.ts)
 
-**Use cases**
+#### Document
 
 | Use case | Description |
 |----------|-------------|
@@ -20,6 +20,11 @@
 | [MoveDocumentDutyInstruction](src/application/instructions/MoveDocumentDutyInstruction.ts) | Returns: `Document` |
 | [RenameDocumentDutyInstruction](src/application/instructions/RenameDocumentDutyInstruction.ts) | Returns: `Document` |
 | [UpdateDocumentRelationsDutyInstruction](src/application/instructions/UpdateDocumentRelationsDutyInstruction.ts) | Returns: `Document \| undefined` |
+
+#### Other
+
+| Use case | Description |
+|----------|-------------|
 | [UpdateReadmeDutyInstruction](src/application/instructions/UpdateReadmeDutyInstruction.ts) |  |
 
 ### Domain

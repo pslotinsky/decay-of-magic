@@ -19,7 +19,11 @@ export class RelationBuilder {
       InspectedClass.withRelations(cls, this.toRelations(cls)),
     );
 
-    return new ClassRegistry(enriched, this.registry.externalSources);
+    return new ClassRegistry(
+      enriched,
+      this.registry.externalSources,
+      this.registry.endpoints,
+    );
   }
 
   private toRelations(cls: InspectedClass): InspectedClassRelation[] {
