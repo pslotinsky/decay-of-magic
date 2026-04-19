@@ -10,12 +10,14 @@ classDiagram
       +getById()
       +getByIdOrFail()
       +find()
+      +findOne()
       +save()
     }
     class PrismaRepository {
       +getById()
       +getByIdOrFail()
       +find()
+      +findOne()
       +save()
       #toEntity()
       #toModel()

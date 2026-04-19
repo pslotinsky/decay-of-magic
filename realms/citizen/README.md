@@ -99,6 +99,12 @@ classDiagram
       +getById()
       +list()
     }
+    class HealthGate {
+      -HealthCheckService health
+      -PrismaHealthIndicator prismaHealth
+      -PrismaService prisma
+      +check()
+    }
     class SessionGate {
       -CommandBus commandBus
       +create()
@@ -126,6 +132,9 @@ classDiagram
       +CreateSessionDto payload
     }
   }
+  namespace ground {
+    class PrismaService
+  }
 
   CitizenDto --> Citizen
   CitizenGate --> RegisterCitizenDto
@@ -136,6 +145,7 @@ classDiagram
   CitizenGate --> GetCitizenQuery
   CitizenGate --> ListCitizensQuery
   CitizenGate --> Citizen
+  HealthGate *-- PrismaService
   SessionGate --> CreateSessionDto
   SessionGate --> SessionDto
   SessionGate --> CreateSessionCommand
@@ -150,6 +160,7 @@ classDiagram
 | dto/[SessionDto](src/frontier/dto/session.dto.ts) |
 | dto/[TokenPayloadDto](src/frontier/dto/token-payload.dto.ts) |
 | gates/[CitizenGate](src/frontier/gates/citizen.gate.ts) |
+| gates/[HealthGate](src/frontier/gates/health.gate.ts) |
 | gates/[SessionGate](src/frontier/gates/session.gate.ts) |
 
 ### ground

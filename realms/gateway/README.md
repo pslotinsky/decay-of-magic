@@ -31,6 +31,7 @@ classDiagram
   }
 
   AppModule --> JwtMiddleware
+  AppModule --> SessionController
 ```
 
 | Entity | Notes |
