@@ -81,9 +81,14 @@ jobs:
         run: npx turbo test:unit
 
   test-e2e:
-    name: E2E Tests
+    name: E2E Tests (${{ matrix.realm }})
     runs-on: ubuntu-latest
     needs: build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        realm: [citizen, universe]
 
     services:
       postgres:
@@ -114,12 +119,7 @@ jobs:
         with:
           name: dist
 
-      - name: E2E Tests - Citizen
-        run: npx turbo test:e2e --filter=citizen
+      - name: E2E Tests
+        run: npx turbo test:e2e --filter=${{ matrix.realm }}
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/citizen
-
-      - name: E2E Tests - Universe
-        run: npx turbo test:e2e --filter=universe
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/universe
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/${{ matrix.realm }}
