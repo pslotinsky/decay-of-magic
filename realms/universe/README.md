@@ -23,6 +23,12 @@ classDiagram
       +string description
       +string cover
     }
+    class HealthGate {
+      -HealthCheckService health
+      -PrismaHealthIndicator prismaHealth
+      -PrismaService prisma
+      +check()
+    }
     class UniverseGate {
       -CommandBus commandBus
       -QueryBus queryBus
@@ -89,6 +95,7 @@ classDiagram
   }
 
   UniverseDto --> Universe
+  HealthGate *-- PrismaService
   UniverseGate --> CreateUniverseDto
   UniverseGate --> UpdateUniverseDto
   UniverseGate --> UniverseDto
@@ -142,6 +149,7 @@ classDiagram
 | frontier/dto/body/[CreateUniverseDto](src/frontier/dto/body/create-universe.dto.ts) |  |
 | frontier/dto/body/[UpdateUniverseDto](src/frontier/dto/body/update-universe.dto.ts) |  |
 | frontier/dto/[UniverseDto](src/frontier/dto/universe.dto.ts) |  |
+| frontier/gates/[HealthGate](src/frontier/gates/health.gate.ts) |  |
 | frontier/gates/[UniverseGate](src/frontier/gates/universe.gate.ts) |  |
 | ground/[PrismaService](src/ground/prisma.service.ts) | Extends `PrismaClient` · Implements `OnModuleInit`, `OnModuleDestroy` |
 | ground/repositories/[PrismaUniverseRepository](src/ground/repositories/prisma-universe.repository.ts) | Extends `PrismaRepository` |

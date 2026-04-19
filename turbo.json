@@ -31,6 +31,10 @@
     },
     "format:check": {
       "cache": false
+    },
+    "docs": {
+      "dependsOn": ["@dod/poe#build"],
+      "cache": false
     }
   }
 }

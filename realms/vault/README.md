@@ -17,6 +17,10 @@ classDiagram
       -CommandBus commandBus
       +upload()
     }
+    class HealthGate {
+      -HealthCheckService health
+      +check()
+    }
   }
   namespace law {
     class UploadFileCommand {
@@ -61,6 +65,7 @@ classDiagram
 |--------|-------|
 | frontier/dto/[UploadFileDto](src/frontier/dto/upload-file.dto.ts) |  |
 | frontier/gates/[FileGate](src/frontier/gates/file.gate.ts) |  |
+| frontier/gates/[HealthGate](src/frontier/gates/health.gate.ts) |  |
 | law/commands/[UploadFileCommand](src/law/commands/upload-file.command.ts) | Extends `Command` |
 | law/commands/[UploadFileUseCase](src/law/commands/upload-file.command.ts) | Implements `ICommandHandler` |
 | lore/[File](src/lore/file.entity.ts) |  |

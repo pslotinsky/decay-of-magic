@@ -68,6 +68,12 @@ classDiagram
       +getById()
       +find()
     }
+    class HealthGate {
+      -HealthCheckService health
+      -PrismaHealthIndicator prismaHealth
+      -PrismaService prisma
+      +check()
+    }
     class ManaGate {
       -CommandBus commandBus
       -QueryBus queryBus
@@ -108,6 +114,9 @@ classDiagram
       +string id
     }
   }
+  namespace ground {
+    class PrismaService
+  }
 
   CreateManaDto --> Mana
   ManaDto --> Mana
@@ -117,6 +126,7 @@ classDiagram
   CardGate --> FindCardsQuery
   CardGate --> GetCardQuery
   CardGate --> Card
+  HealthGate *-- PrismaService
   ManaGate --> CreateManaDto
   ManaGate --> ManaDto
   ManaGate --> CreateManaCommand
@@ -132,6 +142,7 @@ classDiagram
 | dto/[CardDto](src/frontier/dto/card.dto.ts) |
 | dto/[ManaDto](src/frontier/dto/mana.dto.ts) |
 | gates/[CardGate](src/frontier/gates/card.gate.ts) |
+| gates/[HealthGate](src/frontier/gates/health.gate.ts) |
 | gates/[ManaGate](src/frontier/gates/mana.gate.ts) |
 
 ### ground

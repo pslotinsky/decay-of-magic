@@ -18,6 +18,12 @@ classDiagram
       +me()
     }
   }
+  namespace health {
+    class HealthController {
+      -HealthCheckService health
+      +check()
+    }
+  }
   namespace session {
     class SessionController {
       +create()
@@ -38,6 +44,7 @@ classDiagram
 |--------|-------|
 | auth/[JwtMiddleware](src/auth/jwt.middleware.ts) | Implements `NestMiddleware` |
 | citizen/[CitizenController](src/citizen/citizen.controller.ts) |  |
+| health/[HealthController](src/health/health.controller.ts) |  |
 | session/[SessionController](src/session/session.controller.ts) |  |
 | [AppModule](src/app.module.ts) | Implements `NestModule` |
 <!-- poe:classes:end -->
