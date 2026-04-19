@@ -1,10 +1,10 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, Query, QueryHandler } from '@nestjs/cqrs';
 
-import { Mana } from '@/lore/entities/mana.entity';
+import { ManaDto } from '@/frontier/dto/mana.dto';
 import { ManaRepository } from '@/lore/repositories/mana.repository';
 
-export class GetManaQuery extends Query<Mana> {
+export class GetManaQuery extends Query<ManaDto> {
   constructor(public readonly id: string) {
     super();
   }
@@ -14,7 +14,8 @@ export class GetManaQuery extends Query<Mana> {
 export class GetManaHandler implements IQueryHandler<GetManaQuery> {
   @Inject() private readonly manaRepository!: ManaRepository;
 
-  public async execute({ id }: GetManaQuery): Promise<Mana> {
-    return this.manaRepository.getByIdOrFail(id);
+  public async execute({ id }: GetManaQuery): Promise<ManaDto> {
+    const mana = await this.manaRepository.getByIdOrFail(id);
+    return ManaDto.from(mana);
   }
 }

@@ -10,18 +10,18 @@ import { PrismaCardRepository } from './ground/repositories/prisma-card.reposito
 import { PrismaManaRepository } from './ground/repositories/prisma-mana.repository';
 import { CreateCardHandler } from './law/commands/create-card.command';
 import { CreateManaHandler } from './law/commands/create-mana.command';
-import { FindCardsHandler } from './law/queries/find-cards.query';
-import { FindManaHandler } from './law/queries/find-mana.query';
 import { GetCardHandler } from './law/queries/get-card.query';
 import { GetManaHandler } from './law/queries/get-mana.query';
+import { ListCardsHandler } from './law/queries/list-cards.query';
+import { ListManaHandler } from './law/queries/list-mana.query';
 import { CardRepository } from './lore/repositories/card.repository';
 import { ManaRepository } from './lore/repositories/mana.repository';
 
 const queryHandlers = [
   GetCardHandler,
-  FindCardsHandler,
+  ListCardsHandler,
   GetManaHandler,
-  FindManaHandler,
+  ListManaHandler,
 ];
 const commandHandlers = [CreateCardHandler, CreateManaHandler];
 const repositories = [

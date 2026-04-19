@@ -2,6 +2,7 @@ import { S3 } from '@aws-sdk/client-s3';
 import { BadRequestException } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
+import { FileDto } from '@/frontier/dto/file.dto';
 import { File } from '@/lore/file.entity';
 
 const {
@@ -13,7 +14,7 @@ const {
   S3_SECRET_KEY,
 } = process.env;
 
-export class UploadFileCommand extends Command<string> {
+export class UploadFileCommand extends Command<FileDto> {
   constructor(public file: File) {
     super();
   }
@@ -22,7 +23,7 @@ export class UploadFileCommand extends Command<string> {
 @CommandHandler(UploadFileCommand)
 export class UploadFileUseCase implements ICommandHandler<
   UploadFileCommand,
-  string
+  FileDto
 > {
   private bucket: string;
   private client: S3;
@@ -32,7 +33,7 @@ export class UploadFileUseCase implements ICommandHandler<
     this.client = this.createClient();
   }
 
-  public async execute({ file }: UploadFileCommand): Promise<string> {
+  public async execute({ file }: UploadFileCommand): Promise<FileDto> {
     await this.client.putObject({
       Bucket: this.bucket,
       Key: this.createPath(file),
@@ -41,7 +42,7 @@ export class UploadFileUseCase implements ICommandHandler<
       Metadata: { id: file.id, name: file.name },
     });
 
-    return this.createAbsolutePath(file);
+    return FileDto.from(file, this.createAbsolutePath(file));
   }
 
   private createPath(file: File): string {

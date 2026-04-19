@@ -1,13 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { CreateCardDto } from '@/frontier/dto/body/create-card.dto';
+import { CardDto } from '@/frontier/dto/card.dto';
 import { CreateCardCommand } from '@/law/commands/create-card.command';
-import { FindCardsQuery } from '@/law/queries/find-cards.query';
 import { GetCardQuery } from '@/law/queries/get-card.query';
-
-import { CardDto } from '../dto/card.dto';
+import { ListCardsQuery } from '@/law/queries/list-cards.query';
 
 @Controller('/v1/card')
 @ApiTags('Card')
@@ -18,9 +17,10 @@ export class CardGate {
   ) {}
 
   @Post()
-  @ApiCreatedResponse()
-  public async create(@Body() dto: CreateCardDto): Promise<void> {
-    await this.commandBus.execute(new CreateCardCommand(dto));
+  @HttpCode(201)
+  @ApiCreatedResponse({ type: CardDto })
+  public async create(@Body() dto: CreateCardDto): Promise<CardDto> {
+    return this.commandBus.execute(new CreateCardCommand(dto));
   }
 
   @Get('/:id')
@@ -29,9 +29,9 @@ export class CardGate {
     return this.queryBus.execute(new GetCardQuery(id));
   }
 
-  @Get('/')
+  @Get()
   @ApiOkResponse({ type: [CardDto] })
-  public async find(): Promise<CardDto[]> {
-    return this.queryBus.execute(new FindCardsQuery());
+  public async list(): Promise<CardDto[]> {
+    return this.queryBus.execute(new ListCardsQuery());
   }
 }

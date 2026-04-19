@@ -1,13 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { CreateManaDto } from '@/frontier/dto/body/create-mana.dto';
+import { ManaDto } from '@/frontier/dto/mana.dto';
 import { CreateManaCommand } from '@/law/commands/create-mana.command';
-import { FindManaQuery } from '@/law/queries/find-mana.query';
 import { GetManaQuery } from '@/law/queries/get-mana.query';
-
-import { ManaDto } from '../dto/mana.dto';
+import { ListManaQuery } from '@/law/queries/list-mana.query';
 
 @Controller('/v1/mana')
 @ApiTags('Mana')
@@ -18,9 +17,10 @@ export class ManaGate {
   ) {}
 
   @Post()
-  @ApiCreatedResponse()
-  public async create(@Body() dto: CreateManaDto): Promise<void> {
-    await this.commandBus.execute(new CreateManaCommand(dto));
+  @HttpCode(201)
+  @ApiCreatedResponse({ type: ManaDto })
+  public async create(@Body() dto: CreateManaDto): Promise<ManaDto> {
+    return this.commandBus.execute(new CreateManaCommand(dto));
   }
 
   @Get('/:id')
@@ -29,9 +29,9 @@ export class ManaGate {
     return this.queryBus.execute(new GetManaQuery(id));
   }
 
-  @Get('/')
+  @Get()
   @ApiOkResponse({ type: [ManaDto] })
-  public async find(): Promise<ManaDto[]> {
-    return this.queryBus.execute(new FindManaQuery());
+  public async list(): Promise<ManaDto[]> {
+    return this.queryBus.execute(new ListManaQuery());
   }
 }
