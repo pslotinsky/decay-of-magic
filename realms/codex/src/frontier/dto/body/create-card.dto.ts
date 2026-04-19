@@ -1,5 +1,5 @@
+import { IsInt, IsString, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, Min, IsInt } from 'class-validator';
 
 export class CreateCardDto {
   @IsString()

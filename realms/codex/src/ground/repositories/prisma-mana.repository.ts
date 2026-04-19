@@ -4,8 +4,8 @@ import { PrismaRepository } from '@dod/core';
 
 import { Mana, ManaType } from '@/lore/entities/mana.entity';
 import { ManaRepository } from '@/lore/repositories/mana.repository';
-import { Prisma, Mana as ManaModel } from '../../../prisma/generated';
 
+import { Mana as ManaModel, Prisma } from '../../../prisma/generated';
 import { PrismaService } from '../prisma.service';
 
 export class PrismaManaRepository

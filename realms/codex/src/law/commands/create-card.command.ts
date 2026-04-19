@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { ICommandHandler, CommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { CreateCardDto } from '@/frontier/dto/body/create-card.dto';
 import { Card } from '@/lore/entities/card.entity';

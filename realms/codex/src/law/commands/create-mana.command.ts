@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { ICommandHandler, CommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { CreateManaDto } from '@/frontier/dto/body/create-mana.dto';
 import { Mana } from '@/lore/entities/mana.entity';
