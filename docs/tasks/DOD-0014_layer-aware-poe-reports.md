@@ -2,7 +2,7 @@
 
 | Field     | Value                                                                                           |
 | --------- | ----------------------------------------------------------------------------------------------- |
-| Status    | In progress                                                                                     |
+| Status    | Done |
 | Milestone | [Platform Baseline & Consistency](../milestones/Milestone-004_platform-baseline-consistency.md) |
 | Created   | 2026-04-19                                                                                      |
 
