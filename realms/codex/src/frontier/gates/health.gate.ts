@@ -7,6 +7,8 @@ import {
   PrismaHealthIndicator,
 } from '@nestjs/terminus';
 
+import { NoEnvelope } from '@dod/core';
+
 import { PrismaService } from '@/ground/prisma.service';
 
 @Controller('/health')
@@ -20,6 +22,7 @@ export class HealthGate {
 
   @Get()
   @HealthCheck()
+  @NoEnvelope()
   public check(): Promise<HealthCheckResult> {
     return this.health.check([
       () => this.prismaHealth.pingCheck('database', this.prisma),

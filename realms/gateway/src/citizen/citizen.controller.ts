@@ -1,16 +1,14 @@
-import { Request } from 'express';
-import { Controller, Get, HttpException, Req } from '@nestjs/common';
+import { Request, Response } from 'express';
+import { Controller, Get, Req, Res } from '@nestjs/common';
 
 @Controller('/api/v1/citizen')
 export class CitizenController {
   @Get('/me')
-  public async me(@Req() req: Request): Promise<unknown> {
+  public async me(@Req() req: Request, @Res() res: Response): Promise<void> {
     const upstream = await fetch(
       `${process.env['CITIZEN_REALM_URL']}/api/v1/citizen/${req.citizenId}`,
     );
-    if (!upstream.ok) {
-      throw new HttpException('Not found', upstream.status);
-    }
-    return upstream.json() as Promise<unknown>;
+    const body = (await upstream.json()) as unknown;
+    res.status(upstream.status).json(body);
   }
 }

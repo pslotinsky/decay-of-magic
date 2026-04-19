@@ -1,7 +1,15 @@
 import { type Server } from 'node:http';
 import request from 'supertest';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
+
+import {
+  createValidationPipe,
+  EnvelopeInterceptor,
+  ErrorFilter,
+  unwrap,
+} from '@dod/core';
 
 import { AppModule } from '../src/app.module';
 import { CitizenDto } from '../src/frontier/dto/citizen.dto';
@@ -19,7 +27,9 @@ describe('SessionGate (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('/api');
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+    app.useGlobalPipes(createValidationPipe());
+    app.useGlobalInterceptors(new EnvelopeInterceptor(app.get(Reflector)));
+    app.useGlobalFilters(new ErrorFilter());
     await app.init();
 
     prisma = moduleFixture.get(PrismaService);
@@ -38,23 +48,24 @@ describe('SessionGate (e2e)', () => {
     nickname: string,
     secret: string,
   ): Promise<CitizenDto> {
-    const res = await request(server())
+    const response = await request(server())
       .post('/api/v1/citizen')
       .send({ nickname, secret })
       .expect(201);
-    return res.body as CitizenDto;
+    return unwrap<CitizenDto>(response.body);
   }
 
   describe('POST /api/v1/session', () => {
     it('returns access token for valid credentials', async () => {
       await registerCitizen('Zog', 'secret123');
 
-      const res = await request(server())
+      const response = await request(server())
         .post('/api/v1/session')
         .send({ nickname: 'Zog', secret: 'secret123' })
         .expect(201);
+      const session = unwrap<SessionDto>(response.body);
 
-      expect(typeof (res.body as SessionDto).accessToken).toBe('string');
+      expect(typeof session.accessToken).toBe('string');
     });
 
     it('returns 401 when nickname is not found', () => {

@@ -1,6 +1,14 @@
 import request from 'supertest';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
+
+import {
+  createValidationPipe,
+  EnvelopeInterceptor,
+  ErrorFilter,
+  unwrap,
+} from '@dod/core';
 
 import { AppModule } from '../src/app.module';
 import { CitizenDto } from '../src/frontier/dto/citizen.dto';
@@ -17,7 +25,9 @@ describe('CitizenGate (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('/api');
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+    app.useGlobalPipes(createValidationPipe());
+    app.useGlobalInterceptors(new EnvelopeInterceptor(app.get(Reflector)));
+    app.useGlobalFilters(new ErrorFilter());
     await app.init();
 
     prisma = moduleFixture.get(PrismaService);
@@ -30,24 +40,22 @@ describe('CitizenGate (e2e)', () => {
 
   describe('POST /api/v1/citizen', () => {
     it('registers citizen and returns id and nickname', async () => {
-      const citizen = (
-        await request(app.getHttpServer())
-          .post('/api/v1/citizen')
-          .send({ nickname: 'Zog', secret: 'secret123' })
-          .expect(201)
-      ).body as CitizenDto;
+      const response = await request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Zog', secret: 'secret123' })
+        .expect(201);
+      const citizen = unwrap<CitizenDto>(response.body);
 
       expect(citizen.id).toBeDefined();
       expect(citizen.nickname).toBe('Zog');
     });
 
     it('issues CitizenPermit and records issuedAt', async () => {
-      const citizen = (
-        await request(app.getHttpServer())
-          .post('/api/v1/citizen')
-          .send({ nickname: 'Zog', secret: 'secret123' })
-          .expect(201)
-      ).body as CitizenDto;
+      const response = await request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Zog', secret: 'secret123' })
+        .expect(201);
+      const citizen = unwrap<CitizenDto>(response.body);
 
       const permit = await prisma.citizenPermit.findFirst({
         where: { id: citizen.id },
@@ -106,37 +114,33 @@ describe('CitizenGate (e2e)', () => {
 
   describe('PATCH /api/v1/citizen/:id', () => {
     it('updates nickname', async () => {
-      const citizen = (
-        await request(app.getHttpServer())
-          .post('/api/v1/citizen')
-          .send({ nickname: 'Zog', secret: 'secret123' })
-          .expect(201)
-      ).body as CitizenDto;
+      const registerResponse = await request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Zog', secret: 'secret123' })
+        .expect(201);
+      const citizen = unwrap<CitizenDto>(registerResponse.body);
 
-      const updated = (
-        await request(app.getHttpServer())
-          .patch(`/api/v1/citizen/${citizen.id}`)
-          .send({ nickname: 'ZogUpdated' })
-          .expect(200)
-      ).body as CitizenDto;
+      const updateResponse = await request(app.getHttpServer())
+        .patch(`/api/v1/citizen/${citizen.id}`)
+        .send({ nickname: 'ZogUpdated' })
+        .expect(200);
+      const updated = unwrap<CitizenDto>(updateResponse.body);
 
       expect(updated.nickname).toBe('ZogUpdated');
     });
 
     it('does not change id', async () => {
-      const citizen = (
-        await request(app.getHttpServer())
-          .post('/api/v1/citizen')
-          .send({ nickname: 'Zog', secret: 'secret123' })
-          .expect(201)
-      ).body as CitizenDto;
+      const registerResponse = await request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Zog', secret: 'secret123' })
+        .expect(201);
+      const citizen = unwrap<CitizenDto>(registerResponse.body);
 
-      const updated = (
-        await request(app.getHttpServer())
-          .patch(`/api/v1/citizen/${citizen.id}`)
-          .send({ nickname: 'ZogUpdated' })
-          .expect(200)
-      ).body as CitizenDto;
+      const updateResponse = await request(app.getHttpServer())
+        .patch(`/api/v1/citizen/${citizen.id}`)
+        .send({ nickname: 'ZogUpdated' })
+        .expect(200);
+      const updated = unwrap<CitizenDto>(updateResponse.body);
 
       expect(updated.id).toBe(citizen.id);
     });
@@ -165,18 +169,16 @@ describe('CitizenGate (e2e)', () => {
 
   describe('GET /api/v1/citizen/:id', () => {
     it('returns citizen by id', async () => {
-      const citizen = (
-        await request(app.getHttpServer())
-          .post('/api/v1/citizen')
-          .send({ nickname: 'Zog', secret: 'secret123' })
-          .expect(201)
-      ).body as CitizenDto;
+      const registerResponse = await request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Zog', secret: 'secret123' })
+        .expect(201);
+      const citizen = unwrap<CitizenDto>(registerResponse.body);
 
-      const found = (
-        await request(app.getHttpServer())
-          .get(`/api/v1/citizen/${citizen.id}`)
-          .expect(200)
-      ).body as CitizenDto;
+      const getResponse = await request(app.getHttpServer())
+        .get(`/api/v1/citizen/${citizen.id}`)
+        .expect(200);
+      const found = unwrap<CitizenDto>(getResponse.body);
 
       expect(found.id).toBe(citizen.id);
       expect(found.nickname).toBe('Zog');
@@ -201,19 +203,21 @@ describe('CitizenGate (e2e)', () => {
         .send({ nickname: 'Mog', secret: 'secret123' })
         .expect(201);
 
-      const citizens = (
-        await request(app.getHttpServer()).get('/api/v1/citizen').expect(200)
-      ).body as CitizenDto[];
+      const listResponse = await request(app.getHttpServer())
+        .get('/api/v1/citizen')
+        .expect(200);
+      const citizens = unwrap<CitizenDto[]>(listResponse.body);
 
       expect(citizens).toHaveLength(2);
-      expect(citizens.map((c) => c.nickname)).toContain('Zog');
-      expect(citizens.map((c) => c.nickname)).toContain('Mog');
+      expect(citizens.map((citizen) => citizen.nickname)).toContain('Zog');
+      expect(citizens.map((citizen) => citizen.nickname)).toContain('Mog');
     });
 
     it('returns empty array when no citizens exist', async () => {
-      const citizens = (
-        await request(app.getHttpServer()).get('/api/v1/citizen').expect(200)
-      ).body as CitizenDto[];
+      const listResponse = await request(app.getHttpServer())
+        .get('/api/v1/citizen')
+        .expect(200);
+      const citizens = unwrap<CitizenDto[]>(listResponse.body);
 
       expect(citizens).toEqual([]);
     });

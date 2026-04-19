@@ -6,6 +6,8 @@ import {
   HealthCheckService,
 } from '@nestjs/terminus';
 
+import { NoEnvelope } from '@dod/core';
+
 @Controller('/health')
 @ApiTags('Health')
 export class HealthGate {
@@ -13,6 +15,7 @@ export class HealthGate {
 
   @Get()
   @HealthCheck()
+  @NoEnvelope()
   public check(): Promise<HealthCheckResult> {
     return this.health.check([]);
   }

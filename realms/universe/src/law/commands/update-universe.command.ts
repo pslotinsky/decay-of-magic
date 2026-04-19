@@ -1,5 +1,7 @@
-import { ConflictException, Inject } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
+import { ConflictError } from '@dod/core';
 
 import { UpdateUniverseDto } from '@/frontier/dto/body/update-universe.dto';
 import { UniverseDto } from '@/frontier/dto/universe.dto';
@@ -42,7 +44,7 @@ export class UpdateUniverseHandler implements ICommandHandler<UpdateUniverseComm
     const conflicting = await this.universeRepository.findOne({ name });
 
     if (conflicting !== undefined && conflicting.id !== currentId) {
-      throw new ConflictException(`Universe name "${name}" already taken`);
+      throw new ConflictError(`Universe name "${name}" already taken`);
     }
   }
 }

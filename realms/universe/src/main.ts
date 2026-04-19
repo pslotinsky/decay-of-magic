@@ -1,6 +1,12 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { INestApplication } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
+import {
+  createValidationPipe,
+  EnvelopeInterceptor,
+  ErrorFilter,
+} from '@dod/core';
 
 import { AppModule } from './app.module';
 
@@ -8,7 +14,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('/api');
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(createValidationPipe());
+  app.useGlobalInterceptors(new EnvelopeInterceptor(app.get(Reflector)));
+  app.useGlobalFilters(new ErrorFilter());
 
   setupSwagger(app);
 

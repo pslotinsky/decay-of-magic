@@ -4,22 +4,24 @@ import {
   Controller,
   Delete,
   HttpCode,
-  HttpException,
   HttpStatus,
   Post,
   Res,
 } from '@nestjs/common';
 
+import { SuccessEnvelope } from '@dod/core';
+
 const COOKIE_NAME = 'token';
 const COOKIE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+type SessionPayload = { accessToken: string };
 
 @Controller('/api/v1/session')
 export class SessionController {
   @Post()
-  @HttpCode(HttpStatus.CREATED)
   public async create(
     @Body() body: unknown,
-    @Res({ passthrough: true }) res: Response,
+    @Res() res: Response,
   ): Promise<void> {
     const upstream = await fetch(
       `${process.env['CITIZEN_REALM_URL']}/api/v1/session`,
@@ -30,22 +32,23 @@ export class SessionController {
       },
     );
 
+    const upstreamBody = (await upstream.json().catch(() => ({}))) as unknown;
+
     if (!upstream.ok) {
-      const data = (await upstream.json().catch(() => ({}))) as {
-        message?: string;
-      };
-      throw new HttpException(data.message ?? 'Unauthorized', upstream.status);
+      res.status(upstream.status).json(upstreamBody);
+      return;
     }
 
-    const { accessToken } = (await upstream.json()) as { accessToken: string };
+    const { data } = upstreamBody as SuccessEnvelope<SessionPayload>;
 
-    res.cookie(COOKIE_NAME, accessToken, {
+    res.cookie(COOKIE_NAME, data.accessToken, {
       httpOnly: true,
       sameSite: 'strict',
       secure: process.env['NODE_ENV'] === 'production',
       maxAge: COOKIE_TTL_MS,
       path: '/',
     });
+    res.status(HttpStatus.CREATED).end();
   }
 
   @Delete()

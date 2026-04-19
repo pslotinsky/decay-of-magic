@@ -1,6 +1,14 @@
 import request from 'supertest';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
+
+import {
+  createValidationPipe,
+  EnvelopeInterceptor,
+  ErrorFilter,
+  unwrap,
+} from '@dod/core';
 
 import { AppModule } from '../src/app.module';
 import { UniverseDto } from '../src/frontier/dto/universe.dto';
@@ -17,7 +25,9 @@ describe('UniverseGate (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('/api');
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+    app.useGlobalPipes(createValidationPipe());
+    app.useGlobalInterceptors(new EnvelopeInterceptor(app.get(Reflector)));
+    app.useGlobalFilters(new ErrorFilter());
     await app.init();
 
     prisma = moduleFixture.get(PrismaService);
@@ -30,29 +40,27 @@ describe('UniverseGate (e2e)', () => {
 
   describe('POST /api/v1/universe', () => {
     it('creates universe and returns id and name', async () => {
-      const universe = (
-        await request(app.getHttpServer())
-          .post('/api/v1/universe')
-          .send({ id: 'eldoria', name: 'Eldoria' })
-          .expect(201)
-      ).body as UniverseDto;
+      const response = await request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({ id: 'eldoria', name: 'Eldoria' })
+        .expect(201);
+      const universe = unwrap<UniverseDto>(response.body);
 
       expect(universe.id).toBeDefined();
       expect(universe.name).toBe('Eldoria');
     });
 
     it('creates universe with description and cover', async () => {
-      const universe = (
-        await request(app.getHttpServer())
-          .post('/api/v1/universe')
-          .send({
-            id: 'eldoria',
-            name: 'Eldoria',
-            description: 'A magical world',
-            cover: 'https://example.com/cover.jpg',
-          })
-          .expect(201)
-      ).body as UniverseDto;
+      const response = await request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({
+          id: 'eldoria',
+          name: 'Eldoria',
+          description: 'A magical world',
+          cover: 'https://example.com/cover.jpg',
+        })
+        .expect(201);
+      const universe = unwrap<UniverseDto>(response.body);
 
       expect(universe.name).toBe('Eldoria');
       expect(universe.description).toBe('A magical world');
@@ -109,40 +117,36 @@ describe('UniverseGate (e2e)', () => {
 
   describe('PATCH /api/v1/universe/:id', () => {
     it('updates name', async () => {
-      const universe = (
-        await request(app.getHttpServer())
-          .post('/api/v1/universe')
-          .send({ id: 'eldoria', name: 'Eldoria' })
-          .expect(201)
-      ).body as UniverseDto;
+      const createResponse = await request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({ id: 'eldoria', name: 'Eldoria' })
+        .expect(201);
+      const universe = unwrap<UniverseDto>(createResponse.body);
 
-      const updated = (
-        await request(app.getHttpServer())
-          .patch(`/api/v1/universe/${universe.id}`)
-          .send({ name: 'Eldoria Reborn' })
-          .expect(200)
-      ).body as UniverseDto;
+      const updateResponse = await request(app.getHttpServer())
+        .patch(`/api/v1/universe/${universe.id}`)
+        .send({ name: 'Eldoria Reborn' })
+        .expect(200);
+      const updated = unwrap<UniverseDto>(updateResponse.body);
 
       expect(updated.name).toBe('Eldoria Reborn');
     });
 
     it('updates description and cover', async () => {
-      const universe = (
-        await request(app.getHttpServer())
-          .post('/api/v1/universe')
-          .send({ id: 'eldoria', name: 'Eldoria' })
-          .expect(201)
-      ).body as UniverseDto;
+      const createResponse = await request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({ id: 'eldoria', name: 'Eldoria' })
+        .expect(201);
+      const universe = unwrap<UniverseDto>(createResponse.body);
 
-      const updated = (
-        await request(app.getHttpServer())
-          .patch(`/api/v1/universe/${universe.id}`)
-          .send({
-            description: 'Updated description',
-            cover: 'https://example.com/new-cover.jpg',
-          })
-          .expect(200)
-      ).body as UniverseDto;
+      const updateResponse = await request(app.getHttpServer())
+        .patch(`/api/v1/universe/${universe.id}`)
+        .send({
+          description: 'Updated description',
+          cover: 'https://example.com/new-cover.jpg',
+        })
+        .expect(200);
+      const updated = unwrap<UniverseDto>(updateResponse.body);
 
       expect(updated.description).toBe('Updated description');
       expect(updated.cover).toBe('https://example.com/new-cover.jpg');
@@ -161,12 +165,11 @@ describe('UniverseGate (e2e)', () => {
         .send({ id: 'eldoria', name: 'Eldoria' })
         .expect(201);
 
-      const second = (
-        await request(app.getHttpServer())
-          .post('/api/v1/universe')
-          .send({ id: 'shadowlands', name: 'Shadowlands' })
-          .expect(201)
-      ).body as UniverseDto;
+      const secondResponse = await request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({ id: 'shadowlands', name: 'Shadowlands' })
+        .expect(201);
+      const second = unwrap<UniverseDto>(secondResponse.body);
 
       await request(app.getHttpServer())
         .patch(`/api/v1/universe/${second.id}`)
@@ -191,18 +194,16 @@ describe('UniverseGate (e2e)', () => {
 
   describe('GET /api/v1/universe/:id', () => {
     it('returns universe by id', async () => {
-      const universe = (
-        await request(app.getHttpServer())
-          .post('/api/v1/universe')
-          .send({ id: 'eldoria', name: 'Eldoria' })
-          .expect(201)
-      ).body as UniverseDto;
+      const createResponse = await request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({ id: 'eldoria', name: 'Eldoria' })
+        .expect(201);
+      const universe = unwrap<UniverseDto>(createResponse.body);
 
-      const found = (
-        await request(app.getHttpServer())
-          .get(`/api/v1/universe/${universe.id}`)
-          .expect(200)
-      ).body as UniverseDto;
+      const getResponse = await request(app.getHttpServer())
+        .get(`/api/v1/universe/${universe.id}`)
+        .expect(200);
+      const found = unwrap<UniverseDto>(getResponse.body);
 
       expect(found.id).toBe(universe.id);
       expect(found.name).toBe('Eldoria');
@@ -227,9 +228,10 @@ describe('UniverseGate (e2e)', () => {
         .send({ id: 'shadowlands', name: 'Shadowlands' })
         .expect(201);
 
-      const universes = (
-        await request(app.getHttpServer()).get('/api/v1/universe').expect(200)
-      ).body as UniverseDto[];
+      const listResponse = await request(app.getHttpServer())
+        .get('/api/v1/universe')
+        .expect(200);
+      const universes = unwrap<UniverseDto[]>(listResponse.body);
 
       expect(universes).toHaveLength(2);
       expect(universes.map((universe) => universe.name)).toContain('Eldoria');
@@ -239,9 +241,10 @@ describe('UniverseGate (e2e)', () => {
     });
 
     it('returns empty array when no universes exist', async () => {
-      const universes = (
-        await request(app.getHttpServer()).get('/api/v1/universe').expect(200)
-      ).body as UniverseDto[];
+      const listResponse = await request(app.getHttpServer())
+        .get('/api/v1/universe')
+        .expect(200);
+      const universes = unwrap<UniverseDto[]>(listResponse.body);
 
       expect(universes).toEqual([]);
     });

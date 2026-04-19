@@ -1,7 +1,9 @@
 import bcrypt from 'bcryptjs';
 import crypto from 'node:crypto';
-import { ConflictException, Inject } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
+import { ConflictError } from '@dod/core';
 
 import { RegisterCitizenDto } from '@/frontier/dto/body/register-citizen.dto';
 import { CitizenDto } from '@/frontier/dto/citizen.dto';
@@ -40,7 +42,7 @@ export class RegisterCitizenHandler implements ICommandHandler<RegisterCitizenCo
   private async assertNicknameAvailable(nickname: string): Promise<void> {
     const [existing] = await this.citizenRepository.find({ nickname });
     if (existing !== undefined) {
-      throw new ConflictException(`Nickname ${nickname} already taken`);
+      throw new ConflictError(`Nickname ${nickname} already taken`);
     }
   }
 }

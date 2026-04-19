@@ -1,7 +1,9 @@
 import bcrypt from 'bcryptjs';
-import { Inject, UnauthorizedException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
+
+import { UnauthenticatedError } from '@dod/core';
 
 import { CreateSessionDto } from '@/frontier/dto/body/create-session.dto';
 import { SessionDto } from '@/frontier/dto/session.dto';
@@ -35,7 +37,7 @@ export class CreateSessionHandler implements ICommandHandler<CreateSessionComman
     const [citizen] = await this.citizenRepository.find({ nickname });
 
     if (citizen === undefined) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthenticatedError('Invalid credentials');
     }
 
     return citizen;
@@ -45,7 +47,7 @@ export class CreateSessionHandler implements ICommandHandler<CreateSessionComman
     const permit = await this.citizenPermitRepository.getById(citizenId);
 
     if (permit === undefined) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthenticatedError('Invalid credentials');
     }
 
     return permit;
@@ -55,7 +57,7 @@ export class CreateSessionHandler implements ICommandHandler<CreateSessionComman
     const valid = await bcrypt.compare(secret, hash);
 
     if (!valid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthenticatedError('Invalid credentials');
     }
   }
 }
