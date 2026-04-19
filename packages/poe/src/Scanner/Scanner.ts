@@ -44,8 +44,9 @@ export class Scanner {
 
   private async readItems(dir: string): Promise<Dirent<string>[]> {
     const dirPath = join(this.basePath, dir);
+    const items = await readdir(dirPath, { withFileTypes: true });
 
-    return readdir(dirPath, { withFileTypes: true });
+    return items.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   private async scanItem(

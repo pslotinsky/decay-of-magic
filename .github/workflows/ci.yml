@@ -80,6 +80,42 @@ jobs:
       - name: Test
         run: npx turbo test:unit
 
+  docs:
+    name: Docs
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+
+      - name: Relink workspace bins
+        run: |
+          chmod +x packages/poe/dist/index.js
+          npm rebuild --workspaces
+
+      - name: Regenerate docs
+        run: npx turbo run docs
+
+      - name: Assert docs are up to date
+        run: |
+          if ! git diff --quiet; then
+            echo "::error::README files are out of date. Run 'npm run docs' and commit the result."
+            git diff
+            exit 1
+          fi
+
   test-api:
     name: API Tests (${{ matrix.realm }})
     runs-on: ubuntu-latest
