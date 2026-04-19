@@ -7,10 +7,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CitizenDto, SessionDto, unwrap } from '@dod/api-contract';
 import { EnvelopeInterceptor, ErrorFilter } from '@dod/core';
 
-import { AppModule } from '../src/app.module';
-import { PrismaService } from '../src/ground/prisma.service';
+import { AppModule } from '../../src/app.module';
+import { PrismaService } from '../../src/ground/prisma.service';
 
-describe('SessionGate (e2e)', () => {
+describe('SessionGate (api)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
 

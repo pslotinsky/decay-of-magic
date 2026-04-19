@@ -6,10 +6,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UniverseDto, unwrap } from '@dod/api-contract';
 import { EnvelopeInterceptor, ErrorFilter } from '@dod/core';
 
-import { AppModule } from '../src/app.module';
-import { PrismaService } from '../src/ground/prisma.service';
+import { AppModule } from '../../src/app.module';
+import { PrismaService } from '../../src/ground/prisma.service';
 
-describe('UniverseGate (e2e)', () => {
+describe('UniverseGate (api)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
 

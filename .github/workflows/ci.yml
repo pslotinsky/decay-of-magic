@@ -80,8 +80,8 @@ jobs:
       - name: Test
         run: npx turbo test:unit
 
-  test-e2e:
-    name: E2E Tests (${{ matrix.realm }})
+  test-api:
+    name: API Tests (${{ matrix.realm }})
     runs-on: ubuntu-latest
     needs: build
 
@@ -119,7 +119,7 @@ jobs:
         with:
           name: dist
 
-      - name: E2E Tests
-        run: npx turbo test:e2e --filter=${{ matrix.realm }}
+      - name: API Tests
+        run: npx turbo test:api --filter=${{ matrix.realm }}
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/${{ matrix.realm }}

@@ -47,8 +47,8 @@ realms/my-realm/
 │   ├── app.module.ts
 │   └── main.ts
 └── test/
-    ├── jest-e2e.json
-    └── thing.e2e-spec.ts
+    ├── jest-api.json
+    └── thing.api-spec.ts
 ```
 
 ## Layer responsibilities
