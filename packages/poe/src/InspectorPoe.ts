@@ -1,6 +1,7 @@
 import { basename, resolve } from 'path';
 
 import { ClassRegistryParser } from './ClassRegistryParser/ClassRegistryParser';
+import { ConfigLoader } from './Config/ConfigLoader';
 import { PackageReport } from './ReadmeWriter/PackageReport';
 import { ReadmeWriter } from './ReadmeWriter/ReadmeWriter';
 import { Scanner } from './Scanner/Scanner';
@@ -10,9 +11,11 @@ import { Scanner } from './Scanner/Scanner';
  */
 export class InspectorPoe {
   private readonly basePath: string;
+  private readonly configLoader: ConfigLoader;
 
   constructor(basePath: string) {
     this.basePath = basePath;
+    this.configLoader = new ConfigLoader();
   }
 
   public async inspect(path: string): Promise<void> {
@@ -22,16 +25,15 @@ export class InspectorPoe {
     console.info(`inspecting ${basename(packagePath)}...`);
     console.time('inspection completed');
 
-    const files = await new Scanner(packagePath).scan();
+    const config = await this.configLoader.load(packagePath);
+    const files = await new Scanner(packagePath, config.layers).scan();
     const classes = new ClassRegistryParser().parse(files);
 
     console.info(`classes found: ${classes.items.length}`);
 
-    const readmeWriter = new ReadmeWriter(packagePath);
+    const content = new PackageReport(config, classes).render();
 
-    const content = new PackageReport(classes).render();
-
-    await readmeWriter.write(content, 'classes');
+    await new ReadmeWriter(packagePath).write(content, 'classes');
 
     console.info('classes generated');
 

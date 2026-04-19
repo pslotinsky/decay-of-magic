@@ -5,29 +5,22 @@ import { InspectedClass } from '../ClassRegistry/InspectedClass';
  * Renders a markdown table of inspected classes
  */
 export class ClassTable {
-  private readonly layer: string;
+  private readonly root: string;
   private readonly classes: InspectedClass[];
   private readonly classRegistry: ClassRegistry;
-  private readonly hasDescriptions: boolean;
-  private readonly hasNotes: boolean;
-  private readonly flat: boolean;
+  private readonly hasDescriptionColumn: boolean;
 
   constructor(
-    layer: string,
+    root: string,
     classes: InspectedClass[],
     classRegistry: ClassRegistry,
-    flat: boolean = false,
   ) {
-    this.layer = layer;
+    this.root = root.replace(/\\/g, '/').replace(/\/$/, '');
     this.classes = classes;
     this.classRegistry = classRegistry;
-    this.hasDescriptions = classes.some((cls) => cls.description);
-    this.hasNotes = classes.some((cls) => this.renderNotes(cls));
-    this.flat = flat;
-  }
-
-  public render(): string {
-    return `### ${this.layer}\n\n${this.renderContent()}`;
+    this.hasDescriptionColumn = classes.some(
+      (cls) => cls.description || this.renderNotes(cls),
+    );
   }
 
   public renderContent(): string {
@@ -44,12 +37,8 @@ export class ClassTable {
   private buildHeader(): string {
     const cols = ['Entity'];
 
-    if (this.hasDescriptions) {
+    if (this.hasDescriptionColumn) {
       cols.push('Description');
-    }
-
-    if (this.hasNotes) {
-      cols.push('Notes');
     }
 
     return this.renderRow(cols);
@@ -58,12 +47,8 @@ export class ClassTable {
   private buildRow(cls: InspectedClass): string {
     const cols = [this.entityCell(cls)];
 
-    if (this.hasDescriptions) {
-      cols.push(cls.description ?? '');
-    }
-
-    if (this.hasNotes) {
-      cols.push(this.renderNotes(cls));
+    if (this.hasDescriptionColumn) {
+      cols.push(this.descriptionCell(cls));
     }
 
     return this.renderRow(cols);
@@ -74,11 +59,32 @@ export class ClassTable {
   }
 
   private entityCell(cls: InspectedClass): string {
-    const parts = cls.file.replace(/\\/g, '/').split('/');
-    const subdir = parts.slice(this.flat ? 1 : 2, -1).join('/');
+    const file = cls.file.replace(/\\/g, '/');
+    const rootPrefix = `${this.root}/`;
+    const relative = file.startsWith(rootPrefix)
+      ? file.slice(rootPrefix.length)
+      : file;
+    const parts = relative.split('/');
+    const subdir = parts.slice(0, -1).join('/');
     const prefix = subdir ? `${subdir}/` : '';
 
     return `${prefix}${cls.link}`;
+  }
+
+  private descriptionCell(cls: InspectedClass): string {
+    const paragraphs: string[] = [];
+
+    if (cls.description) {
+      paragraphs.push(cls.description);
+    }
+
+    const notes = this.renderNotes(cls);
+
+    if (notes) {
+      paragraphs.push(notes);
+    }
+
+    return paragraphs.join('<br><br>');
   }
 
   private renderNotes(cls: InspectedClass): string {

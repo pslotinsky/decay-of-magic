@@ -3,7 +3,7 @@
 <!-- poe:classes:start -->
 ## Classes
 
-### application
+### Application
 
 ```mermaid
 classDiagram
@@ -217,8 +217,8 @@ classDiagram
   UpdateReadmeDutyInstruction --> DocumentTocRender
 ```
 
-| Entity | Notes |
-|--------|-------|
+| Entity | Description |
+|--------|-------------|
 | [Zok](src/application/Zok.ts) |  |
 | instructions/[ChangeStatusDutyInstruction](src/application/instructions/ChangeStatusDutyInstruction.ts) | Extends [DutyInstruction](src/application/instructions/DutyInstruction.ts) |
 | instructions/[CreateDocumentDutyInstruction](src/application/instructions/CreateDocumentDutyInstruction.ts) | Extends [DutyInstruction](src/application/instructions/DutyInstruction.ts) |
@@ -230,7 +230,7 @@ classDiagram
 | instructions/[UpdateDocumentRelationsDutyInstruction](src/application/instructions/UpdateDocumentRelationsDutyInstruction.ts) | Extends [DutyInstruction](src/application/instructions/DutyInstruction.ts) |
 | instructions/[UpdateReadmeDutyInstruction](src/application/instructions/UpdateReadmeDutyInstruction.ts) | Extends [DutyInstruction](src/application/instructions/DutyInstruction.ts) |
 
-### domain
+### Domain
 
 ```mermaid
 classDiagram
@@ -449,8 +449,8 @@ classDiagram
   DocumentTocRender --> Document
 ```
 
-| Entity | Notes |
-|--------|-------|
+| Entity | Description |
+|--------|-------------|
 | assistants/[ArchiveKeeper](src/domain/assistants/ArchiveKeeper.ts) | Abstract · Extends [Assistant](src/domain/assistants/Assistant.ts) |
 | assistants/[Assistant](src/domain/assistants/Assistant.ts) | Abstract |
 | assistants/[HumorAdvisor](src/domain/assistants/HumorAdvisor.ts) | Extends [Assistant](src/domain/assistants/Assistant.ts) |
@@ -473,7 +473,7 @@ classDiagram
 | tools/parser/[TextExtractor](src/domain/tools/parser/TextExtractor.ts) |  |
 | tools/render/[DocumentTocRender](src/domain/tools/render/DocumentTocRender.ts) |  |
 
-### infrastructure
+### Infrastructure
 
 ```mermaid
 classDiagram
@@ -628,8 +628,8 @@ classDiagram
   YamlProtocolClerk --> Plea
 ```
 
-| Entity | Notes |
-|--------|-------|
+| Entity | Description |
+|--------|-------------|
 | archive/[FileSystemArchive](src/infrastructure/archive/FileSystemArchive.ts) | Extends [Archive](src/domain/tools/Archive.ts) |
 | assistants/[FileSystemArchiveKeeper](src/infrastructure/assistants/FileSystemArchiveKeeper.ts) | Extends [ArchiveKeeper](src/domain/assistants/ArchiveKeeper.ts) |
 | assistants/[NanoPleaFormalist](src/infrastructure/assistants/NanoPleaFormalist.ts) | Extends [PleaFormalist](src/domain/assistants/PleaFormalist.ts) |

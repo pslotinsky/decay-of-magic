@@ -31,7 +31,6 @@ export class ClassParser {
 
   public classes(): InspectedClass[] {
     const pattern = new RegExp(CLASS_PATTERN.source, 'gm');
-    const layer = this.getLayer(this.file.path);
     const results: InspectedClass[] = [];
     let match: RegExpExecArray | null;
 
@@ -47,7 +46,7 @@ export class ClassParser {
         new InspectedClass({
           name,
           file: this.file.path,
-          layer,
+          layer: this.file.layer,
           body,
           abstract: !!abstractKeyword,
           description: jsdoc ? this.parseJsDoc(jsdoc) : undefined,
@@ -85,13 +84,6 @@ export class ClassParser {
     }
 
     return result;
-  }
-
-  private getLayer(file: string): string {
-    const parts = file.replace(/\\/g, '/').split('/');
-    const segment = parts[1];
-
-    return segment && !segment.endsWith('.ts') ? segment : 'root';
   }
 
   private parseJsDoc(raw: string): string | undefined {

@@ -31,8 +31,10 @@ export class ClassRegistry {
       (groups[cls.layer] ??= []).push(cls);
     }
 
-    const { root, ...layers } = groups;
+    return groups;
+  }
 
-    return root ? { ...layers, root } : layers;
+  public getLayer(title: string): InspectedClass[] {
+    return this.items.filter((cls) => cls.layer === title);
   }
 }

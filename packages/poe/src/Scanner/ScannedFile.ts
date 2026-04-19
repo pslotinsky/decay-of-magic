@@ -5,6 +5,7 @@ export class ScannedFile {
   constructor(
     public readonly path: string,
     public readonly content: string,
+    public readonly layer: string,
   ) {}
 
   public contains(text: string): boolean {

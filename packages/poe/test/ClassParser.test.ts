@@ -1,12 +1,12 @@
-import test from 'node:test';
 import assert from 'node:assert';
+import test from 'node:test';
 
+import { InspectedClassMember } from '../src/ClassRegistry/InspectedClassMember';
 import { ClassRegistryParser } from '../src/ClassRegistryParser/ClassRegistryParser';
 import { ScannedFile } from '../src/Scanner/ScannedFile';
-import { InspectedClassMember } from '../src/ClassRegistry/InspectedClassMember';
 
-function file(path: string, content: string): ScannedFile {
-  return new ScannedFile(path, content);
+function file(path: string, content: string, layer = 'domain'): ScannedFile {
+  return new ScannedFile(path, content, layer);
 }
 
 test.describe('Unit: ClassParser', () => {
@@ -59,20 +59,12 @@ test.describe('Unit: ClassParser', () => {
     assert.deepStrictEqual(registry.items[0].interfaces, ['Bar', 'Baz']);
   });
 
-  test('derives layer from subdirectory under src/', () => {
+  test('carries layer from scanned file', () => {
     const registry = new ClassRegistryParser().parse([
-      file('src/domain/Foo.ts', `export class Foo {}`),
+      file('Foo.ts', `export class Foo {}`, 'application'),
     ]);
 
-    assert.strictEqual(registry.items[0].layer, 'domain');
-  });
-
-  test('uses root layer for files directly under src/', () => {
-    const registry = new ClassRegistryParser().parse([
-      file('src/Foo.ts', `export class Foo {}`),
-    ]);
-
-    assert.strictEqual(registry.items[0].layer, 'root');
+    assert.strictEqual(registry.items[0].layer, 'application');
   });
 
   test('extracts multiple classes from one file', () => {

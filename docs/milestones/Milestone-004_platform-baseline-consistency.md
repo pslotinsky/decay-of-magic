@@ -25,7 +25,7 @@ These improvements ensure that future realms and features can be added without a
 ## Tasks
 
 <!-- TOC.START: task -->
-- [ ] [DOD-0014: Improve Poe configurability and layer-specific documentation generation](../tasks/DOD-0014_improve-poe-configurability-and-layer-specific-documentation-generation.md)
+- [ ] [DOD-0014: Layer-aware Poe reports](../tasks/DOD-0014_layer-aware-poe-reports.md)
 - [x] [DOD-0015: Define testing strategy for realm services](../tasks/DOD-0015_define-testing-strategy-for-realm-services.md)
 - [x] [DOD-0016: Establish service operability baseline](../tasks/DOD-0016_establish-service-operability-baseline.md)
 - [x] [DOD-0017: Clean up platform configuration inconsistencies](../tasks/DOD-0017_clean-up-platform-configuration-inconsistencies.md)

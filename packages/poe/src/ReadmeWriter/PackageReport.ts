@@ -1,54 +1,40 @@
 import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
-import { ClassDiagram } from './ClassDiagram';
-import { ClassTable } from './ClassTable';
-
-const LAYER_SPLIT_THRESHOLD = 25;
+import { PoeConfig } from '../Config/PoeConfig';
+import { RendererRegistry } from '../Renderers/RendererRegistry';
 
 /**
- * Combined report grouping class tables and diagrams by layer
+ * Renders the full package report by dispatching each configured
+ * layer to its matching renderer
  */
 export class PackageReport {
+  private readonly config: PoeConfig;
   private readonly classRegistry: ClassRegistry;
-  private readonly diagram: ClassDiagram;
+  private readonly renderers: RendererRegistry;
 
-  constructor(classRegistry: ClassRegistry) {
+  constructor(config: PoeConfig, classRegistry: ClassRegistry) {
+    this.config = config;
     this.classRegistry = classRegistry;
-    this.diagram = new ClassDiagram(classRegistry);
+    this.renderers = new RendererRegistry();
   }
 
   public render(): string {
-    return this.classRegistry.items.length < LAYER_SPLIT_THRESHOLD
-      ? this.renderFlat()
-      : this.renderByLayers();
+    const sections = this.config.layers
+      .map((layer) => this.renderLayer(layer))
+      .filter((section) => section.length > 0);
+
+    return sections.length > 0 ? `## Classes\n\n${sections.join('\n\n')}` : '';
   }
 
-  private renderFlat(): string {
-    const diagram = this.diagram.renderAll();
-    const ordered = Object.values(this.classRegistry.layers).flat();
-    const table = new ClassTable(
-      '',
-      ordered,
-      this.classRegistry,
-      true,
-    ).renderContent();
+  private renderLayer(layer: PoeConfig['layers'][number]): string {
+    const classes = this.classRegistry.getLayer(layer.title);
 
-    return `## Classes\n\n${diagram}\n\n${table}`;
-  }
+    if (classes.length === 0) {
+      return '';
+    }
 
-  private renderByLayers(): string {
-    const layers = Object.entries(this.classRegistry.layers)
-      .map(([layer, classes]) => {
-        const diagram = this.diagram.renderLayer(layer, classes);
-        const table = new ClassTable(
-          layer,
-          classes,
-          this.classRegistry,
-        ).renderContent();
+    const renderer = this.renderers.resolve(layer.renderer);
+    const body = renderer.render(layer, classes, this.classRegistry);
 
-        return `### ${layer}\n\n${diagram}\n\n${table}`;
-      })
-      .join('\n\n');
-
-    return `## Classes\n\n${layers}`;
+    return body ? `### ${layer.title}\n\n${body}` : '';
   }
 }

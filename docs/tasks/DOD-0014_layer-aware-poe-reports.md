@@ -1,4 +1,4 @@
-# DOD-0014: Improve Poe configurability and layer-specific documentation generation
+# DOD-0014: Layer-aware Poe reports
 
 | Field     | Value                                                                                           |
 | --------- | ----------------------------------------------------------------------------------------------- |
@@ -33,3 +33,10 @@ Infrastructure layer:
 - ER diagrams based on schema
 
 Goal: generate useful documentation without producing unnecessary noise.
+
+## Steps
+
+- [x] Step 1 — Per-package `poe.config.mjs` + renderer dispatch; `domain` renderer wired, other renderers fall back to `domain` until their step lands.
+- [ ] Step 2 — `application` renderer: commands/queries as a use-case list.
+- [ ] Step 3 — `api` renderer: endpoint list from controllers.
+- [ ] Step 4 — `infrastructure` renderer: ER diagram from Prisma schema.

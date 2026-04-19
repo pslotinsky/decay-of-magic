@@ -6,7 +6,9 @@
   "exports": {
     "./eslint/base": "./eslint/base.js",
     "./eslint/nestjs": "./eslint/nestjs.js",
-    "./eslint/react": "./eslint/react.js"
+    "./eslint/react": "./eslint/react.js",
+    "./poe/library": "./poe/library.js",
+    "./poe/realm": "./poe/realm.js"
   },
   "dependencies": {
     "@eslint/js": "^10.0.1",
