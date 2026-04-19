@@ -2,7 +2,7 @@
 
 | Field     | Value                                                                                           |
 | --------- | ----------------------------------------------------------------------------------------------- |
-| Status    | In progress                                                                                     |
+| Status    | Done                                                                                            |
 | Milestone | [Platform Baseline & Consistency](../milestones/Milestone-004_platform-baseline-consistency.md) |
 | Created   | 2026-04-19                                                                                      |
 
@@ -15,6 +15,7 @@ Scope:
 - add health endpoints for services
 - ensure CI configuration is consistent across realms
 - introduce Dependabot for dependency monitoring
+- route documentation generation through turbo so new realms are picked up automatically
 
 Explicitly out of scope for now:
 
