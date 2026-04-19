@@ -30,5 +30,5 @@ These improvements ensure that future realms and features can be added without a
 - [x] [DOD-0016: Establish service operability baseline](../tasks/DOD-0016_establish-service-operability-baseline.md)
 - [x] [DOD-0017: Clean up platform configuration inconsistencies](../tasks/DOD-0017_clean-up-platform-configuration-inconsistencies.md)
 - [x] [DOD-0018: Refactor frontend api layer](../tasks/DOD-0018_refactor-frontend-api-layer.md)
-- [ ] [DOD-0019: Define API conventions for realm services](../tasks/DOD-0019_define-api-conventions-for-realm-services.md)
+- [x] [DOD-0019: Define API conventions for realm services](../tasks/DOD-0019_define-api-conventions-for-realm-services.md)
 <!-- TOC.END -->
