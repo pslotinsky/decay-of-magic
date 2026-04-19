@@ -1,9 +1,9 @@
 import { Globe, Pencil } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
+import { type UniverseDto } from '@/api/universe';
 import { Card } from '@/components/Card';
 import { IconButton } from '@/components/IconButton';
-import { type UniverseDto } from '@/queries/universe';
 
 import styles from './UniversesPageList.module.scss';
 

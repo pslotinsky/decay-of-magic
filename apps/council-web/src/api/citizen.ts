@@ -1,8 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { req } from '../lib/http';
+import { client } from './client';
 
 export type CitizenDto = { id: string; nickname: string };
+
+export type RegisterCitizenInput = { nickname: string; secret: string };
+
+export type UpdateCitizenInput = { id: string; nickname: string };
 
 const citizenKeys = {
   all: ['citizens'] as const,
@@ -11,19 +15,17 @@ const citizenKeys = {
 export function useCitizens() {
   return useQuery({
     queryKey: citizenKeys.all,
-    queryFn: () => req<CitizenDto[]>('/api/v1/citizen'),
+    queryFn: () => client.get('/api/v1/citizen').json<CitizenDto[]>(),
   });
 }
 
 export function useRegisterCitizen() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ nickname, secret }: { nickname: string; secret: string }) =>
-      req<CitizenDto>('/api/v1/citizen', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nickname, secret }),
-      }),
+    mutationFn: ({ nickname, secret }: RegisterCitizenInput) =>
+      client
+        .post('/api/v1/citizen', { json: { nickname, secret } })
+        .json<CitizenDto>(),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: citizenKeys.all }),
   });
@@ -32,12 +34,10 @@ export function useRegisterCitizen() {
 export function useUpdateCitizen() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, nickname }: { id: string; nickname: string }) =>
-      req<CitizenDto>(`/api/v1/citizen/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nickname }),
-      }),
+    mutationFn: ({ id, nickname }: UpdateCitizenInput) =>
+      client
+        .patch(`/api/v1/citizen/${id}`, { json: { nickname } })
+        .json<CitizenDto>(),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: citizenKeys.all }),
   });

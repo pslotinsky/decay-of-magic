@@ -1,7 +1,7 @@
 import { useParams } from 'react-router';
 
+import { useUniverse } from '@/api/universe';
 import { Page } from '@/components/Page';
-import { useUniverse } from '@/queries/universe';
 
 import { UniversePageHeader } from './UniversePageHeader';
 

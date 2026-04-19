@@ -1,18 +1,11 @@
-import { useEffect, useState } from 'react';
-
-import { type CardDto, CardPreview } from '@/components/CardPreview';
+import { useCards } from '@/api/card';
+import { CardPreview } from '@/components/CardPreview';
 import { Page, PageHeader } from '@/components/Page';
 
 import styles from './CardsPage.module.scss';
 
 export const CardsPage = () => {
-  const [cards, setCards] = useState<CardDto[]>([]);
-
-  useEffect(() => {
-    fetch('/api/v1/card')
-      .then((response) => response.json())
-      .then(setCards);
-  }, []);
+  const { data: cards } = useCards();
 
   return (
     <Page

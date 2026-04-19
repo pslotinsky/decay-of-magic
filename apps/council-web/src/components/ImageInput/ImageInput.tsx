@@ -1,7 +1,7 @@
 import { ImagePlus, Loader } from 'lucide-react';
 import { useRef } from 'react';
 
-import { useUploadFile } from '@/queries/file';
+import { useUploadFile } from '@/api/file';
 
 import styles from './ImageInput.module.scss';
 

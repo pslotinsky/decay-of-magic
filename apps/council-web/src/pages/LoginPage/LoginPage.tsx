@@ -1,42 +1,22 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import { useLoginMutation } from '@/api/session';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
-
-import { useAuth } from '../../context/useAuth';
-import { req } from '../../lib/http';
 
 import styles from './LoginPage.module.scss';
 
 export function LoginPage() {
-  const { login } = useAuth();
   const navigate = useNavigate();
+  const login = useLoginMutation();
 
   const [nickname, setNickname] = useState('');
   const [secret, setSecret] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(event: React.FormEvent) {
+  function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    setError(null);
-    setLoading(true);
-    try {
-      await req('/api/v1/session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nickname, secret }),
-      });
-
-      await login();
-
-      void navigate('/');
-    } catch {
-      setError('Invalid credentials. Try again.');
-    } finally {
-      setLoading(false);
-    }
+    login.mutate({ nickname, secret }, { onSuccess: () => void navigate('/') });
   }
 
   return (
@@ -71,10 +51,12 @@ export function LoginPage() {
             />
           </div>
 
-          {error && <p className={styles.error}>{error}</p>}
+          {login.isError && (
+            <p className={styles.error}>Invalid credentials. Try again.</p>
+          )}
 
-          <Button type="submit" disabled={loading}>
-            {loading ? 'Verifying…' : 'Authenticate'}
+          <Button type="submit" disabled={login.isPending}>
+            {login.isPending ? 'Verifying…' : 'Authenticate'}
           </Button>
         </form>
       </Card>

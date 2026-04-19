@@ -1,5 +1,5 @@
+import { type CitizenDto } from '@/api/citizen';
 import { Card } from '@/components/Card';
-import { type CitizenDto } from '@/queries/citizen';
 
 import styles from './CitizensPageList.module.scss';
 

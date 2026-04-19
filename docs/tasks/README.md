@@ -18,6 +18,6 @@
 - [ ] [DOD-0015: Define testing strategy for realm services](./DOD-0015_define-testing-strategy-for-realm-services.md)
 - [ ] [DOD-0016: Establish service operability baseline](./DOD-0016_establish-service-operability-baseline.md)
 - [x] [DOD-0017: Clean up platform configuration inconsistencies](./DOD-0017_clean-up-platform-configuration-inconsistencies.md)
-- [ ] [DOD-0018: Finalize frontend data layer decision](./DOD-0018_finalize-frontend-data-layer-decision.md)
+- [x] [DOD-0018: Refactor frontend api layer](./DOD-0018_refactor-frontend-api-layer.md)
 - [ ] [DOD-0019: Define API conventions for realm services](./DOD-0019_define-api-conventions-for-realm-services.md)
 <!-- TOC.END -->

@@ -1,10 +1,24 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { req } from '../lib/http';
+import { client } from './client';
 
 export type UniverseDto = {
   id: string;
   name: string;
+  description?: string;
+  cover?: string;
+};
+
+export type CreateUniverseInput = {
+  id: string;
+  name: string;
+  description?: string;
+  cover?: string;
+};
+
+export type UpdateUniverseInput = {
+  id: string;
+  name?: string;
   description?: string;
   cover?: string;
 };
@@ -17,31 +31,22 @@ const universeKeys = {
 export function useUniverses() {
   return useQuery({
     queryKey: universeKeys.all,
-    queryFn: () => req<UniverseDto[]>('/api/v1/universe'),
+    queryFn: () => client.get('/api/v1/universe').json<UniverseDto[]>(),
   });
 }
 
 export function useUniverse(id: string) {
   return useQuery({
     queryKey: universeKeys.detail(id),
-    queryFn: () => req<UniverseDto>(`/api/v1/universe/${id}`),
+    queryFn: () => client.get(`/api/v1/universe/${id}`).json<UniverseDto>(),
   });
 }
 
 export function useCreateUniverse() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: {
-      id: string;
-      name: string;
-      description?: string;
-      cover?: string;
-    }) =>
-      req<UniverseDto>('/api/v1/universe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      }),
+    mutationFn: (data: CreateUniverseInput) =>
+      client.post('/api/v1/universe', { json: data }).json<UniverseDto>(),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: universeKeys.all }),
   });
@@ -50,20 +55,10 @@ export function useCreateUniverse() {
 export function useUpdateUniverse() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      id,
-      ...data
-    }: {
-      id: string;
-      name?: string;
-      description?: string;
-      cover?: string;
-    }) =>
-      req<UniverseDto>(`/api/v1/universe/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      }),
+    mutationFn: ({ id, ...data }: UpdateUniverseInput) =>
+      client
+        .patch(`/api/v1/universe/${id}`, { json: data })
+        .json<UniverseDto>(),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: universeKeys.all });
       queryClient.invalidateQueries({
