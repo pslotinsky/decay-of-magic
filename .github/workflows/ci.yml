@@ -114,7 +114,12 @@ jobs:
         with:
           name: dist
 
-      - name: E2E Tests
-        run: npx turbo test:e2e
+      - name: E2E Tests - Citizen
+        run: npx turbo test:e2e --filter=citizen
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/citizen
+
+      - name: E2E Tests - Universe
+        run: npx turbo test:e2e --filter=universe
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/universe

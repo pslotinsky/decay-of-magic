@@ -1,5 +1,5 @@
-import { Controller, Get, HttpException, Req } from '@nestjs/common';
 import { Request } from 'express';
+import { Controller, Get, HttpException, Req } from '@nestjs/common';
 
 @Controller('/api/v1/citizen')
 export class CitizenController {

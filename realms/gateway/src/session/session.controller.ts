@@ -1,3 +1,4 @@
+import { Response } from 'express';
 import {
   Body,
   Controller,
@@ -8,7 +9,6 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
-import { Response } from 'express';
 
 const COOKIE_NAME = 'token';
 const COOKIE_TTL_MS = 7 * 24 * 60 * 60 * 1000;

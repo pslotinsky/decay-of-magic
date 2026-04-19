@@ -1,10 +1,10 @@
+import { NextFunction, Request, Response } from 'express';
 import {
   Injectable,
   NestMiddleware,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { NextFunction, Request, Response } from 'express';
 
 @Injectable()
 export class JwtMiddleware implements NestMiddleware {
