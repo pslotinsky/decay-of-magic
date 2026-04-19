@@ -44,7 +44,7 @@ The response column shows the payload carried in the envelope's `data` field —
 
 Notes:
 
-- `POST` always returns the created resource — never just an id, never an empty body. Clients should not need a second round-trip to read what they just wrote.
+- `POST` returns the created resource by default — never just an id. Cookie-authentication endpoints (where the response is a `Set-Cookie` instruction and the token stays server-side) are a recognized exception and may return `201` with an empty body.
 - `PATCH` uses **merge semantics**: the request body is a partial resource; provided fields replace existing values, omitted fields stay untouched. RFC 6902 JSON Patch is **not** used.
 - `PUT` is not used; full replacement is not part of the baseline.
 - `DELETE` is idempotent in intent but returns `404` for an already-deleted resource, not `204`. The transport is honest about whether the resource currently exists.
@@ -177,7 +177,11 @@ Error codes are deliberately stack-agnostic. They decouple clients from whicheve
 
 **Operation naming**
 
-Each endpoint is a conceptual operation. Use these verbs in the OpenAPI operationId and any generated client SDK: `create`, `update`, `remove`, `getById`, `list`. Do not use `find` for a listing endpoint — `find` denotes a possibly-empty single result and clashes with collection semantics.
+Each endpoint is a conceptual operation. Default verbs — used in the OpenAPI operationId and any generated client SDK — are: `create`, `update`, `remove`, `getById`, `list`.
+
+Domain-significant verbs override the default when they carry information the generic verb would erase: `register` for signing up a citizen, `login` / `logout` for session lifecycle, `upload` for binary payloads, `publish` / `archive` for state transitions, etc. Pick the more specific term; don't flatten it to `create` just to match the table.
+
+Do not use `find` for a listing endpoint — `find` denotes a possibly-empty single result and clashes with collection semantics.
 
 ## Versioning
 

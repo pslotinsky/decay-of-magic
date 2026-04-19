@@ -7,7 +7,7 @@ import {
 
 import { NoEnvelope } from '@dod/core';
 
-@Controller('/api/health')
+@Controller('/api/v1/health')
 export class HealthController {
   constructor(private readonly health: HealthCheckService) {}
 

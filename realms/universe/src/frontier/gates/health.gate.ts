@@ -11,7 +11,7 @@ import { NoEnvelope } from '@dod/core';
 
 import { PrismaService } from '@/ground/prisma.service';
 
-@Controller('/health')
+@Controller('/v1/health')
 @ApiTags('Health')
 export class HealthGate {
   constructor(

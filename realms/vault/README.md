@@ -8,6 +8,13 @@ Manages files: upload, storage, etc
 ```mermaid
 classDiagram
   namespace frontier {
+    class FileDto {
+      +string id
+      +string category
+      +string name
+      +string mimetype
+      +string url
+    }
     class UploadFileDto {
       +string id
       +string category
@@ -52,17 +59,22 @@ classDiagram
     class Command
   }
 
+  FileDto --> File
+  FileGate --> FileDto
   FileGate --> UploadFileDto
   FileGate --> UploadFileCommand
   FileGate --> File
   UploadFileCommand --|> Command
   UploadFileCommand *-- File
+  UploadFileCommand --> FileDto
+  UploadFileUseCase --> FileDto
   UploadFileUseCase --> UploadFileCommand
   UploadFileUseCase --> File
 ```
 
 | Entity | Notes |
 |--------|-------|
+| frontier/dto/[FileDto](src/frontier/dto/file.dto.ts) |  |
 | frontier/dto/[UploadFileDto](src/frontier/dto/upload-file.dto.ts) |  |
 | frontier/gates/[FileGate](src/frontier/gates/file.gate.ts) |  |
 | frontier/gates/[HealthGate](src/frontier/gates/health.gate.ts) |  |

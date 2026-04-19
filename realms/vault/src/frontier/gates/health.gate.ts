@@ -8,7 +8,7 @@ import {
 
 import { NoEnvelope } from '@dod/core';
 
-@Controller('/health')
+@Controller('/v1/health')
 @ApiTags('Health')
 export class HealthGate {
   constructor(private readonly health: HealthCheckService) {}

@@ -81,7 +81,7 @@ services:
     volumes:
       - ./realms/gateway/src:/app/realms/gateway/src
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/health"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/v1/health"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -139,7 +139,7 @@ services:
       - ./realms/codex/src:/app/realms/codex/src
       - ./packages/core/src:/app/packages/core/src
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3001/api/health"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3001/api/v1/health"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -166,7 +166,7 @@ services:
     volumes:
       - ./realms/vault/src:/app/realms/vault/src
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3002/api/health"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3002/api/v1/health"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -202,7 +202,7 @@ services:
     volumes:
       - ./realms/citizen/src:/app/realms/citizen/src
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3003/api/health"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3003/api/v1/health"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -238,7 +238,7 @@ services:
       - ./realms/universe/src:/app/realms/universe/src
       - ./packages/core/src:/app/packages/core/src
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3004/api/health"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3004/api/v1/health"]
       interval: 10s
       timeout: 5s
       retries: 10

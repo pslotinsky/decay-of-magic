@@ -188,7 +188,8 @@ export class PrismaService
 Command class and its handler live in the same file. Handler injects the repository via `@Inject()`.
 
 ```typescript
-import { ConflictException, Inject } from '@nestjs/common';
+import { ConflictError } from '@dod/core';
+import { Inject } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CreateThingDto } from '@/frontier/dto/body/create-thing.dto';
 import { ThingDto } from '@/frontier/dto/thing.dto';
@@ -208,7 +209,7 @@ export class CreateThingHandler implements ICommandHandler<CreateThingCommand> {
   public async execute({ payload }: CreateThingCommand): Promise<ThingDto> {
     const existing = await this.thingRepository.findOne({ name: payload.name });
     if (existing !== undefined) {
-      throw new ConflictException(`Name "${payload.name}" already taken`);
+      throw new ConflictError(`Name "${payload.name}" already taken`);
     }
 
     const thing = Thing.create(payload);
@@ -218,6 +219,8 @@ export class CreateThingHandler implements ICommandHandler<CreateThingCommand> {
   }
 }
 ```
+
+`law` throws framework-agnostic domain errors from `@dod/core` (`ConflictError`, `NotFoundError`, `UnauthenticatedError`, etc.) — never `NestJS` exceptions. The `ErrorFilter` at the `frontier` layer maps them to the HTTP envelope defined in [Design-005](./Design-005_api-guidelines.md).
 
 ### Query handler (`law/queries/`)
 
@@ -420,18 +423,25 @@ export class AppModule {}
 
 ### Bootstrap (`main.ts`)
 
-Global prefix `/api`, validation pipe with `whitelist: true`, Swagger setup.
+Global prefix `/api`, plus the three platform hooks from `@dod/core` that implement [Design-005](./Design-005_api-guidelines.md): custom validation pipe (emits `ValidationFailedError`), envelope interceptor (wraps 2xx payloads as `{ data }`), error filter (maps domain errors + unknown exceptions to the error envelope).
 
 ```typescript
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import {
+  createValidationPipe,
+  EnvelopeInterceptor,
+  ErrorFilter,
+} from '@dod/core';
+import { INestApplication } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('/api');
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(createValidationPipe());
+  app.useGlobalInterceptors(new EnvelopeInterceptor(app.get(Reflector)));
+  app.useGlobalFilters(new ErrorFilter());
   setupSwagger(app);
   await app.listen(process.env.PORT ?? 3000);
 }
@@ -448,6 +458,8 @@ function setupSwagger(app: INestApplication): void {
 
 void bootstrap();
 ```
+
+Endpoints whose response must bypass the envelope (health probes, metrics, webhooks) apply `@NoEnvelope()` to the handler method.
 
 ### Prisma schema (`prisma/schema.prisma`)
 
@@ -473,11 +485,37 @@ model Thing {
 
 ## Core abstractions (`@dod/core`)
 
+**Domain primitives**
+
 | Export                | Purpose                                                                                           |
 | --------------------- | ------------------------------------------------------------------------------------------------- |
 | `Entity`              | Base class with `update(params)` — mutates own fields from partial                                |
 | `EntityRepository<T>` | Abstract contract: `getById`, `getByIdOrFail`, `find`, `findOne`, `save`                          |
-| `PrismaRepository<T>` | Prisma implementation of `EntityRepository`; subclasses provide `delegate`, `toEntity`, `toModel` |
+| `PrismaRepository<T>` | Prisma implementation of `EntityRepository`; subclasses provide `delegate`, `toEntity`, `toModel`. `getByIdOrFail` throws `NotFoundError` |
+
+**Domain errors** — thrown by `law` and `lore`, caught by the HTTP filter at the `frontier`:
+
+| Export                  | HTTP status | Use                                                           |
+| ----------------------- | ----------- | ------------------------------------------------------------- |
+| `DomainError`           | —           | Abstract base — subclass when a new error code is introduced  |
+| `BadRequestError`       | 400         | Request shape unparseable or semantically nonsense            |
+| `ValidationFailedError` | 400         | Field-level validation failure (raised by `createValidationPipe`) |
+| `UnauthenticatedError`  | 401         | No or invalid credentials                                     |
+| `ForbiddenError`        | 403         | Authenticated but not authorized                              |
+| `NotFoundError`         | 404         | Resource does not exist                                       |
+| `ConflictError`         | 409         | Uniqueness or state invariant violated                        |
+| `UnprocessableError`    | 422         | Request valid in shape but rejected by domain rules           |
+
+**HTTP glue** — wired once in `main.ts`, keeps the realm aligned with [Design-005](./Design-005_api-guidelines.md):
+
+| Export                   | Purpose                                                                             |
+| ------------------------ | ----------------------------------------------------------------------------------- |
+| `createValidationPipe()` | Replaces Nest's `ValidationPipe`; flattens `class-validator` errors into the envelope's `details[]` |
+| `EnvelopeInterceptor`    | Wraps 2xx responses as `{ data }`                                                   |
+| `ErrorFilter`            | Maps `DomainError` (and fallback exceptions) to `{ error: { code, message, details? } }` |
+| `NoEnvelope()`           | Method decorator that bypasses the envelope for fixed-shape endpoints (health, metrics, webhooks) |
+
+The wire-level type definitions (`SuccessEnvelope<T>`, `ErrorEnvelope`, `ErrorCode`) live in the zero-dep `@dod/api-contract` package and are imported directly by realms and by the web client.
 
 ## Data flow for a command
 

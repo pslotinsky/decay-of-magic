@@ -47,7 +47,7 @@ export class AppModule implements NestModule {
     consumer
       .apply(JwtMiddleware)
       .exclude(
-        { path: '/api/health', method: RequestMethod.GET },
+        { path: '/api/v1/health', method: RequestMethod.GET },
         { path: '/api/v1/session', method: RequestMethod.POST },
         { path: '/api/v1/session', method: RequestMethod.DELETE },
       )

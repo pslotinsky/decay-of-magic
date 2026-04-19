@@ -66,7 +66,7 @@ classDiagram
       -QueryBus queryBus
       +create()
       +getById()
-      +find()
+      +list()
     }
     class HealthGate {
       -HealthCheckService health
@@ -79,7 +79,7 @@ classDiagram
       -QueryBus queryBus
       +create()
       +getById()
-      +find()
+      +list()
     }
   }
   namespace lore {
@@ -102,36 +102,37 @@ classDiagram
     class CreateCardCommand {
       +CreateCardDto payload
     }
-    class FindCardsQuery
     class GetCardQuery {
       +string id
     }
+    class ListCardsQuery
     class CreateManaCommand {
       +CreateManaDto payload
     }
-    class FindManaQuery
     class GetManaQuery {
       +string id
     }
+    class ListManaQuery
   }
   namespace ground {
     class PrismaService
   }
 
   CreateManaDto --> Mana
+  CardDto --> Card
   ManaDto --> Mana
   CardGate --> CreateCardDto
   CardGate --> CardDto
   CardGate --> CreateCardCommand
-  CardGate --> FindCardsQuery
   CardGate --> GetCardQuery
+  CardGate --> ListCardsQuery
   CardGate --> Card
   HealthGate *-- PrismaService
   ManaGate --> CreateManaDto
   ManaGate --> ManaDto
   ManaGate --> CreateManaCommand
-  ManaGate --> FindManaQuery
   ManaGate --> GetManaQuery
+  ManaGate --> ListManaQuery
   ManaGate --> Mana
 ```
 
@@ -216,14 +217,6 @@ classDiagram
     class CreateManaHandler {
       +execute()
     }
-    class FindCardsQuery
-    class FindCardsHandler {
-      +execute()
-    }
-    class FindManaQuery
-    class FindManaHandler {
-      +execute()
-    }
     class GetCardQuery {
       +string id
     }
@@ -234,6 +227,14 @@ classDiagram
       +string id
     }
     class GetManaHandler {
+      +execute()
+    }
+    class ListCardsQuery
+    class ListCardsHandler {
+      +execute()
+    }
+    class ListManaQuery
+    class ListManaHandler {
       +execute()
     }
   }
@@ -286,57 +287,70 @@ classDiagram
     class ManaRepository
   }
   namespace nestjs_cqrs {
+    class Command
     class Query
   }
 
+  CreateCardCommand --|> Command
   CreateCardCommand *-- CreateCardDto
   CreateCardCommand --> CardDto
   CreateCardCommand --> Card
   CreateCardHandler *-- CardRepository
+  CreateCardHandler --> CardDto
   CreateCardHandler --> CreateCardCommand
   CreateCardHandler --> Card
+  CreateManaCommand --|> Command
   CreateManaCommand *-- CreateManaDto
   CreateManaCommand --> ManaDto
   CreateManaCommand --> Mana
   CreateManaHandler *-- ManaRepository
+  CreateManaHandler --> ManaDto
   CreateManaHandler --> CreateManaCommand
   CreateManaHandler --> Mana
-  FindCardsQuery --|> Query
-  FindCardsQuery --> Card
-  FindCardsHandler *-- CardRepository
-  FindCardsHandler --> FindCardsQuery
-  FindCardsHandler --> Card
-  FindManaQuery --|> Query
-  FindManaQuery --> Mana
-  FindManaHandler *-- ManaRepository
-  FindManaHandler --> FindManaQuery
-  FindManaHandler --> Mana
   GetCardQuery --|> Query
+  GetCardQuery --> CardDto
   GetCardQuery --> Card
   GetCardHandler *-- CardRepository
+  GetCardHandler --> CardDto
   GetCardHandler --> GetCardQuery
   GetCardHandler --> Card
   GetManaQuery --|> Query
+  GetManaQuery --> ManaDto
   GetManaQuery --> Mana
   GetManaHandler *-- ManaRepository
+  GetManaHandler --> ManaDto
   GetManaHandler --> GetManaQuery
   GetManaHandler --> Mana
+  ListCardsQuery --|> Query
+  ListCardsQuery --> CardDto
+  ListCardsQuery --> Card
+  ListCardsHandler *-- CardRepository
+  ListCardsHandler --> CardDto
+  ListCardsHandler --> ListCardsQuery
+  ListCardsHandler --> Card
+  ListManaQuery --|> Query
+  ListManaQuery --> ManaDto
+  ListManaQuery --> Mana
+  ListManaHandler *-- ManaRepository
+  ListManaHandler --> ManaDto
+  ListManaHandler --> ListManaQuery
+  ListManaHandler --> Mana
 ```
 
 | Entity | Notes |
 |--------|-------|
-| commands/[CreateCardCommand](src/law/commands/create-card.command.ts) |  |
+| commands/[CreateCardCommand](src/law/commands/create-card.command.ts) | Extends `Command` |
 | commands/[CreateCardHandler](src/law/commands/create-card.command.ts) | Implements `ICommandHandler` |
-| commands/[CreateManaCommand](src/law/commands/create-mana.command.ts) |  |
+| commands/[CreateManaCommand](src/law/commands/create-mana.command.ts) | Extends `Command` |
 | commands/[CreateManaHandler](src/law/commands/create-mana.command.ts) | Implements `ICommandHandler` |
-| queries/[FindCardsQuery](src/law/queries/find-cards.query.ts) | Extends `Query` |
-| queries/[FindCardsHandler](src/law/queries/find-cards.query.ts) | Implements `IQueryHandler` |
-| queries/[FindManaQuery](src/law/queries/find-mana.query.ts) | Extends `Query` |
-| queries/[FindManaHandler](src/law/queries/find-mana.query.ts) | Implements `IQueryHandler` |
 | queries/[GetCardQuery](src/law/queries/get-card.query.ts) | Extends `Query` |
 | queries/[GetCardHandler](src/law/queries/get-card.query.ts) | Implements `IQueryHandler` |
 | queries/[GetManaQuery](src/law/queries/get-mana.query.ts) | Extends `Query` |
 | queries/[GetManaHandler](src/law/queries/get-mana.query.ts) | Implements `IQueryHandler` |
+| queries/[ListCardsQuery](src/law/queries/list-cards.query.ts) | Extends `Query` |
+| queries/[ListCardsHandler](src/law/queries/list-cards.query.ts) | Implements `IQueryHandler` |
+| queries/[ListManaQuery](src/law/queries/list-mana.query.ts) | Extends `Query` |
+| queries/[ListManaHandler](src/law/queries/list-mana.query.ts) | Implements `IQueryHandler` |
 
 ### lore
 
