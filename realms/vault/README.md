@@ -45,41 +45,9 @@ classDiagram
 
 ### Law
 
-```mermaid
-classDiagram
-  namespace law {
-    class UploadFileCommand {
-      +File file
-    }
-    class UploadFileUseCase {
-      +execute()
-      -createPath()
-      -createAbsolutePath()
-    }
-  }
-  namespace lore {
-    class File {
-      +string id
-      +string category
-      +string name
-      +Buffer buffer
-      +string mimetype
-    }
-  }
-  namespace nestjs_cqrs {
-    class Command
-  }
-
-  UploadFileCommand --|> Command
-  UploadFileCommand *-- File
-  UploadFileUseCase --> UploadFileCommand
-  UploadFileUseCase --> File
-```
-
-| Entity | Description |
-|--------|-------------|
-| commands/[UploadFileCommand](src/law/commands/upload-file.command.ts) | Extends `Command` |
-| commands/[UploadFileUseCase](src/law/commands/upload-file.command.ts) | Implements `ICommandHandler` |
+| Use case | Description |
+|----------|-------------|
+| [UploadFileCommand](src/law/commands/upload-file.command.ts) | Params: `(file: File)`<br>Returns: `FileDto` |
 
 ### Lore
 

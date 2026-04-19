@@ -19,6 +19,10 @@ export const base = tseslint.config(
         ],
       }],
       'simple-import-sort/exports': 'error',
+      '@typescript-eslint/no-unused-vars': ['error', {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      }],
     },
   },
 );

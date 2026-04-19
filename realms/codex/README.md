@@ -109,111 +109,14 @@ classDiagram
 
 ### Law
 
-```mermaid
-classDiagram
-  namespace law {
-    class CreateCardCommand {
-      +CreateCardDto payload
-    }
-    class CreateCardHandler {
-      +execute()
-    }
-    class CreateManaCommand {
-      +CreateManaDto payload
-    }
-    class CreateManaHandler {
-      +execute()
-    }
-    class GetCardQuery {
-      +string id
-    }
-    class GetCardHandler {
-      +execute()
-    }
-    class GetManaQuery {
-      +string id
-    }
-    class GetManaHandler {
-      +execute()
-    }
-    class ListCardsQuery
-    class ListCardsHandler {
-      +execute()
-    }
-    class ListManaQuery
-    class ListManaHandler {
-      +execute()
-    }
-  }
-  namespace lore {
-    class Card {
-      +string id
-      +string name
-      +string imageUrl
-      +string description
-      +number level
-      +number cost
-      +string manaId
-    }
-    class CardRepository
-    class Mana {
-      +string id
-      +string name
-      +ManaType type
-    }
-    class ManaRepository
-  }
-  namespace nestjs_cqrs {
-    class Command
-    class Query
-  }
-
-  CreateCardCommand --|> Command
-  CreateCardCommand --> Card
-  CreateCardHandler *-- CardRepository
-  CreateCardHandler --> CreateCardCommand
-  CreateCardHandler --> Card
-  CreateManaCommand --|> Command
-  CreateManaCommand --> Mana
-  CreateManaHandler *-- ManaRepository
-  CreateManaHandler --> CreateManaCommand
-  CreateManaHandler --> Mana
-  GetCardQuery --|> Query
-  GetCardQuery --> Card
-  GetCardHandler *-- CardRepository
-  GetCardHandler --> GetCardQuery
-  GetCardHandler --> Card
-  GetManaQuery --|> Query
-  GetManaQuery --> Mana
-  GetManaHandler *-- ManaRepository
-  GetManaHandler --> GetManaQuery
-  GetManaHandler --> Mana
-  ListCardsQuery --|> Query
-  ListCardsQuery --> Card
-  ListCardsHandler *-- CardRepository
-  ListCardsHandler --> ListCardsQuery
-  ListCardsHandler --> Card
-  ListManaQuery --|> Query
-  ListManaQuery --> Mana
-  ListManaHandler *-- ManaRepository
-  ListManaHandler --> ListManaQuery
-  ListManaHandler --> Mana
-```
-
-| Entity | Description |
-|--------|-------------|
-| commands/[CreateCardCommand](src/law/commands/create-card.command.ts) | Extends `Command` |
-| commands/[CreateCardHandler](src/law/commands/create-card.command.ts) | Implements `ICommandHandler` |
-| commands/[CreateManaCommand](src/law/commands/create-mana.command.ts) | Extends `Command` |
-| commands/[CreateManaHandler](src/law/commands/create-mana.command.ts) | Implements `ICommandHandler` |
-| queries/[GetCardQuery](src/law/queries/get-card.query.ts) | Extends `Query` |
-| queries/[GetCardHandler](src/law/queries/get-card.query.ts) | Implements `IQueryHandler` |
-| queries/[GetManaQuery](src/law/queries/get-mana.query.ts) | Extends `Query` |
-| queries/[GetManaHandler](src/law/queries/get-mana.query.ts) | Implements `IQueryHandler` |
-| queries/[ListCardsQuery](src/law/queries/list-cards.query.ts) | Extends `Query` |
-| queries/[ListCardsHandler](src/law/queries/list-cards.query.ts) | Implements `IQueryHandler` |
-| queries/[ListManaQuery](src/law/queries/list-mana.query.ts) | Extends `Query` |
-| queries/[ListManaHandler](src/law/queries/list-mana.query.ts) | Implements `IQueryHandler` |
+| Use case | Description |
+|----------|-------------|
+| [CreateCardCommand](src/law/commands/create-card.command.ts) | Params: `(payload: CreateCardDto)`<br>Returns: `CardDto` |
+| [CreateManaCommand](src/law/commands/create-mana.command.ts) | Params: `(payload: CreateManaDto)`<br>Returns: `ManaDto` |
+| [GetCardQuery](src/law/queries/get-card.query.ts) | Params: `(id: string)`<br>Returns: `CardDto` |
+| [GetManaQuery](src/law/queries/get-mana.query.ts) | Params: `(id: string)`<br>Returns: `ManaDto` |
+| [ListCardsQuery](src/law/queries/list-cards.query.ts) | Returns: `CardDto[]` |
+| [ListManaQuery](src/law/queries/list-mana.query.ts) | Returns: `ManaDto[]` |
 
 ### Lore
 
@@ -242,9 +145,7 @@ classDiagram
   }
 
   CardRepository --|> EntityRepository
-  CardRepository --> Card
   ManaRepository --|> EntityRepository
-  ManaRepository --> Mana
 ```
 
 | Entity | Description |
@@ -270,6 +171,7 @@ classDiagram
     }
   }
   namespace lore {
+    class CardRepository
     class Card {
       +string id
       +string name
@@ -279,13 +181,12 @@ classDiagram
       +number cost
       +string manaId
     }
-    class CardRepository
+    class ManaRepository
     class Mana {
       +string id
       +string name
       +ManaType type
     }
-    class ManaRepository
   }
   namespace dod_core {
     class PrismaRepository
@@ -293,18 +194,18 @@ classDiagram
 
   PrismaService --|> PrismaClient
   PrismaCardRepository --|> PrismaRepository
+  PrismaCardRepository ..|> CardRepository
   PrismaCardRepository *-- PrismaService
   PrismaCardRepository --> Card
-  PrismaCardRepository --> CardRepository
   PrismaManaRepository --|> PrismaRepository
+  PrismaManaRepository ..|> ManaRepository
   PrismaManaRepository *-- PrismaService
   PrismaManaRepository --> Mana
-  PrismaManaRepository --> ManaRepository
 ```
 
 | Entity | Description |
 |--------|-------------|
 | [PrismaService](src/ground/prisma.service.ts) | Extends `PrismaClient` · Implements `OnModuleInit`, `OnModuleDestroy` |
-| repositories/[PrismaCardRepository](src/ground/repositories/prisma-card.repository.ts) | Extends `PrismaRepository` |
-| repositories/[PrismaManaRepository](src/ground/repositories/prisma-mana.repository.ts) | Extends `PrismaRepository` |
+| repositories/[PrismaCardRepository](src/ground/repositories/prisma-card.repository.ts) | Extends `PrismaRepository` · Implements [CardRepository](src/lore/repositories/card.repository.ts) |
+| repositories/[PrismaManaRepository](src/ground/repositories/prisma-mana.repository.ts) | Extends `PrismaRepository` · Implements [ManaRepository](src/lore/repositories/mana.repository.ts) |
 <!-- poe:classes:end -->

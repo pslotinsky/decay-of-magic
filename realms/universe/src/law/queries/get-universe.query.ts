@@ -5,6 +5,9 @@ import { UniverseDto, UniverseSchema } from '@dod/api-contract';
 
 import { UniverseRepository } from '@/lore/repositories/universe.repository';
 
+/**
+ * Fetches a single universe by id. Fails when the id is unknown
+ */
 export class GetUniverseQuery extends Query<UniverseDto> {
   constructor(public readonly id: string) {
     super();

@@ -56,8 +56,6 @@ classDiagram
     class ConfigLoader {
       +load()
       -assertExists()
-      -validate()
-      -validateLayer()
     }
     class InspectorPoe {
       -string basePath
@@ -110,11 +108,25 @@ classDiagram
       -updateContent()
       -readPackageName()
     }
+    class ApplicationRenderer {
+      +render()
+      -renderUseCases()
+      -renderEntryPoints()
+      -isVisible()
+      -useCaseRow()
+      -descriptionCell()
+      -signatureLines()
+      -escape()
+      -params()
+      -returnType()
+      -splitTopLevel()
+    }
     class DomainRenderer {
       +render()
     }
     class RendererRegistry {
       -Renderer domain
+      -Renderer application
       +resolve()
     }
     class ScannedFile {
@@ -160,10 +172,12 @@ classDiagram
   ClassTable *-- ClassRegistry
   PackageReport *-- ClassRegistry
   PackageReport *-- RendererRegistry
+  ApplicationRenderer --> InspectedClass
   DomainRenderer --> ClassRegistry
   DomainRenderer --> InspectedClass
   DomainRenderer --> ClassDiagram
   DomainRenderer --> ClassTable
+  RendererRegistry --> ApplicationRenderer
   RendererRegistry --> DomainRenderer
   Scanner --> ScannedFile
 ```
@@ -183,6 +197,7 @@ classDiagram
 | ReadmeWriter/[ClassTable](src/ReadmeWriter/ClassTable.ts) | Renders a markdown table of inspected classes |
 | ReadmeWriter/[PackageReport](src/ReadmeWriter/PackageReport.ts) | Renders the full package report by dispatching each configured<br>layer to its matching renderer |
 | ReadmeWriter/[ReadmeWriter](src/ReadmeWriter/ReadmeWriter.ts) | Updates README files with generated class tables |
+| Renderers/[ApplicationRenderer](src/Renderers/ApplicationRenderer.ts) | Renders a layer as a use-case table. Entry points (facades without a<br>parent base) get a separate section. Handlers and abstract bases are<br>hidden as implementation detail.<br><br>Implements `Renderer` |
 | Renderers/[DomainRenderer](src/Renderers/DomainRenderer.ts) | Renders a layer as a Mermaid class diagram plus a table of its classes<br><br>Implements `Renderer` |
 | Renderers/[RendererRegistry](src/Renderers/RendererRegistry.ts) | Resolves a renderer by kind. Kinds without a dedicated renderer<br>fall back to the domain renderer until their step lands. |
 | Scanner/[ScannedFile](src/Scanner/ScannedFile.ts) | Holds the raw content of a scanned source file |

@@ -5,6 +5,9 @@ import { UniverseDto, UniverseSchema } from '@dod/api-contract';
 
 import { UniverseRepository } from '@/lore/repositories/universe.repository';
 
+/**
+ * Lists every universe currently registered in the realm
+ */
 export class ListUniversesQuery extends Query<UniverseDto[]> {}
 
 @QueryHandler(ListUniversesQuery)

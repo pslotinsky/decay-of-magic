@@ -11,6 +11,9 @@ import { ConflictError } from '@dod/core';
 import { Universe } from '@/lore/entities/universe.entity';
 import { UniverseRepository } from '@/lore/repositories/universe.repository';
 
+/**
+ * Creates a new universe. Fails when the name is already taken
+ */
 export class CreateUniverseCommand extends Command<UniverseDto> {
   constructor(public readonly payload: CreateUniverseDto) {
     super();

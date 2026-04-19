@@ -93,103 +93,13 @@ classDiagram
 
 ### Law
 
-```mermaid
-classDiagram
-  namespace law {
-    class CreateSessionCommand {
-      +CreateSessionDto payload
-    }
-    class CreateSessionHandler {
-      +execute()
-      -findCitizenByNickname()
-      -loadPermit()
-      -verifySecret()
-    }
-    class RegisterCitizenCommand {
-      +RegisterCitizenDto payload
-    }
-    class RegisterCitizenHandler {
-      +execute()
-      -assertNicknameAvailable()
-    }
-    class UpdateCitizenCommand {
-      +string id
-      +UpdateCitizenDto payload
-    }
-    class UpdateCitizenHandler {
-      +execute()
-    }
-    class GetCitizenQuery {
-      +string id
-    }
-    class GetCitizenHandler {
-      +execute()
-    }
-    class ListCitizensQuery
-    class ListCitizensHandler {
-      +execute()
-    }
-  }
-  namespace lore {
-    class CitizenRepository
-    class CitizenPermitRepository
-    class CitizenPermit {
-      +string id
-      +string secret
-      +Date issuedAt
-    }
-    class Citizen {
-      +string id
-      +string nickname
-    }
-  }
-  namespace nestjs_cqrs {
-    class Command
-    class Query
-  }
-
-  CreateSessionCommand --|> Command
-  CreateSessionHandler *-- CitizenRepository
-  CreateSessionHandler *-- CitizenPermitRepository
-  CreateSessionHandler --> CreateSessionCommand
-  CreateSessionHandler --> CitizenPermit
-  CreateSessionHandler --> Citizen
-  RegisterCitizenCommand --|> Command
-  RegisterCitizenCommand --> Citizen
-  RegisterCitizenHandler *-- CitizenRepository
-  RegisterCitizenHandler *-- CitizenPermitRepository
-  RegisterCitizenHandler --> RegisterCitizenCommand
-  RegisterCitizenHandler --> CitizenPermit
-  RegisterCitizenHandler --> Citizen
-  UpdateCitizenCommand --|> Command
-  UpdateCitizenCommand --> Citizen
-  UpdateCitizenHandler *-- CitizenRepository
-  UpdateCitizenHandler --> UpdateCitizenCommand
-  UpdateCitizenHandler --> Citizen
-  GetCitizenQuery --|> Query
-  GetCitizenQuery --> Citizen
-  GetCitizenHandler *-- CitizenRepository
-  GetCitizenHandler --> GetCitizenQuery
-  GetCitizenHandler --> Citizen
-  ListCitizensQuery --|> Query
-  ListCitizensQuery --> Citizen
-  ListCitizensHandler *-- CitizenRepository
-  ListCitizensHandler --> ListCitizensQuery
-  ListCitizensHandler --> Citizen
-```
-
-| Entity | Description |
-|--------|-------------|
-| commands/[CreateSessionCommand](src/law/commands/create-session.command.ts) | Extends `Command` |
-| commands/[CreateSessionHandler](src/law/commands/create-session.command.ts) | Implements `ICommandHandler` |
-| commands/[RegisterCitizenCommand](src/law/commands/register-citizen.command.ts) | Extends `Command` |
-| commands/[RegisterCitizenHandler](src/law/commands/register-citizen.command.ts) | Implements `ICommandHandler` |
-| commands/[UpdateCitizenCommand](src/law/commands/update-citizen.command.ts) | Extends `Command` |
-| commands/[UpdateCitizenHandler](src/law/commands/update-citizen.command.ts) | Implements `ICommandHandler` |
-| queries/[GetCitizenQuery](src/law/queries/get-citizen.query.ts) | Extends `Query` |
-| queries/[GetCitizenHandler](src/law/queries/get-citizen.query.ts) | Implements `IQueryHandler` |
-| queries/[ListCitizensQuery](src/law/queries/list-citizens.query.ts) | Extends `Query` |
-| queries/[ListCitizensHandler](src/law/queries/list-citizens.query.ts) | Implements `IQueryHandler` |
+| Use case | Description |
+|----------|-------------|
+| [CreateSessionCommand](src/law/commands/create-session.command.ts) | Params: `(payload: CreateSessionDto)`<br>Returns: `SessionDto` |
+| [RegisterCitizenCommand](src/law/commands/register-citizen.command.ts) | Params: `(payload: RegisterCitizenDto)`<br>Returns: `CitizenDto` |
+| [UpdateCitizenCommand](src/law/commands/update-citizen.command.ts) | Params: `(id: string, payload: UpdateCitizenDto)`<br>Returns: `CitizenDto` |
+| [GetCitizenQuery](src/law/queries/get-citizen.query.ts) | Params: `(id: string)`<br>Returns: `CitizenDto` |
+| [ListCitizensQuery](src/law/queries/list-citizens.query.ts) | Returns: `CitizenDto[]` |
 
 ### Lore
 
@@ -216,10 +126,7 @@ classDiagram
   CitizenPermit --> Citizen
   Citizen --|> Entity
   CitizenPermitRepository --|> EntityRepository
-  CitizenPermitRepository --> CitizenPermit
-  CitizenPermitRepository --> Citizen
   CitizenRepository --|> EntityRepository
-  CitizenRepository --> Citizen
 ```
 
 | Entity | Description |
@@ -245,6 +152,7 @@ classDiagram
     }
   }
   namespace lore {
+    class CitizenPermitRepository
     class CitizenPermit {
       +string id
       +string secret
@@ -254,7 +162,6 @@ classDiagram
       +string id
       +string nickname
     }
-    class CitizenPermitRepository
     class CitizenRepository
   }
   namespace dod_core {
@@ -263,19 +170,19 @@ classDiagram
 
   PrismaService --|> PrismaClient
   PrismaCitizenPermitRepository --|> PrismaRepository
+  PrismaCitizenPermitRepository ..|> CitizenPermitRepository
   PrismaCitizenPermitRepository *-- PrismaService
   PrismaCitizenPermitRepository --> CitizenPermit
   PrismaCitizenPermitRepository --> Citizen
-  PrismaCitizenPermitRepository --> CitizenPermitRepository
   PrismaCitizenRepository --|> PrismaRepository
+  PrismaCitizenRepository ..|> CitizenRepository
   PrismaCitizenRepository *-- PrismaService
   PrismaCitizenRepository --> Citizen
-  PrismaCitizenRepository --> CitizenRepository
 ```
 
 | Entity | Description |
 |--------|-------------|
 | [PrismaService](src/ground/prisma.service.ts) | Extends `PrismaClient` · Implements `OnModuleInit`, `OnModuleDestroy` |
-| repositories/[PrismaCitizenPermitRepository](src/ground/repositories/prisma-citizen-permit.repository.ts) | Extends `PrismaRepository` |
-| repositories/[PrismaCitizenRepository](src/ground/repositories/prisma-citizen.repository.ts) | Extends `PrismaRepository` |
+| repositories/[PrismaCitizenPermitRepository](src/ground/repositories/prisma-citizen-permit.repository.ts) | Extends `PrismaRepository` · Implements [CitizenPermitRepository](src/lore/repositories/citizen-permit.repository.ts) |
+| repositories/[PrismaCitizenRepository](src/ground/repositories/prisma-citizen.repository.ts) | Extends `PrismaRepository` · Implements [CitizenRepository](src/lore/repositories/citizen.repository.ts) |
 <!-- poe:classes:end -->

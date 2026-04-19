@@ -10,6 +10,10 @@ import { ConflictError } from '@dod/core';
 
 import { UniverseRepository } from '@/lore/repositories/universe.repository';
 
+/**
+ * Updates an existing universe. Only fields present in the payload
+ * are changed. Fails if the new name collides with another universe
+ */
 export class UpdateUniverseCommand extends Command<UniverseDto> {
   constructor(
     public readonly id: string,

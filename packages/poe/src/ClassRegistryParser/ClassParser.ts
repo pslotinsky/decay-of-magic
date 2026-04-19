@@ -6,7 +6,7 @@ import {
 import { ScannedFile } from '../Scanner/ScannedFile';
 
 const CLASS_PATTERN =
-  /^\s*(?:\/\*\*([\s\S]*?)\*\/\s*)?(?:export\s+)?(?:default\s+)?(abstract\s+)?class\s+(\w+)(?:\s+extends\s+(\w+))?(?:\s+implements\s+([\w,\s]+))?/gm;
+  /^\s*(?:\/\*\*([\s\S]*?)\*\/\s*)?(?:export\s+)?(?:default\s+)?(abstract\s+)?class\s+(\w+)(?:\s+extends\s+(\w+)(?:<([^>]*)>)?)?(?:\s+implements\s+([\w,\s]+))?/gm;
 
 const PRIMITIVE_TYPES = new Set([
   'string',
@@ -35,8 +35,15 @@ export class ClassParser {
     let match: RegExpExecArray | null;
 
     while ((match = pattern.exec(this.file.content)) !== null) {
-      const [fullMatch, jsdoc, abstractKeyword, name, parent, implementsStr] =
-        match;
+      const [
+        fullMatch,
+        jsdoc,
+        abstractKeyword,
+        name,
+        parent,
+        parentGenerics,
+        implementsStr,
+      ] = match;
       const bodyStart = match.index + fullMatch.length;
       const body =
         this.extractDeclarationTail(this.file.content, bodyStart) +
@@ -51,6 +58,9 @@ export class ClassParser {
           abstract: !!abstractKeyword,
           description: jsdoc ? this.parseJsDoc(jsdoc) : undefined,
           parent: parent ?? undefined,
+          parentGenerics: parentGenerics
+            ? parentGenerics.replace(/\s+/g, ' ').trim()
+            : undefined,
           interfaces: implementsStr
             ? this.parseInterfaces(implementsStr)
             : undefined,

@@ -63,81 +63,12 @@ classDiagram
 
 ### Law
 
-```mermaid
-classDiagram
-  namespace law {
-    class CreateUniverseCommand {
-      +CreateUniverseDto payload
-    }
-    class CreateUniverseHandler {
-      +execute()
-      -assertNameAvailable()
-    }
-    class UpdateUniverseCommand {
-      +string id
-      +UpdateUniverseDto payload
-    }
-    class UpdateUniverseHandler {
-      +execute()
-      -assertNameAvailable()
-    }
-    class GetUniverseQuery {
-      +string id
-    }
-    class GetUniverseHandler {
-      +execute()
-    }
-    class ListUniversesQuery
-    class ListUniversesHandler {
-      +execute()
-    }
-  }
-  namespace lore {
-    class Universe {
-      +string id
-      +string name
-      +string description
-      +string cover
-    }
-    class UniverseRepository
-  }
-  namespace nestjs_cqrs {
-    class Command
-    class Query
-  }
-
-  CreateUniverseCommand --|> Command
-  CreateUniverseCommand --> Universe
-  CreateUniverseHandler *-- UniverseRepository
-  CreateUniverseHandler --> CreateUniverseCommand
-  CreateUniverseHandler --> Universe
-  UpdateUniverseCommand --|> Command
-  UpdateUniverseCommand --> Universe
-  UpdateUniverseHandler *-- UniverseRepository
-  UpdateUniverseHandler --> UpdateUniverseCommand
-  UpdateUniverseHandler --> Universe
-  GetUniverseQuery --|> Query
-  GetUniverseQuery --> Universe
-  GetUniverseHandler *-- UniverseRepository
-  GetUniverseHandler --> GetUniverseQuery
-  GetUniverseHandler --> Universe
-  ListUniversesQuery --|> Query
-  ListUniversesQuery --> Universe
-  ListUniversesHandler *-- UniverseRepository
-  ListUniversesHandler --> ListUniversesQuery
-  ListUniversesHandler --> Universe
-```
-
-| Entity | Description |
-|--------|-------------|
-| commands/[CreateUniverseCommand](src/law/commands/create-universe.command.ts) | Extends `Command` |
-| commands/[CreateUniverseHandler](src/law/commands/create-universe.command.ts) | Implements `ICommandHandler` |
-| commands/[UpdateUniverseCommand](src/law/commands/update-universe.command.ts) | Extends `Command` |
-| commands/[UpdateUniverseHandler](src/law/commands/update-universe.command.ts) | Implements `ICommandHandler` |
-| queries/[GetUniverseQuery](src/law/queries/get-universe.query.ts) | Extends `Query` |
-| queries/[GetUniverseHandler](src/law/queries/get-universe.query.ts) | Implements `IQueryHandler` |
-| queries/[ListUniversesQuery](src/law/queries/list-universes.query.ts) | Extends `Query` |
-| queries/[ListUniversesHandler](src/law/queries/list-universes.query.ts) | Implements `IQueryHandler` |
+| Use case | Description |
+|----------|-------------|
+| [CreateUniverseCommand](src/law/commands/create-universe.command.ts) | Params: `(payload: CreateUniverseDto)`<br>Returns: `UniverseDto`<br><br>Creates a new universe. Fails when the name is already taken |
+| [UpdateUniverseCommand](src/law/commands/update-universe.command.ts) | Params: `(id: string, payload: UpdateUniverseDto)`<br>Returns: `UniverseDto`<br><br>Updates an existing universe. Only fields present in the payload<br>are changed. Fails if the new name collides with another universe |
+| [GetUniverseQuery](src/law/queries/get-universe.query.ts) | Params: `(id: string)`<br>Returns: `UniverseDto`<br><br>Fetches a single universe by id. Fails when the id is unknown |
+| [ListUniversesQuery](src/law/queries/list-universes.query.ts) | Returns: `UniverseDto[]`<br><br>Lists every universe currently registered in the realm |
 
 ### Lore
 
@@ -159,7 +90,6 @@ classDiagram
 
   Universe --|> Entity
   UniverseRepository --|> EntityRepository
-  UniverseRepository --> Universe
 ```
 
 | Entity | Description |
@@ -179,13 +109,13 @@ classDiagram
     }
   }
   namespace lore {
+    class UniverseRepository
     class Universe {
       +string id
       +string name
       +string description
       +string cover
     }
-    class UniverseRepository
   }
   namespace dod_core {
     class PrismaRepository
@@ -193,13 +123,13 @@ classDiagram
 
   PrismaService --|> PrismaClient
   PrismaUniverseRepository --|> PrismaRepository
+  PrismaUniverseRepository ..|> UniverseRepository
   PrismaUniverseRepository *-- PrismaService
   PrismaUniverseRepository --> Universe
-  PrismaUniverseRepository --> UniverseRepository
 ```
 
 | Entity | Description |
 |--------|-------------|
 | [PrismaService](src/ground/prisma.service.ts) | Extends `PrismaClient` · Implements `OnModuleInit`, `OnModuleDestroy` |
-| repositories/[PrismaUniverseRepository](src/ground/repositories/prisma-universe.repository.ts) | Extends `PrismaRepository` |
+| repositories/[PrismaUniverseRepository](src/ground/repositories/prisma-universe.repository.ts) | Extends `PrismaRepository` · Implements [UniverseRepository](src/lore/repositories/universe.repository.ts) |
 <!-- poe:classes:end -->
