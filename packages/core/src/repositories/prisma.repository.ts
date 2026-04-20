@@ -1,5 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
-
+import { NotFoundError } from '../errors/not-found.error';
 import { EntityRepository } from './entity.repository';
 
 type Delegate<TModel extends { id: string }> = {
@@ -27,7 +26,7 @@ export abstract class PrismaRepository<
     const entity = await this.getById(id);
 
     if (!entity) {
-      throw new NotFoundException(`Entity ${id} not found`);
+      throw new NotFoundError(`Entity ${id} not found`);
     }
 
     return entity;

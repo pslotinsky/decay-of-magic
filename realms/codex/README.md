@@ -28,306 +28,49 @@ npm run prisma:migrate:dev
 <!-- poe:classes:start -->
 ## Classes
 
-### frontier
+### Frontier
 
-```mermaid
-classDiagram
-  namespace frontier {
-    class CreateCardDto {
-      +string id
-      +string name
-      +string imageUrl
-      +string description
-      +number level
-      +number cost
-      +string manaId
-    }
-    class CreateManaDto {
-      +string id
-      +string name
-      +ManaType type
-    }
-    class CardDto {
-      +string id
-      +string name
-      +string imageUrl
-      +string description
-      +number level
-      +number cost
-      +string manaId
-    }
-    class ManaDto {
-      +string id
-      +string name
-      +ManaType type
-    }
-    class CardGate {
-      -CommandBus commandBus
-      -QueryBus queryBus
-      +create()
-      +getById()
-      +find()
-    }
-    class ManaGate {
-      -CommandBus commandBus
-      -QueryBus queryBus
-      +create()
-      +getById()
-      +find()
-    }
-  }
-  namespace lore {
-    class Mana {
-      +string id
-      +string name
-      +ManaType type
-    }
-    class Card {
-      +string id
-      +string name
-      +string imageUrl
-      +string description
-      +number level
-      +number cost
-      +string manaId
-    }
-  }
-  namespace law {
-    class CreateCardCommand {
-      +CreateCardDto payload
-    }
-    class FindCardsQuery
-    class GetCardQuery {
-      +string id
-    }
-    class CreateManaCommand {
-      +CreateManaDto payload
-    }
-    class FindManaQuery
-    class GetManaQuery {
-      +string id
-    }
-  }
+#### [Card](src/frontier/gates/card.gate.ts)
 
-  CreateManaDto --> Mana
-  ManaDto --> Mana
-  CardGate --> CreateCardDto
-  CardGate --> CardDto
-  CardGate --> CreateCardCommand
-  CardGate --> FindCardsQuery
-  CardGate --> GetCardQuery
-  CardGate --> Card
-  ManaGate --> CreateManaDto
-  ManaGate --> ManaDto
-  ManaGate --> CreateManaCommand
-  ManaGate --> FindManaQuery
-  ManaGate --> GetManaQuery
-  ManaGate --> Mana
-```
+| Endpoint | Description |
+|----------|-------------|
+| POST /v1/card | Params: `(dto: CreateCardDto)`<br>Returns: `CardDto` |
+| GET /v1/card/:id | Params: `(id: string)`<br>Returns: `CardDto` |
+| GET /v1/card | Returns: `CardDto[]` |
 
-| Entity |
-|--------|
-| dto/body/[CreateCardDto](src/frontier/dto/body/create-card.dto.ts) |
-| dto/body/[CreateManaDto](src/frontier/dto/body/create-mana.dto.ts) |
-| dto/[CardDto](src/frontier/dto/card.dto.ts) |
-| dto/[ManaDto](src/frontier/dto/mana.dto.ts) |
-| gates/[CardGate](src/frontier/gates/card.gate.ts) |
-| gates/[ManaGate](src/frontier/gates/mana.gate.ts) |
+#### [Health](src/frontier/gates/health.gate.ts)
 
-### ground
+| Endpoint | Description |
+|----------|-------------|
+| GET /v1/health | Returns: `HealthCheckResult` |
 
-```mermaid
-classDiagram
-  namespace ground {
-    class PrismaService
-    class PrismaCardRepository {
-      #toEntity()
-      #toModel()
-    }
-    class PrismaManaRepository {
-      #toEntity()
-      #toModel()
-    }
-  }
-  namespace lore {
-    class Card {
-      +string id
-      +string name
-      +string imageUrl
-      +string description
-      +number level
-      +number cost
-      +string manaId
-    }
-    class CardRepository
-    class Mana {
-      +string id
-      +string name
-      +ManaType type
-    }
-    class ManaRepository
-  }
-  namespace dod_core {
-    class PrismaRepository
-  }
+#### [Mana](src/frontier/gates/mana.gate.ts)
 
-  PrismaService --|> PrismaClient
-  PrismaCardRepository --|> PrismaRepository
-  PrismaCardRepository *-- PrismaService
-  PrismaCardRepository --> Card
-  PrismaCardRepository --> CardRepository
-  PrismaManaRepository --|> PrismaRepository
-  PrismaManaRepository *-- PrismaService
-  PrismaManaRepository --> Mana
-  PrismaManaRepository --> ManaRepository
-```
+| Endpoint | Description |
+|----------|-------------|
+| POST /v1/mana | Params: `(dto: CreateManaDto)`<br>Returns: `ManaDto` |
+| GET /v1/mana/:id | Params: `(id: string)`<br>Returns: `ManaDto` |
+| GET /v1/mana | Returns: `ManaDto[]` |
 
-| Entity | Notes |
-|--------|-------|
-| [PrismaService](src/ground/prisma.service.ts) | Extends `PrismaClient` · Implements `OnModuleInit`, `OnModuleDestroy` |
-| repositories/[PrismaCardRepository](src/ground/repositories/prisma-card.repository.ts) | Extends `PrismaRepository` |
-| repositories/[PrismaManaRepository](src/ground/repositories/prisma-mana.repository.ts) | Extends `PrismaRepository` |
+### Law
 
-### law
+#### Card
 
-```mermaid
-classDiagram
-  namespace law {
-    class CreateCardCommand {
-      +CreateCardDto payload
-    }
-    class CreateCardHandler {
-      +execute()
-    }
-    class CreateManaCommand {
-      +CreateManaDto payload
-    }
-    class CreateManaHandler {
-      +execute()
-    }
-    class FindCardsQuery
-    class FindCardsHandler {
-      +execute()
-    }
-    class FindManaQuery
-    class FindManaHandler {
-      +execute()
-    }
-    class GetCardQuery {
-      +string id
-    }
-    class GetCardHandler {
-      +execute()
-    }
-    class GetManaQuery {
-      +string id
-    }
-    class GetManaHandler {
-      +execute()
-    }
-  }
-  namespace frontier {
-    class CreateCardDto {
-      +string id
-      +string name
-      +string imageUrl
-      +string description
-      +number level
-      +number cost
-      +string manaId
-    }
-    class CardDto {
-      +string id
-      +string name
-      +string imageUrl
-      +string description
-      +number level
-      +number cost
-      +string manaId
-    }
-    class CreateManaDto {
-      +string id
-      +string name
-      +ManaType type
-    }
-    class ManaDto {
-      +string id
-      +string name
-      +ManaType type
-    }
-  }
-  namespace lore {
-    class Card {
-      +string id
-      +string name
-      +string imageUrl
-      +string description
-      +number level
-      +number cost
-      +string manaId
-    }
-    class CardRepository
-    class Mana {
-      +string id
-      +string name
-      +ManaType type
-    }
-    class ManaRepository
-  }
-  namespace nestjs_cqrs {
-    class Query
-  }
+| Use case | Description |
+|----------|-------------|
+| [CreateCardCommand](src/law/commands/create-card.command.ts) | Params: `(payload: CreateCardDto)`<br>Returns: `CardDto` |
+| [GetCardQuery](src/law/queries/get-card.query.ts) | Params: `(id: string)`<br>Returns: `CardDto` |
+| [ListCardsQuery](src/law/queries/list-cards.query.ts) | Returns: `CardDto[]` |
 
-  CreateCardCommand *-- CreateCardDto
-  CreateCardCommand --> CardDto
-  CreateCardCommand --> Card
-  CreateCardHandler *-- CardRepository
-  CreateCardHandler --> CreateCardCommand
-  CreateCardHandler --> Card
-  CreateManaCommand *-- CreateManaDto
-  CreateManaCommand --> ManaDto
-  CreateManaCommand --> Mana
-  CreateManaHandler *-- ManaRepository
-  CreateManaHandler --> CreateManaCommand
-  CreateManaHandler --> Mana
-  FindCardsQuery --|> Query
-  FindCardsQuery --> Card
-  FindCardsHandler *-- CardRepository
-  FindCardsHandler --> FindCardsQuery
-  FindCardsHandler --> Card
-  FindManaQuery --|> Query
-  FindManaQuery --> Mana
-  FindManaHandler *-- ManaRepository
-  FindManaHandler --> FindManaQuery
-  FindManaHandler --> Mana
-  GetCardQuery --|> Query
-  GetCardQuery --> Card
-  GetCardHandler *-- CardRepository
-  GetCardHandler --> GetCardQuery
-  GetCardHandler --> Card
-  GetManaQuery --|> Query
-  GetManaQuery --> Mana
-  GetManaHandler *-- ManaRepository
-  GetManaHandler --> GetManaQuery
-  GetManaHandler --> Mana
-```
+#### Mana
 
-| Entity | Notes |
-|--------|-------|
-| commands/[CreateCardCommand](src/law/commands/create-card.command.ts) |  |
-| commands/[CreateCardHandler](src/law/commands/create-card.command.ts) | Implements `ICommandHandler` |
-| commands/[CreateManaCommand](src/law/commands/create-mana.command.ts) |  |
-| commands/[CreateManaHandler](src/law/commands/create-mana.command.ts) | Implements `ICommandHandler` |
-| queries/[FindCardsQuery](src/law/queries/find-cards.query.ts) | Extends `Query` |
-| queries/[FindCardsHandler](src/law/queries/find-cards.query.ts) | Implements `IQueryHandler` |
-| queries/[FindManaQuery](src/law/queries/find-mana.query.ts) | Extends `Query` |
-| queries/[FindManaHandler](src/law/queries/find-mana.query.ts) | Implements `IQueryHandler` |
-| queries/[GetCardQuery](src/law/queries/get-card.query.ts) | Extends `Query` |
-| queries/[GetCardHandler](src/law/queries/get-card.query.ts) | Implements `IQueryHandler` |
-| queries/[GetManaQuery](src/law/queries/get-mana.query.ts) | Extends `Query` |
-| queries/[GetManaHandler](src/law/queries/get-mana.query.ts) | Implements `IQueryHandler` |
+| Use case | Description |
+|----------|-------------|
+| [CreateManaCommand](src/law/commands/create-mana.command.ts) | Params: `(payload: CreateManaDto)`<br>Returns: `ManaDto` |
+| [GetManaQuery](src/law/queries/get-mana.query.ts) | Params: `(id: string)`<br>Returns: `ManaDto` |
+| [ListManaQuery](src/law/queries/list-mana.query.ts) | Returns: `ManaDto[]` |
 
-### lore
+### Lore
 
 ```mermaid
 classDiagram
@@ -354,28 +97,42 @@ classDiagram
   }
 
   CardRepository --|> EntityRepository
-  CardRepository --> Card
   ManaRepository --|> EntityRepository
-  ManaRepository --> Mana
 ```
 
-| Entity | Description | Notes |
-|--------|-------------|-------|
-| entities/[Card](src/lore/entities/card.entity.ts) | Spells and creatures. Each card belongs to one mana and may have multiple abilities |  |
-| entities/[Mana](src/lore/entities/mana.entity.ts) | • Core mana: Fire, Water, Earth, Air (common for all mages)<br>• Special mana: Necromancy, Demonology, Chaos, etc (specific to a particular mage) |  |
-| repositories/[CardRepository](src/lore/repositories/card.repository.ts) |  | Abstract · Extends `EntityRepository` |
-| repositories/[ManaRepository](src/lore/repositories/mana.repository.ts) |  | Abstract · Extends `EntityRepository` |
+| Entity | Description |
+|--------|-------------|
+| entities/[Card](src/lore/entities/card.entity.ts) | Spells and creatures. Each card belongs to one mana and may have multiple abilities |
+| entities/[Mana](src/lore/entities/mana.entity.ts) | • Core mana: Fire, Water, Earth, Air (common for all mages)<br>• Special mana: Necromancy, Demonology, Chaos, etc (specific to a particular mage) |
+| repositories/[CardRepository](src/lore/repositories/card.repository.ts) | Abstract · Extends `EntityRepository` |
+| repositories/[ManaRepository](src/lore/repositories/mana.repository.ts) | Abstract · Extends `EntityRepository` |
 
-### root
+### Ground
 
 ```mermaid
-classDiagram
-  namespace root {
-    class AppModule
+erDiagram
+  Mana {
+    string id PK
+    string name
+    string type
   }
+  Mage {
+    string id PK
+    string name
+    string imageUrl
+    string description
+    string manaId
+  }
+  Card {
+    string id PK
+    string name
+    string imageUrl
+    string description
+    int level
+    int cost
+    string manaId
+  }
+  Mage }o--|| Mana : mana
+  Card }o--|| Mana : mana
 ```
-
-| Entity |
-|--------|
-| [AppModule](src/app.module.ts) |
 <!-- poe:classes:end -->

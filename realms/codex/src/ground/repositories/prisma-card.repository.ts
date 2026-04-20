@@ -4,8 +4,8 @@ import { PrismaRepository } from '@dod/core';
 
 import { Card } from '@/lore/entities/card.entity';
 import { CardRepository } from '@/lore/repositories/card.repository';
-import { Prisma, Card as CardModel } from '../../../prisma/generated';
 
+import { Card as CardModel, Prisma } from '../../../prisma/generated';
 import { PrismaService } from '../prisma.service';
 
 export class PrismaCardRepository

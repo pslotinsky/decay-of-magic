@@ -26,15 +26,8 @@ realms/my-realm/
 │   └── generated/             # Generated Prisma client (gitignored)
 ├── src/
 │   ├── frontier/              # API layer — the edge of the realm
-│   │   ├── gates/
-│   │   │   └── thing.gate.ts
-│   │   └── dto/
-│   │       ├── thing.dto.ts
-│   │       ├── body/
-│   │       │   ├── create-thing.dto.ts
-│   │       │   └── update-thing.dto.ts
-│   │       └── query/
-│   │           └── list-things.query.dto.ts
+│   │   └── gates/
+│   │       └── thing.gate.ts
 │   ├── law/                   # Application layer — commands and queries
 │   │   ├── commands/
 │   │   │   ├── create-thing.command.ts
@@ -54,8 +47,8 @@ realms/my-realm/
 │   ├── app.module.ts
 │   └── main.ts
 └── test/
-    ├── jest-e2e.json
-    └── thing.e2e-spec.ts
+    ├── jest-api.json
+    └── thing.api-spec.ts
 ```
 
 ## Layer responsibilities
@@ -185,13 +178,14 @@ export class PrismaService
 
 ### Command handler (`law/commands/`)
 
-Command class and its handler live in the same file. Handler injects the repository via `@Inject()`.
+Command class and its handler live in the same file. Handler injects the repository via `@Inject()`. The outgoing DTO is produced by `ThingSchema.parse(entity)` — this enforces the wire contract at runtime and strips any non-contract fields the entity might carry.
 
 ```typescript
-import { ConflictException, Inject } from '@nestjs/common';
+import { CreateThingDto, ThingDto, ThingSchema } from '@dod/api-contract';
+import { ConflictError } from '@dod/core';
+import { Inject } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CreateThingDto } from '@/frontier/dto/body/create-thing.dto';
-import { ThingDto } from '@/frontier/dto/thing.dto';
+
 import { Thing } from '@/lore/entities/thing.entity';
 import { ThingRepository } from '@/lore/repositories/thing.repository';
 
@@ -208,28 +202,30 @@ export class CreateThingHandler implements ICommandHandler<CreateThingCommand> {
   public async execute({ payload }: CreateThingCommand): Promise<ThingDto> {
     const existing = await this.thingRepository.findOne({ name: payload.name });
     if (existing !== undefined) {
-      throw new ConflictException(`Name "${payload.name}" already taken`);
+      throw new ConflictError(`Name "${payload.name}" already taken`);
     }
 
     const thing = Thing.create(payload);
     await this.thingRepository.save(thing);
 
-    return ThingDto.from(thing);
+    return ThingSchema.parse(thing);
   }
 }
 ```
 
+`law` throws framework-agnostic domain errors from `@dod/core` (`ConflictError`, `NotFoundError`, `UnauthenticatedError`, etc.) — never `NestJS` exceptions. The `ErrorFilter` at the `frontier` layer maps them to the HTTP envelope defined in [Design-005](./Design-005_api-guidelines.md).
+
 ### Query handler (`law/queries/`)
 
-Same file convention as commands. Use `getByIdOrFail` for single-entity lookups. For filtered lists, define a filter type in the query file — `law` never imports from `frontier`.
+Same file convention as commands. Use `getByIdOrFail` for single-entity lookups. Outgoing DTOs pass through `XxxSchema.parse()`.
 
 ```typescript
+import { ThingDto, ThingSchema } from '@dod/api-contract';
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, Query, QueryHandler } from '@nestjs/cqrs';
-import { ThingDto } from '@/frontier/dto/thing.dto';
+
 import { ThingRepository } from '@/lore/repositories/thing.repository';
 
-// single entity
 export class GetThingQuery extends Query<ThingDto> {
   constructor(public readonly id: string) {
     super();
@@ -242,122 +238,76 @@ export class GetThingHandler implements IQueryHandler<GetThingQuery> {
 
   public async execute({ id }: GetThingQuery): Promise<ThingDto> {
     const thing = await this.thingRepository.getByIdOrFail(id);
-    return ThingDto.from(thing);
+    return ThingSchema.parse(thing);
   }
 }
 
-// filtered list — filter type belongs to law, not frontier
-export type ListThingsFilter = {
-  type?: string;
-  universeId?: string;
-};
-
-export class ListThingsQuery extends Query<ThingDto[]> {
-  constructor(public readonly filter: ListThingsFilter = {}) {
-    super();
-  }
-}
+export class ListThingsQuery extends Query<ThingDto[]> {}
 
 @QueryHandler(ListThingsQuery)
 export class ListThingsHandler implements IQueryHandler<ListThingsQuery> {
   @Inject() private readonly thingRepository!: ThingRepository;
 
-  public async execute({ filter }: ListThingsQuery): Promise<ThingDto[]> {
-    const things = await this.thingRepository.find(filter);
-    return things.map((thing) => ThingDto.from(thing));
+  public async execute(): Promise<ThingDto[]> {
+    const things = await this.thingRepository.find();
+    return things.map((thing) => ThingSchema.parse(thing));
   }
 }
 ```
 
-The gate translates the frontier DTO into the law-level filter:
+For filtered lists, declare the filter type inside the query file and have the gate pass it through — `law` still never imports from `frontier`.
+
+### Wire shapes (`@dod/api-contract`)
+
+All request/response shapes — schemas **and** inferred types — live in the zero-dep `@dod/api-contract` package. Realms do **not** keep a local `frontier/dto/` directory; the wire contract has one home.
 
 ```typescript
-@Get()
-public async list(@Query() query: ListThingsQueryDto): Promise<ThingDto[]> {
-  return this.queryBus.execute(new ListThingsQuery(query));
-}
+// @dod/api-contract/src/contracts/thing.ts
+import { z } from 'zod';
+
+export const ThingSchema = z.object({
+  id: z.uuid(),
+  name: z.string(),
+  description: z.string().optional(),
+});
+export type ThingDto = z.infer<typeof ThingSchema>;
+
+export const CreateThingSchema = z.object({
+  id: z.uuid(),
+  name: z.string().min(1).max(100),
+});
+export type CreateThingDto = z.infer<typeof CreateThingSchema>;
+
+export const UpdateThingSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+});
+export type UpdateThingDto = z.infer<typeof UpdateThingSchema>;
 ```
 
-### Request DTOs (`frontier/dto/body/`)
-
-Use `class-validator` decorators. Create DTO has all required fields. Update DTO marks every field `@IsOptional()`.
-
-```typescript
-// create-thing.dto.ts
-import { IsString, MaxLength, MinLength } from 'class-validator';
-
-export class CreateThingDto {
-  @IsString() @MinLength(1) @MaxLength(100)
-  public id!: string;
-
-  @IsString() @MinLength(1) @MaxLength(100)
-  public name!: string;
-}
-
-// update-thing.dto.ts
-import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-
-export class UpdateThingDto {
-  @IsOptional() @IsString() @MinLength(1) @MaxLength(100)
-  public name?: string;
-}
-```
-
-### Query DTOs (`frontier/dto/query/`)
-
-Used for `GET` endpoints with filter parameters (`?type=good&universeId=dod`). All fields are optional. Use `@Type()` for non-string values (numbers, booleans).
-
-```typescript
-// list-things.query.dto.ts
-import { IsOptional, IsString, IsUUID } from 'class-validator';
-
-export class ListThingsQueryDto {
-  @IsOptional() @IsString()
-  public type?: string;
-
-  @IsOptional() @IsUUID()
-  public universeId?: string;
-}
-```
-
-### Response DTO (`frontier/dto/`)
-
-Maps a domain entity to an API response using `plainToInstance`.
-
-```typescript
-import { plainToInstance } from 'class-transformer';
-import { Thing } from '@/lore/entities/thing.entity';
-
-export class ThingDto {
-  public static from(thing: Thing): ThingDto {
-    return plainToInstance(ThingDto, thing);
-  }
-
-  public id!: string;
-  public name!: string;
-  public description?: string;
-}
-```
+Convention: the schema (const) is `XxxSchema`, the inferred type is `XxxDto`. Both are imported directly by gates, handlers, and the web client.
 
 ### Gate (`frontier/gates/`)
 
-Named `ThingGate`, not `ThingController`. Dispatches to `CommandBus` or `QueryBus` — no business logic.
+Named `ThingGate`, not `ThingController`. Dispatches to `CommandBus` or `QueryBus` — no business logic. Incoming bodies are validated by `@ZodBody(Schema)` from `@dod/core`, which throws `ValidationFailedError` with field-level details on failure.
 
 ```typescript
-import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  CreateThingDto,
+  CreateThingSchema,
+  ThingDto,
+  UpdateThingDto,
+  UpdateThingSchema,
+} from '@dod/api-contract';
+import { ZodBody } from '@dod/core';
+import { Controller, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { ThingDto } from '@/frontier/dto/thing.dto';
-import { CreateThingDto } from '@/frontier/dto/body/create-thing.dto';
-import { UpdateThingDto } from '@/frontier/dto/body/update-thing.dto';
-import { ListThingsQueryDto } from '@/frontier/dto/query/list-things.query.dto';
+
 import { CreateThingCommand } from '@/law/commands/create-thing.command';
 import { UpdateThingCommand } from '@/law/commands/update-thing.command';
 import { GetThingQuery } from '@/law/queries/get-thing.query';
 import { ListThingsQuery } from '@/law/queries/list-things.query';
 
 @Controller('/v1/thing')
-@ApiTags('Thing')
 export class ThingGate {
   constructor(
     private readonly commandBus: CommandBus,
@@ -366,12 +316,17 @@ export class ThingGate {
 
   @Post()
   @HttpCode(201)
-  public async create(@Body() dto: CreateThingDto): Promise<ThingDto> {
+  public async create(
+    @ZodBody(CreateThingSchema) dto: CreateThingDto,
+  ): Promise<ThingDto> {
     return this.commandBus.execute(new CreateThingCommand(dto));
   }
 
   @Patch('/:id')
-  public async update(@Param('id') id: string, @Body() dto: UpdateThingDto): Promise<ThingDto> {
+  public async update(
+    @Param('id') id: string,
+    @ZodBody(UpdateThingSchema) dto: UpdateThingDto,
+  ): Promise<ThingDto> {
     return this.commandBus.execute(new UpdateThingCommand(id, dto));
   }
 
@@ -381,8 +336,8 @@ export class ThingGate {
   }
 
   @Get()
-  public async list(@Query() query: ListThingsQueryDto): Promise<ThingDto[]> {
-    return this.queryBus.execute(new ListThingsQuery(query));
+  public async list(): Promise<ThingDto[]> {
+    return this.queryBus.execute(new ListThingsQuery());
   }
 }
 ```
@@ -420,34 +375,26 @@ export class AppModule {}
 
 ### Bootstrap (`main.ts`)
 
-Global prefix `/api`, validation pipe with `whitelist: true`, Swagger setup.
+Global prefix `/api`, plus two platform hooks from `@dod/core` that implement [Design-005](./Design-005_api-guidelines.md): envelope interceptor (wraps 2xx payloads as `{ data }`), error filter (maps domain errors + unknown exceptions to the error envelope). Body/query validation happens per-endpoint via `@ZodBody(Schema)` — no global pipe is needed.
 
 ```typescript
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { EnvelopeInterceptor, ErrorFilter } from '@dod/core';
+import { NestFactory, Reflector } from '@nestjs/core';
+
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('/api');
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  setupSwagger(app);
+  app.useGlobalInterceptors(new EnvelopeInterceptor(app.get(Reflector)));
+  app.useGlobalFilters(new ErrorFilter());
   await app.listen(process.env.PORT ?? 3000);
-}
-
-function setupSwagger(app: INestApplication): void {
-  const config = new DocumentBuilder()
-    .setTitle('Thing realm')
-    .setDescription('Thing management API')
-    .setVersion('1.0')
-    .addTag('Thing')
-    .build();
-  SwaggerModule.setup('api', app, () => SwaggerModule.createDocument(app, config));
 }
 
 void bootstrap();
 ```
+
+Endpoints whose response must bypass the envelope (health probes, metrics, webhooks) apply `@NoEnvelope()` to the handler method. Swagger is not wired — the OpenAPI surface of a realm is defined by the Zod schemas in `@dod/api-contract`.
 
 ### Prisma schema (`prisma/schema.prisma`)
 
@@ -473,11 +420,39 @@ model Thing {
 
 ## Core abstractions (`@dod/core`)
 
+**Domain primitives**
+
 | Export                | Purpose                                                                                           |
 | --------------------- | ------------------------------------------------------------------------------------------------- |
 | `Entity`              | Base class with `update(params)` — mutates own fields from partial                                |
 | `EntityRepository<T>` | Abstract contract: `getById`, `getByIdOrFail`, `find`, `findOne`, `save`                          |
-| `PrismaRepository<T>` | Prisma implementation of `EntityRepository`; subclasses provide `delegate`, `toEntity`, `toModel` |
+| `PrismaRepository<T>` | Prisma implementation of `EntityRepository`; subclasses provide `delegate`, `toEntity`, `toModel`. `getByIdOrFail` throws `NotFoundError` |
+
+**Domain errors** — thrown by `law` and `lore`, caught by the HTTP filter at the `frontier`:
+
+| Export                  | HTTP status | Use                                                           |
+| ----------------------- | ----------- | ------------------------------------------------------------- |
+| `DomainError`           | —           | Abstract base — subclass when a new error code is introduced  |
+| `BadRequestError`       | 400         | Request shape unparseable or semantically nonsense            |
+| `ValidationFailedError` | 400         | Field-level validation failure (raised by `createValidationPipe`) |
+| `UnauthenticatedError`  | 401         | No or invalid credentials                                     |
+| `ForbiddenError`        | 403         | Authenticated but not authorized                              |
+| `NotFoundError`         | 404         | Resource does not exist                                       |
+| `ConflictError`         | 409         | Uniqueness or state invariant violated                        |
+| `UnprocessableError`    | 422         | Request valid in shape but rejected by domain rules           |
+
+**HTTP glue** — wired once in `main.ts` (`EnvelopeInterceptor` + `ErrorFilter`), plus decorators used per endpoint. Keeps the realm aligned with [Design-005](./Design-005_api-guidelines.md):
+
+| Export                   | Purpose                                                                             |
+| ------------------------ | ----------------------------------------------------------------------------------- |
+| `EnvelopeInterceptor`    | Wraps 2xx responses as `{ data }`                                                   |
+| `ErrorFilter`            | Maps `DomainError` (and fallback exceptions) to `{ error: { code, message, details? } }` |
+| `ZodBody(schema)`        | Parameter decorator: parses the request body with a Zod schema, raises `ValidationFailedError` on failure |
+| `ZodQuery(schema)`       | Same, for query parameters                                                          |
+| `ZodParam(name, schema)` | Same, for path parameters                                                           |
+| `NoEnvelope()`           | Method decorator that bypasses the envelope for fixed-shape endpoints (health, metrics, webhooks) |
+
+The wire-level type definitions (`SuccessEnvelope<T>`, `ErrorEnvelope`, `ErrorCode`) and every realm's Zod schemas + inferred DTOs live in the `@dod/api-contract` package.
 
 ## Data flow for a command
 

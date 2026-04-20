@@ -1,5 +1,6 @@
+import type { CitizenDto } from '@dod/api-contract';
+
 import { Card } from '@/components/Card';
-import { type CitizenDto } from '@/queries/citizen';
 
 import styles from './CitizensPageList.module.scss';
 

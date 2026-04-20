@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { TerminusModule } from '@nestjs/terminus';
 
+import { HealthGate } from './frontier/gates/health.gate';
 import { UniverseGate } from './frontier/gates/universe.gate';
 import { PrismaService } from './ground/prisma.service';
 import { PrismaUniverseRepository } from './ground/repositories/prisma-universe.repository';
@@ -18,8 +20,8 @@ const repositories = [
 const services = [PrismaService];
 
 @Module({
-  imports: [CqrsModule],
-  controllers: [UniverseGate],
+  imports: [CqrsModule, TerminusModule],
+  controllers: [HealthGate, UniverseGate],
   providers: [
     ...commandHandlers,
     ...queryHandlers,

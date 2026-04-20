@@ -1,7 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, Query, QueryHandler } from '@nestjs/cqrs';
 
-import { CitizenDto } from '@/frontier/dto/citizen.dto';
+import { CitizenDto, CitizenSchema } from '@dod/api-contract';
+
 import { CitizenRepository } from '@/lore/repositories/citizen.repository';
 
 export class GetCitizenQuery extends Query<CitizenDto> {
@@ -16,7 +17,6 @@ export class GetCitizenHandler implements IQueryHandler<GetCitizenQuery> {
 
   public async execute({ id }: GetCitizenQuery): Promise<CitizenDto> {
     const citizen = await this.citizenRepository.getByIdOrFail(id);
-
-    return CitizenDto.from(citizen);
+    return CitizenSchema.parse(citizen);
   }
 }

@@ -2,7 +2,8 @@ import { Command, Option } from 'nestjs-command';
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
-import { CitizenDto } from '@/frontier/dto/citizen.dto';
+import { CitizenDto } from '@dod/api-contract';
+
 import { RegisterCitizenCommand } from '@/law/commands/register-citizen.command';
 
 @Injectable()

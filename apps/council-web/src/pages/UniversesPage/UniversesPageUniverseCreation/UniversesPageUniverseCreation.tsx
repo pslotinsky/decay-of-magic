@@ -1,10 +1,10 @@
 import { type SyntheticEvent, useState } from 'react';
 
+import { useCreateUniverse } from '@/api/universe';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
 import { ImageInput } from '@/components/ImageInput';
 import { Textarea } from '@/components/Textarea';
-import { useCreateUniverse } from '@/queries/universe';
 
 import styles from './UniversesPageUniverseCreation.module.scss';
 

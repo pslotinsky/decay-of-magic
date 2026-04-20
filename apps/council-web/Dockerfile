@@ -17,6 +17,11 @@ COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/package-lock.json ./package-lock.json
 RUN npm ci
 
+# Build @dod/api-contract (consumed by the web app)
+COPY --from=pruner /app/packages/config ./packages/config
+COPY --from=pruner /app/out/full/packages/api-contract ./packages/api-contract
+RUN npm run build -w packages/api-contract
+
 # ================================
 # 🚀 Stage: Development
 # src is volume-mounted by docker-compose
@@ -26,6 +31,8 @@ WORKDIR /app
 
 COPY --from=installer /app/node_modules ./node_modules
 COPY --from=installer /app/apps/council-web/node_modules ./apps/council-web/node_modules
+COPY --from=installer /app/packages/api-contract/dist ./packages/api-contract/dist
+COPY --from=installer /app/packages/api-contract/package.json ./packages/api-contract/
 COPY --from=pruner /app/packages/config ./packages/config
 # Copy all app config files (vite.config.ts, tsconfig*, index.html, etc.)
 COPY --from=pruner /app/out/full/apps/council-web ./apps/council-web

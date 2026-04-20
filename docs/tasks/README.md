@@ -14,4 +14,10 @@
 - [x] [DOD-0011: Describe Universe API and tests](./DOD-0011_describe-universe-api-and-tests.md)
 - [x] [DOD-0012: Implement Universe realm](./DOD-0012_implement-universe-realm.md)
 - [x] [DOD-0013: Create Universe admin UI](./DOD-0013_create-universe-admin-ui.md)
+- [x] [DOD-0014: Layer-aware Poe reports](./DOD-0014_layer-aware-poe-reports.md)
+- [x] [DOD-0015: Define testing strategy for realm services](./DOD-0015_define-testing-strategy-for-realm-services.md)
+- [x] [DOD-0016: Establish service operability baseline](./DOD-0016_establish-service-operability-baseline.md)
+- [x] [DOD-0017: Clean up platform configuration inconsistencies](./DOD-0017_clean-up-platform-configuration-inconsistencies.md)
+- [x] [DOD-0018: Refactor frontend api layer](./DOD-0018_refactor-frontend-api-layer.md)
+- [x] [DOD-0019: Define API conventions for realm services](./DOD-0019_define-api-conventions-for-realm-services.md)
 <!-- TOC.END -->

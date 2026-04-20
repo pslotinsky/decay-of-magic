@@ -1,31 +1,24 @@
-import { type ReactNode, useCallback, useEffect, useState } from 'react';
+import { type ReactNode, useCallback, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
-import type { CitizenDto } from '@/queries/citizen';
+import { sessionKeys, useMeQuery } from '@/api/session';
 
 import { AuthContext } from './context';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [citizen, setCitizen] = useState<CitizenDto | undefined>(undefined);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    fetchMe()
-      .then(setCitizen)
-      .catch(() => setCitizen(undefined))
-      .finally(() => setReady(true));
-  }, []);
-
-  const login = useCallback(async () => {
-    setCitizen(await fetchMe());
-  }, []);
+  const queryClient = useQueryClient();
+  const { data: citizen, isPending } = useMeQuery();
 
   const logout = useCallback(async () => {
-    await fetch('/api/v1/session', {
-      method: 'DELETE',
-      credentials: 'include',
-    });
-    setCitizen(undefined);
-  }, []);
+    try {
+      await fetch('/api/v1/session', {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+    } finally {
+      queryClient.setQueryData(sessionKeys.me, undefined);
+    }
+  }, [queryClient]);
 
   useEffect(() => {
     const handle = () => {
@@ -37,19 +30,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('unauthorized', handle);
   }, [logout]);
 
-  if (!ready) return null;
+  if (isPending) return null;
 
   return (
-    <AuthContext.Provider value={{ citizen, login, logout }}>
+    <AuthContext.Provider value={{ citizen, logout }}>
       {children}
     </AuthContext.Provider>
   );
-}
-
-async function fetchMe(): Promise<CitizenDto | undefined> {
-  const response = await fetch('/api/v1/citizen/me', {
-    credentials: 'include',
-  });
-
-  return response.ok ? (response.json() as Promise<CitizenDto>) : undefined;
 }

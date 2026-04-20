@@ -1,10 +1,12 @@
 import { type SyntheticEvent, useState } from 'react';
 
+import type { UniverseDto } from '@dod/api-contract';
+
+import { useUpdateUniverse } from '@/api/universe';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
 import { ImageInput } from '@/components/ImageInput';
 import { Textarea } from '@/components/Textarea';
-import { type UniverseDto, useUpdateUniverse } from '@/queries/universe';
 
 import styles from './UniversesPageUniverseEditing.module.scss';
 

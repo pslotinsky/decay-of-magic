@@ -1,10 +1,19 @@
-import { ConflictException, Inject } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { UpdateUniverseDto } from '@/frontier/dto/body/update-universe.dto';
-import { UniverseDto } from '@/frontier/dto/universe.dto';
+import {
+  UniverseDto,
+  UniverseSchema,
+  UpdateUniverseDto,
+} from '@dod/api-contract';
+import { ConflictError } from '@dod/core';
+
 import { UniverseRepository } from '@/lore/repositories/universe.repository';
 
+/**
+ * Updates an existing universe. Only fields present in the payload
+ * are changed. Fails if the new name collides with another universe
+ */
 export class UpdateUniverseCommand extends Command<UniverseDto> {
   constructor(
     public readonly id: string,
@@ -32,7 +41,7 @@ export class UpdateUniverseHandler implements ICommandHandler<UpdateUniverseComm
 
     await this.universeRepository.save(universe);
 
-    return UniverseDto.from(universe);
+    return UniverseSchema.parse(universe);
   }
 
   private async assertNameAvailable(
@@ -42,7 +51,7 @@ export class UpdateUniverseHandler implements ICommandHandler<UpdateUniverseComm
     const conflicting = await this.universeRepository.findOne({ name });
 
     if (conflicting !== undefined && conflicting.id !== currentId) {
-      throw new ConflictException(`Universe name "${name}" already taken`);
+      throw new ConflictError(`Universe name "${name}" already taken`);
     }
   }
 }

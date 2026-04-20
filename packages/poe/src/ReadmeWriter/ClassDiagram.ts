@@ -4,7 +4,7 @@ import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
 import { InspectedClass } from '../ClassRegistry/InspectedClass';
 
 /**
- * Generates a Mermaid class diagram from inspected classes
+ * Generates a Mermaid class diagram for a single layer
  */
 export class ClassDiagram {
   private static addTextPadding(text: string, padding: number = 2): string {
@@ -25,51 +25,9 @@ export class ClassDiagram {
     this.knownNames = new Set(classRegistry.items.map((cls) => cls.name));
   }
 
-  public render(): string {
-    return this.classRegistry.isEmpty ? '' : this.renderDiagram();
-  }
-
-  public renderAll(): string {
-    this.clearLines();
-
-    const allClasses = this.classRegistry.items;
-    const external = this.collectExternalParents(allClasses);
-
-    this.addLine('```mermaid');
-    this.addLine('classDiagram');
-
-    for (const [layer, classes] of Object.entries(this.classRegistry.layers)) {
-      this.addNamespace(layer, classes);
-    }
-
-    for (const [pkg, names] of Object.entries(external)) {
-      this.addExternalNamespace(pkg, names);
-    }
-
-    this.addRelations(allClasses);
-    this.addLine('```');
-
-    return this.lines.join('\n');
-  }
-
   public renderLayer(layer: string, classes: InspectedClass[]): string {
     this.clearLines();
     this.addLayerDiagram(layer, classes);
-    return this.lines.join('\n');
-  }
-
-  private renderDiagram(): string {
-    this.clearLines();
-
-    this.addLine('## Class Diagram');
-
-    for (const [layer, classes] of Object.entries(this.classRegistry.layers)) {
-      this.addLine();
-      this.addLine(`### ${layer}`);
-      this.addLine();
-      this.addLayerDiagram(layer, classes);
-    }
-
     return this.lines.join('\n');
   }
 

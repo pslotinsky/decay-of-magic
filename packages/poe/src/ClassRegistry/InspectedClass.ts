@@ -12,6 +12,7 @@ type InspectedClassParams = {
   abstract: boolean;
   description?: string;
   parent?: string;
+  parentGenerics?: string;
   interfaces?: string[];
   fields?: string[];
   members?: InspectedClassMember[];
@@ -36,6 +37,7 @@ export class InspectedClass {
   readonly abstract: boolean;
   readonly description?: string;
   readonly parent?: string;
+  readonly parentGenerics?: string;
   readonly interfaces?: string[];
   readonly fields?: string[];
   readonly members?: InspectedClassMember[];
@@ -49,6 +51,7 @@ export class InspectedClass {
     this.abstract = params.abstract;
     this.description = params.description;
     this.parent = params.parent;
+    this.parentGenerics = params.parentGenerics;
     this.interfaces = params.interfaces;
     this.fields = params.fields;
     this.members = params.members;

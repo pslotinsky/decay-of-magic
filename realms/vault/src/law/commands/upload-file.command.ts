@@ -1,19 +1,23 @@
+import { z } from 'zod';
 import { S3 } from '@aws-sdk/client-s3';
-import { BadRequestException } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
+import { FileDto, FileSchema } from '@dod/api-contract';
 
 import { File } from '@/lore/file.entity';
 
-const {
-  PUBLIC_ENDPOINT,
-  S3_ENDPOINT,
-  S3_REGION,
-  S3_BUCKET,
-  S3_ACCESS_KEY,
-  S3_SECRET_KEY,
-} = process.env;
+const env = z
+  .object({
+    PUBLIC_ENDPOINT: z.url(),
+    S3_ENDPOINT: z.url(),
+    S3_REGION: z.string().min(1),
+    S3_BUCKET: z.string().min(1),
+    S3_ACCESS_KEY: z.string().min(1),
+    S3_SECRET_KEY: z.string().min(1),
+  })
+  .parse(process.env);
 
-export class UploadFileCommand extends Command<string> {
+export class UploadFileCommand extends Command<FileDto> {
   constructor(public file: File) {
     super();
   }
@@ -22,26 +26,28 @@ export class UploadFileCommand extends Command<string> {
 @CommandHandler(UploadFileCommand)
 export class UploadFileUseCase implements ICommandHandler<
   UploadFileCommand,
-  string
+  FileDto
 > {
-  private bucket: string;
-  private client: S3;
+  private readonly client = new S3({
+    forcePathStyle: true,
+    endpoint: env.S3_ENDPOINT,
+    region: env.S3_REGION,
+    credentials: {
+      accessKeyId: env.S3_ACCESS_KEY,
+      secretAccessKey: env.S3_SECRET_KEY,
+    },
+  });
 
-  constructor() {
-    this.bucket = this.createBucket();
-    this.client = this.createClient();
-  }
-
-  public async execute({ file }: UploadFileCommand): Promise<string> {
+  public async execute({ file }: UploadFileCommand): Promise<FileDto> {
     await this.client.putObject({
-      Bucket: this.bucket,
+      Bucket: env.S3_BUCKET,
       Key: this.createPath(file),
       Body: file.buffer,
       ContentType: file.mimetype,
       Metadata: { id: file.id, name: file.name },
     });
 
-    return this.createAbsolutePath(file);
+    return FileSchema.parse({ ...file, url: this.createAbsolutePath(file) });
   }
 
   private createPath(file: File): string {
@@ -49,36 +55,6 @@ export class UploadFileUseCase implements ICommandHandler<
   }
 
   private createAbsolutePath(file: File): string {
-    const path = this.createPath(file);
-
-    return `${PUBLIC_ENDPOINT}/${S3_BUCKET}/${path}`;
-  }
-
-  private createBucket(): string {
-    if (!S3_BUCKET) {
-      throw new BadRequestException('S3_BUCKET is undefined');
-    }
-
-    return S3_BUCKET;
-  }
-
-  private createClient(): S3 {
-    if (!S3_ACCESS_KEY) {
-      throw new BadRequestException('S3_ACCESS_KEY is undefined');
-    }
-
-    if (!S3_SECRET_KEY) {
-      throw new BadRequestException('S3_SECRET_KEY is undefined');
-    }
-
-    return new S3({
-      forcePathStyle: true,
-      endpoint: S3_ENDPOINT,
-      region: S3_REGION,
-      credentials: {
-        accessKeyId: S3_ACCESS_KEY,
-        secretAccessKey: S3_SECRET_KEY,
-      },
-    });
+    return `${env.PUBLIC_ENDPOINT}/${env.S3_BUCKET}/${this.createPath(file)}`;
   }
 }

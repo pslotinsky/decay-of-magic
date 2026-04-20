@@ -1,9 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, Query, QueryHandler } from '@nestjs/cqrs';
 
-import { UniverseDto } from '@/frontier/dto/universe.dto';
+import { UniverseDto, UniverseSchema } from '@dod/api-contract';
+
 import { UniverseRepository } from '@/lore/repositories/universe.repository';
 
+/**
+ * Lists every universe currently registered in the realm
+ */
 export class ListUniversesQuery extends Query<UniverseDto[]> {}
 
 @QueryHandler(ListUniversesQuery)
@@ -13,6 +17,6 @@ export class ListUniversesHandler implements IQueryHandler<ListUniversesQuery> {
   public async execute(): Promise<UniverseDto[]> {
     const universes = await this.universeRepository.find();
 
-    return universes.map((universe) => UniverseDto.from(universe));
+    return universes.map((universe) => UniverseSchema.parse(universe));
   }
 }

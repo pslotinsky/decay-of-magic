@@ -1,8 +1,10 @@
 import { type SyntheticEvent, useState } from 'react';
 
+import type { CitizenDto } from '@dod/api-contract';
+
+import { useUpdateCitizen } from '@/api/citizen';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
-import { type CitizenDto, useUpdateCitizen } from '@/queries/citizen';
 
 import styles from './CitizensPageCitizenEditing.module.scss';
 

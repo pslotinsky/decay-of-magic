@@ -1,12 +1,9 @@
 import { createContext } from 'react';
 
-import type { CitizenDto } from '@/queries/citizen';
-
-export type { CitizenDto };
+import type { CitizenDto } from '@dod/api-contract';
 
 export interface AuthContextValue {
   citizen?: CitizenDto;
-  login: () => Promise<void>;
   logout: () => Promise<void>;
 }
 

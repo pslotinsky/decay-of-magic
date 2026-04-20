@@ -1,0 +1,219 @@
+import request from 'supertest';
+import { INestApplication } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { Test, TestingModule } from '@nestjs/testing';
+
+import { CitizenDto, unwrap } from '@dod/api-contract';
+import { EnvelopeInterceptor, ErrorFilter } from '@dod/core';
+
+import { AppModule } from '../../src/app.module';
+import { PrismaService } from '../../src/ground/prisma.service';
+
+describe('CitizenGate (api)', () => {
+  let app: INestApplication;
+  let prisma: PrismaService;
+
+  beforeEach(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    app.setGlobalPrefix('/api');
+    app.useGlobalInterceptors(new EnvelopeInterceptor(app.get(Reflector)));
+    app.useGlobalFilters(new ErrorFilter());
+    await app.init();
+
+    prisma = moduleFixture.get(PrismaService);
+    await prisma.$executeRaw`TRUNCATE TABLE citizen_permit, citizen CASCADE`;
+  });
+
+  afterEach(async () => {
+    await app.close();
+  });
+
+  describe('POST /api/v1/citizen', () => {
+    it('registers citizen and returns id and nickname', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Zog', secret: 'secret123' })
+        .expect(201);
+      const citizen = unwrap<CitizenDto>(response.body);
+
+      expect(citizen.id).toBeDefined();
+      expect(citizen.nickname).toBe('Zog');
+    });
+
+    it('issues CitizenPermit and records issuedAt', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Zog', secret: 'secret123' })
+        .expect(201);
+      const citizen = unwrap<CitizenDto>(response.body);
+
+      const permit = await prisma.citizenPermit.findFirst({
+        where: { id: citizen.id },
+      });
+      expect(permit).toBeDefined();
+      expect(permit!.issuedAt).toBeInstanceOf(Date);
+    });
+
+    it('returns 409 when nickname already exists', async () => {
+      await request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Zog', secret: 'secret123' })
+        .expect(201);
+
+      await request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Zog', secret: 'another123' })
+        .expect(409);
+    });
+
+    it('returns 400 when nickname is missing', () => {
+      return request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ secret: 'secret123' })
+        .expect(400);
+    });
+
+    it('returns 400 when nickname is not a string', () => {
+      return request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 42, secret: 'secret123' })
+        .expect(400);
+    });
+
+    it('returns 400 when nickname is empty', () => {
+      return request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: '', secret: 'secret123' })
+        .expect(400);
+    });
+
+    it('returns 400 when secret is missing', () => {
+      return request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Zog' })
+        .expect(400);
+    });
+
+    it('returns 400 when secret is too short', () => {
+      return request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Zog', secret: 'short' })
+        .expect(400);
+    });
+  });
+
+  describe('PATCH /api/v1/citizen/:id', () => {
+    it('updates nickname', async () => {
+      const registerResponse = await request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Zog', secret: 'secret123' })
+        .expect(201);
+      const citizen = unwrap<CitizenDto>(registerResponse.body);
+
+      const updateResponse = await request(app.getHttpServer())
+        .patch(`/api/v1/citizen/${citizen.id}`)
+        .send({ nickname: 'ZogUpdated' })
+        .expect(200);
+      const updated = unwrap<CitizenDto>(updateResponse.body);
+
+      expect(updated.nickname).toBe('ZogUpdated');
+    });
+
+    it('does not change id', async () => {
+      const registerResponse = await request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Zog', secret: 'secret123' })
+        .expect(201);
+      const citizen = unwrap<CitizenDto>(registerResponse.body);
+
+      const updateResponse = await request(app.getHttpServer())
+        .patch(`/api/v1/citizen/${citizen.id}`)
+        .send({ nickname: 'ZogUpdated' })
+        .expect(200);
+      const updated = unwrap<CitizenDto>(updateResponse.body);
+
+      expect(updated.id).toBe(citizen.id);
+    });
+
+    it('returns 404 when citizen not found', () => {
+      return request(app.getHttpServer())
+        .patch('/api/v1/citizen/non-existent-id')
+        .send({ nickname: 'Zog' })
+        .expect(404);
+    });
+
+    it('returns 400 when nickname is not a string', () => {
+      return request(app.getHttpServer())
+        .patch('/api/v1/citizen/some-id')
+        .send({ nickname: 42 })
+        .expect(400);
+    });
+
+    it('returns 400 when nickname is empty', () => {
+      return request(app.getHttpServer())
+        .patch('/api/v1/citizen/some-id')
+        .send({ nickname: '' })
+        .expect(400);
+    });
+  });
+
+  describe('GET /api/v1/citizen/:id', () => {
+    it('returns citizen by id', async () => {
+      const registerResponse = await request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Zog', secret: 'secret123' })
+        .expect(201);
+      const citizen = unwrap<CitizenDto>(registerResponse.body);
+
+      const getResponse = await request(app.getHttpServer())
+        .get(`/api/v1/citizen/${citizen.id}`)
+        .expect(200);
+      const found = unwrap<CitizenDto>(getResponse.body);
+
+      expect(found.id).toBe(citizen.id);
+      expect(found.nickname).toBe('Zog');
+    });
+
+    it('returns 404 when citizen not found', () => {
+      return request(app.getHttpServer())
+        .get('/api/v1/citizen/non-existent-id')
+        .expect(404);
+    });
+  });
+
+  describe('GET /api/v1/citizen', () => {
+    it('returns collection of citizens', async () => {
+      await request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Zog', secret: 'secret123' })
+        .expect(201);
+
+      await request(app.getHttpServer())
+        .post('/api/v1/citizen')
+        .send({ nickname: 'Mog', secret: 'secret123' })
+        .expect(201);
+
+      const listResponse = await request(app.getHttpServer())
+        .get('/api/v1/citizen')
+        .expect(200);
+      const citizens = unwrap<CitizenDto[]>(listResponse.body);
+
+      expect(citizens).toHaveLength(2);
+      expect(citizens.map((citizen) => citizen.nickname)).toContain('Zog');
+      expect(citizens.map((citizen) => citizen.nickname)).toContain('Mog');
+    });
+
+    it('returns empty array when no citizens exist', async () => {
+      const listResponse = await request(app.getHttpServer())
+        .get('/api/v1/citizen')
+        .expect(200);
+      const citizens = unwrap<CitizenDto[]>(listResponse.body);
+
+      expect(citizens).toEqual([]);
+    });
+  });
+});

@@ -1,6 +1,6 @@
 import {
-  Body,
   Controller,
+  HttpCode,
   Inject,
   Post,
   UploadedFile,
@@ -8,28 +8,25 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+
+import { FileDto, UploadFileDto, UploadFileSchema } from '@dod/api-contract';
+import { ZodBody } from '@dod/core';
 
 import { UploadFileCommand } from '@/law/commands/upload-file.command';
 import { File } from '@/lore/file.entity';
 
-import { UploadFileDto } from '../dto/upload-file.dto';
-
 @Controller('/v1/file')
-@ApiTags('File')
 export class FileGate {
   @Inject()
   private commandBus!: CommandBus;
 
-  @Post('/')
+  @Post()
+  @HttpCode(201)
   @UseInterceptors(FileInterceptor('file'))
-  @ApiOkResponse({ type: String })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: UploadFileDto })
   public async upload(
-    @Body() body: UploadFileDto,
+    @ZodBody(UploadFileSchema) body: UploadFileDto,
     @UploadedFile() uploadedFile: Express.Multer.File,
-  ): Promise<string> {
+  ): Promise<FileDto> {
     const file = File.create({
       ...body,
       buffer: uploadedFile.buffer,
@@ -37,8 +34,6 @@ export class FileGate {
       mimetype: uploadedFile.mimetype,
     });
 
-    const url = await this.commandBus.execute(new UploadFileCommand(file));
-
-    return url;
+    return this.commandBus.execute(new UploadFileCommand(file));
   }
 }

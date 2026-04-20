@@ -15,6 +15,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src/'),
     },
   },
+  optimizeDeps: {
+    include: ['@dod/api-contract'],
+  },
   server: {
     port: Number(PORT),
     host: HOST,

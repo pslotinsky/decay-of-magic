@@ -1,11 +1,19 @@
-import { ConflictException, Inject } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { CreateUniverseDto } from '@/frontier/dto/body/create-universe.dto';
-import { UniverseDto } from '@/frontier/dto/universe.dto';
+import {
+  CreateUniverseDto,
+  UniverseDto,
+  UniverseSchema,
+} from '@dod/api-contract';
+import { ConflictError } from '@dod/core';
+
 import { Universe } from '@/lore/entities/universe.entity';
 import { UniverseRepository } from '@/lore/repositories/universe.repository';
 
+/**
+ * Creates a new universe. Fails when the name is already taken
+ */
 export class CreateUniverseCommand extends Command<UniverseDto> {
   constructor(public readonly payload: CreateUniverseDto) {
     super();
@@ -25,14 +33,14 @@ export class CreateUniverseHandler implements ICommandHandler<CreateUniverseComm
 
     await this.universeRepository.save(universe);
 
-    return UniverseDto.from(universe);
+    return UniverseSchema.parse(universe);
   }
 
   private async assertNameAvailable(name: string): Promise<void> {
     const existing = await this.universeRepository.findOne({ name });
 
     if (existing !== undefined) {
-      throw new ConflictException(`Universe name "${name}" already taken`);
+      throw new ConflictError(`Universe name "${name}" already taken`);
     }
   }
 }

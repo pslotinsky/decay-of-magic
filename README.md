@@ -9,10 +9,10 @@ _In this world, magic dies, but battles live on._
 ## Project structure
 
 ```sh
-├── apps/           # client applications: council-web, decay-of-magic-web, ...
-├── services/       # microservices: codex, battle, vault, ...
-├── packages/       # shared libs
-└── docs/           # roadmaps, milestones, tasks, adr, ideas, devlogs
+├── apps/           # client applications: council-web, ...
+├── realms/         # microservices: gateway, citizen, universe, codex, vault, ...
+├── packages/       # shared libs: @dod/core, @dod/api-contract, @dod/poe, zok, @dod/config
+└── docs/           # roadmaps, milestones, tasks, adr, designs, ideas, devlogs
 ```
 
 ## Getting started
@@ -27,6 +27,7 @@ docker-compose up -d --build
 - [Milestones](./docs/milestones/README.md)
 - [Tasks](./docs/tasks/README.md)
 - [ADRs](./docs/adr/README.md)
+- [Designs](./docs/design/README.md)
 - [Ideas](./docs/ideas/README.md)
 - [Dev logs](./docs/devlogs/README.md)
 

@@ -61,10 +61,14 @@ services:
       dockerfile: realms/gateway/Dockerfile
       target: dev
     depends_on:
-      - codex
-      - vault
-      - citizen
-      - universe
+      codex:
+        condition: service_healthy
+      vault:
+        condition: service_healthy
+      citizen:
+        condition: service_healthy
+      universe:
+        condition: service_healthy
     ports:
       - "3000:3000"
     environment:
@@ -73,9 +77,15 @@ services:
       VAULT_REALM_URL: "http://vault:3002"
       CITIZEN_REALM_URL: "http://citizen:3003"
       UNIVERSE_REALM_URL: "http://universe:3004"
-      JWT_SECRET: ${JWT_SECRET:-dev-secret}
+      JWT_SECRET: ${JWT_SECRET}
     volumes:
       - ./realms/gateway/src:/app/realms/gateway/src
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
 
   db-init:
     image: postgres:18
@@ -128,6 +138,12 @@ services:
     volumes:
       - ./realms/codex/src:/app/realms/codex/src
       - ./packages/core/src:/app/packages/core/src
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3001/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
 
   vault:
     build:
@@ -149,6 +165,12 @@ services:
       S3_REGION: default
     volumes:
       - ./realms/vault/src:/app/realms/vault/src
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3002/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
 
   citizen-migrate:
     build:
@@ -176,9 +198,15 @@ services:
     environment:
       PORT: 3003
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/citizen"
-      JWT_SECRET: ${JWT_SECRET:-dev-secret}
+      JWT_SECRET: ${JWT_SECRET}
     volumes:
       - ./realms/citizen/src:/app/realms/citizen/src
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3003/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
 
   universe-migrate:
     build:
@@ -209,6 +237,12 @@ services:
     volumes:
       - ./realms/universe/src:/app/realms/universe/src
       - ./packages/core/src:/app/packages/core/src
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3004/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
 
   council:
     build:
@@ -216,7 +250,8 @@ services:
       dockerfile: apps/council-web/Dockerfile
       target: dev
     depends_on:
-      - gateway
+      gateway:
+        condition: service_healthy
     ports:
       - "5175:5175"
     environment:

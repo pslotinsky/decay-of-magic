@@ -6,7 +6,7 @@ import {
 import { ScannedFile } from '../Scanner/ScannedFile';
 
 const CLASS_PATTERN =
-  /^\s*(?:\/\*\*([\s\S]*?)\*\/\s*)?(?:export\s+)?(?:default\s+)?(abstract\s+)?class\s+(\w+)(?:\s+extends\s+(\w+))?(?:\s+implements\s+([\w,\s]+))?/gm;
+  /^\s*(?:\/\*\*([\s\S]*?)\*\/\s*)?(?:export\s+)?(?:default\s+)?(abstract\s+)?class\s+(\w+)(?:\s+extends\s+(\w+)(?:<([^>]*)>)?)?(?:\s+implements\s+([\w,\s]+))?/gm;
 
 const PRIMITIVE_TYPES = new Set([
   'string',
@@ -31,13 +31,19 @@ export class ClassParser {
 
   public classes(): InspectedClass[] {
     const pattern = new RegExp(CLASS_PATTERN.source, 'gm');
-    const layer = this.getLayer(this.file.path);
     const results: InspectedClass[] = [];
     let match: RegExpExecArray | null;
 
     while ((match = pattern.exec(this.file.content)) !== null) {
-      const [fullMatch, jsdoc, abstractKeyword, name, parent, implementsStr] =
-        match;
+      const [
+        fullMatch,
+        jsdoc,
+        abstractKeyword,
+        name,
+        parent,
+        parentGenerics,
+        implementsStr,
+      ] = match;
       const bodyStart = match.index + fullMatch.length;
       const body =
         this.extractDeclarationTail(this.file.content, bodyStart) +
@@ -47,11 +53,14 @@ export class ClassParser {
         new InspectedClass({
           name,
           file: this.file.path,
-          layer,
+          layer: this.file.layer,
           body,
           abstract: !!abstractKeyword,
           description: jsdoc ? this.parseJsDoc(jsdoc) : undefined,
           parent: parent ?? undefined,
+          parentGenerics: parentGenerics
+            ? parentGenerics.replace(/\s+/g, ' ').trim()
+            : undefined,
           interfaces: implementsStr
             ? this.parseInterfaces(implementsStr)
             : undefined,
@@ -85,13 +94,6 @@ export class ClassParser {
     }
 
     return result;
-  }
-
-  private getLayer(file: string): string {
-    const parts = file.replace(/\\/g, '/').split('/');
-    const segment = parts[1];
-
-    return segment && !segment.endsWith('.ts') ? segment : 'root';
   }
 
   private parseJsDoc(raw: string): string | undefined {
