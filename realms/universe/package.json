@@ -23,10 +23,10 @@
   "dependencies": {
     "@dod/api-contract": "*",
     "@dod/core": "*",
-    "@nestjs/common": "^11.1.18",
-    "@nestjs/core": "^11.1.18",
+    "@nestjs/common": "^11.1.19",
+    "@nestjs/core": "^11.1.19",
     "@nestjs/cqrs": "^11.0.3",
-    "@nestjs/platform-express": "^11.1.18",
+    "@nestjs/platform-express": "^11.1.19",
     "@nestjs/terminus": "^11.1.1",
     "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",
@@ -37,20 +37,20 @@
   },
   "devDependencies": {
     "@dod/config": "*",
-    "@nestjs/cli": "^11.0.19",
-    "@nestjs/schematics": "^11.0.10",
-    "@nestjs/testing": "^11.1.18",
+    "@nestjs/cli": "^11.0.21",
+    "@nestjs/schematics": "^11.1.0",
+    "@nestjs/testing": "^11.1.19",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.6.0",
     "@types/pg": "^8.20.0",
     "@types/supertest": "^7.2.0",
     "dotenv": "^17.4.2",
-    "eslint": "^10.2.0",
+    "eslint": "^10.2.1",
     "jest": "^30.3.0",
-    "prettier": "^3.8.2",
+    "prettier": "^3.8.3",
     "prisma": "^7.7.0",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.9",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.3"
   }
 }

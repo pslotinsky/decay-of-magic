@@ -17,8 +17,8 @@
   },
   "devDependencies": {
     "@dod/config": "*",
-    "eslint": "^10.2.0",
-    "prettier": "^3.8.2",
-    "typescript": "^6.0.2"
+    "eslint": "^10.2.1",
+    "prettier": "^3.8.3",
+    "typescript": "^6.0.3"
   }
 }

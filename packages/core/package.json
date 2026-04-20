@@ -23,12 +23,12 @@
   },
   "devDependencies": {
     "@dod/config": "*",
-    "@nestjs/common": "^11.1.18",
-    "@nestjs/core": "^11.1.18",
-    "eslint": "^10.2.0",
-    "prettier": "^3.8.2",
+    "@nestjs/common": "^11.1.19",
+    "@nestjs/core": "^11.1.19",
+    "eslint": "^10.2.1",
+    "prettier": "^3.8.3",
     "rxjs": "^7.8.2",
-    "typescript": "^6.0.2",
+    "typescript": "^6.0.3",
     "zod": "^4.3.6"
   }
 }
