@@ -121,3 +121,14 @@ idea:
     created:
       name: Created
       type: date
+
+research:
+  prefix: Research
+  idDigits: 3
+  path: ./research
+  template: research.nj
+  aliases: ['researches']
+  fields:
+    created:
+      name: Created
+      type: date
