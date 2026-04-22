@@ -20,4 +20,9 @@
 - [x] [DOD-0017: Clean up platform configuration inconsistencies](./DOD-0017_clean-up-platform-configuration-inconsistencies.md)
 - [x] [DOD-0018: Refactor frontend api layer](./DOD-0018_refactor-frontend-api-layer.md)
 - [x] [DOD-0019: Define API conventions for realm services](./DOD-0019_define-api-conventions-for-realm-services.md)
+- [ ] [DOD-0020: Codex contracts + todo tests](./DOD-0020_codex-contracts-todo-tests.md)
+- [ ] [DOD-0021: Codex law & lore](./DOD-0021_codex-law-lore.md)
+- [ ] [DOD-0022: Codex ground](./DOD-0022_codex-ground.md)
+- [ ] [DOD-0023: Codex part of Council](./DOD-0023_codex-part-of-council.md)
+- [ ] [DOD-0024: Universe settings](./DOD-0024_universe-settings.md)
 <!-- TOC.END -->

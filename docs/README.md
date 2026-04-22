@@ -26,6 +26,10 @@ Records of significant architectural decisions made during development, includin
 
 Documents detailing the system’s architecture, module decomposition, entity relationships, and domain logic before implementation
 
+### [Research](./research/README.md)
+
+Point-in-time investigations that inform design decisions — comparative studies, stress tests against existing systems, technical surveys. Snapshots, not living docs.
+
 ### [Ideas](./ideas/README.md)
 
 Collection of game design concepts, mechanics proposals, and creative brainstorming documents.
