@@ -9,39 +9,39 @@ import {
 } from '@nestjs/common';
 
 import {
-  CardDto,
-  CreateCardDto,
-  CreateCardSchema,
-  UpdateCardDto,
-  UpdateCardSchema,
+  CreateHeroDto,
+  CreateHeroSchema,
+  HeroDto,
+  UpdateHeroDto,
+  UpdateHeroSchema,
 } from '@dod/api-contract';
 import { ZodBody } from '@dod/core';
 
-@Controller('/v1/card')
-export class CardGate {
+@Controller('/v1/hero')
+export class HeroGate {
   @Post()
   @HttpCode(201)
   public create(
-    @ZodBody(CreateCardSchema) _dto: CreateCardDto,
-  ): Promise<CardDto> {
+    @ZodBody(CreateHeroSchema) _dto: CreateHeroDto,
+  ): Promise<HeroDto> {
     throw new Error('Not implemented');
   }
 
   @Patch('/:id')
   public update(
     @Param('id') _id: string,
-    @ZodBody(UpdateCardSchema) _dto: UpdateCardDto,
-  ): Promise<CardDto> {
+    @ZodBody(UpdateHeroSchema) _dto: UpdateHeroDto,
+  ): Promise<HeroDto> {
     throw new Error('Not implemented');
   }
 
   @Get('/:id')
-  public getById(@Param('id') _id: string): Promise<CardDto> {
+  public getById(@Param('id') _id: string): Promise<HeroDto> {
     throw new Error('Not implemented');
   }
 
   @Get()
-  public list(@Query('universeId') _universeId: string): Promise<CardDto[]> {
+  public list(@Query('universeId') _universeId: string): Promise<HeroDto[]> {
     throw new Error('Not implemented');
   }
 }
