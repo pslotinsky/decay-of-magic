@@ -7,6 +7,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 import {
   CreateElementDto,
@@ -17,31 +18,52 @@ import {
 } from '@dod/api-contract';
 import { ZodBody } from '@dod/core';
 
+import { CreateArchetypeCommand } from '@/law/commands/create-archetype.command';
+import { UpdateArchetypeCommand } from '@/law/commands/update-archetype.command';
+import { GetArchetypeQuery } from '@/law/queries/get-archetype.query';
+import { ListArchetypesQuery } from '@/law/queries/list-archetypes.query';
+import { ArchetypeKind } from '@/lore/entities/archetype.entity';
+
 @Controller('/v1/element')
 export class ElementGate {
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
+
   @Post()
   @HttpCode(201)
-  public create(
-    @ZodBody(CreateElementSchema) _dto: CreateElementDto,
+  public async create(
+    @ZodBody(CreateElementSchema) dto: CreateElementDto,
   ): Promise<ElementDto> {
-    throw new Error('Not implemented');
+    return this.commandBus.execute(
+      new CreateArchetypeCommand<ElementDto>(ArchetypeKind.Element, dto),
+    );
   }
 
   @Patch('/:id')
-  public update(
-    @Param('id') _id: string,
-    @ZodBody(UpdateElementSchema) _dto: UpdateElementDto,
+  public async update(
+    @Param('id') id: string,
+    @ZodBody(UpdateElementSchema) dto: UpdateElementDto,
   ): Promise<ElementDto> {
-    throw new Error('Not implemented');
+    return this.commandBus.execute(
+      new UpdateArchetypeCommand<ElementDto>(ArchetypeKind.Element, id, dto),
+    );
   }
 
   @Get('/:id')
-  public getById(@Param('id') _id: string): Promise<ElementDto> {
-    throw new Error('Not implemented');
+  public async getById(@Param('id') id: string): Promise<ElementDto> {
+    return this.queryBus.execute(
+      new GetArchetypeQuery<ElementDto>(ArchetypeKind.Element, id),
+    );
   }
 
   @Get()
-  public list(@Query('universeId') _universeId: string): Promise<ElementDto[]> {
-    throw new Error('Not implemented');
+  public async list(
+    @Query('universeId') universeId: string,
+  ): Promise<ElementDto[]> {
+    return this.queryBus.execute(
+      new ListArchetypesQuery<ElementDto>(ArchetypeKind.Element, universeId),
+    );
   }
 }
