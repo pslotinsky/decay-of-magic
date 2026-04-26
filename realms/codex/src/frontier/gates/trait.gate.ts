@@ -7,6 +7,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 import {
   CreateTraitDto,
@@ -17,31 +18,52 @@ import {
 } from '@dod/api-contract';
 import { ZodBody } from '@dod/core';
 
+import { CreateArchetypeCommand } from '@/law/commands/create-archetype.command';
+import { UpdateArchetypeCommand } from '@/law/commands/update-archetype.command';
+import { GetArchetypeQuery } from '@/law/queries/get-archetype.query';
+import { ListArchetypesQuery } from '@/law/queries/list-archetypes.query';
+import { ArchetypeKind } from '@/lore/entities/archetype.entity';
+
 @Controller('/v1/trait')
 export class TraitGate {
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
+
   @Post()
   @HttpCode(201)
-  public create(
-    @ZodBody(CreateTraitSchema) _dto: CreateTraitDto,
+  public async create(
+    @ZodBody(CreateTraitSchema) dto: CreateTraitDto,
   ): Promise<TraitDto> {
-    throw new Error('Not implemented');
+    return this.commandBus.execute(
+      new CreateArchetypeCommand<TraitDto>(ArchetypeKind.Trait, dto),
+    );
   }
 
   @Patch('/:id')
-  public update(
-    @Param('id') _id: string,
-    @ZodBody(UpdateTraitSchema) _dto: UpdateTraitDto,
+  public async update(
+    @Param('id') id: string,
+    @ZodBody(UpdateTraitSchema) dto: UpdateTraitDto,
   ): Promise<TraitDto> {
-    throw new Error('Not implemented');
+    return this.commandBus.execute(
+      new UpdateArchetypeCommand<TraitDto>(ArchetypeKind.Trait, id, dto),
+    );
   }
 
   @Get('/:id')
-  public getById(@Param('id') _id: string): Promise<TraitDto> {
-    throw new Error('Not implemented');
+  public async getById(@Param('id') id: string): Promise<TraitDto> {
+    return this.queryBus.execute(
+      new GetArchetypeQuery<TraitDto>(ArchetypeKind.Trait, id),
+    );
   }
 
   @Get()
-  public list(@Query('universeId') _universeId: string): Promise<TraitDto[]> {
-    throw new Error('Not implemented');
+  public async list(
+    @Query('universeId') universeId: string,
+  ): Promise<TraitDto[]> {
+    return this.queryBus.execute(
+      new ListArchetypesQuery<TraitDto>(ArchetypeKind.Trait, universeId),
+    );
   }
 }

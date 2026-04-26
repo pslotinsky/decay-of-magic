@@ -7,6 +7,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 import {
   CreateStatDto,
@@ -17,31 +18,52 @@ import {
 } from '@dod/api-contract';
 import { ZodBody } from '@dod/core';
 
+import { CreateArchetypeCommand } from '@/law/commands/create-archetype.command';
+import { UpdateArchetypeCommand } from '@/law/commands/update-archetype.command';
+import { GetArchetypeQuery } from '@/law/queries/get-archetype.query';
+import { ListArchetypesQuery } from '@/law/queries/list-archetypes.query';
+import { ArchetypeKind } from '@/lore/entities/archetype.entity';
+
 @Controller('/v1/stat')
 export class StatGate {
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
+
   @Post()
   @HttpCode(201)
-  public create(
-    @ZodBody(CreateStatSchema) _dto: CreateStatDto,
+  public async create(
+    @ZodBody(CreateStatSchema) dto: CreateStatDto,
   ): Promise<StatDto> {
-    throw new Error('Not implemented');
+    return this.commandBus.execute(
+      new CreateArchetypeCommand<StatDto>(ArchetypeKind.Stat, dto),
+    );
   }
 
   @Patch('/:id')
-  public update(
-    @Param('id') _id: string,
-    @ZodBody(UpdateStatSchema) _dto: UpdateStatDto,
+  public async update(
+    @Param('id') id: string,
+    @ZodBody(UpdateStatSchema) dto: UpdateStatDto,
   ): Promise<StatDto> {
-    throw new Error('Not implemented');
+    return this.commandBus.execute(
+      new UpdateArchetypeCommand<StatDto>(ArchetypeKind.Stat, id, dto),
+    );
   }
 
   @Get('/:id')
-  public getById(@Param('id') _id: string): Promise<StatDto> {
-    throw new Error('Not implemented');
+  public async getById(@Param('id') id: string): Promise<StatDto> {
+    return this.queryBus.execute(
+      new GetArchetypeQuery<StatDto>(ArchetypeKind.Stat, id),
+    );
   }
 
   @Get()
-  public list(@Query('universeId') _universeId: string): Promise<StatDto[]> {
-    throw new Error('Not implemented');
+  public async list(
+    @Query('universeId') universeId: string,
+  ): Promise<StatDto[]> {
+    return this.queryBus.execute(
+      new ListArchetypesQuery<StatDto>(ArchetypeKind.Stat, universeId),
+    );
   }
 }

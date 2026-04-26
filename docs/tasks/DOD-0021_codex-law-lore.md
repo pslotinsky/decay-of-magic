@@ -2,7 +2,7 @@
 
 | Field     | Value                                                     |
 | --------- | --------------------------------------------------------- |
-| Status    | In progress                                               |
+| Status    | Done                                                      |
 | Milestone | [Codex Realm](../milestones/Milestone-005_codex-realm.md) |
 | Created   | 2026-04-22                                                |
 

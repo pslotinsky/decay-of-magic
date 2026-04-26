@@ -1,1 +1,0 @@
-export { ManaPage } from './ManaPage';

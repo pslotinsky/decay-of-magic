@@ -7,6 +7,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 import {
   CreateHeroDto,
@@ -17,31 +18,52 @@ import {
 } from '@dod/api-contract';
 import { ZodBody } from '@dod/core';
 
+import { CreateArchetypeCommand } from '@/law/commands/create-archetype.command';
+import { UpdateArchetypeCommand } from '@/law/commands/update-archetype.command';
+import { GetArchetypeQuery } from '@/law/queries/get-archetype.query';
+import { ListArchetypesQuery } from '@/law/queries/list-archetypes.query';
+import { ArchetypeKind } from '@/lore/entities/archetype.entity';
+
 @Controller('/v1/hero')
 export class HeroGate {
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
+
   @Post()
   @HttpCode(201)
-  public create(
-    @ZodBody(CreateHeroSchema) _dto: CreateHeroDto,
+  public async create(
+    @ZodBody(CreateHeroSchema) dto: CreateHeroDto,
   ): Promise<HeroDto> {
-    throw new Error('Not implemented');
+    return this.commandBus.execute(
+      new CreateArchetypeCommand<HeroDto>(ArchetypeKind.Hero, dto),
+    );
   }
 
   @Patch('/:id')
-  public update(
-    @Param('id') _id: string,
-    @ZodBody(UpdateHeroSchema) _dto: UpdateHeroDto,
+  public async update(
+    @Param('id') id: string,
+    @ZodBody(UpdateHeroSchema) dto: UpdateHeroDto,
   ): Promise<HeroDto> {
-    throw new Error('Not implemented');
+    return this.commandBus.execute(
+      new UpdateArchetypeCommand<HeroDto>(ArchetypeKind.Hero, id, dto),
+    );
   }
 
   @Get('/:id')
-  public getById(@Param('id') _id: string): Promise<HeroDto> {
-    throw new Error('Not implemented');
+  public async getById(@Param('id') id: string): Promise<HeroDto> {
+    return this.queryBus.execute(
+      new GetArchetypeQuery<HeroDto>(ArchetypeKind.Hero, id),
+    );
   }
 
   @Get()
-  public list(@Query('universeId') _universeId: string): Promise<HeroDto[]> {
-    throw new Error('Not implemented');
+  public async list(
+    @Query('universeId') universeId: string,
+  ): Promise<HeroDto[]> {
+    return this.queryBus.execute(
+      new ListArchetypesQuery<HeroDto>(ArchetypeKind.Hero, universeId),
+    );
   }
 }

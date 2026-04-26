@@ -7,6 +7,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 import {
   CreateFactionDto,
@@ -17,31 +18,52 @@ import {
 } from '@dod/api-contract';
 import { ZodBody } from '@dod/core';
 
+import { CreateArchetypeCommand } from '@/law/commands/create-archetype.command';
+import { UpdateArchetypeCommand } from '@/law/commands/update-archetype.command';
+import { GetArchetypeQuery } from '@/law/queries/get-archetype.query';
+import { ListArchetypesQuery } from '@/law/queries/list-archetypes.query';
+import { ArchetypeKind } from '@/lore/entities/archetype.entity';
+
 @Controller('/v1/faction')
 export class FactionGate {
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
+
   @Post()
   @HttpCode(201)
-  public create(
-    @ZodBody(CreateFactionSchema) _dto: CreateFactionDto,
+  public async create(
+    @ZodBody(CreateFactionSchema) dto: CreateFactionDto,
   ): Promise<FactionDto> {
-    throw new Error('Not implemented');
+    return this.commandBus.execute(
+      new CreateArchetypeCommand<FactionDto>(ArchetypeKind.Faction, dto),
+    );
   }
 
   @Patch('/:id')
-  public update(
-    @Param('id') _id: string,
-    @ZodBody(UpdateFactionSchema) _dto: UpdateFactionDto,
+  public async update(
+    @Param('id') id: string,
+    @ZodBody(UpdateFactionSchema) dto: UpdateFactionDto,
   ): Promise<FactionDto> {
-    throw new Error('Not implemented');
+    return this.commandBus.execute(
+      new UpdateArchetypeCommand<FactionDto>(ArchetypeKind.Faction, id, dto),
+    );
   }
 
   @Get('/:id')
-  public getById(@Param('id') _id: string): Promise<FactionDto> {
-    throw new Error('Not implemented');
+  public async getById(@Param('id') id: string): Promise<FactionDto> {
+    return this.queryBus.execute(
+      new GetArchetypeQuery<FactionDto>(ArchetypeKind.Faction, id),
+    );
   }
 
   @Get()
-  public list(@Query('universeId') _universeId: string): Promise<FactionDto[]> {
-    throw new Error('Not implemented');
+  public async list(
+    @Query('universeId') universeId: string,
+  ): Promise<FactionDto[]> {
+    return this.queryBus.execute(
+      new ListArchetypesQuery<FactionDto>(ArchetypeKind.Faction, universeId),
+    );
   }
 }
