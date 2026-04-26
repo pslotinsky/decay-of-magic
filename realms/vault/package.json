@@ -23,7 +23,7 @@
     "docs": "poe inspect"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1032.0",
+    "@aws-sdk/client-s3": "^3.1037.0",
     "@dod/api-contract": "*",
     "@dod/core": "*",
     "@nestjs/common": "^11.1.19",
