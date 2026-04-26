@@ -1,7 +1,7 @@
 # ================================
 # 🔍 Stage: Prune
 # ================================
-FROM node:24-alpine AS pruner
+FROM node:25-alpine AS pruner
 RUN npm install -g turbo@2
 WORKDIR /app
 COPY . .
@@ -10,7 +10,7 @@ RUN turbo prune council-web --docker
 # ================================
 # 📦 Stage: Install
 # ================================
-FROM node:24-alpine AS installer
+FROM node:25-alpine AS installer
 WORKDIR /app
 
 COPY --from=pruner /app/out/json/ .
@@ -26,7 +26,7 @@ RUN npm run build -w packages/api-contract
 # 🚀 Stage: Development
 # src is volume-mounted by docker-compose
 # ================================
-FROM node:24-alpine AS dev
+FROM node:25-alpine AS dev
 WORKDIR /app
 
 COPY --from=installer /app/node_modules ./node_modules
@@ -52,6 +52,6 @@ WORKDIR /app/apps/council-web
 RUN npm run build
 
 # Expose dist for use by a web server
-FROM node:24-alpine AS static
+FROM node:25-alpine AS static
 WORKDIR /app/apps/council-web
 COPY --from=builder /app/apps/council-web/dist ./dist
