@@ -5,4 +5,5 @@
 - [x] [Milestone-002: Citizen Realm](./Milestone-002_citizen-realm.md)
 - [x] [Milestone-003: Universe Realm](./Milestone-003_universe-realm.md)
 - [x] [Milestone-004: Platform Baseline & Consistency](./Milestone-004_platform-baseline-consistency.md)
+- [ ] [Milestone-005: Codex Realm](./Milestone-005_codex-realm.md)
 <!-- TOC.END -->

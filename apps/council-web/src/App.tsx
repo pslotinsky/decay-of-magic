@@ -1,10 +1,8 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { CardsPage } from './pages/CardsPage';
 import { CitizensPage } from './pages/CitizensPage';
 import { LoginPage } from './pages/LoginPage';
-import { ManaPage } from './pages/ManaPage';
 import { UniversePage } from './pages/UniversePage';
 import { UniversesPage } from './pages/UniversesPage';
 
@@ -34,22 +32,6 @@ function App() {
           element={
             <ProtectedRoute>
               <CitizensPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/mana"
-          element={
-            <ProtectedRoute>
-              <ManaPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/card"
-          element={
-            <ProtectedRoute>
-              <CardsPage />
             </ProtectedRoute>
           }
         />

@@ -99,6 +99,8 @@ services:
       /bin/sh -c "
       psql -h db -U $${POSTGRES_USER} -d postgres -lqt | cut -d'|' -f1 | grep -qw codex ||
       psql -h db -U $${POSTGRES_USER} -d postgres -c 'CREATE DATABASE codex';
+      psql -h db -U $${POSTGRES_USER} -d postgres -lqt | cut -d'|' -f1 | grep -qw codex_test ||
+      psql -h db -U $${POSTGRES_USER} -d postgres -c 'CREATE DATABASE codex_test';
       psql -h db -U $${POSTGRES_USER} -d postgres -lqt | cut -d'|' -f1 | grep -qw citizen ||
       psql -h db -U $${POSTGRES_USER} -d postgres -c 'CREATE DATABASE citizen';
       psql -h db -U $${POSTGRES_USER} -d postgres -lqt | cut -d'|' -f1 | grep -qw citizen_test ||
