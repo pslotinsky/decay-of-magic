@@ -179,28 +179,12 @@ classDiagram
 
 ```mermaid
 erDiagram
-  Mana {
-    string id PK
+  Archetype {
+    string id
+    string universeId
+    string kind
     string name
-    string type
+    json payload
   }
-  Mage {
-    string id PK
-    string name
-    string imageUrl
-    string description
-    string manaId
-  }
-  Card {
-    string id PK
-    string name
-    string imageUrl
-    string description
-    int level
-    int cost
-    string manaId
-  }
-  Mage }o--|| Mana : mana
-  Card }o--|| Mana : mana
 ```
 <!-- poe:classes:end -->

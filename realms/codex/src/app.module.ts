@@ -10,7 +10,7 @@ import { HeroGate } from './frontier/gates/hero.gate';
 import { StatGate } from './frontier/gates/stat.gate';
 import { TraitGate } from './frontier/gates/trait.gate';
 import { PrismaService } from './ground/prisma.service';
-import { InMemoryArchetypeRepository } from './ground/repositories/in-memory-archetype.repository';
+import { PrismaArchetypeRepository } from './ground/repositories/prisma-archetype.repository';
 import { CreateArchetypeHandler } from './law/commands/create-archetype.command';
 import { UpdateArchetypeHandler } from './law/commands/update-archetype.command';
 import { GetArchetypeHandler } from './law/queries/get-archetype.query';
@@ -23,7 +23,7 @@ const commandHandlers = [CreateArchetypeHandler, UpdateArchetypeHandler];
 const queryHandlers = [GetArchetypeHandler, ListArchetypesHandler];
 
 const repositories = [
-  { provide: ArchetypeRepository, useClass: InMemoryArchetypeRepository },
+  { provide: ArchetypeRepository, useClass: PrismaArchetypeRepository },
 ];
 
 const services = [ArchetypeFactory, PrismaService];
