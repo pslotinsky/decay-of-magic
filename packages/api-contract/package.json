@@ -13,11 +13,11 @@
     "docs": "poe inspect"
   },
   "dependencies": {
-    "zod": "^4.3.6"
+    "zod": "^4.4.2"
   },
   "devDependencies": {
     "@dod/config": "*",
-    "eslint": "^10.2.1",
+    "eslint": "^10.3.0",
     "prettier": "^3.8.3",
     "typescript": "^6.0.3"
   }

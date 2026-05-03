@@ -25,10 +25,10 @@
     "@dod/config": "*",
     "@nestjs/common": "^11.1.19",
     "@nestjs/core": "^11.1.19",
-    "eslint": "^10.2.1",
+    "eslint": "^10.3.0",
     "prettier": "^3.8.3",
     "rxjs": "^7.8.2",
     "typescript": "^6.0.3",
-    "zod": "^4.3.6"
+    "zod": "^4.4.2"
   }
 }
