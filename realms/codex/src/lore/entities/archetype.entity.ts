@@ -35,6 +35,15 @@ export abstract class Archetype extends Entity {
     this.name = params.name;
   }
 
+  public override update<T extends object>(
+    this: T,
+    params: Partial<T>,
+  ): Set<keyof T> {
+    const changed = super.update(params) as unknown as Set<keyof T>;
+    (this as unknown as Archetype).enforceInvariants();
+    return changed;
+  }
+
   public toDto(): ArchetypeIdentity {
     return {
       id: this.id,
@@ -42,4 +51,11 @@ export abstract class Archetype extends Entity {
       name: this.name,
     };
   }
+
+  /**
+   * Subclasses override to normalize internal state after a mutation.
+   * Called automatically from the constructor and from `update`. Default
+   * implementation is a no-op.
+   */
+  protected enforceInvariants(): void {}
 }

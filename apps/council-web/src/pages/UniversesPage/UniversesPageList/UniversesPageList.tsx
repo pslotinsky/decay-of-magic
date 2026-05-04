@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import type { UniverseDto } from '@dod/api-contract';
 
 import { Card } from '@/components/Card';
+import { ErrorText } from '@/components/ErrorText';
 import { IconButton } from '@/components/IconButton';
 
 import styles from './UniversesPageList.module.scss';
@@ -19,7 +20,7 @@ export function UniversesPageList({ universes, error, onEdit }: Props) {
   const navigate = useNavigate();
 
   if (error) {
-    return <p className={styles.error}>{error}</p>;
+    return <ErrorText message={error} />;
   }
 
   if (universes.length === 0) {

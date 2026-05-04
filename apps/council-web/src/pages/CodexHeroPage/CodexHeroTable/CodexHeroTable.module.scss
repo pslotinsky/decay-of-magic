@@ -1,0 +1,54 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: var(--space-3) var(--space-4);
+    text-align: left;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  th {
+    font-size: var(--type-label-medium-size);
+    font-weight: var(--type-label-medium-weight);
+    font-variant: small-caps;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.row {
+  cursor: pointer;
+  transition: background 0.1s;
+
+  &:hover {
+    background: var(--border-light);
+  }
+
+  &:hover .actions :global(button) {
+    opacity: 1;
+  }
+}
+
+.actions {
+  width: 1%;
+  text-align: right;
+
+  :global(button) {
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.empty {
+  color: var(--muted);
+}

@@ -1,0 +1,1 @@
+export { CodexElementTable } from './CodexElementTable';

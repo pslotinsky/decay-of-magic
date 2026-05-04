@@ -1,12 +1,17 @@
-import { Globe, LogOut, Users } from 'lucide-react';
-import { Link, NavLink } from 'react-router';
+import { LogOut } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { Link } from 'react-router';
 
 import rostraImg from '../../assets/rostra.webp';
 import { useAuth } from '../../context/useAuth';
 
 import styles from './NavMenu.module.scss';
 
-export function NavMenu() {
+interface Props {
+  children: ReactNode;
+}
+
+export function NavMenu({ children }: Props) {
   const { citizen, logout } = useAuth();
 
   return (
@@ -16,30 +21,7 @@ export function NavMenu() {
         <span className={styles.logoName}>The Council</span>
       </Link>
       <div className={styles.inner}>
-        <ul className={styles.links}>
-          <li>
-            <NavLink
-              to="/universe"
-              className={({ isActive }) =>
-                isActive ? styles.active : undefined
-              }
-            >
-              <Globe />
-              Universes
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/citizen"
-              className={({ isActive }) =>
-                isActive ? styles.active : undefined
-              }
-            >
-              <Users />
-              Register of Citizens
-            </NavLink>
-          </li>
-        </ul>
+        {children}
         <span className={styles.citizen}>{citizen?.nickname}</span>
         <button className={styles.logout} onClick={() => void logout()}>
           <LogOut />
@@ -48,4 +30,8 @@ export function NavMenu() {
       </div>
     </nav>
   );
+}
+
+export function navLinkClass({ isActive }: { isActive: boolean }) {
+  return isActive ? styles.active : undefined;
 }

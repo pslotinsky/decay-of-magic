@@ -18,6 +18,7 @@ export class CardArchetype extends Archetype {
     const { id, universeId, name, ...data } = dto;
     super({ id, universeId, name });
     this.data = data;
+    this.enforceInvariants();
   }
 
   public override toDto(): CardDto {
@@ -25,5 +26,13 @@ export class CardArchetype extends Archetype {
       ...super.toDto(),
       ...this.data,
     };
+  }
+
+  protected override enforceInvariants(): void {
+    if (this.data.activation !== 'emptySlot' && this.data.stats) {
+      const { stats: _drop, ...rest } = this.data;
+      void _drop;
+      this.data = rest as CardData;
+    }
   }
 }

@@ -1,6 +1,7 @@
 import type { CitizenDto } from '@dod/api-contract';
 
 import { Card } from '@/components/Card';
+import { ErrorText } from '@/components/ErrorText';
 
 import styles from './CitizensPageList.module.scss';
 
@@ -13,7 +14,7 @@ interface Props {
 
 export function CitizensPageList({ citizens, error, onEdit }: Props) {
   if (error) {
-    return <p className={styles.error}>{error}</p>;
+    return <ErrorText message={error} />;
   }
 
   if (citizens.length === 0) {

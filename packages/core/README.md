@@ -21,15 +21,20 @@ classDiagram
     class UnauthenticatedError
     class UnprocessableError
     class ValidationFailedError
+    class CoreHttpModule
     class EnvelopeInterceptor {
       -Reflector reflector
       +intercept()
     }
     class ErrorFilter {
+      -ErrorLogger errorLogger
       +catch()
       -map()
       -envelope()
       -messageOf()
+    }
+    class ErrorLogger {
+      +log()
     }
     class ZodPipe {
       -TSchema schema
@@ -71,6 +76,7 @@ classDiagram
   UnauthenticatedError --|> DomainError
   UnprocessableError --|> DomainError
   ValidationFailedError --|> DomainError
+  ErrorFilter *-- ErrorLogger
   ErrorFilter --> DomainError
   ZodPipe --> ValidationFailedError
   EntityRepository --> Entity
@@ -94,8 +100,10 @@ classDiagram
 | errors/[UnauthenticatedError](src/errors/unauthenticated.error.ts) | Signals that the caller is not authenticated.<br><br>Extends [DomainError](src/errors/domain.error.ts) |
 | errors/[UnprocessableError](src/errors/unprocessable.error.ts) | Signals that the request is well-formed but rejected on semantic grounds —<br>a domain rule prevents the operation from completing.<br><br>Extends [DomainError](src/errors/domain.error.ts) |
 | errors/[ValidationFailedError](src/errors/validation-failed.error.ts) | Signals that input failed schema validation. Carries per-field details so<br>callers can surface structured feedback.<br><br>Extends [DomainError](src/errors/domain.error.ts) |
+| http/[CoreHttpModule](src/http/core-http.module.ts) |  |
 | http/[EnvelopeInterceptor](src/http/envelope.interceptor.ts) | Implements `NestInterceptor` |
 | http/[ErrorFilter](src/http/error.filter.ts) | Implements `ExceptionFilter` |
+| http/[ErrorLogger](src/http/error.logger.ts) |  |
 | http/[ZodPipe](src/http/zod.pipe.ts) |  |
 | repositories/[EntityRepository](src/repositories/entity.repository.ts) | Abstract base for domain repositories. Defines the standard CRUD contract<br>that all entity repositories must implement.<br><br>Abstract |
 | repositories/[InMemoryRepository](src/repositories/in-memory.repository.ts) | In-memory implementation of EntityRepository. Provides getById, find, and<br>save via a per-instance Map; intended for tests and prototypes where<br>persistence is out of scope.<br><br>Abstract |

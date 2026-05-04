@@ -188,7 +188,7 @@ A `passive` `increaseStat` therefore behaves like a tracked binding, not a one-s
 
 ### Target
 
-The set of entities the ability sees. A target is always a bare slug naming the scope.
+The set of entities the ability sees. A target is either a bare slug naming the scope, or a non-empty list of slugs whose resolved sets are unioned.
 
 ```yaml
 target: self
@@ -199,7 +199,10 @@ target: ownerMinions
 target: enemyMinions
 target: allMinions          # ownerMinions ∪ enemyMinions
 target: chosen              # the play-time pick
+target: [enemyHero, enemyMinions]   # all enemies
 ```
+
+When given a list, each scope is resolved independently and the engine takes the union. Order has no semantic meaning. A single scope may be written as a bare slug or a one-element list — engines treat them identically.
 
 Narrowing happens at two layers, both optional and orthogonal to `target`:
 

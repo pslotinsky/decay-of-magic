@@ -5,6 +5,7 @@ import type { CitizenDto } from '@dod/api-contract';
 import { useUpdateCitizen } from '@/api/citizen';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
+import { ErrorText } from '@/components/ErrorText';
 
 import styles from './CitizensPageCitizenEditing.module.scss';
 
@@ -12,6 +13,8 @@ interface Props {
   citizen: CitizenDto | null;
   onClose: () => void;
 }
+
+const FORM_ID = 'citizen-edit';
 
 export function CitizensPageCitizenEditing({ citizen, onClose }: Props) {
   const [nickname, setNickname] = useState(citizen?.nickname ?? '');
@@ -26,8 +29,20 @@ export function CitizensPageCitizenEditing({ citizen, onClose }: Props) {
   }
 
   return (
-    <Drawer open={!!citizen} title="Edit Citizen" onClose={onClose}>
-      <form onSubmit={handleSubmit} className={styles.form}>
+    <Drawer
+      open={!!citizen}
+      title="Edit Citizen"
+      onClose={onClose}
+      footer={
+        <>
+          <ErrorText message={error?.message} />
+          <Button type="submit" form={FORM_ID} disabled={isPending}>
+            {isPending ? 'Saving…' : 'Save'}
+          </Button>
+        </>
+      }
+    >
+      <form id={FORM_ID} onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.field}>
           <span className={styles.label}>Nickname</span>
           <input
@@ -36,10 +51,6 @@ export function CitizensPageCitizenEditing({ citizen, onClose }: Props) {
             required
           />
         </div>
-        {error && <p className={styles.error}>{error.message}</p>}
-        <Button type="submit" disabled={isPending}>
-          {isPending ? 'Saving…' : 'Save'}
-        </Button>
       </form>
     </Drawer>
   );

@@ -14,6 +14,7 @@ import { ZodBody } from '@dod/core';
 
 import { UploadFileCommand } from '@/law/commands/upload-file.command';
 import { File } from '@/lore/file.entity';
+import { FileTransform } from '@/lore/file-transform';
 
 @Controller('/v1/file')
 export class FileGate {
@@ -27,13 +28,17 @@ export class FileGate {
     @ZodBody(UploadFileSchema) body: UploadFileDto,
     @UploadedFile() uploadedFile: Express.Multer.File,
   ): Promise<FileDto> {
+    const { transform, ...rest } = body;
+
     const file = File.create({
-      ...body,
+      ...rest,
       buffer: uploadedFile.buffer,
       name: uploadedFile.originalname,
       mimetype: uploadedFile.mimetype,
     });
 
-    return this.commandBus.execute(new UploadFileCommand(file));
+    return this.commandBus.execute(
+      new UploadFileCommand(file, transform as FileTransform | undefined),
+    );
   }
 }

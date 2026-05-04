@@ -27,6 +27,8 @@ export type Target =
   | 'enemyMinions'
   | 'allMinions';
 
+export type Targets = Target | Target[];
+
 export type EffectKind =
   | 'damage'
   | 'heal'
@@ -121,13 +123,13 @@ export type Effect =
 export type Ability =
   | {
       trigger: Trigger;
-      target: Target;
+      target: Targets;
       exclude?: Expression;
       effects: Effect[];
     }
   | {
       passive: true;
-      target: Target;
+      target: Targets;
       exclude?: Expression;
       effects: Effect[];
     };

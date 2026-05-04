@@ -3,6 +3,7 @@ import { type SyntheticEvent, useState } from 'react';
 import { useRegisterCitizen } from '@/api/citizen';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
+import { ErrorText } from '@/components/ErrorText';
 
 import styles from './CitizensPageCitizenRegistration.module.scss';
 
@@ -10,6 +11,8 @@ interface Props {
   open: boolean;
   onClose: () => void;
 }
+
+const FORM_ID = 'citizen-register';
 
 export function CitizensPageCitizenRegistration({ open, onClose }: Props) {
   const [nickname, setNickname] = useState('');
@@ -31,8 +34,20 @@ export function CitizensPageCitizenRegistration({ open, onClose }: Props) {
   }
 
   return (
-    <Drawer open={open} title="Enroll Citizen" onClose={onClose}>
-      <form onSubmit={handleSubmit} className={styles.form}>
+    <Drawer
+      open={open}
+      title="Enroll Citizen"
+      onClose={onClose}
+      footer={
+        <>
+          <ErrorText message={error?.message} />
+          <Button type="submit" form={FORM_ID} disabled={isPending}>
+            {isPending ? 'Enrolling…' : 'Enroll'}
+          </Button>
+        </>
+      }
+    >
+      <form id={FORM_ID} onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.field}>
           <span className={styles.label}>Nickname</span>
           <input
@@ -53,10 +68,6 @@ export function CitizensPageCitizenRegistration({ open, onClose }: Props) {
             required
           />
         </div>
-        {error && <p className={styles.error}>{error.message}</p>}
-        <Button type="submit" disabled={isPending}>
-          {isPending ? 'Enrolling…' : 'Enroll'}
-        </Button>
       </form>
     </Drawer>
   );

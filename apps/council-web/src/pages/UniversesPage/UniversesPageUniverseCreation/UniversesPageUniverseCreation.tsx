@@ -3,6 +3,7 @@ import { type SyntheticEvent, useState } from 'react';
 import { useCreateUniverse } from '@/api/universe';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
+import { ErrorText } from '@/components/ErrorText';
 import { ImageInput } from '@/components/ImageInput';
 import { Textarea } from '@/components/Textarea';
 
@@ -12,6 +13,8 @@ interface Props {
   open: boolean;
   onClose: () => void;
 }
+
+const FORM_ID = 'universe-create';
 
 export function UniversesPageUniverseCreation({ open, onClose }: Props) {
   const [id, setId] = useState('');
@@ -42,8 +45,20 @@ export function UniversesPageUniverseCreation({ open, onClose }: Props) {
   }
 
   return (
-    <Drawer open={open} title="Create Universe" onClose={onClose}>
-      <form onSubmit={handleSubmit} className={styles.form}>
+    <Drawer
+      open={open}
+      title="Create Universe"
+      onClose={onClose}
+      footer={
+        <>
+          <ErrorText message={error?.message} />
+          <Button type="submit" form={FORM_ID} disabled={isPending}>
+            {isPending ? 'Creating…' : 'Create'}
+          </Button>
+        </>
+      }
+    >
+      <form id={FORM_ID} onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.field}>
           <span className={styles.label}>Id</span>
           <input
@@ -74,10 +89,6 @@ export function UniversesPageUniverseCreation({ open, onClose }: Props) {
           <span className={styles.label}>Cover</span>
           <ImageInput value={cover} onChange={setCover} />
         </div>
-        {error && <p className={styles.error}>{error.message}</p>}
-        <Button type="submit" disabled={isPending}>
-          {isPending ? 'Creating…' : 'Create'}
-        </Button>
       </form>
     </Drawer>
   );

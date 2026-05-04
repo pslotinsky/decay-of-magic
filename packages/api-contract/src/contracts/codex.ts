@@ -37,6 +37,12 @@ export const TARGET_VALUES = [
 export const TargetSchema = z.enum(TARGET_VALUES);
 export type Target = z.infer<typeof TargetSchema>;
 
+export const TargetsSchema = z.union([
+  TargetSchema,
+  z.array(TargetSchema).min(1),
+]);
+export type Targets = z.infer<typeof TargetsSchema>;
+
 export const ACTIVATION_VALUES = [
   'emptySlot',
   'enemyMinion',
@@ -218,14 +224,14 @@ export { EffectSchema };
 
 const TriggeredAbilitySchema = z.strictObject({
   trigger: TriggerSchema,
-  target: TargetSchema,
+  target: TargetsSchema,
   exclude: ExpressionSchema.optional(),
   effects: z.array(EffectSchema).min(1),
 });
 
 const PassiveAbilitySchema = z.strictObject({
   passive: z.literal(true),
-  target: TargetSchema,
+  target: TargetsSchema,
   exclude: ExpressionSchema.optional(),
   effects: z.array(EffectSchema).min(1),
 });
@@ -331,17 +337,30 @@ export type CardDto = z.infer<typeof CardSchema>;
 export const CreateCardSchema = CardSchema;
 export type CreateCardDto = z.infer<typeof CreateCardSchema>;
 
-export const UpdateCardSchema = z.object({
-  name: LongName.optional(),
-  description: Description.optional(),
-  art: z.url().optional(),
-  factions: z.array(Slug).optional(),
-  cost: CostSchema.optional(),
-  stats: StatBlockSchema.optional(),
-  traits: z.array(Slug).optional(),
-  activation: ActivationSchema.optional(),
-  abilities: z.array(AbilitySchema).optional(),
-});
+export const UpdateCardSchema = z
+  .object({
+    name: LongName.optional(),
+    description: Description.optional(),
+    art: z.url().optional(),
+    factions: z.array(Slug).optional(),
+    cost: CostSchema.optional(),
+    stats: StatBlockSchema.optional(),
+    traits: z.array(Slug).optional(),
+    activation: ActivationSchema.optional(),
+    abilities: z.array(AbilitySchema).optional(),
+  })
+  .refine(
+    (data) =>
+      !(
+        data.activation !== undefined &&
+        data.activation !== 'emptySlot' &&
+        data.stats !== undefined
+      ),
+    {
+      message: cardActivationStatsMessage,
+      path: ['stats'],
+    },
+  );
 export type UpdateCardDto = z.infer<typeof UpdateCardSchema>;
 
 export const HeroSchema = z.object({

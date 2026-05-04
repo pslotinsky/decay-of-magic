@@ -4,15 +4,23 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  Injectable,
 } from '@nestjs/common';
 
 import { ErrorCode, ErrorDetail, ErrorEnvelope } from '@dod/api-contract';
 
 import { DomainError } from '../errors/domain.error';
+import { ErrorLogger } from './error.logger';
 
 type ResponseLike = {
   status(code: number): ResponseLike;
   json(body: unknown): void;
+};
+
+type RequestLike = {
+  method?: string;
+  url?: string;
+  originalUrl?: string;
 };
 
 const CODE_TO_STATUS: Record<ErrorCode, number> = {
@@ -38,14 +46,18 @@ const STATUS_TO_CODE: Record<number, ErrorCode> = {
 type Mapped = { status: number; envelope: ErrorEnvelope };
 
 @Catch()
+@Injectable()
 export class ErrorFilter implements ExceptionFilter {
+  public constructor(private readonly errorLogger: ErrorLogger) {}
+
   public catch(exception: unknown, host: ArgumentsHost): void {
+    const http = host.switchToHttp();
+    const request = http.getRequest<RequestLike>();
     const { status, envelope } = this.map(exception);
-    host
-      .switchToHttp()
-      .getResponse<ResponseLike>()
-      .status(status)
-      .json(envelope);
+
+    this.errorLogger.log(request, status, envelope, exception);
+
+    http.getResponse<ResponseLike>().status(status).json(envelope);
   }
 
   private map(exception: unknown): Mapped {

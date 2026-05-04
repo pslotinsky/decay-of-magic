@@ -5,6 +5,7 @@ import type { UniverseDto } from '@dod/api-contract';
 import { useUpdateUniverse } from '@/api/universe';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
+import { ErrorText } from '@/components/ErrorText';
 import { ImageInput } from '@/components/ImageInput';
 import { Textarea } from '@/components/Textarea';
 
@@ -14,6 +15,8 @@ interface Props {
   universe: UniverseDto | null;
   onClose: () => void;
 }
+
+const FORM_ID = 'universe-edit';
 
 export function UniversesPageUniverseEditing({ universe, onClose }: Props) {
   const [name, setName] = useState(universe?.name ?? '');
@@ -38,8 +41,20 @@ export function UniversesPageUniverseEditing({ universe, onClose }: Props) {
   }
 
   return (
-    <Drawer open={!!universe} title="Edit Universe" onClose={onClose}>
-      <form onSubmit={handleSubmit} className={styles.form}>
+    <Drawer
+      open={!!universe}
+      title="Edit Universe"
+      onClose={onClose}
+      footer={
+        <>
+          <ErrorText message={error?.message} />
+          <Button type="submit" form={FORM_ID} disabled={isPending}>
+            {isPending ? 'Saving…' : 'Save'}
+          </Button>
+        </>
+      }
+    >
+      <form id={FORM_ID} onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.field}>
           <span className={styles.label}>Name</span>
           <input
@@ -60,10 +75,6 @@ export function UniversesPageUniverseEditing({ universe, onClose }: Props) {
           <span className={styles.label}>Cover</span>
           <ImageInput value={cover} onChange={setCover} />
         </div>
-        {error && <p className={styles.error}>{error.message}</p>}
-        <Button type="submit" disabled={isPending}>
-          {isPending ? 'Saving…' : 'Save'}
-        </Button>
       </form>
     </Drawer>
   );

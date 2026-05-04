@@ -7,9 +7,10 @@ interface Props {
   title: string;
   onClose: () => void;
   children: ReactNode;
+  footer?: ReactNode;
 }
 
-export function Drawer({ open, title, onClose, children }: Props) {
+export function Drawer({ open, title, onClose, children, footer }: Props) {
   return (
     <>
       <div
@@ -23,7 +24,8 @@ export function Drawer({ open, title, onClose, children }: Props) {
             ✕
           </button>
         </div>
-        <div className={styles.body}>{children}</div>
+        <div className={styles.body}>{open && children}</div>
+        {footer && <div className={styles.footer}>{footer}</div>}
       </div>
     </>
   );

@@ -1,0 +1,1 @@
+export { CodexFactionTable } from './CodexFactionTable';

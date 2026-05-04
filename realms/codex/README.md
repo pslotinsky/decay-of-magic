@@ -111,12 +111,15 @@ classDiagram
       +string id
       +string universeId
       +string name
+      +update()
       +toDto()
+      #enforceInvariants()
     }
     class CardArchetype {
       +ArchetypeKind kind
       +CardData data
       +toDto()
+      #enforceInvariants()
     }
     class ElementArchetype {
       +ArchetypeKind kind

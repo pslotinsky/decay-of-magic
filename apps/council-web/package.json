@@ -12,24 +12,23 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "@dod/api-contract": "*",
-    "@tanstack/react-query": "^5.100.9",
-    "clsx": "^2.1.1",
-    "ky": "^2.0.2",
-    "lucide-react": "^1.14.0",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "react-router": "^7.14.2"
-  },
   "devDependencies": {
+    "@dod/api-contract": "*",
     "@dod/config": "*",
+    "@tanstack/react-query": "^5.100.9",
     "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
+    "clsx": "^2.1.1",
     "eslint": "^10.3.0",
+    "ky": "^2.0.2",
+    "lucide-react": "^1.14.0",
     "prettier": "^3.8.3",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "react-easy-crop": "^5.5.7",
+    "react-router": "^7.14.2",
     "sass-embedded": "^1.99.0",
     "typescript": "~6.0.3",
     "vite": "^8.0.10"
