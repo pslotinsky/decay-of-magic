@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { useLoginMutation } from '@/api/session';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
+import { ErrorText } from '@/components/ErrorText';
 
 import styles from './LoginPage.module.scss';
 
@@ -52,7 +53,10 @@ export function LoginPage() {
           </div>
 
           {login.isError && (
-            <p className={styles.error}>Invalid credentials. Try again.</p>
+            <ErrorText
+              message="Invalid credentials. Try again."
+              className={styles.error}
+            />
           )}
 
           <Button type="submit" disabled={login.isPending}>

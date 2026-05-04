@@ -1,0 +1,1 @@
+export { CodexHeroPage } from './CodexHeroPage';

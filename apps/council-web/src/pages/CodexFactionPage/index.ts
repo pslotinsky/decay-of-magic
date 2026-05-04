@@ -1,0 +1,1 @@
+export { CodexFactionPage } from './CodexFactionPage';

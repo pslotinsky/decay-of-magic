@@ -1,0 +1,31 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+
+  button {
+    width: 100%;
+    margin-top: var(--space-2);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  font-size: var(--type-label-medium-size);
+  font-weight: var(--type-label-medium-weight);
+  font-variant: small-caps;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+}
+.readonly {
+  font-family: var(--font-mono, monospace);
+  font-size: var(--type-body-medium-size);
+  color: var(--muted);
+  padding: var(--space-2) 0;
+  word-break: break-all;
+}

@@ -1,0 +1,1 @@
+export { CodexCardPage } from './CodexCardPage';

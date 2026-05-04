@@ -5,7 +5,7 @@ import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CitizenDto, SessionDto, unwrap } from '@dod/api-contract';
-import { EnvelopeInterceptor, ErrorFilter } from '@dod/core';
+import { EnvelopeInterceptor } from '@dod/core';
 
 import { AppModule } from '../../src/app.module';
 import { PrismaService } from '../../src/ground/prisma.service';
@@ -22,7 +22,6 @@ describe('SessionGate (api)', () => {
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('/api');
     app.useGlobalInterceptors(new EnvelopeInterceptor(app.get(Reflector)));
-    app.useGlobalFilters(new ErrorFilter());
     await app.init();
 
     prisma = moduleFixture.get(PrismaService);

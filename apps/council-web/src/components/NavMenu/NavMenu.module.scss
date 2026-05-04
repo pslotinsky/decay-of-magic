@@ -93,6 +93,24 @@
   }
 }
 
+.universeName {
+  margin-top: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid rgba(220, 210, 190, 0.15);
+  margin-bottom: var(--space-2);
+
+  a {
+    font-family: var(--font-heading);
+    font-size: var(--type-title-large-size);
+    font-weight: var(--type-title-large-weight);
+    color: var(--bg);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+  }
+}
+
 .citizen {
   margin-top: auto;
   padding-top: var(--space-7);

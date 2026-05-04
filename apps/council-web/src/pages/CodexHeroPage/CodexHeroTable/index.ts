@@ -1,0 +1,1 @@
+export { CodexHeroTable } from './CodexHeroTable';

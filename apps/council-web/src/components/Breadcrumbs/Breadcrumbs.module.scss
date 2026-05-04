@@ -1,25 +1,27 @@
 .breadcrumbs {
   display: flex;
   align-items: center;
-  margin-bottom: var(--space-2);
+  flex-wrap: wrap;
+  gap: 0 var(--space-2);
+  font-family: var(--font-heading);
+  min-height: var(--space-12);
 }
 
 .crumb {
-  display: flex;
-  align-items: center;
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
 }
 
 .sep {
-  font-size: var(--type-label-medium-size);
+  font-size: var(--type-headline-small-size);
   color: var(--light-muted);
-  margin: 0 var(--space-2);
 }
 
 .link {
-  font-size: var(--type-label-medium-size);
-  font-weight: var(--type-label-medium-weight);
-  font-variant: small-caps;
-  letter-spacing: 0.15em;
+  font-size: var(--type-headline-small-size);
+  font-weight: var(--type-title-large-weight);
+  letter-spacing: 0.02em;
   color: var(--muted);
   transition: color 0.15s;
 
@@ -29,9 +31,8 @@
 }
 
 .text {
-  font-size: var(--type-label-medium-size);
-  font-weight: var(--type-label-medium-weight);
-  font-variant: small-caps;
-  letter-spacing: 0.15em;
-  color: var(--light-muted);
+  font-size: var(--type-headline-small-size);
+  font-weight: var(--type-headline-small-weight);
+  letter-spacing: 0.02em;
+  color: var(--dark);
 }

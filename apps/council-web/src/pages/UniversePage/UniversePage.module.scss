@@ -1,4 +1,43 @@
-.error {
-  color: var(--rust);
-  font-style: italic;
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 240px;
+  cursor: pointer;
+}
+
+.iconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% + 2 * var(--space-4));
+  margin: calc(-1 * var(--space-4)) calc(-1 * var(--space-4)) var(--space-4);
+  height: 120px;
+  background: var(--border-light);
+  color: var(--muted);
+}
+
+.body {
+  flex-grow: 1;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: var(--type-title-large-size);
+  font-weight: var(--type-title-large-weight);
+  margin-bottom: var(--space-1);
+}
+
+.description {
+  color: var(--muted);
+  font-size: var(--type-body-medium-size);
+  font-weight: var(--type-body-medium-weight);
+  margin: 0;
 }

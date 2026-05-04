@@ -11,6 +11,8 @@ import {
 import { JwtModule } from '@nestjs/jwt';
 import { TerminusModule } from '@nestjs/terminus';
 
+import { CoreHttpModule } from '@dod/core';
+
 import { JwtMiddleware } from './auth/jwt.middleware';
 import { CitizenController } from './citizen/citizen.controller';
 import { HealthController } from './health/health.controller';
@@ -35,7 +37,11 @@ const {
 } = env;
 
 @Module({
-  imports: [JwtModule.register({ secret: JWT_SECRET }), TerminusModule],
+  imports: [
+    CoreHttpModule,
+    JwtModule.register({ secret: JWT_SECRET }),
+    TerminusModule,
+  ],
   controllers: [CitizenController, HealthController, SessionController],
 })
 export class AppModule implements NestModule {
@@ -63,23 +69,23 @@ export class AppModule implements NestModule {
       .exclude({ path: '/api/v1/citizen/me', method: RequestMethod.GET })
       .forRoutes('/api/v1/citizen');
 
-    consumer
-      .apply(
-        createProxyMiddleware({
-          target: `${CODEX_REALM_URL}/api/v1/card`,
-          changeOrigin: true,
-        }),
-      )
-      .forRoutes('/api/v1/card');
-
-    consumer
-      .apply(
-        createProxyMiddleware({
-          target: `${CODEX_REALM_URL}/api/v1/mana`,
-          changeOrigin: true,
-        }),
-      )
-      .forRoutes('/api/v1/mana');
+    for (const kind of [
+      'element',
+      'faction',
+      'stat',
+      'trait',
+      'card',
+      'hero',
+    ] as const) {
+      consumer
+        .apply(
+          createProxyMiddleware({
+            target: `${CODEX_REALM_URL}/api/v1/${kind}`,
+            changeOrigin: true,
+          }),
+        )
+        .forRoutes(`/api/v1/${kind}`);
+    }
 
     consumer
       .apply(

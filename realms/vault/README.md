@@ -25,7 +25,8 @@ Manages files: upload, storage, etc
 
 | Use case | Description |
 |----------|-------------|
-| [UploadFileCommand](src/law/commands/upload-file.command.ts) | Params: `(file: File)`<br>Returns: `FileDto` |
+| [TransformFileCommand](src/law/commands/transform-file.command.ts) | Params: `(file: File, transform: FileTransform)`<br>Returns: `File` |
+| [UploadFileCommand](src/law/commands/upload-file.command.ts) | Params: `(file: File, transform: FileTransform)`<br>Returns: `FileDto` |
 
 ### Lore
 

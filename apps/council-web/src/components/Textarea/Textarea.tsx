@@ -1,4 +1,9 @@
-import { type TextareaHTMLAttributes, useEffect, useRef } from 'react';
+import {
+  type KeyboardEvent,
+  type TextareaHTMLAttributes,
+  useEffect,
+  useRef,
+} from 'react';
 
 export function Textarea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   const ref = useRef<HTMLTextAreaElement>(null);
@@ -12,5 +17,20 @@ export function Textarea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
 
   useEffect(resize, [props.value]);
 
-  return <textarea ref={ref} rows={1} onInput={resize} {...props} />;
+  function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key === 'Enter') {
+      event.stopPropagation();
+    }
+    props.onKeyDown?.(event);
+  }
+
+  return (
+    <textarea
+      ref={ref}
+      rows={1}
+      onInput={resize}
+      {...props}
+      onKeyDown={handleKeyDown}
+    />
+  );
 }

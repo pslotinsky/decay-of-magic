@@ -1,21 +1,20 @@
 import type { ReactNode } from 'react';
 
-import { NavMenu } from '../NavMenu';
-
 import styles from './Page.module.scss';
 
 interface Props {
+  nav: ReactNode;
   header?: ReactNode;
   children?: ReactNode;
 }
 
-export const Page = ({ header, children }: Props) => {
+export const Page = ({ nav, header, children }: Props) => {
   return (
     <div className={styles.layout}>
-      <NavMenu />
+      {nav}
       <main className={styles.main}>
         {header}
-        {children}
+        <div className={styles.content}>{children}</div>
       </main>
     </div>
   );

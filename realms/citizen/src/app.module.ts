@@ -4,6 +4,8 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { JwtModule } from '@nestjs/jwt';
 import { TerminusModule } from '@nestjs/terminus';
 
+import { CoreHttpModule } from '@dod/core';
+
 import { CitizenGate } from './frontier/gates/citizen.gate';
 import { HealthGate } from './frontier/gates/health.gate';
 import { SessionGate } from './frontier/gates/session.gate';
@@ -36,6 +38,7 @@ const { JWT_SECRET } = z
 
 @Module({
   imports: [
+    CoreHttpModule,
     CqrsModule,
     TerminusModule,
     JwtModule.register({

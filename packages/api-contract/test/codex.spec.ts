@@ -17,7 +17,9 @@ import {
 const accepts = (schema: z.ZodType, input: unknown): void => {
   const result = schema.safeParse(input);
   if (!result.success) {
-    throw new Error(`expected valid, got: ${JSON.stringify(result.error.issues)}`);
+    throw new Error(
+      `expected valid, got: ${JSON.stringify(result.error.issues)}`,
+    );
   }
 };
 
@@ -70,7 +72,8 @@ const validHero = () => ({
 });
 
 describe('CreateElementSchema', () => {
-  it('accepts a valid element', () => accepts(CreateElementSchema, validElement()));
+  it('accepts a valid element', () =>
+    accepts(CreateElementSchema, validElement()));
   it('rejects missing universeId', () =>
     rejects(CreateElementSchema, { ...validElement(), universeId: undefined }));
   it('rejects missing name', () =>
@@ -84,13 +87,18 @@ describe('CreateElementSchema', () => {
 });
 
 describe('UpdateElementSchema', () => {
-  it('accepts a name change', () => accepts(UpdateElementSchema, { name: 'Inferno' }));
+  it('accepts a name change', () =>
+    accepts(UpdateElementSchema, { name: 'Inferno' }));
   it('accepts an empty patch', () => accepts(UpdateElementSchema, {}));
   it('rejects empty name', () => rejects(UpdateElementSchema, { name: '' }));
 });
 
 describe('CreateFactionSchema', () => {
-  const valid = () => ({ id: 'orderOfAsh', universeId: 'eldoria', name: 'Order of Ash' });
+  const valid = () => ({
+    id: 'orderOfAsh',
+    universeId: 'eldoria',
+    name: 'Order of Ash',
+  });
   it('accepts a valid faction', () => accepts(CreateFactionSchema, valid()));
   it('rejects missing universeId', () =>
     rejects(CreateFactionSchema, { ...valid(), universeId: undefined }));
@@ -103,7 +111,10 @@ describe('CreateFactionSchema', () => {
 describe('CreateStatSchema', () => {
   it('accepts a valid stat', () => accepts(CreateStatSchema, validStat()));
   it('accepts multiple appliesTo values', () =>
-    accepts(CreateStatSchema, { ...validStat(), appliesTo: ['minion', 'hero', 'card'] }));
+    accepts(CreateStatSchema, {
+      ...validStat(),
+      appliesTo: ['minion', 'hero', 'card'],
+    }));
   it('rejects missing universeId', () =>
     rejects(CreateStatSchema, { ...validStat(), universeId: undefined }));
   it('rejects empty name', () =>
@@ -118,11 +129,13 @@ describe('CreateStatSchema', () => {
 
 describe('UpdateStatSchema', () => {
   it('accepts an empty patch', () => accepts(UpdateStatSchema, {}));
-  it('accepts a partial change', () => accepts(UpdateStatSchema, { name: 'Renamed' }));
+  it('accepts a partial change', () =>
+    accepts(UpdateStatSchema, { name: 'Renamed' }));
   it('accepts an appliesTo update', () =>
     accepts(UpdateStatSchema, { appliesTo: ['hero', 'card'] }));
   it('rejects empty name', () => rejects(UpdateStatSchema, { name: '' }));
-  it('rejects empty appliesTo', () => rejects(UpdateStatSchema, { appliesTo: [] }));
+  it('rejects empty appliesTo', () =>
+    rejects(UpdateStatSchema, { appliesTo: [] }));
   it('rejects unknown appliesTo value', () =>
     rejects(UpdateStatSchema, { appliesTo: ['robot'] }));
 });
@@ -130,7 +143,10 @@ describe('UpdateStatSchema', () => {
 describe('CreateTraitSchema', () => {
   it('accepts a valid trait', () => accepts(CreateTraitSchema, validTrait()));
   it('accepts multiple appliesTo values', () =>
-    accepts(CreateTraitSchema, { ...validTrait(), appliesTo: ['minion', 'hero', 'card'] }));
+    accepts(CreateTraitSchema, {
+      ...validTrait(),
+      appliesTo: ['minion', 'hero', 'card'],
+    }));
   it('rejects empty appliesTo', () =>
     rejects(CreateTraitSchema, { ...validTrait(), appliesTo: [] }));
   it('rejects unknown appliesTo value', () =>
@@ -140,12 +156,15 @@ describe('CreateTraitSchema', () => {
 describe('UpdateTraitSchema', () => {
   it('accepts an appliesTo update', () =>
     accepts(UpdateTraitSchema, { appliesTo: ['hero', 'card'] }));
-  it('rejects empty appliesTo', () => rejects(UpdateTraitSchema, { appliesTo: [] }));
+  it('rejects empty appliesTo', () =>
+    rejects(UpdateTraitSchema, { appliesTo: [] }));
 });
 
 describe('CreateCardSchema — basic shape', () => {
-  it('accepts a valid summon card', () => accepts(CreateCardSchema, validSummonCard()));
-  it('accepts a valid spell card', () => accepts(CreateCardSchema, validSpellCard()));
+  it('accepts a valid summon card', () =>
+    accepts(CreateCardSchema, validSummonCard()));
+  it('accepts a valid spell card', () =>
+    accepts(CreateCardSchema, validSpellCard()));
   it('rejects missing universeId', () =>
     rejects(CreateCardSchema, { ...validSummonCard(), universeId: undefined }));
   it('rejects empty name', () =>
@@ -195,7 +214,10 @@ describe('CreateCardSchema — abilities', () => {
   });
 
   it('accepts an ability with one or more effects', () =>
-    accepts(CreateCardSchema, { ...validSummonCard(), abilities: [ability()] }));
+    accepts(CreateCardSchema, {
+      ...validSummonCard(),
+      abilities: [ability()],
+    }));
   it('rejects empty effects array', () =>
     rejects(CreateCardSchema, {
       ...validSummonCard(),
@@ -226,6 +248,21 @@ describe('CreateCardSchema — abilities', () => {
       ...validSummonCard(),
       abilities: [ability({ target: 'mysterious' })],
     }));
+  it('accepts a target list of multiple scopes', () =>
+    accepts(CreateCardSchema, {
+      ...validSummonCard(),
+      abilities: [ability({ target: ['enemyHero', 'enemyMinions'] })],
+    }));
+  it('rejects an empty target list', () =>
+    rejects(CreateCardSchema, {
+      ...validSummonCard(),
+      abilities: [ability({ target: [] })],
+    }));
+  it('rejects an unknown scope inside a target list', () =>
+    rejects(CreateCardSchema, {
+      ...validSummonCard(),
+      abilities: [ability({ target: ['enemyHero', 'mysterious'] })],
+    }));
 });
 
 describe('CreateCardSchema — effects', () => {
@@ -235,7 +272,10 @@ describe('CreateCardSchema — effects', () => {
   });
 
   it('rejects unknown effect kind', () =>
-    rejects(CreateCardSchema, cardWith({ kind: 'mysteryKind', params: { amount: 1 } })));
+    rejects(
+      CreateCardSchema,
+      cardWith({ kind: 'mysteryKind', params: { amount: 1 } }),
+    ));
   it('rejects effect params that violate the kind schema', () =>
     rejects(CreateCardSchema, cardWith({ kind: 'damage', params: {} })));
 });
@@ -264,6 +304,18 @@ describe('UpdateCardSchema', () => {
   it('rejects empty name', () => rejects(UpdateCardSchema, { name: '' }));
   it('rejects zero cost amount', () =>
     rejects(UpdateCardSchema, { cost: { fire: 0 } }));
+  it('accepts switching activation to non-emptySlot without stats', () =>
+    accepts(UpdateCardSchema, { activation: 'immediate' }));
+  it('rejects sending stats together with non-emptySlot activation', () =>
+    rejects(UpdateCardSchema, {
+      activation: 'immediate',
+      stats: { attack: 0, health: 0 },
+    }));
+  it('accepts emptySlot activation with stats', () =>
+    accepts(UpdateCardSchema, {
+      activation: 'emptySlot',
+      stats: { attack: 1, health: 1 },
+    }));
 });
 
 describe('CreateHeroSchema', () => {
@@ -282,7 +334,8 @@ describe('CreateHeroSchema', () => {
 
 describe('UpdateHeroSchema', () => {
   it('accepts an empty patch', () => accepts(UpdateHeroSchema, {}));
-  it('accepts a name change', () => accepts(UpdateHeroSchema, { name: 'Renamed' }));
+  it('accepts a name change', () =>
+    accepts(UpdateHeroSchema, { name: 'Renamed' }));
   it('accepts a faction change', () =>
     accepts(UpdateHeroSchema, { faction: 'orderOfAsh' }));
   it('rejects empty name', () => rejects(UpdateHeroSchema, { name: '' }));

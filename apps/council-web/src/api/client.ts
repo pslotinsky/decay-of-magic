@@ -1,6 +1,8 @@
-import ky, { type KyInstance } from 'ky';
+import ky, { HTTPError, type KyInstance } from 'ky';
 
-import type { SuccessEnvelope } from '@dod/api-contract';
+import type { ErrorEnvelope, SuccessEnvelope } from '@dod/api-contract';
+
+import { ApiError } from './error';
 
 const instance: KyInstance = ky.create({
   credentials: 'include',
@@ -12,8 +14,25 @@ const instance: KyInstance = ky.create({
         }
       },
     ],
+    beforeError: [
+      ({ error }) => {
+        if (error instanceof HTTPError && isErrorEnvelope(error.data)) {
+          return new ApiError(error.response.status, error.data);
+        }
+        return error;
+      },
+    ],
   },
 });
+
+function isErrorEnvelope(data: unknown): data is ErrorEnvelope {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'error' in data &&
+    typeof (data as { error: unknown }).error === 'object'
+  );
+}
 
 export const client = {
   get: <TData>(url: string): Promise<SuccessEnvelope<TData>> =>

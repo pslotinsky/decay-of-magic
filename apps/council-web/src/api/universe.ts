@@ -21,11 +21,12 @@ export function useUniverses() {
   });
 }
 
-export function useUniverse(id: string) {
+export function useUniverse(id: string = '') {
   return useQuery({
     queryKey: universeKeys.detail(id),
     queryFn: () => client.get<UniverseDto>(`/api/v1/universe/${id}`),
     select: (envelope) => envelope.data,
+    enabled: !!id,
   });
 }
 

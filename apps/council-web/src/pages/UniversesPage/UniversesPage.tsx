@@ -4,6 +4,7 @@ import type { UniverseDto } from '@dod/api-contract';
 
 import { useUniverses } from '@/api/universe';
 import { Button } from '@/components/Button';
+import { RootNav } from '@/components/NavMenu';
 import { Page, PageHeader } from '@/components/Page';
 
 import { UniversesPageList } from './UniversesPageList';
@@ -18,10 +19,10 @@ export function UniversesPage() {
   return (
     <>
       <Page
+        nav={<RootNav />}
         header={
           <PageHeader
             title="Universes"
-            breadcrumbs={[{ label: 'Home', to: '/' }]}
             action={
               <Button onClick={() => setCreateOpen(true)}>
                 Create Universe

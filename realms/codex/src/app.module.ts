@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TerminusModule } from '@nestjs/terminus';
 
+import { CoreHttpModule } from '@dod/core';
+
 import { CardGate } from './frontier/gates/card.gate';
 import { ElementGate } from './frontier/gates/element.gate';
 import { FactionGate } from './frontier/gates/faction.gate';
@@ -29,7 +31,7 @@ const repositories = [
 const services = [ArchetypeFactory, PrismaService];
 
 @Module({
-  imports: [CqrsModule, TerminusModule],
+  imports: [CoreHttpModule, CqrsModule, TerminusModule],
   controllers: [
     HealthGate,
     ElementGate,

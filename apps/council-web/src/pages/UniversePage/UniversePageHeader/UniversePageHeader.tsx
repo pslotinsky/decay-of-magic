@@ -19,12 +19,7 @@ export function UniversePageHeader({ universe }: Props) {
         />
       )}
       <div className={styles.heroOverlay}>
-        <Breadcrumbs
-          items={[
-            { label: 'Home', to: '/' },
-            { label: 'Universes', to: '/universe' },
-          ]}
-        />
+        <Breadcrumbs items={[{ label: 'Universes', to: '/universe' }]} />
         <div className={styles.heroBottom}>
           <h1 className={styles.heroTitle}>{universe.name}</h1>
           {universe.description && (
