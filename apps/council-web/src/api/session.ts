@@ -34,11 +34,3 @@ export function useLoginMutation() {
     onSuccess: () => queryClient.refetchQueries({ queryKey: sessionKeys.me }),
   });
 }
-
-export function useLogoutMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: () => client.delete('/api/v1/session'),
-    onSettled: () => queryClient.setQueryData(sessionKeys.me, undefined),
-  });
-}

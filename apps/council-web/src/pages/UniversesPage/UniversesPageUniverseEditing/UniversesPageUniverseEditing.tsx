@@ -6,10 +6,10 @@ import { useUpdateUniverse } from '@/api/universe';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
 import { ErrorText } from '@/components/ErrorText';
+import { Form, FormField } from '@/components/Form';
 import { ImageInput } from '@/components/ImageInput';
+import { Text } from '@/components/Text';
 import { Textarea } from '@/components/Textarea';
-
-import styles from './UniversesPageUniverseEditing.module.scss';
 
 interface Props {
   universe: UniverseDto | null;
@@ -44,6 +44,7 @@ export function UniversesPageUniverseEditing({ universe, onClose }: Props) {
     <Drawer
       open={!!universe}
       title="Edit Universe"
+      subtitle={<Text mono muted value={universe?.id} />}
       onClose={onClose}
       footer={
         <>
@@ -54,28 +55,25 @@ export function UniversesPageUniverseEditing({ universe, onClose }: Props) {
         </>
       }
     >
-      <form id={FORM_ID} onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.field}>
-          <span className={styles.label}>Name</span>
+      <Form id={FORM_ID} onSubmit={handleSubmit}>
+        <FormField label="Name">
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
             required
           />
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Description</span>
+        </FormField>
+        <FormField label="Description">
           <Textarea
             value={description}
             onChange={(event) => setDescription(event.target.value)}
             placeholder="Optional"
           />
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Cover</span>
+        </FormField>
+        <FormField label="Cover">
           <ImageInput value={cover} onChange={setCover} />
-        </div>
-      </form>
+        </FormField>
+      </Form>
     </Drawer>
   );
 }

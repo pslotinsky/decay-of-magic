@@ -25,7 +25,6 @@ import { client } from './client';
 
 export const useElements = (universeId: string) =>
   useList<ElementDto>('element', universeId);
-export const useElement = (id: string) => useGet<ElementDto>('element', id);
 export const useCreateElement = () =>
   useCreate<ElementDto, CreateElementDto>('element');
 export const useUpdateElement = () =>
@@ -33,7 +32,6 @@ export const useUpdateElement = () =>
 
 export const useFactions = (universeId: string) =>
   useList<FactionDto>('faction', universeId);
-export const useFaction = (id: string) => useGet<FactionDto>('faction', id);
 export const useCreateFaction = () =>
   useCreate<FactionDto, CreateFactionDto>('faction');
 export const useUpdateFaction = () =>
@@ -41,13 +39,11 @@ export const useUpdateFaction = () =>
 
 export const useStats = (universeId: string) =>
   useList<StatDto>('stat', universeId);
-export const useStat = (id: string) => useGet<StatDto>('stat', id);
 export const useCreateStat = () => useCreate<StatDto, CreateStatDto>('stat');
 export const useUpdateStat = () => useUpdate<StatDto, UpdateStatDto>('stat');
 
 export const useTraits = (universeId: string) =>
   useList<TraitDto>('trait', universeId);
-export const useTrait = (id: string) => useGet<TraitDto>('trait', id);
 export const useCreateTrait = () =>
   useCreate<TraitDto, CreateTraitDto>('trait');
 export const useUpdateTrait = () =>
@@ -55,13 +51,11 @@ export const useUpdateTrait = () =>
 
 export const useCards = (universeId: string) =>
   useList<CardDto>('card', universeId);
-export const useCard = (id: string) => useGet<CardDto>('card', id);
 export const useCreateCard = () => useCreate<CardDto, CreateCardDto>('card');
 export const useUpdateCard = () => useUpdate<CardDto, UpdateCardDto>('card');
 
 export const useHeroes = (universeId: string) =>
   useList<HeroDto>('hero', universeId);
-export const useHero = (id: string) => useGet<HeroDto>('hero', id);
 export const useCreateHero = () => useCreate<HeroDto, CreateHeroDto>('hero');
 export const useUpdateHero = () => useUpdate<HeroDto, UpdateHeroDto>('hero');
 
@@ -70,7 +64,6 @@ type Kind = 'element' | 'faction' | 'stat' | 'trait' | 'card' | 'hero';
 const codexKeys = {
   list: (kind: Kind, universeId: string) =>
     ['codex', kind, 'list', universeId] as const,
-  detail: (kind: Kind, id: string) => ['codex', kind, 'detail', id] as const,
 };
 
 function useList<TDto>(kind: Kind, universeId: string) {
@@ -82,15 +75,6 @@ function useList<TDto>(kind: Kind, universeId: string) {
       ),
     select: (envelope) => envelope.data,
     enabled: Boolean(universeId),
-  });
-}
-
-function useGet<TDto>(kind: Kind, id: string) {
-  return useQuery({
-    queryKey: codexKeys.detail(kind, id),
-    queryFn: () => client.get<TDto>(`/api/v1/${kind}/${id}`),
-    select: (envelope) => envelope.data,
-    enabled: Boolean(id),
   });
 }
 
@@ -118,11 +102,8 @@ function useUpdate<TDto, TBody>(kind: Kind) {
       );
       return envelope.data;
     },
-    onSuccess: (_data, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['codex', kind, 'list'] });
-      queryClient.invalidateQueries({
-        queryKey: codexKeys.detail(kind, variables.id),
-      });
     },
   });
 }

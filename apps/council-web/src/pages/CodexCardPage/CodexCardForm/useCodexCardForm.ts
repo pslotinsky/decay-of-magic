@@ -44,7 +44,7 @@ export function useCodexCardForm({ initial, stats, traits, onSubmit }: Params) {
   const [factionIds, setFactionIds] = useState<Set<string>>(
     new Set(initial?.factions ?? []),
   );
-  const [cost, setCost] = useState<Record<string, number>>(
+  const [cost, setCostState] = useState<Record<string, number>>(
     Object.fromEntries(
       Object.entries(initial?.cost ?? {}).map(([slug, value]) => [
         slug,
@@ -80,12 +80,27 @@ export function useCodexCardForm({ initial, stats, traits, onSubmit }: Params) {
     setTraitIds((current) => toggleSet(current, traitId));
   }
 
-  function updateCost(slug: string, value: number) {
-    setCost((current) => ({ ...current, [slug]: value }));
+  function setCost(slug: string, raw: string) {
+    setCostState((current) => {
+      if (raw === '') {
+        const next = { ...current };
+        delete next[slug];
+        return next;
+      }
+      return { ...current, [slug]: Number(raw) };
+    });
   }
 
   function updateStat(slug: string, expr: Expression) {
     setStatValues((current) => ({ ...current, [slug]: expr }));
+  }
+
+  function clearStat(slug: string) {
+    setStatValues((current) => {
+      const next = { ...current };
+      delete next[slug];
+      return next;
+    });
   }
 
   const minionStats = useMemo(
@@ -140,9 +155,10 @@ export function useCodexCardForm({ initial, stats, traits, onSubmit }: Params) {
     factionIds,
     toggleFaction,
     cost,
-    updateCost,
+    setCost,
     statValues,
     updateStat,
+    clearStat,
     traitIds: applicableTraitIds,
     toggleTrait,
     filteredTraits,
@@ -185,7 +201,10 @@ function buildPayload(state: BuildArgs): CardFormPayload {
   if (state.activation === 'emptySlot') {
     const filteredStats: Record<string, Expression> = {};
     for (const stat of state.minionStats) {
-      filteredStats[stat.id] = state.statValues[stat.id] ?? 0;
+      const value = state.statValues[stat.id];
+      if (value !== undefined && value !== 0) {
+        filteredStats[stat.id] = value;
+      }
     }
     payload.stats = filteredStats;
   }

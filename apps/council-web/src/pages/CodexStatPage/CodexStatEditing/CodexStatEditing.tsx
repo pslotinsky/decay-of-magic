@@ -10,9 +10,9 @@ import { useUpdateStat } from '@/api/codex';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
 import { ErrorText } from '@/components/ErrorText';
-import { PillToggle } from '@/components/PillToggle';
-
-import styles from './CodexStatEditing.module.scss';
+import { Form, FormField } from '@/components/Form';
+import { PillToggleList } from '@/components/PillToggleList';
+import { Text } from '@/components/Text';
 
 interface Props {
   stat: StatDto | null;
@@ -45,6 +45,7 @@ export function CodexStatEditing({ stat, onClose }: Props) {
     <Drawer
       open={!!stat}
       title="Edit Stat"
+      subtitle={<Text mono muted value={stat?.id} />}
       onClose={onClose}
       footer={
         <>
@@ -59,34 +60,22 @@ export function CodexStatEditing({ stat, onClose }: Props) {
         </>
       }
     >
-      <form id={FORM_ID} onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.field}>
-          <span className={styles.label}>Id</span>
-          <span className={styles.readonly}>{stat?.id ?? ''}</span>
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Name</span>
+      <Form id={FORM_ID} onSubmit={handleSubmit}>
+        <FormField label="Name">
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
             required
           />
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Applies to</span>
-          <div className={styles.pillRow}>
-            {APPLIES_TO_VALUES.map((value) => (
-              <PillToggle
-                key={value}
-                selected={appliesTo.includes(value)}
-                onToggle={() => toggle(value)}
-              >
-                {value}
-              </PillToggle>
-            ))}
-          </div>
-        </div>
-      </form>
+        </FormField>
+        <FormField label="Applies to">
+          <PillToggleList
+            items={APPLIES_TO_VALUES}
+            isSelected={(value) => appliesTo.includes(value)}
+            onToggle={toggle}
+          />
+        </FormField>
+      </Form>
     </Drawer>
   );
 }

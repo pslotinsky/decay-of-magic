@@ -1,6 +1,12 @@
+import { AtSign, Braces, Hash, ToggleLeft, Type } from 'lucide-react';
 import { useState } from 'react';
 
 import type { Expression } from '@dod/api-contract';
+
+import {
+  ButtonSelect,
+  type ButtonSelectOption,
+} from '@/components/ButtonSelect';
 
 import { defaultForMode, detectMode, type Mode } from './expressions';
 import { OperatorBody } from './OperatorBody';
@@ -8,13 +14,44 @@ import { PathBody } from './PathBody';
 
 import styles from './ExpressionEditor.module.scss';
 
+const ICON_SIZE = 14;
+
+const MODE_OPTIONS: ButtonSelectOption<Mode>[] = [
+  {
+    value: 'number',
+    description: 'number',
+    icon: <Hash size={ICON_SIZE} />,
+  },
+  {
+    value: 'boolean',
+    description: 'boolean',
+    icon: <ToggleLeft size={ICON_SIZE} />,
+  },
+  {
+    value: 'literalString',
+    description: 'text',
+    icon: <Type size={ICON_SIZE} />,
+  },
+  {
+    value: 'path',
+    description: 'path',
+    icon: <AtSign size={ICON_SIZE} />,
+  },
+  {
+    value: 'operator',
+    description: 'operator',
+    icon: <Braces size={ICON_SIZE} />,
+  },
+];
+
 interface Props {
-  value: Expression;
+  value?: Expression;
   onChange: (next: Expression) => void;
+  onClear?: () => void;
 }
 
-export function ExpressionEditor({ value, onChange }: Props) {
-  const detected = detectMode(value);
+export function ExpressionEditor({ value, onChange, onClear }: Props) {
+  const detected = value === undefined ? 'number' : detectMode(value);
   const [overrideMode, setOverrideMode] = useState<Mode | null>(null);
   const mode = overrideMode ?? detected;
 
@@ -29,18 +66,19 @@ export function ExpressionEditor({ value, onChange }: Props) {
   return (
     <div className={styles.editor}>
       <div className={styles.kindRow}>
-        <select
+        <ModeBody
+          mode={mode}
+          value={value}
+          onChange={onChange}
+          onClear={onClear}
+        />
+        <ButtonSelect
           value={mode}
-          onChange={(event) => changeMode(event.target.value as Mode)}
+          onChange={changeMode}
+          options={MODE_OPTIONS}
+          ariaLabel="value type"
           className={styles.kindSelect}
-        >
-          <option value="number">number</option>
-          <option value="boolean">boolean</option>
-          <option value="literalString">text</option>
-          <option value="path">path</option>
-          <option value="operator">operator</option>
-        </select>
-        <ModeBody mode={mode} value={value} onChange={onChange} />
+        />
       </div>
     </div>
   );
@@ -48,21 +86,31 @@ export function ExpressionEditor({ value, onChange }: Props) {
 
 interface BodyProps {
   mode: Mode;
-  value: Expression;
+  value: Expression | undefined;
   onChange: (next: Expression) => void;
+  onClear?: () => void;
 }
 
-function ModeBody({ mode, value, onChange }: BodyProps) {
+function ModeBody({ mode, value, onChange, onClear }: BodyProps) {
   if (mode === 'number') {
-    const numeric = typeof value === 'number' ? value : 0;
+    const numeric = typeof value === 'number' ? value : undefined;
     return (
       <input
         type="number"
         step="any"
-        value={numeric}
+        value={numeric ?? ''}
         onFocus={(event) => event.currentTarget.select()}
         onWheel={(event) => event.currentTarget.blur()}
-        onChange={(event) => onChange(Number(event.target.value))}
+        onChange={(event) => {
+          const raw = event.target.value;
+          if (raw !== '') {
+            onChange(Number(raw));
+          } else if (onClear) {
+            onClear();
+          } else {
+            onChange(0);
+          }
+        }}
       />
     );
   }
@@ -90,10 +138,15 @@ function ModeBody({ mode, value, onChange }: BodyProps) {
     );
   }
   if (mode === 'path') {
-    return <PathBody value={value} onChange={onChange} />;
+    return <PathBody value={value ?? 'self'} onChange={onChange} />;
   }
   if (mode === 'operator') {
-    return <OperatorBody value={value} onChange={onChange} />;
+    return (
+      <OperatorBody
+        value={value ?? defaultForMode('operator')}
+        onChange={onChange}
+      />
+    );
   }
   return null;
 }

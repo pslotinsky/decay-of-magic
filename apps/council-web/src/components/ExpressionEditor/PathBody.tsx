@@ -1,12 +1,13 @@
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+
 import type { Expression } from '@dod/api-contract';
 
+import { Menu, MenuGroup, MenuItem } from '@/components/Menu';
+import { Popover } from '@/components/Popover';
+
 import { useExpressionEditorContext } from './context';
-import {
-  CUSTOM_FIELD,
-  fieldGroups,
-  flattenFields,
-  PATH_ROOTS,
-} from './expressions';
+import { fieldGroups, PATH_ROOTS } from './expressions';
 
 import styles from './ExpressionEditor.module.scss';
 
@@ -15,16 +16,34 @@ interface Props {
   onChange: (next: Expression) => void;
 }
 
-export function PathBody({ value, onChange }: Props) {
-  const ctx = useExpressionEditorContext();
-  const groups = fieldGroups(ctx);
-  const knownFields = flattenFields(groups);
+type Stage = { kind: 'roots' } | { kind: 'fields'; root: string };
 
-  const str = typeof value === 'string' ? value : 'self';
-  const head = str.split('.')[0] ?? 'self';
-  const rest = str.includes('.') ? str.slice(head.length + 1) : '';
+interface ParsedPath {
+  display: string;
+  root: string;
+  rest: string;
+}
+
+function parsePath(value: Expression): ParsedPath {
+  const display = typeof value === 'string' ? value : 'self';
+  const head = display.split('.')[0] ?? 'self';
+  const rest = display.includes('.') ? display.slice(head.length + 1) : '';
   const root = (PATH_ROOTS as readonly string[]).includes(head) ? head : 'self';
-  const isCustom = rest !== '' && !knownFields.includes(rest);
+  return { display, root, rest };
+}
+
+export function PathBody({ value, onChange }: Props) {
+  const { display, root, rest } = parsePath(value);
+
+  const [open, setOpen] = useState(false);
+  const [stage, setStage] = useState<Stage>({ kind: 'roots' });
+
+  function handleOpenChange(next: boolean) {
+    setOpen(next);
+    if (next) {
+      setStage({ kind: 'roots' });
+    }
+  }
 
   function emit(nextRoot: string, nextField: string) {
     onChange(nextField ? `${nextRoot}.${nextField}` : nextRoot);
@@ -32,46 +51,113 @@ export function PathBody({ value, onChange }: Props) {
 
   return (
     <div className={styles.pathRow}>
-      <select value={root} onChange={(event) => emit(event.target.value, rest)}>
-        {PATH_ROOTS.map((entry) => (
-          <option key={entry} value={entry}>
-            {entry}
-          </option>
-        ))}
-      </select>
-      <select
-        value={isCustom ? CUSTOM_FIELD : rest}
-        onChange={(event) => {
-          const next = event.target.value;
-          if (next === CUSTOM_FIELD) {
-            emit(root, '');
-            return;
-          }
-          emit(root, next);
-        }}
+      <Popover
+        open={open}
+        onOpenChange={handleOpenChange}
+        content={() =>
+          stage.kind === 'roots' ? (
+            <RootsStage
+              onPick={(nextRoot) =>
+                setStage({ kind: 'fields', root: nextRoot })
+              }
+            />
+          ) : (
+            <FieldsStage
+              root={stage.root}
+              customDraft={root === stage.root ? rest : ''}
+              onBack={() => setStage({ kind: 'roots' })}
+              onPick={(field) => {
+                emit(stage.root, field);
+                setOpen(false);
+              }}
+              onCustomChange={(suffix) =>
+                emit(stage.root, suffix.replace(/^\./, ''))
+              }
+            />
+          )
+        }
       >
-        <option value="">— root —</option>
-        {groups.map((group) => (
-          <optgroup key={group.label} label={group.label}>
-            {group.options.map((entry) => (
-              <option key={entry} value={entry}>
-                {entry}
-              </option>
-            ))}
-          </optgroup>
+        <button
+          type="button"
+          className={styles.pathTrigger}
+          aria-haspopup="menu"
+          title={display}
+        >
+          {display}
+        </button>
+      </Popover>
+    </div>
+  );
+}
+
+interface RootsStageProps {
+  onPick: (root: string) => void;
+}
+
+function RootsStage({ onPick }: RootsStageProps) {
+  return (
+    <div className={styles.pathMenu}>
+      <Menu role="menu">
+        {PATH_ROOTS.map((entry) => (
+          <MenuItem
+            key={entry}
+            extra={<ChevronRight size={14} />}
+            onClick={() => onPick(entry)}
+          >
+            {entry}
+          </MenuItem>
         ))}
-        <option value={CUSTOM_FIELD}>custom…</option>
-      </select>
-      {isCustom && (
+      </Menu>
+    </div>
+  );
+}
+
+interface FieldsStageProps {
+  root: string;
+  customDraft: string;
+  onBack: () => void;
+  onPick: (field: string) => void;
+  onCustomChange: (suffix: string) => void;
+}
+
+function FieldsStage({
+  root,
+  customDraft,
+  onBack,
+  onPick,
+  onCustomChange,
+}: FieldsStageProps) {
+  const ctx = useExpressionEditorContext();
+  const groups = fieldGroups(ctx);
+
+  return (
+    <div className={styles.pathMenu}>
+      <button type="button" className={styles.pathMenuBack} onClick={onBack}>
+        <ChevronLeft size={14} />
+        <span>{root}</span>
+      </button>
+      <Menu role="menu">
+        <MenuItem onClick={() => onPick('')}>
+          <span className={styles.pathMenuMuted}>(root only)</span>
+        </MenuItem>
+        {groups.map((group) => (
+          <MenuGroup key={group.label} label={group.label}>
+            {group.options.map((field) => (
+              <MenuItem key={field} onClick={() => onPick(field)}>
+                {field}
+              </MenuItem>
+            ))}
+          </MenuGroup>
+        ))}
+      </Menu>
+      <div className={styles.pathMenuCustom}>
+        <span className={styles.pathMenuGroupLabel}>custom</span>
         <input
-          value={rest}
-          onChange={(event) => {
-            const suffix = event.target.value.replace(/^\./, '');
-            emit(root, suffix);
-          }}
+          value={customDraft}
+          onChange={(event) => onCustomChange(event.target.value)}
           placeholder="custom.path"
         />
-      )}
+      </div>
     </div>
   );
 }

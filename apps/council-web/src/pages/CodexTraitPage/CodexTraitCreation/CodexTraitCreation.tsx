@@ -6,10 +6,9 @@ import { useCreateTrait } from '@/api/codex';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
 import { ErrorText } from '@/components/ErrorText';
-import { PillToggle } from '@/components/PillToggle';
+import { Form, FormField } from '@/components/Form';
+import { PillToggleList } from '@/components/PillToggleList';
 import { nameToSlug } from '@/util/slug';
-
-import styles from './CodexTraitCreation.module.scss';
 
 interface Props {
   open: boolean;
@@ -78,40 +77,31 @@ export function CodexTraitCreation({ open, universeId, onClose }: Props) {
         </>
       }
     >
-      <form id={FORM_ID} onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.field}>
-          <span className={styles.label}>Id</span>
+      <Form id={FORM_ID} onSubmit={handleSubmit}>
+        <FormField label="Id">
           <input
             value={id}
             onChange={(event) => handleIdChange(event.target.value)}
             placeholder="e.g. immuneToSpells"
             required
           />
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Name</span>
+        </FormField>
+        <FormField label="Name">
           <input
             value={name}
             onChange={(event) => handleNameChange(event.target.value)}
             placeholder="Display name"
             required
           />
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Applies to</span>
-          <div className={styles.pillRow}>
-            {APPLIES_TO_VALUES.map((value) => (
-              <PillToggle
-                key={value}
-                selected={appliesTo.includes(value)}
-                onToggle={() => toggle(value)}
-              >
-                {value}
-              </PillToggle>
-            ))}
-          </div>
-        </div>
-      </form>
+        </FormField>
+        <FormField label="Applies to">
+          <PillToggleList
+            items={APPLIES_TO_VALUES}
+            isSelected={(value) => appliesTo.includes(value)}
+            onToggle={toggle}
+          />
+        </FormField>
+      </Form>
     </Drawer>
   );
 }

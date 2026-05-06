@@ -1,0 +1,40 @@
+.wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--border-light);
+  border-radius: var(--space-1);
+  color: var(--muted);
+  font: inherit;
+  font-size: var(--type-body-medium-size);
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+
+  &:hover,
+  &[aria-expanded='true'] {
+    color: var(--dark);
+    border-color: var(--border);
+  }
+}
+
+.menu {
+  padding: var(--space-1);
+  background: var(--parchment, #fff);
+  border: 1px solid var(--border-light);
+  border-radius: var(--space-1);
+  box-shadow: 0 6px 18px rgba(20, 24, 38, 0.12);
+  min-width: 10rem;
+  max-height: 18rem;
+  overflow-y: auto;
+}

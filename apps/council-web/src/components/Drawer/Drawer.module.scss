@@ -42,6 +42,12 @@
   border-bottom: 1px solid var(--border-light);
 }
 
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .title {
   display: flex;
   align-items: center;
@@ -52,6 +58,10 @@
   line-height: var(--type-headline-small-line-height);
   letter-spacing: 0.02em;
   color: var(--dark);
+}
+
+.subtitle {
+  word-break: break-all;
 }
 
 .close {

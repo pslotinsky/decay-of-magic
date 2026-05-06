@@ -4,10 +4,9 @@ import { useCreateUniverse } from '@/api/universe';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
 import { ErrorText } from '@/components/ErrorText';
+import { Form, FormField } from '@/components/Form';
 import { ImageInput } from '@/components/ImageInput';
 import { Textarea } from '@/components/Textarea';
-
-import styles from './UniversesPageUniverseCreation.module.scss';
 
 interface Props {
   open: boolean;
@@ -58,38 +57,34 @@ export function UniversesPageUniverseCreation({ open, onClose }: Props) {
         </>
       }
     >
-      <form id={FORM_ID} onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.field}>
-          <span className={styles.label}>Id</span>
+      <Form id={FORM_ID} onSubmit={handleSubmit}>
+        <FormField label="Id">
           <input
             value={id}
             onChange={(event) => setId(event.target.value)}
             placeholder="e.g. arcane-dominion"
             required
           />
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Name</span>
+        </FormField>
+        <FormField label="Name">
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder="Universe name"
             required
           />
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Description</span>
+        </FormField>
+        <FormField label="Description">
           <Textarea
             value={description}
             onChange={(event) => setDescription(event.target.value)}
             placeholder="Optional"
           />
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Cover</span>
+        </FormField>
+        <FormField label="Cover">
           <ImageInput value={cover} onChange={setCover} />
-        </div>
-      </form>
+        </FormField>
+      </Form>
     </Drawer>
   );
 }

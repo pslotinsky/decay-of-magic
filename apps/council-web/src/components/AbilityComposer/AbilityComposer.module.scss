@@ -38,12 +38,6 @@
   cursor: pointer;
 }
 
-.fieldRow {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: var(--space-3);
-}
-
 .field {
   display: flex;
   flex-direction: column;
@@ -103,19 +97,6 @@
   margin-left: auto;
 }
 
-.checkboxes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-}
-
-.checkbox {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  cursor: pointer;
-}
-
 .pillRow {
   display: flex;
   flex-wrap: wrap;
@@ -144,6 +125,12 @@
   color: var(--rust);
   font-style: italic;
   font-size: var(--type-body-medium-size);
+}
+
+.hint {
+  color: var(--muted);
+  font-size: var(--type-body-medium-size);
+  font-style: italic;
 }
 
 .addInner {

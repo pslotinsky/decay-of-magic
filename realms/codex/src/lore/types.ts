@@ -34,6 +34,7 @@ export type EffectKind =
   | 'heal'
   | 'fullHeal'
   | 'gainElement'
+  | 'decreaseElement'
   | 'increaseStat'
   | 'decreaseStat'
   | 'multiplyStat'
@@ -73,6 +74,11 @@ export type Effect =
   | { kind: 'fullHeal'; params: Record<string, never>; filter?: Expression }
   | {
       kind: 'gainElement';
+      params: Record<string, Expression>;
+      filter?: Expression;
+    }
+  | {
+      kind: 'decreaseElement';
       params: Record<string, Expression>;
       filter?: Expression;
     }

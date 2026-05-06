@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import { Image as ImageIcon, Pencil } from 'lucide-react';
 
 import type {
@@ -51,7 +52,7 @@ export function CodexCardItem({ card, onEdit }: Props) {
         {cost && (
           <div className={styles.chipRow}>
             {Object.entries(cost).map(([slug, value]) => (
-              <span key={slug} className={`${styles.chip} ${styles.chipCost}`}>
+              <span key={slug} className={clsx(styles.chip, styles.chipCost)}>
                 <span className={styles.chipKey}>{slug}</span>
                 <span className={styles.chipValue}>{value}</span>
               </span>
@@ -61,7 +62,7 @@ export function CodexCardItem({ card, onEdit }: Props) {
         {stats && (
           <div className={styles.chipRow}>
             {Object.entries(stats).map(([slug, expr]) => (
-              <span key={slug} className={`${styles.chip} ${styles.chipStat}`}>
+              <span key={slug} className={clsx(styles.chip, styles.chipStat)}>
                 <span className={styles.chipKey}>{slug}</span>
                 <span className={styles.chipValue}>
                   {formatExpression(expr)}
@@ -75,7 +76,7 @@ export function CodexCardItem({ card, onEdit }: Props) {
             {card.abilities?.map((ability, index) => (
               <span
                 key={`ability-${index}`}
-                className={`${styles.chip} ${styles.chipAbility}`}
+                className={clsx(styles.chip, styles.chipAbility)}
                 title={describeAbility(ability)}
               >
                 {abilityShortcut(ability)}
@@ -84,7 +85,7 @@ export function CodexCardItem({ card, onEdit }: Props) {
             {card.traits?.map((slug) => (
               <span
                 key={`trait-${slug}`}
-                className={`${styles.chip} ${styles.chipTrait}`}
+                className={clsx(styles.chip, styles.chipTrait)}
               >
                 {slug}
               </span>

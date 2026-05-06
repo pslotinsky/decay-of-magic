@@ -59,6 +59,7 @@ export function emptyEffect(kind: EffectKind): EffectDto {
     case 'reflectDamage':
       return { kind, params: {} };
     case 'gainElement':
+    case 'decreaseElement':
     case 'increaseStat':
     case 'decreaseStat':
     case 'multiplyStat':

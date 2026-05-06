@@ -82,17 +82,20 @@ export function AbilityEditor({
     onChange(buildTriggered(trigger, target, effects, exclude));
   }
 
+  function setTarget(value: Target) {
+    onChange(rebuild({ target: value }));
+  }
+
   function toggleTarget(value: Target) {
     const current = Array.isArray(target) ? target : [target];
-    const exists = current.includes(value);
-    const nextList = exists
+
+    const next = current.includes(value)
       ? current.filter((entry) => entry !== value)
-      : [...current, value];
-    if (nextList.length === 0) {
-      return;
+      : current.concat(value);
+
+    if (next.length > 0) {
+      onChange(rebuild({ target: next.length === 1 ? next[0]! : next }));
     }
-    const nextTarget: Targets = nextList.length === 1 ? nextList[0]! : nextList;
-    onChange(rebuild({ target: nextTarget }));
   }
 
   function toggleExclude() {
@@ -167,13 +170,16 @@ export function AbilityEditor({
               <PillToggle
                 key={value}
                 selected={selected}
-                onToggle={() => toggleTarget(value)}
+                onToggle={(event) =>
+                  event.shiftKey ? toggleTarget(value) : setTarget(value)
+                }
               >
                 {value}
               </PillToggle>
             );
           })}
         </div>
+        <span className={styles.hint}>Shift+click to combine targets</span>
       </div>
 
       <div className={styles.field}>

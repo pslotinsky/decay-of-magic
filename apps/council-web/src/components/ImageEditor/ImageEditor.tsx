@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Cropper, { type Area } from 'react-easy-crop';
 
@@ -34,7 +34,7 @@ export function ImageEditor({
   onCancel,
   onConfirm,
 }: Props) {
-  const imageUrl = useMemo(() => URL.createObjectURL(file), [file]);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedArea, setCroppedArea] = useState<Area | null>(null);
@@ -42,7 +42,18 @@ export function ImageEditor({
   const [width, setWidth] = useState(defaultWidth);
   const [quality, setQuality] = useState(defaultQuality);
 
-  useEffect(() => () => URL.revokeObjectURL(imageUrl), [imageUrl]);
+  useEffect(() => {
+    const reader = new FileReader();
+    let cancelled = false;
+    reader.onload = () => {
+      if (!cancelled) setImageUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+    return () => {
+      cancelled = true;
+      reader.abort();
+    };
+  }, [file]);
 
   function handleConfirm() {
     if (!croppedArea) return;
@@ -74,15 +85,17 @@ export function ImageEditor({
           </button>
         </div>
         <div className={styles.cropper}>
-          <Cropper
-            image={imageUrl}
-            crop={crop}
-            zoom={zoom}
-            aspect={activeAspect}
-            onCropChange={setCrop}
-            onZoomChange={setZoom}
-            onCropComplete={(_, area) => setCroppedArea(area)}
-          />
+          {imageUrl && (
+            <Cropper
+              image={imageUrl}
+              crop={crop}
+              zoom={zoom}
+              aspect={activeAspect}
+              onCropChange={setCrop}
+              onZoomChange={setZoom}
+              onCropComplete={(_, area) => setCroppedArea(area)}
+            />
+          )}
         </div>
         <div className={styles.controls}>
           <div className={styles.field}>

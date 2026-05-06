@@ -6,8 +6,8 @@ import { useUpdateFaction } from '@/api/codex';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
 import { ErrorText } from '@/components/ErrorText';
-
-import styles from './CodexFactionEditing.module.scss';
+import { Form, FormField } from '@/components/Form';
+import { Text } from '@/components/Text';
 
 interface Props {
   faction: FactionDto | null;
@@ -31,6 +31,7 @@ export function CodexFactionEditing({ faction, onClose }: Props) {
     <Drawer
       open={!!faction}
       title="Edit Faction"
+      subtitle={<Text mono muted value={faction?.id} />}
       onClose={onClose}
       footer={
         <>
@@ -41,20 +42,15 @@ export function CodexFactionEditing({ faction, onClose }: Props) {
         </>
       }
     >
-      <form id={FORM_ID} onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.field}>
-          <span className={styles.label}>Id</span>
-          <span className={styles.readonly}>{faction?.id ?? ''}</span>
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Name</span>
+      <Form id={FORM_ID} onSubmit={handleSubmit}>
+        <FormField label="Name">
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
             required
           />
-        </div>
-      </form>
+        </FormField>
+      </Form>
     </Drawer>
   );
 }

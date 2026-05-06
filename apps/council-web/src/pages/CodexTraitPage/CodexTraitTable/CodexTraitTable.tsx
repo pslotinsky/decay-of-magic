@@ -1,11 +1,8 @@
-import { Pencil } from 'lucide-react';
-
 import type { TraitDto } from '@dod/api-contract';
 
 import { Card } from '@/components/Card';
-import { IconButton } from '@/components/IconButton';
-
-import styles from './CodexTraitTable.module.scss';
+import { Table } from '@/components/Table';
+import { Text } from '@/components/Text';
 
 interface Props {
   traits: TraitDto[];
@@ -13,45 +10,32 @@ interface Props {
 }
 
 export function CodexTraitTable({ traits, onEdit }: Props) {
-  if (traits.length === 0) {
-    return <p className={styles.empty}>No traits yet.</p>;
-  }
-
   return (
     <Card noPadding>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Applies to</th>
-            <th aria-label="actions" />
-          </tr>
-        </thead>
-        <tbody>
-          {traits.map((trait) => (
-            <tr
-              key={trait.id}
-              className={styles.row}
-              onClick={() => onEdit(trait)}
-            >
-              <td className={styles.code}>{trait.id}</td>
-              <td>{trait.name}</td>
-              <td className={styles.muted}>{trait.appliesTo.join(', ')}</td>
-              <td className={styles.actions}>
-                <IconButton
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    onEdit(trait);
-                  }}
-                >
-                  <Pencil size={16} />
-                </IconButton>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Table
+        rows={traits}
+        columns={[
+          {
+            header: 'Id',
+            cell: (trait) => (
+              <Text mono muted>
+                {trait.id}
+              </Text>
+            ),
+          },
+          { header: 'Name', cell: (trait) => trait.name },
+          {
+            header: 'Applies to',
+            cell: (trait) => (
+              <Text muted italic>
+                {trait.appliesTo.join(', ')}
+              </Text>
+            ),
+          },
+        ]}
+        onRowClick={onEdit}
+        empty="No traits yet."
+      />
     </Card>
   );
 }

@@ -57,6 +57,7 @@ export const EFFECT_KIND_VALUES = [
   'heal',
   'fullHeal',
   'gainElement',
+  'decreaseElement',
   'increaseStat',
   'decreaseStat',
   'multiplyStat',
@@ -157,6 +158,11 @@ const EffectSchema = z.discriminatedUnion('kind', [
   }),
   z.object({
     kind: z.literal('gainElement'),
+    params: z.record(Slug, ExpressionSchema),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('decreaseElement'),
     params: z.record(Slug, ExpressionSchema),
     filter: ExpressionSchema.optional(),
   }),

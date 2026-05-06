@@ -7,8 +7,8 @@ import { useFieldErrors } from '@/api/error';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
 import { ErrorText } from '@/components/ErrorText';
-
-import styles from './CodexElementEditing.module.scss';
+import { Form, FormField } from '@/components/Form';
+import { Text } from '@/components/Text';
 
 interface Props {
   element: ElementDto | null;
@@ -33,6 +33,7 @@ export function CodexElementEditing({ element, onClose }: Props) {
     <Drawer
       open={!!element}
       title="Edit Element"
+      subtitle={<Text mono muted value={element?.id} />}
       onClose={onClose}
       footer={
         <>
@@ -43,21 +44,16 @@ export function CodexElementEditing({ element, onClose }: Props) {
         </>
       }
     >
-      <form id={FORM_ID} onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.field}>
-          <span className={styles.label}>Id</span>
-          <span className={styles.readonly}>{element?.id ?? ''}</span>
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Name</span>
+      <Form id={FORM_ID} onSubmit={handleSubmit}>
+        <FormField label="Name">
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
             required
           />
           <ErrorText message={fieldErrors.name} variant="field" />
-        </div>
-      </form>
+        </FormField>
+      </Form>
     </Drawer>
   );
 }

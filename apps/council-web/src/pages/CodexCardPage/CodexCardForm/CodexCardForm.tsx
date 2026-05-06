@@ -12,8 +12,9 @@ import {
   ExpressionEditor,
   ExpressionEditorProvider,
 } from '@/components/ExpressionEditor';
+import { Form, FormField } from '@/components/Form';
 import { ImageInput } from '@/components/ImageInput';
-import { PillToggle } from '@/components/PillToggle';
+import { PillToggleList } from '@/components/PillToggleList';
 import { Textarea } from '@/components/Textarea';
 
 import { type CardFormPayload, useCodexCardForm } from './useCodexCardForm';
@@ -47,74 +48,54 @@ export function CodexCardForm({
 
   return (
     <ExpressionEditorProvider value={{ elements, factions, stats, traits }}>
-      <form id={formId} onSubmit={form.handleSubmit} className={styles.form}>
-        <div className={styles.field}>
-          <span className={styles.label}>Id</span>
-          {form.isEditMode ? (
-            <span className={styles.readonly}>{form.id}</span>
-          ) : (
+      <Form id={formId} onSubmit={form.handleSubmit}>
+        {!form.isEditMode && (
+          <FormField label="Id">
             <input
               value={form.id}
               onChange={(event) => form.setId(event.target.value)}
               placeholder="e.g. goblinBerserker"
               required
             />
-          )}
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Name</span>
+          </FormField>
+        )}
+        <FormField label="Name">
           <input
             value={form.name}
             onChange={(event) => form.setName(event.target.value)}
             required
           />
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Description</span>
+        </FormField>
+        <FormField label="Description">
           <Textarea
             value={form.description}
             onChange={(event) => form.setDescription(event.target.value)}
             placeholder="Optional"
           />
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Activation</span>
-          <select
-            value={form.activation}
-            onChange={(event) =>
-              form.setActivation(event.target.value as typeof form.activation)
-            }
-          >
-            {ACTIVATION_VALUES.map((value) => (
-              <option key={value} value={value}>
-                {value}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Art</span>
+        </FormField>
+        <FormField label="Activation">
+          <PillToggleList
+            items={ACTIVATION_VALUES}
+            isSelected={(value) => form.activation === value}
+            onToggle={form.setActivation}
+          />
+        </FormField>
+        <FormField label="Art">
           <ImageInput value={form.art} onChange={form.setArt} aspect={1} />
-        </div>
+        </FormField>
         {factions.length > 0 && (
-          <div className={styles.field}>
-            <span className={styles.label}>Factions</span>
-            <div className={styles.pillRow}>
-              {factions.map((faction) => (
-                <PillToggle
-                  key={faction.id}
-                  selected={form.factionIds.has(faction.id)}
-                  onToggle={() => form.toggleFaction(faction.id)}
-                >
-                  {faction.name}
-                </PillToggle>
-              ))}
-            </div>
-          </div>
+          <FormField label="Factions">
+            <PillToggleList
+              items={factions}
+              isSelected={(faction) => form.factionIds.has(faction.id)}
+              onToggle={(faction) => form.toggleFaction(faction.id)}
+              keyOf={(faction) => faction.id}
+              labelOf={(faction) => faction.name}
+            />
+          </FormField>
         )}
         {elements.length > 0 && (
-          <div className={styles.field}>
-            <span className={styles.label}>Cost</span>
+          <FormField label="Cost">
             <div className={styles.numberGrid}>
               {elements.map((element) => (
                 <label key={element.id} className={styles.numberRow}>
@@ -122,59 +103,53 @@ export function CodexCardForm({
                   <input
                     type="number"
                     min={0}
-                    value={form.cost[element.id] ?? 0}
+                    value={form.cost[element.id] ?? ''}
                     onFocus={(event) => event.currentTarget.select()}
                     onWheel={(event) => event.currentTarget.blur()}
                     onChange={(event) =>
-                      form.updateCost(element.id, Number(event.target.value))
+                      form.setCost(element.id, event.target.value)
                     }
                   />
                 </label>
               ))}
             </div>
-          </div>
+          </FormField>
         )}
         {form.activation === 'emptySlot' && form.minionStats.length > 0 && (
-          <div className={styles.field}>
-            <span className={styles.label}>Stats</span>
+          <FormField label="Stats">
             <div className={styles.expressionGrid}>
               {form.minionStats.map((stat) => (
                 <div key={stat.id} className={styles.expressionRow}>
                   <span className={styles.numberLabel}>{stat.name}</span>
                   <ExpressionEditor
-                    value={form.statValues[stat.id] ?? 0}
+                    value={form.statValues[stat.id]}
                     onChange={(next) => form.updateStat(stat.id, next)}
+                    onClear={() => form.clearStat(stat.id)}
                   />
                 </div>
               ))}
             </div>
-          </div>
+          </FormField>
         )}
         {form.filteredTraits.length > 0 && (
-          <div className={styles.field}>
-            <span className={styles.label}>Traits</span>
-            <div className={styles.pillRow}>
-              {form.filteredTraits.map((trait) => (
-                <PillToggle
-                  key={trait.id}
-                  selected={form.traitIds.has(trait.id)}
-                  onToggle={() => form.toggleTrait(trait.id)}
-                >
-                  {trait.name}
-                </PillToggle>
-              ))}
-            </div>
-          </div>
+          <FormField label="Traits">
+            <PillToggleList
+              items={form.filteredTraits}
+              isSelected={(trait) => form.traitIds.has(trait.id)}
+              onToggle={(trait) => form.toggleTrait(trait.id)}
+              keyOf={(trait) => trait.id}
+              labelOf={(trait) => trait.name}
+            />
+          </FormField>
         )}
-        <div className={styles.field}>
-          <span className={styles.label}>Abilities</span>
+        <FormField label="Abilities">
           <AbilityComposer
             value={form.abilities}
             onChange={form.setAbilities}
             context={{ elements, factions, stats, traits, cards }}
           />
-        </div>
-      </form>
+        </FormField>
+      </Form>
     </ExpressionEditorProvider>
   );
 }

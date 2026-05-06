@@ -47,34 +47,35 @@ export const mocker = {
     }),
   },
   card: {
-    createSummonBody: (overrides: Partial<CreateCardDto> = {}): CreateCardDto =>
-      ({
-        id: 'goblinBerserker',
-        universeId: 'eldoria',
-        name: 'Goblin Berserker',
-        cost: { fire: 1 },
-        stats: { attack: 4, health: 16 },
-        activation: 'emptySlot',
-        ...overrides,
-      }) as CreateCardDto,
-    createSpellBody: (overrides: Partial<CreateCardDto> = {}): CreateCardDto =>
-      ({
-        id: 'fireball',
-        universeId: 'eldoria',
-        name: 'Fireball',
-        cost: { fire: 5 },
-        activation: 'immediate',
-        ...overrides,
-      }) as CreateCardDto,
+    createSummonBody: (
+      overrides: Partial<CreateCardDto> = {},
+    ): CreateCardDto => ({
+      id: 'goblinBerserker',
+      universeId: 'eldoria',
+      name: 'Goblin Berserker',
+      cost: { fire: 1 },
+      stats: { attack: 4, health: 16 },
+      activation: 'emptySlot',
+      ...overrides,
+    }),
+    createSpellBody: (
+      overrides: Partial<CreateCardDto> = {},
+    ): CreateCardDto => ({
+      id: 'fireball',
+      universeId: 'eldoria',
+      name: 'Fireball',
+      cost: { fire: 5 },
+      activation: 'immediate',
+      ...overrides,
+    }),
   },
   hero: {
-    createBody: (overrides: Partial<CreateHeroDto> = {}): CreateHeroDto =>
-      ({
-        id: 'archmage',
-        universeId: 'eldoria',
-        name: 'Archmage',
-        elements: { fire: 5, water: 5 },
-        ...overrides,
-      }) as CreateHeroDto,
+    createBody: (overrides: Partial<CreateHeroDto> = {}): CreateHeroDto => ({
+      id: 'archmage',
+      universeId: 'eldoria',
+      name: 'Archmage',
+      elements: { fire: 5, water: 5 },
+      ...overrides,
+    }),
   },
 };

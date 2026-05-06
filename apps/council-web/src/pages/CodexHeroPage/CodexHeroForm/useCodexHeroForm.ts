@@ -165,7 +165,9 @@ function buildPayload(state: BuildArgs): HeroFormPayload {
   const elementsPayload: Record<string, number> = {};
   for (const element of state.elements) {
     const value = state.elementValues[element.id];
-    elementsPayload[element.id] = Number.isFinite(value) ? (value ?? 0) : 0;
+    if (Number.isFinite(value) && value > 0) {
+      elementsPayload[element.id] = value;
+    }
   }
 
   const payload: HeroFormPayload = {
@@ -179,7 +181,10 @@ function buildPayload(state: BuildArgs): HeroFormPayload {
 
   const statsPayload: Record<string, Expression> = {};
   for (const stat of state.heroStats) {
-    statsPayload[stat.id] = state.statValues[stat.id] ?? 0;
+    const value = state.statValues[stat.id];
+    if (value !== undefined && value !== 0) {
+      statsPayload[stat.id] = value;
+    }
   }
   if (Object.keys(statsPayload).length > 0) payload.stats = statsPayload;
   if (state.traitIds.size > 0) payload.traits = [...state.traitIds];

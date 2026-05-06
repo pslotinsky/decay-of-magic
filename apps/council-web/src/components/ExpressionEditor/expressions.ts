@@ -10,13 +10,13 @@ export const PATH_ROOTS = [
   'enemyHero',
   'target',
   'chosen',
+  'source',
   'event',
 ] as const;
 
-export const LIST_FIELDS = ['traits', 'factions'] as const;
-export const CUSTOM_FIELD = '__custom__';
+const LIST_FIELDS = ['traits', 'factions'] as const;
 
-export interface FieldGroup {
+interface FieldGroup {
   label: string;
   options: string[];
 }
@@ -42,9 +42,9 @@ export const VARIADIC_OPERATORS = [
 ] as const;
 export const UNARY_OPERATORS = ['not'] as const;
 
-export type BinaryOp = (typeof BINARY_OPERATORS)[number];
-export type VariadicOp = (typeof VARIADIC_OPERATORS)[number];
-export type UnaryOp = (typeof UNARY_OPERATORS)[number];
+type BinaryOp = (typeof BINARY_OPERATORS)[number];
+type VariadicOp = (typeof VARIADIC_OPERATORS)[number];
+type UnaryOp = (typeof UNARY_OPERATORS)[number];
 export type AnyOp = BinaryOp | VariadicOp | UnaryOp;
 
 const ALL_OPERATORS: AnyOp[] = [
@@ -87,7 +87,7 @@ export function defaultForMode(mode: Mode): Expression {
   }
 }
 
-export function looksLikePath(value: string): boolean {
+function looksLikePath(value: string): boolean {
   const head = value.split('.')[0];
   return (PATH_ROOTS as readonly string[]).includes(head ?? '');
 }
@@ -172,8 +172,4 @@ export function fieldGroups(
     });
   }
   return groups;
-}
-
-export function flattenFields(groups: FieldGroup[]): string[] {
-  return groups.flatMap((group) => group.options);
 }

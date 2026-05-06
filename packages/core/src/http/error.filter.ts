@@ -107,7 +107,7 @@ export class ErrorFilter implements ExceptionFilter {
     const body = exception.getResponse();
     if (typeof body === 'string') return body;
     if (typeof body === 'object' && body !== null && 'message' in body) {
-      const message = (body as { message: unknown }).message;
+      const message = body.message;
       if (typeof message === 'string') return message;
       if (Array.isArray(message)) return message.join('; ');
     }

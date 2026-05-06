@@ -1,9 +1,6 @@
-import { Trash2 } from 'lucide-react';
-
 import type { EffectDto, Expression } from '@dod/api-contract';
 
 import { ExpressionEditor } from '@/components/ExpressionEditor';
-import { IconButton } from '@/components/IconButton';
 import { PillToggle } from '@/components/PillToggle';
 
 import type { AbilityComposerContext } from './AbilityComposer';
@@ -34,6 +31,7 @@ export function EffectParams({ effect, context, onChange }: Props) {
     case 'reflectDamage':
       return null;
     case 'gainElement':
+    case 'decreaseElement':
       return (
         <SlugRecordField
           label="Per element"
@@ -161,28 +159,18 @@ function SlugRecordField({
     <div className={styles.field}>
       <span className={styles.label}>{label}</span>
       <div className={styles.slugRecord}>
-        {options.map((option) => {
-          const present = Object.prototype.hasOwnProperty.call(
-            value,
-            option.id,
-          );
-          return (
-            <div key={option.id} className={styles.slugRow}>
-              <div className={styles.slugLabelRow}>
-                <span className={styles.slugLabel}>{option.name}</span>
-                {present && (
-                  <IconButton onClick={() => remove(option.id)}>
-                    <Trash2 size={14} />
-                  </IconButton>
-                )}
-              </div>
-              <ExpressionEditor
-                value={value[option.id] ?? 0}
-                onChange={(next) => onChange({ ...value, [option.id]: next })}
-              />
+        {options.map((option) => (
+          <div key={option.id} className={styles.slugRow}>
+            <div className={styles.slugLabelRow}>
+              <span className={styles.slugLabel}>{option.name}</span>
             </div>
-          );
-        })}
+            <ExpressionEditor
+              value={value[option.id]}
+              onChange={(next) => onChange({ ...value, [option.id]: next })}
+              onClear={() => remove(option.id)}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

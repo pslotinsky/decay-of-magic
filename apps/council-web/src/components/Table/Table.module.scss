@@ -22,31 +22,12 @@
   }
 }
 
-.row {
+.rowClickable {
   cursor: pointer;
   transition: background 0.1s;
 
   &:hover {
     background: var(--border-light);
-  }
-
-  &:hover .actions :global(button) {
-    opacity: 1;
-  }
-}
-
-.code {
-  font-family: var(--font-mono, monospace);
-  color: var(--muted);
-}
-
-.actions {
-  width: 1%;
-  text-align: right;
-
-  :global(button) {
-    opacity: 0;
-    transition: opacity 0.15s;
   }
 }
 

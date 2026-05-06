@@ -5,9 +5,8 @@ import { useFieldErrors } from '@/api/error';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
 import { ErrorText } from '@/components/ErrorText';
+import { Form, FormField } from '@/components/Form';
 import { nameToSlug } from '@/util/slug';
-
-import styles from './CodexElementCreation.module.scss';
 
 interface Props {
   open: boolean;
@@ -63,9 +62,8 @@ export function CodexElementCreation({ open, universeId, onClose }: Props) {
         </>
       }
     >
-      <form id={FORM_ID} onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.field}>
-          <span className={styles.label}>Id</span>
+      <Form id={FORM_ID} onSubmit={handleSubmit}>
+        <FormField label="Id">
           <input
             value={id}
             onChange={(event) => handleIdChange(event.target.value)}
@@ -73,9 +71,8 @@ export function CodexElementCreation({ open, universeId, onClose }: Props) {
             required
           />
           <ErrorText message={fieldErrors.id} variant="field" />
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Name</span>
+        </FormField>
+        <FormField label="Name">
           <input
             value={name}
             onChange={(event) => handleNameChange(event.target.value)}
@@ -83,8 +80,8 @@ export function CodexElementCreation({ open, universeId, onClose }: Props) {
             required
           />
           <ErrorText message={fieldErrors.name} variant="field" />
-        </div>
-      </form>
+        </FormField>
+      </Form>
     </Drawer>
   );
 }

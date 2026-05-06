@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
 import { ErrorText } from '@/components/ErrorText';
+import { Text } from '@/components/Text';
 
 import { CodexCardForm } from '../CodexCardForm';
 
@@ -34,6 +35,7 @@ export function CodexCardEditing({ card, universeId, onClose }: Props) {
     <Drawer
       open={!!card}
       title="Edit Card"
+      subtitle={<Text mono muted value={card?.id} />}
       onClose={onClose}
       footer={
         card ? (

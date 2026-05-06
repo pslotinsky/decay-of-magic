@@ -6,8 +6,8 @@ import { useUpdateCitizen } from '@/api/citizen';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
 import { ErrorText } from '@/components/ErrorText';
-
-import styles from './CitizensPageCitizenEditing.module.scss';
+import { Form, FormField } from '@/components/Form';
+import { Text } from '@/components/Text';
 
 interface Props {
   citizen: CitizenDto | null;
@@ -32,6 +32,7 @@ export function CitizensPageCitizenEditing({ citizen, onClose }: Props) {
     <Drawer
       open={!!citizen}
       title="Edit Citizen"
+      subtitle={<Text mono muted value={citizen?.id} />}
       onClose={onClose}
       footer={
         <>
@@ -42,16 +43,15 @@ export function CitizensPageCitizenEditing({ citizen, onClose }: Props) {
         </>
       }
     >
-      <form id={FORM_ID} onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.field}>
-          <span className={styles.label}>Nickname</span>
+      <Form id={FORM_ID} onSubmit={handleSubmit}>
+        <FormField label="Nickname">
           <input
             value={nickname}
             onChange={(event) => setNickname(event.target.value)}
             required
           />
-        </div>
-      </form>
+        </FormField>
+      </Form>
     </Drawer>
   );
 }

@@ -42,14 +42,20 @@ export class UpdateArchetypeHandler implements ICommandHandler<UpdateArchetypeCo
     archetype: Archetype,
     payload: Record<string, unknown>,
   ): Partial<Archetype> {
-    if (!('data' in archetype)) {
-      return payload as Partial<Archetype>;
+    if (!hasData(archetype)) {
+      return payload;
     }
 
     const { name, ...rest } = payload;
     return {
       name,
-      data: { ...(archetype.data as object), ...pickDefined(rest) },
+      data: { ...archetype.data, ...pickDefined(rest) },
     } as Partial<Archetype>;
   }
+}
+
+function hasData(
+  archetype: Archetype,
+): archetype is Archetype & { data: Record<string, unknown> } {
+  return 'data' in archetype;
 }

@@ -4,8 +4,7 @@ import { useRegisterCitizen } from '@/api/citizen';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
 import { ErrorText } from '@/components/ErrorText';
-
-import styles from './CitizensPageCitizenRegistration.module.scss';
+import { Form, FormField } from '@/components/Form';
 
 interface Props {
   open: boolean;
@@ -47,18 +46,16 @@ export function CitizensPageCitizenRegistration({ open, onClose }: Props) {
         </>
       }
     >
-      <form id={FORM_ID} onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.field}>
-          <span className={styles.label}>Nickname</span>
+      <Form id={FORM_ID} onSubmit={handleSubmit}>
+        <FormField label="Nickname">
           <input
             value={nickname}
             onChange={(event) => setNickname(event.target.value)}
             placeholder="Choose a name"
             required
           />
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Secret</span>
+        </FormField>
+        <FormField label="Secret">
           <input
             type="password"
             value={secret}
@@ -67,8 +64,8 @@ export function CitizensPageCitizenRegistration({ open, onClose }: Props) {
             minLength={8}
             required
           />
-        </div>
-      </form>
+        </FormField>
+      </Form>
     </Drawer>
   );
 }

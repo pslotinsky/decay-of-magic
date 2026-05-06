@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
 import { ErrorText } from '@/components/ErrorText';
+import { Text } from '@/components/Text';
 
 import { CodexHeroForm } from '../CodexHeroForm';
 
@@ -34,6 +35,7 @@ export function CodexHeroEditing({ hero, universeId, onClose }: Props) {
     <Drawer
       open={!!hero}
       title="Edit Hero"
+      subtitle={<Text mono muted value={hero?.id} />}
       onClose={onClose}
       footer={
         hero ? (
