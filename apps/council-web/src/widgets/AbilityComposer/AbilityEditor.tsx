@@ -11,9 +11,9 @@ import {
   TRIGGER_VALUES,
 } from '@dod/api-contract';
 
-import { ExpressionEditor } from '@/components/ExpressionEditor';
 import { IconButton } from '@/components/IconButton';
 import { PillToggle } from '@/components/PillToggle';
+import { ExpressionEditor } from '@/widgets/ExpressionEditor';
 
 import { buildPassive, buildTriggered, isPassive } from './abilities';
 import type { AbilityComposerContext } from './AbilityComposer';

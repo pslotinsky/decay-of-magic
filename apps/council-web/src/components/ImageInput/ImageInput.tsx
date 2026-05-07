@@ -12,9 +12,10 @@ interface Props {
   value: string;
   onChange: (url: string) => void;
   aspect?: number;
+  defaultWidth?: number;
 }
 
-export function ImageInput({ value, onChange, aspect }: Props) {
+export function ImageInput({ value, onChange, aspect, defaultWidth }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const { mutate, isPending } = useUploadFile();
@@ -61,6 +62,7 @@ export function ImageInput({ value, onChange, aspect }: Props) {
         <ImageEditor
           file={pendingFile}
           aspect={aspect}
+          defaultWidth={defaultWidth}
           onCancel={() => setPendingFile(null)}
           onConfirm={handleConfirm}
         />

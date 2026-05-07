@@ -58,5 +58,5 @@ This slice is **not MVP-blocking**: the rest of the milestone (DOD-0020 → DOD-
 - [x] [DOD-0021: Codex law & lore](../tasks/DOD-0021_codex-law-lore.md)
 - [x] [DOD-0022: Codex ground](../tasks/DOD-0022_codex-ground.md)
 - [ ] [DOD-0023: Codex part of Council](../tasks/DOD-0023_codex-part-of-council.md)
-- [ ] [DOD-0024: Universe settings](../tasks/DOD-0024_universe-settings.md)
+- [x] [DOD-0024: Universe settings](../tasks/DOD-0024_universe-settings.md)
 <!-- TOC.END -->

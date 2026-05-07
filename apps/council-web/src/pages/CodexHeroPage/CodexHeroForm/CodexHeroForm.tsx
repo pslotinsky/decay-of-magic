@@ -7,15 +7,15 @@ import type {
   TraitDto,
 } from '@dod/api-contract';
 
-import { AbilityComposer } from '@/components/AbilityComposer';
-import {
-  ExpressionEditor,
-  ExpressionEditorProvider,
-} from '@/components/ExpressionEditor';
 import { Form, FormField } from '@/components/Form';
 import { ImageInput } from '@/components/ImageInput';
 import { PillToggleList } from '@/components/PillToggleList';
 import { Textarea } from '@/components/Textarea';
+import { AbilityComposer } from '@/widgets/AbilityComposer';
+import {
+  ExpressionEditor,
+  ExpressionEditorProvider,
+} from '@/widgets/ExpressionEditor';
 
 import { type HeroFormPayload, useCodexHeroForm } from './useCodexHeroForm';
 

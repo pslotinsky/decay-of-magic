@@ -1,11 +1,14 @@
 import { type SyntheticEvent, useState } from 'react';
 
+import { DEFAULT_UNIVERSE_SETTINGS } from '@dod/api-contract';
+
 import { useCreateUniverse } from '@/api/universe';
 import { Button } from '@/components/Button';
 import { Drawer } from '@/components/Drawer';
 import { ErrorText } from '@/components/ErrorText';
 import { Form, FormField } from '@/components/Form';
 import { ImageInput } from '@/components/ImageInput';
+import { JsonEditor } from '@/components/JsonEditor';
 import { Textarea } from '@/components/Textarea';
 
 interface Props {
@@ -20,16 +23,22 @@ export function UniversesPageUniverseCreation({ open, onClose }: Props) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [cover, setCover] = useState('');
+  const [settings, setSettings] = useState(DEFAULT_UNIVERSE_SETTINGS);
+  const [settingsError, setSettingsError] = useState<string | null>(null);
   const { mutate, error, isPending } = useCreateUniverse();
 
   function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (settingsError !== null) {
+      return;
+    }
     mutate(
       {
         id,
         name,
         ...(description && { description }),
         ...(cover && { cover }),
+        settings,
       },
       {
         onSuccess: () => {
@@ -37,6 +46,7 @@ export function UniversesPageUniverseCreation({ open, onClose }: Props) {
           setName('');
           setDescription('');
           setCover('');
+          setSettings(DEFAULT_UNIVERSE_SETTINGS);
           onClose();
         },
       },
@@ -50,7 +60,7 @@ export function UniversesPageUniverseCreation({ open, onClose }: Props) {
       onClose={onClose}
       footer={
         <>
-          <ErrorText message={error?.message} />
+          <ErrorText message={settingsError ?? error?.message} />
           <Button type="submit" form={FORM_ID} disabled={isPending}>
             {isPending ? 'Creating…' : 'Create'}
           </Button>
@@ -83,6 +93,13 @@ export function UniversesPageUniverseCreation({ open, onClose }: Props) {
         </FormField>
         <FormField label="Cover">
           <ImageInput value={cover} onChange={setCover} />
+        </FormField>
+        <FormField label="Settings (JSON)">
+          <JsonEditor
+            defaultValue={DEFAULT_UNIVERSE_SETTINGS}
+            onChange={setSettings}
+            onError={setSettingsError}
+          />
         </FormField>
       </Form>
     </Drawer>

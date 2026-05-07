@@ -10,7 +10,7 @@ import type {
 } from '@dod/api-contract';
 
 import { Button } from '@/components/Button';
-import { ExpressionEditorProvider } from '@/components/ExpressionEditor';
+import { ExpressionEditorProvider } from '@/widgets/ExpressionEditor';
 
 import { defaultAbility } from './abilities';
 import { AbilityEditor } from './AbilityEditor';

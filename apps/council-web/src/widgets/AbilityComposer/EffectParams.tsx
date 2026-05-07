@@ -1,7 +1,7 @@
 import type { EffectDto, Expression } from '@dod/api-contract';
 
-import { ExpressionEditor } from '@/components/ExpressionEditor';
 import { PillToggle } from '@/components/PillToggle';
+import { ExpressionEditor } from '@/widgets/ExpressionEditor';
 
 import type { AbilityComposerContext } from './AbilityComposer';
 

@@ -1,5 +1,6 @@
 import {
   ACTIVATION_VALUES,
+  type CardArtSettings,
   type CardDto,
   type ElementDto,
   type FactionDto,
@@ -7,15 +8,15 @@ import {
   type TraitDto,
 } from '@dod/api-contract';
 
-import { AbilityComposer } from '@/components/AbilityComposer';
-import {
-  ExpressionEditor,
-  ExpressionEditorProvider,
-} from '@/components/ExpressionEditor';
 import { Form, FormField } from '@/components/Form';
 import { ImageInput } from '@/components/ImageInput';
 import { PillToggleList } from '@/components/PillToggleList';
 import { Textarea } from '@/components/Textarea';
+import { AbilityComposer } from '@/widgets/AbilityComposer';
+import {
+  ExpressionEditor,
+  ExpressionEditorProvider,
+} from '@/widgets/ExpressionEditor';
 
 import { type CardFormPayload, useCodexCardForm } from './useCodexCardForm';
 
@@ -31,6 +32,7 @@ interface Props {
   stats: StatDto[];
   traits: TraitDto[];
   cards: CardDto[];
+  cardArt: CardArtSettings;
   onSubmit: (payload: CardFormPayload) => void;
 }
 
@@ -42,6 +44,7 @@ export function CodexCardForm({
   stats,
   traits,
   cards,
+  cardArt,
   onSubmit,
 }: Props) {
   const form = useCodexCardForm({ initial, stats, traits, onSubmit });
@@ -81,7 +84,12 @@ export function CodexCardForm({
           />
         </FormField>
         <FormField label="Art">
-          <ImageInput value={form.art} onChange={form.setArt} aspect={1} />
+          <ImageInput
+            value={form.art}
+            onChange={form.setArt}
+            aspect={cardArt.aspect}
+            defaultWidth={cardArt.width}
+          />
         </FormField>
         {factions.length > 0 && (
           <FormField label="Factions">

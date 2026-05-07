@@ -3,8 +3,6 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"],
-      "@dod/core": ["../../packages/core/src/index.ts"],                                                                                                                    
-      "@dod/core/*": ["../../packages/core/src/*"],
       "@prisma/client": ["../../node_modules/.prisma/client"]
     }
   },

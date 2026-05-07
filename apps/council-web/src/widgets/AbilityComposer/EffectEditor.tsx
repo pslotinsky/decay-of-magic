@@ -7,8 +7,8 @@ import {
   type Expression,
 } from '@dod/api-contract';
 
-import { ExpressionEditor } from '@/components/ExpressionEditor';
 import { IconButton } from '@/components/IconButton';
+import { ExpressionEditor } from '@/widgets/ExpressionEditor';
 
 import { emptyEffect } from './abilities';
 import type { AbilityComposerContext } from './AbilityComposer';
