@@ -35,12 +35,9 @@ export abstract class Archetype extends Entity {
     this.name = params.name;
   }
 
-  public override update<T extends object>(
-    this: T,
-    params: Partial<T>,
-  ): Set<keyof T> {
-    const changed = super.update(params) as unknown as Set<keyof T>;
-    (this as unknown as Archetype).enforceInvariants();
+  public override update<T>(fields: Partial<T>): Set<keyof T> {
+    const changed = super.update(fields);
+    this.enforceInvariants();
     return changed;
   }
 

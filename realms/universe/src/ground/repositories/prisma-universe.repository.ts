@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common';
 
 import { PrismaRepository } from '@dod/core';
 
-import { Universe } from '@/lore/entities/universe.entity';
+import { Universe, UniverseSettings } from '@/lore/entities/universe.entity';
 import { UniverseRepository } from '@/lore/repositories/universe.repository';
 
 import { Prisma, Universe as UniverseModel } from '../../../prisma/generated';
@@ -23,6 +23,7 @@ export class PrismaUniverseRepository
       ...model,
       description: model.description ?? undefined,
       cover: model.cover ?? undefined,
+      settings: model.settings as UniverseSettings,
     });
   }
 
@@ -31,6 +32,7 @@ export class PrismaUniverseRepository
       ...entity,
       description: entity.description ?? null,
       cover: entity.cover ?? null,
+      settings: entity.settings as Prisma.JsonValue,
     };
   }
 }

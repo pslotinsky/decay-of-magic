@@ -5,6 +5,7 @@ import {
   CreateUniverseDto,
   CreateUniverseSchema,
   UniverseDto,
+  UniverseSummaryDto,
   UpdateUniverseDto,
   UpdateUniverseSchema,
 } from '@dod/api-contract';
@@ -44,7 +45,7 @@ export class UniverseGate {
   }
 
   @Get()
-  public async list(): Promise<UniverseDto[]> {
+  public async list(): Promise<UniverseSummaryDto[]> {
     return this.queryBus.execute(new ListUniversesQuery());
   }
 }

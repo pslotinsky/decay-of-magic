@@ -30,20 +30,18 @@ This slice is not MVP-blocking — DOD-0020 → DOD-0023 ship Codex with a fixed
 - `GET /universe/:id` returns full settings; `GET /universe` list view omits them to keep the list light.
 - PATCH semantics: each realm's settings sub-object is replaced wholesale; omitted keys preserve existing values.
 
-### Codex settings (initial schema — TBD)
+### Codex settings (initial schema)
 
-Concrete fields land when customization needs surface in practice. Candidate areas:
+`CodexSettingsSchema` ships with a single field in this slice — driven by a concrete need surfaced in DOD-0023:
 
-- per-Universe display labels for Codex entity types (e.g. call Cards "deals" in Cyber Deal)
-- theme tokens (palette, card frame style)
-- presentation choices (compact vs spacious card layout, faction badge style)
+- `cardArt: { aspect: number; width: number }` — defaults for the card-art image editor (crop ratio + output width). DoM uses `{ aspect: 1, width: 600 }`; the schema-level defaults match today's hard-coded values (`aspect: 1`, `width: 1600`).
 
-The specific schema is intentionally left open here — it should be driven by real customization needs, not speculation.
+Other candidate areas (display labels, theme tokens, faction→cost-element mapping, presentation choices) are deliberately left out and will land in follow-up tasks as their customization needs become concrete.
 
 ### Council UI
 
-- Universe create and edit forms gain a settings section.
-- Codex settings editor renders the fields defined by `CodexSettingsSchema` once that schema is pinned.
+- Universe create and edit forms gain a settings section that renders `CodexSettingsSchema` (currently the `cardArt` editor: aspect picker + width input).
+- The Codex card-art `ImageInput` reads `aspect` and `defaultWidth` from the active Universe's `codex.cardArt` settings instead of the hard-coded `aspect={1}` / `defaultWidth=1600`.
 - Future realms plug their own settings editors into the same section as they ship.
 
 ## Result

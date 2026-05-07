@@ -397,3 +397,20 @@ export const UpdateHeroSchema = z.object({
   abilities: z.array(AbilitySchema).optional(),
 });
 export type UpdateHeroDto = z.infer<typeof UpdateHeroSchema>;
+
+const CardArtSettingsSchema = z.object({
+  aspect: z.number().positive().max(10),
+  width: z.int().min(64).max(4096),
+});
+export type CardArtSettings = z.infer<typeof CardArtSettingsSchema>;
+
+export const CodexSettingsSchema = z.object({
+  cardArt: CardArtSettingsSchema,
+});
+export type CodexSettings = z.infer<typeof CodexSettingsSchema>;
+
+export const DEFAULT_CARD_ART: CardArtSettings = { aspect: 1, width: 1600 };
+
+export const DEFAULT_CODEX_SETTINGS: CodexSettings = {
+  cardArt: DEFAULT_CARD_ART,
+};

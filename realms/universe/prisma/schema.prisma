@@ -13,6 +13,7 @@ model Universe {
   name        String  @unique
   description String?
   cover       String?
+  settings    Json    @default("{\"codex\":{\"cardArt\":{\"aspect\":1,\"width\":600}}}")
 
   @@map("universe")
 }
