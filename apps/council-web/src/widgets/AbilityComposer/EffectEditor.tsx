@@ -7,6 +7,7 @@ import {
   type Expression,
 } from '@dod/api-contract';
 
+import { Checkbox } from '@/components/Checkbox';
 import { IconButton } from '@/components/IconButton';
 import { ExpressionEditor } from '@/widgets/ExpressionEditor';
 
@@ -87,14 +88,9 @@ export function EffectEditor({
         </div>
       </div>
       <EffectParams effect={effect} context={context} onChange={onChange} />
-      <label className={styles.toggleRow}>
-        <input
-          type="checkbox"
-          checked={effect.filter !== undefined}
-          onChange={toggleFilter}
-        />
+      <Checkbox checked={effect.filter !== undefined} onChange={toggleFilter}>
         Per-effect filter
-      </label>
+      </Checkbox>
       {effect.filter !== undefined && (
         <ExpressionEditor value={effect.filter} onChange={setFilter} />
       )}

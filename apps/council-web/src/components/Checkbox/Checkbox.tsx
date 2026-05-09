@@ -25,7 +25,9 @@ export function Checkbox({ checked, onChange, disabled, children }: Props) {
         disabled={disabled}
       />
       <span className={styles.box} aria-hidden="true" />
-      {children !== undefined && <span className={styles.text}>{children}</span>}
+      {children !== undefined && (
+        <span className={styles.text}>{children}</span>
+      )}
     </label>
   );
 }

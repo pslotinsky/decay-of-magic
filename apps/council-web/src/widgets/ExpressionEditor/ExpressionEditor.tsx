@@ -7,6 +7,7 @@ import {
   ButtonSelect,
   type ButtonSelectOption,
 } from '@/components/ButtonSelect';
+import { Checkbox } from '@/components/Checkbox';
 
 import { defaultForMode, detectMode, type Mode } from './expressions';
 import { OperatorBody } from './OperatorBody';
@@ -117,14 +118,9 @@ function ModeBody({ mode, value, onChange, onClear }: BodyProps) {
   if (mode === 'boolean') {
     const bool = typeof value === 'boolean' ? value : false;
     return (
-      <label className={styles.booleanLabel}>
-        <input
-          type="checkbox"
-          checked={bool}
-          onChange={(event) => onChange(event.target.checked)}
-        />
+      <Checkbox checked={bool} onChange={onChange}>
         {bool ? 'true' : 'false'}
-      </label>
+      </Checkbox>
     );
   }
   if (mode === 'literalString') {

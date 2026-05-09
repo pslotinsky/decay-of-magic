@@ -11,6 +11,7 @@ import {
   TRIGGER_VALUES,
 } from '@dod/api-contract';
 
+import { Checkbox } from '@/components/Checkbox';
 import { IconButton } from '@/components/IconButton';
 import { PillToggle } from '@/components/PillToggle';
 import { ExpressionEditor } from '@/widgets/ExpressionEditor';
@@ -183,14 +184,9 @@ export function AbilityEditor({
       </div>
 
       <div className={styles.field}>
-        <label className={styles.toggleRow}>
-          <input
-            type="checkbox"
-            checked={exclude !== undefined}
-            onChange={toggleExclude}
-          />
+        <Checkbox checked={exclude !== undefined} onChange={toggleExclude}>
           Exclude expression
-        </label>
+        </Checkbox>
         {exclude !== undefined && (
           <ExpressionEditor value={exclude} onChange={setExclude} />
         )}
