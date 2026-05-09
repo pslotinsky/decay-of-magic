@@ -8,6 +8,7 @@ import {
   type TraitDto,
 } from '@dod/api-contract';
 
+import { ButtonSelect } from '@/components/ButtonSelect';
 import { Form, FormField } from '@/components/Form';
 import { ImageInput } from '@/components/ImageInput';
 import { PillToggleList } from '@/components/PillToggleList';
@@ -47,21 +48,18 @@ export function CodexCardForm({
   cardArt,
   onSubmit,
 }: Props) {
-  const form = useCodexCardForm({ initial, stats, traits, onSubmit });
+  const form = useCodexCardForm({
+    initial,
+    elements,
+    factions,
+    stats,
+    traits,
+    onSubmit,
+  });
 
   return (
     <ExpressionEditorProvider value={{ elements, factions, stats, traits }}>
       <Form id={formId} onSubmit={form.handleSubmit}>
-        {!form.isEditMode && (
-          <FormField label="Id">
-            <input
-              value={form.id}
-              onChange={(event) => form.setId(event.target.value)}
-              placeholder="e.g. goblinBerserker"
-              required
-            />
-          </FormField>
-        )}
         <FormField label="Name">
           <input
             value={form.name}
@@ -69,6 +67,15 @@ export function CodexCardForm({
             required
           />
         </FormField>
+        {!form.isEditMode && (
+          <FormField label="Id">
+            <input
+              value={form.id}
+              onChange={(event) => form.setId(event.target.value)}
+              required
+            />
+          </FormField>
+        )}
         <FormField label="Description">
           <Textarea
             value={form.description}
@@ -102,10 +109,10 @@ export function CodexCardForm({
             />
           </FormField>
         )}
-        {elements.length > 0 && (
+        {form.availableElements.length > 0 && (
           <FormField label="Cost">
             <div className={styles.numberGrid}>
-              {elements.map((element) => (
+              {form.availableElements.map((element) => (
                 <label key={element.id} className={styles.numberRow}>
                   <span className={styles.numberLabel}>{element.name}</span>
                   <input
@@ -126,17 +133,35 @@ export function CodexCardForm({
         {form.activation === 'emptySlot' && form.minionStats.length > 0 && (
           <FormField label="Stats">
             <div className={styles.expressionGrid}>
-              {form.minionStats.map((stat) => (
+              {form.visibleMinionStats.map((stat) => (
                 <div key={stat.id} className={styles.expressionRow}>
                   <span className={styles.numberLabel}>{stat.name}</span>
                   <ExpressionEditor
                     value={form.statValues[stat.id]}
                     onChange={(next) => form.updateStat(stat.id, next)}
-                    onClear={() => form.clearStat(stat.id)}
+                    onClear={
+                      stat.required
+                        ? () => form.clearStat(stat.id)
+                        : () => form.removeOptionalStat(stat.id)
+                    }
                   />
                 </div>
               ))}
             </div>
+            {form.addableMinionStats.length > 0 && (
+              <ButtonSelect
+                value=""
+                onChange={(statId) => form.showOptionalStat(statId)}
+                options={form.addableMinionStats.map((stat) => ({
+                  value: stat.id,
+                  label: stat.name,
+                }))}
+                placeholder="+ Add stat"
+                variant="label"
+                ariaLabel="Add stat"
+                className={styles.addStat}
+              />
+            )}
           </FormField>
         )}
         {form.filteredTraits.length > 0 && (

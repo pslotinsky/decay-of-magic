@@ -1,5 +1,6 @@
 import {
   CreateCardDto,
+  CreateFactionDto,
   CreateHeroDto,
   CreateStatDto,
   CreateTraitDto,
@@ -27,7 +28,7 @@ export class ArchetypeFactory {
       case ArchetypeKind.Element:
         return new ElementArchetype(payload as ArchetypeIdentity);
       case ArchetypeKind.Faction:
-        return new FactionArchetype(payload as ArchetypeIdentity);
+        return new FactionArchetype(payload as CreateFactionDto);
       case ArchetypeKind.Stat:
         return new StatArchetype(payload as CreateStatDto);
       case ArchetypeKind.Trait:

@@ -78,6 +78,8 @@ A simple list page. Table of names. "New" button opens a modal or inline form wi
 
 Same shape as Elements — list of names, create / edit via a single form. Each Universe has ~a handful of Factions.
 
+Faction carries an `elements` field (multi-select from this Universe's Elements; can be empty) that restricts which Elements appear in the cost picker for cards in this Faction. Zero = non-elemental; one = DoM-style; many = a Faction that can pay in several Elements.
+
 ### Stats
 
 List table of (slug, name, `appliesTo`). "New" opens a Stat editor. Row click opens edit.
@@ -87,6 +89,7 @@ Stat editor fields:
 - `id` (camelCase slug, edit-locked after create)
 - `name`
 - `appliesTo` (multi-select checkboxes: `minion`, `hero`, `card`)
+- `required` (boolean) — when true, this stat is rendered inline in entity editors that include it via `appliesTo`; otherwise it's hidden behind a "+ Add stat" affordance
 
 ### Traits
 
@@ -108,8 +111,8 @@ Card editor fields:
 - `description` (rules text and flavor combined; single textarea)
 - `activation` (dropdown: `emptySlot` / `enemyMinion` / `ownerMinion` / `immediate`)
 - `factions` (multi-select from this Universe's Factions)
-- `cost` (per-Element amount picker)
-- `stats` (one input per Stat in the Universe whose `appliesTo` includes `minion`; value is amount-or-Expression; visible only when `activation: emptySlot`)
+- `cost` (per-Element amount picker; restricted to the union of `elements` declared on the card's Factions)
+- `stats` (Stats in the Universe whose `appliesTo` includes `minion` — `required` ones rendered inline, optional ones added via "+ Add stat"; value is amount-or-Expression; visible only when `activation: emptySlot`)
 - `traits` (multi-select from the Universe's Traits whose `appliesTo` includes `minion` for `activation: emptySlot` cards, or `card` for spell cards)
 - `art` (URL, picked from the asset viewer)
 - abilities — ordered list built with the Ability composer
@@ -121,8 +124,8 @@ List table of (name, faction, pool-summary). Editor fields:
 - `name`
 - `description`
 - `faction` (optional, single-select)
-- `elements` (per-Element amount picker, same component as Card cost)
-- `stats` (one input per Stat in the Universe whose `appliesTo` includes `hero`; value is amount-or-Expression)
+- `elements` (per-Element amount picker, same component as Card cost; restricted to the `elements` declared on the hero's Faction — no restriction if no Faction)
+- `stats` (Stats in the Universe whose `appliesTo` includes `hero` — `required` ones rendered inline, optional ones added via "+ Add stat"; value is amount-or-Expression)
 - `traits` (multi-select from the Universe's Traits whose `appliesTo` includes `hero`)
 - `art` (URL, picked from the asset viewer)
 - abilities — ordered list built with the Ability composer (passive abilities are typical for hero signatures)

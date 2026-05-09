@@ -1,6 +1,6 @@
 .numberGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: var(--space-3);
 }
 
@@ -25,4 +25,9 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+}
+
+.addStat {
+  align-self: flex-start;
+  margin-top: var(--space-3);
 }

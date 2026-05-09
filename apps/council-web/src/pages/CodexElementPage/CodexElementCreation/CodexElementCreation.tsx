@@ -63,15 +63,6 @@ export function CodexElementCreation({ open, universeId, onClose }: Props) {
       }
     >
       <Form id={FORM_ID} onSubmit={handleSubmit}>
-        <FormField label="Id">
-          <input
-            value={id}
-            onChange={(event) => handleIdChange(event.target.value)}
-            placeholder="e.g. fire"
-            required
-          />
-          <ErrorText message={fieldErrors.id} variant="field" />
-        </FormField>
         <FormField label="Name">
           <input
             value={name}
@@ -80,6 +71,15 @@ export function CodexElementCreation({ open, universeId, onClose }: Props) {
             required
           />
           <ErrorText message={fieldErrors.name} variant="field" />
+        </FormField>
+        <FormField label="Id">
+          <input
+            value={id}
+            onChange={(event) => handleIdChange(event.target.value)}
+            placeholder="e.g. fire"
+            required
+          />
+          <ErrorText message={fieldErrors.id} variant="field" />
         </FormField>
       </Form>
     </Drawer>

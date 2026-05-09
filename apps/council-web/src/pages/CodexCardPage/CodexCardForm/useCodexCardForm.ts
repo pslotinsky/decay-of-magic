@@ -4,7 +4,9 @@ import type {
   AbilityDto,
   Activation,
   CardDto,
+  ElementDto,
   Expression,
+  FactionDto,
   StatDto,
   TraitDto,
 } from '@dod/api-contract';
@@ -26,12 +28,21 @@ export interface CardFormPayload {
 
 interface Params {
   initial?: Partial<CardDto>;
+  elements: ElementDto[];
+  factions: FactionDto[];
   stats: StatDto[];
   traits: TraitDto[];
   onSubmit: (payload: CardFormPayload) => void;
 }
 
-export function useCodexCardForm({ initial, stats, traits, onSubmit }: Params) {
+export function useCodexCardForm({
+  initial,
+  elements,
+  factions,
+  stats,
+  traits,
+  onSubmit,
+}: Params) {
   const isEditMode = !!initial?.id;
   const [id, setIdState] = useState(initial?.id ?? '');
   const [idTouched, setIdTouched] = useState(isEditMode);
@@ -55,6 +66,9 @@ export function useCodexCardForm({ initial, stats, traits, onSubmit }: Params) {
   const [statValues, setStatValues] = useState<Record<string, Expression>>({
     ...(initial?.stats ?? {}),
   });
+  const [shownOptionalStats, setShownOptionalStats] = useState<Set<string>>(
+    () => new Set(Object.keys(initial?.stats ?? {})),
+  );
   const [traitIds, setTraitIds] = useState<Set<string>>(
     new Set(initial?.traits ?? []),
   );
@@ -103,10 +117,52 @@ export function useCodexCardForm({ initial, stats, traits, onSubmit }: Params) {
     });
   }
 
+  function showOptionalStat(slug: string) {
+    setShownOptionalStats((current) => {
+      const next = new Set(current);
+      next.add(slug);
+      return next;
+    });
+  }
+
+  function removeOptionalStat(slug: string) {
+    setShownOptionalStats((current) => {
+      const next = new Set(current);
+      next.delete(slug);
+      return next;
+    });
+    clearStat(slug);
+  }
+
   const minionStats = useMemo(
     () => stats.filter((stat) => stat.appliesTo.includes('minion')),
     [stats],
   );
+
+  const visibleMinionStats = useMemo(
+    () =>
+      minionStats.filter(
+        (stat) => stat.required || shownOptionalStats.has(stat.id),
+      ),
+    [minionStats, shownOptionalStats],
+  );
+
+  const addableMinionStats = useMemo(
+    () =>
+      minionStats.filter(
+        (stat) => !stat.required && !shownOptionalStats.has(stat.id),
+      ),
+    [minionStats, shownOptionalStats],
+  );
+
+  const availableElements = useMemo(() => {
+    const allowed = new Set(
+      factions.flatMap((faction) =>
+        factionIds.has(faction.id) ? (faction.elements ?? []) : [],
+      ),
+    );
+    return elements.filter((element) => allowed.has(element.id));
+  }, [elements, factions, factionIds]);
 
   const traitScope = activation === 'emptySlot' ? 'minion' : 'card';
   const filteredTraits = useMemo(
@@ -132,6 +188,7 @@ export function useCodexCardForm({ initial, stats, traits, onSubmit }: Params) {
         activation,
         factionIds,
         cost,
+        availableElements,
         statValues,
         applicableTraitIds,
         abilities,
@@ -156,6 +213,7 @@ export function useCodexCardForm({ initial, stats, traits, onSubmit }: Params) {
     toggleFaction,
     cost,
     setCost,
+    availableElements,
     statValues,
     updateStat,
     clearStat,
@@ -163,6 +221,10 @@ export function useCodexCardForm({ initial, stats, traits, onSubmit }: Params) {
     toggleTrait,
     filteredTraits,
     minionStats,
+    visibleMinionStats,
+    addableMinionStats,
+    showOptionalStat,
+    removeOptionalStat,
     abilities,
     setAbilities,
     handleSubmit,
@@ -177,6 +239,7 @@ interface BuildArgs {
   activation: Activation;
   factionIds: Set<string>;
   cost: Record<string, number>;
+  availableElements: ElementDto[];
   statValues: Record<string, Expression>;
   applicableTraitIds: Set<string>;
   abilities: AbilityDto[];
@@ -184,9 +247,14 @@ interface BuildArgs {
 }
 
 function buildPayload(state: BuildArgs): CardFormPayload {
+  const allowedElementIds = new Set(
+    state.availableElements.map((element) => element.id),
+  );
   const filteredCost: Record<string, number> = {};
   for (const [slug, value] of Object.entries(state.cost)) {
-    if (Number.isFinite(value) && value > 0) filteredCost[slug] = value;
+    if (allowedElementIds.has(slug) && Number.isFinite(value) && value > 0) {
+      filteredCost[slug] = value;
+    }
   }
 
   const payload: CardFormPayload = {

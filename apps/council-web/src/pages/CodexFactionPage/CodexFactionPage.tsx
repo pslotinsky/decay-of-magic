@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 
 import type { FactionDto } from '@dod/api-contract';
 
-import { useFactions } from '@/api/codex';
+import { useElements, useFactions } from '@/api/codex';
 import { useUniverse } from '@/api/universe';
 import { Button } from '@/components/Button';
 import { ErrorText } from '@/components/ErrorText';
@@ -18,6 +18,7 @@ export function CodexFactionPage() {
   const { universeId } = useParams<{ universeId: string }>();
   const { data: universe } = useUniverse(universeId!);
   const { data: factions = [], error } = useFactions(universeId!);
+  const { data: elements = [] } = useElements(universeId!);
   const [createOpen, setCreateOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<FactionDto | null>(null);
 
@@ -42,7 +43,11 @@ export function CodexFactionPage() {
         }
       >
         <ErrorText message={error?.message} />
-        <CodexFactionTable factions={factions} onEdit={setEditTarget} />
+        <CodexFactionTable
+          factions={factions}
+          elements={elements}
+          onEdit={setEditTarget}
+        />
       </Page>
 
       <CodexFactionCreation

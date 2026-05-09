@@ -78,19 +78,19 @@ export function CodexTraitCreation({ open, universeId, onClose }: Props) {
       }
     >
       <Form id={FORM_ID} onSubmit={handleSubmit}>
-        <FormField label="Id">
-          <input
-            value={id}
-            onChange={(event) => handleIdChange(event.target.value)}
-            placeholder="e.g. immuneToSpells"
-            required
-          />
-        </FormField>
         <FormField label="Name">
           <input
             value={name}
             onChange={(event) => handleNameChange(event.target.value)}
             placeholder="Display name"
+            required
+          />
+        </FormField>
+        <FormField label="Id">
+          <input
+            value={id}
+            onChange={(event) => handleIdChange(event.target.value)}
+            placeholder="e.g. immuneToSpells"
             required
           />
         </FormField>

@@ -8,6 +8,7 @@ import {
 
 import { useUpdateStat } from '@/api/codex';
 import { Button } from '@/components/Button';
+import { Checkbox } from '@/components/Checkbox';
 import { Drawer } from '@/components/Drawer';
 import { ErrorText } from '@/components/ErrorText';
 import { Form, FormField } from '@/components/Form';
@@ -24,6 +25,7 @@ const FORM_ID = 'codex-stat-edit';
 export function CodexStatEditing({ stat, onClose }: Props) {
   const [name, setName] = useState(stat?.name ?? '');
   const [appliesTo, setAppliesTo] = useState<AppliesTo>(stat?.appliesTo ?? []);
+  const [required, setRequired] = useState(stat?.required ?? false);
   const { mutate, error, isPending } = useUpdateStat();
 
   function toggle(value: AppliesTo[number]) {
@@ -37,7 +39,10 @@ export function CodexStatEditing({ stat, onClose }: Props) {
   function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
     if (stat) {
-      mutate({ id: stat.id, name, appliesTo }, { onSuccess: onClose });
+      mutate(
+        { id: stat.id, name, appliesTo, required },
+        { onSuccess: onClose },
+      );
     }
   }
 
@@ -74,6 +79,11 @@ export function CodexStatEditing({ stat, onClose }: Props) {
             isSelected={(value) => appliesTo.includes(value)}
             onToggle={toggle}
           />
+        </FormField>
+        <FormField label="Required">
+          <Checkbox checked={required} onChange={setRequired}>
+            Required by default
+          </Checkbox>
         </FormField>
       </Form>
     </Drawer>

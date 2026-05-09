@@ -267,6 +267,7 @@ export const FactionSchema = z.object({
   id: Slug,
   universeId: UniverseId,
   name: ShortName,
+  elements: z.array(Slug).optional(),
 });
 export type FactionDto = z.infer<typeof FactionSchema>;
 
@@ -275,6 +276,7 @@ export type CreateFactionDto = z.infer<typeof CreateFactionSchema>;
 
 export const UpdateFactionSchema = z.object({
   name: ShortName.optional(),
+  elements: z.array(Slug).optional(),
 });
 export type UpdateFactionDto = z.infer<typeof UpdateFactionSchema>;
 
@@ -283,6 +285,7 @@ export const StatSchema = z.object({
   universeId: UniverseId,
   name: ShortName,
   appliesTo: AppliesToSchema,
+  required: z.boolean().optional(),
 });
 export type StatDto = z.infer<typeof StatSchema>;
 
@@ -292,6 +295,7 @@ export type CreateStatDto = z.infer<typeof CreateStatSchema>;
 export const UpdateStatSchema = z.object({
   name: ShortName.optional(),
   appliesTo: AppliesToSchema.optional(),
+  required: z.boolean().optional(),
 });
 export type UpdateStatDto = z.infer<typeof UpdateStatSchema>;
 

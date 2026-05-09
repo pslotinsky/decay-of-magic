@@ -44,11 +44,25 @@ export function CodexHeroForm({
   cards,
   onSubmit,
 }: Props) {
-  const form = useCodexHeroForm({ initial, elements, stats, traits, onSubmit });
+  const form = useCodexHeroForm({
+    initial,
+    elements,
+    factions,
+    stats,
+    traits,
+    onSubmit,
+  });
 
   return (
     <ExpressionEditorProvider value={{ elements, factions, stats, traits }}>
       <Form id={formId} onSubmit={form.handleSubmit}>
+        <FormField label="Name">
+          <input
+            value={form.name}
+            onChange={(event) => form.setName(event.target.value)}
+            required
+          />
+        </FormField>
         {!form.isEditMode && (
           <FormField label="Id">
             <input
@@ -59,13 +73,6 @@ export function CodexHeroForm({
             />
           </FormField>
         )}
-        <FormField label="Name">
-          <input
-            value={form.name}
-            onChange={(event) => form.setName(event.target.value)}
-            required
-          />
-        </FormField>
         <FormField label="Description">
           <Textarea
             value={form.description}
@@ -89,10 +96,10 @@ export function CodexHeroForm({
         <FormField label="Art">
           <ImageInput value={form.art} onChange={form.setArt} />
         </FormField>
-        {elements.length > 0 && (
-          <FormField label="Starting elements">
+        {form.availableElements.length > 0 && (
+          <FormField label="Elements">
             <div className={styles.numberGrid}>
-              {elements.map((element) => (
+              {form.availableElements.map((element) => (
                 <label key={element.id} className={styles.numberRow}>
                   <span className={styles.numberLabel}>{element.name}</span>
                   <input
@@ -113,16 +120,39 @@ export function CodexHeroForm({
         {form.heroStats.length > 0 && (
           <FormField label="Stats">
             <div className={styles.expressionGrid}>
-              {form.heroStats.map((stat) => (
+              {form.visibleHeroStats.map((stat) => (
                 <div key={stat.id} className={styles.expressionRow}>
                   <span className={styles.numberLabel}>{stat.name}</span>
                   <ExpressionEditor
                     value={form.statValues[stat.id] ?? 0}
                     onChange={(next) => form.updateStat(stat.id, next)}
+                    onClear={
+                      stat.required
+                        ? () => form.clearStat(stat.id)
+                        : () => form.removeOptionalStat(stat.id)
+                    }
                   />
                 </div>
               ))}
             </div>
+            {form.addableHeroStats.length > 0 && (
+              <select
+                className={styles.addStat}
+                value=""
+                onChange={(event) => {
+                  if (event.target.value) {
+                    form.showOptionalStat(event.target.value);
+                  }
+                }}
+              >
+                <option value="">+ Add stat…</option>
+                {form.addableHeroStats.map((stat) => (
+                  <option key={stat.id} value={stat.id}>
+                    {stat.name}
+                  </option>
+                ))}
+              </select>
+            )}
           </FormField>
         )}
         {form.heroTraits.length > 0 && (

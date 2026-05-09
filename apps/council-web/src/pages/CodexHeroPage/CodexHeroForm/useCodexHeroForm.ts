@@ -4,6 +4,7 @@ import type {
   AbilityDto,
   ElementDto,
   Expression,
+  FactionDto,
   HeroDto,
   StatDto,
   TraitDto,
@@ -26,6 +27,7 @@ export interface HeroFormPayload {
 interface Params {
   initial?: HeroDto;
   elements: ElementDto[];
+  factions: FactionDto[];
   stats: StatDto[];
   traits: TraitDto[];
   onSubmit: (payload: HeroFormPayload) => void;
@@ -34,6 +36,7 @@ interface Params {
 export function useCodexHeroForm({
   initial,
   elements,
+  factions,
   stats,
   traits,
   onSubmit,
@@ -56,6 +59,9 @@ export function useCodexHeroForm({
   const [statValues, setStatValues] = useState<Record<string, Expression>>({
     ...(initial?.stats ?? {}),
   });
+  const [shownOptionalStats, setShownOptionalStats] = useState<Set<string>>(
+    () => new Set(Object.keys(initial?.stats ?? {})),
+  );
   const [traitIds, setTraitIds] = useState<Set<string>>(
     new Set(initial?.traits ?? []),
   );
@@ -93,14 +99,69 @@ export function useCodexHeroForm({
     setStatValues((current) => ({ ...current, [slug]: expr }));
   }
 
+  function clearStat(slug: string) {
+    setStatValues((current) => {
+      const next = { ...current };
+      delete next[slug];
+      return next;
+    });
+  }
+
+  function showOptionalStat(slug: string) {
+    setShownOptionalStats((current) => {
+      const next = new Set(current);
+      next.add(slug);
+      return next;
+    });
+  }
+
+  function removeOptionalStat(slug: string) {
+    setShownOptionalStats((current) => {
+      const next = new Set(current);
+      next.delete(slug);
+      return next;
+    });
+    clearStat(slug);
+  }
+
   const heroStats = useMemo(
     () => stats.filter((stat) => stat.appliesTo.includes('hero')),
     [stats],
   );
+
+  const visibleHeroStats = useMemo(
+    () =>
+      heroStats.filter(
+        (stat) => stat.required || shownOptionalStats.has(stat.id),
+      ),
+    [heroStats, shownOptionalStats],
+  );
+
+  const addableHeroStats = useMemo(
+    () =>
+      heroStats.filter(
+        (stat) => !stat.required && !shownOptionalStats.has(stat.id),
+      ),
+    [heroStats, shownOptionalStats],
+  );
+
   const heroTraits = useMemo(
     () => traits.filter((trait) => trait.appliesTo.includes('hero')),
     [traits],
   );
+
+  const availableElements = useMemo(() => {
+    let result = elements;
+
+    const heroFaction = factions.find((entry) => entry.id === faction);
+
+    if (heroFaction) {
+      const allowed = new Set(heroFaction.elements);
+      result = elements.filter((element) => allowed.has(element.id));
+    }
+
+    return result;
+  }, [elements, factions, faction]);
 
   function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -111,7 +172,7 @@ export function useCodexHeroForm({
         description,
         art,
         faction,
-        elements,
+        availableElements,
         elementValues,
         statValues,
         traitIds,
@@ -133,13 +194,19 @@ export function useCodexHeroForm({
     setArt,
     faction,
     setFaction,
+    availableElements,
     elementValues,
     updateElement,
     statValues,
     updateStat,
+    clearStat,
     traitIds,
     toggleTrait,
     heroStats,
+    visibleHeroStats,
+    addableHeroStats,
+    showOptionalStat,
+    removeOptionalStat,
     heroTraits,
     abilities,
     setAbilities,
@@ -153,7 +220,7 @@ interface BuildArgs {
   description: string;
   art: string;
   faction: string;
-  elements: ElementDto[];
+  availableElements: ElementDto[];
   elementValues: Record<string, number>;
   statValues: Record<string, Expression>;
   traitIds: Set<string>;
@@ -163,7 +230,7 @@ interface BuildArgs {
 
 function buildPayload(state: BuildArgs): HeroFormPayload {
   const elementsPayload: Record<string, number> = {};
-  for (const element of state.elements) {
+  for (const element of state.availableElements) {
     const value = state.elementValues[element.id];
     if (Number.isFinite(value) && value > 0) {
       elementsPayload[element.id] = value;

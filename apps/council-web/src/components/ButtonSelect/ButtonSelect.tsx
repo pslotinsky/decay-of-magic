@@ -13,10 +13,14 @@ export interface ButtonSelectOption<T extends string> {
   icon?: ReactNode;
 }
 
+type Variant = 'icon' | 'label';
+
 interface Props<T extends string> {
   value: T;
   onChange: (next: T) => void;
   options: ButtonSelectOption<T>[];
+  placeholder?: ReactNode;
+  variant?: Variant;
   ariaLabel?: string;
   className?: string;
 }
@@ -25,6 +29,8 @@ export function ButtonSelect<T extends string>({
   value,
   onChange,
   options,
+  placeholder,
+  variant = 'icon',
   ariaLabel,
   className,
 }: Props<T>) {
@@ -58,12 +64,15 @@ export function ButtonSelect<T extends string>({
       >
         <button
           type="button"
-          className={styles.trigger}
+          className={clsx(
+            styles.trigger,
+            variant === 'label' && styles.triggerLabel,
+          )}
           aria-haspopup="listbox"
           aria-label={ariaLabel}
           title={current?.description ?? current?.label}
         >
-          {current?.icon ?? current?.label ?? value}
+          {current?.icon ?? current?.label ?? placeholder ?? value}
         </button>
       </Popover>
     </div>

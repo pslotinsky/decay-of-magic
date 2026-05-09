@@ -4,6 +4,7 @@ import { APPLIES_TO_VALUES, type AppliesTo } from '@dod/api-contract';
 
 import { useCreateStat } from '@/api/codex';
 import { Button } from '@/components/Button';
+import { Checkbox } from '@/components/Checkbox';
 import { Drawer } from '@/components/Drawer';
 import { ErrorText } from '@/components/ErrorText';
 import { Form, FormField } from '@/components/Form';
@@ -23,6 +24,7 @@ export function CodexStatCreation({ open, universeId, onClose }: Props) {
   const [name, setName] = useState('');
   const [idTouched, setIdTouched] = useState(false);
   const [appliesTo, setAppliesTo] = useState<AppliesTo>([]);
+  const [required, setRequired] = useState(false);
   const { mutate, error, isPending } = useCreateStat();
 
   function handleNameChange(value: string) {
@@ -46,13 +48,14 @@ export function CodexStatCreation({ open, universeId, onClose }: Props) {
   function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
     mutate(
-      { id, universeId, name, appliesTo },
+      { id, universeId, name, appliesTo, required },
       {
         onSuccess: () => {
           setId('');
           setName('');
           setIdTouched(false);
           setAppliesTo([]);
+          setRequired(false);
           onClose();
         },
       },
@@ -78,19 +81,19 @@ export function CodexStatCreation({ open, universeId, onClose }: Props) {
       }
     >
       <Form id={FORM_ID} onSubmit={handleSubmit}>
-        <FormField label="Id">
-          <input
-            value={id}
-            onChange={(event) => handleIdChange(event.target.value)}
-            placeholder="e.g. attack"
-            required
-          />
-        </FormField>
         <FormField label="Name">
           <input
             value={name}
             onChange={(event) => handleNameChange(event.target.value)}
             placeholder="Display name"
+            required
+          />
+        </FormField>
+        <FormField label="Id">
+          <input
+            value={id}
+            onChange={(event) => handleIdChange(event.target.value)}
+            placeholder="e.g. attack"
             required
           />
         </FormField>
@@ -100,6 +103,11 @@ export function CodexStatCreation({ open, universeId, onClose }: Props) {
             isSelected={(value) => appliesTo.includes(value)}
             onToggle={toggle}
           />
+        </FormField>
+        <FormField label="Required">
+          <Checkbox checked={required} onChange={setRequired}>
+            Required by default
+          </Checkbox>
         </FormField>
       </Form>
     </Drawer>

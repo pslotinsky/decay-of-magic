@@ -32,6 +32,10 @@ export function CodexStatTable({ stats, onEdit }: Props) {
               </Text>
             ),
           },
+          {
+            header: 'Required',
+            cell: (stat) => (stat.required ? 'yes' : '—'),
+          },
         ]}
         onRowClick={onEdit}
         empty="No stats yet."
