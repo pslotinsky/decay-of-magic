@@ -2,7 +2,7 @@ import { CreateHeroDto, HeroDto } from '@dod/api-contract';
 
 import { Archetype, ArchetypeKind } from './archetype.entity';
 
-type HeroData = Omit<HeroDto, 'id' | 'universeId' | 'name'>;
+type HeroData = Omit<HeroDto, 'id' | 'universeId' | 'name' | 'order'>;
 
 /**
  * A playable character prototype. Defines identity, an Element pool, optional
@@ -13,9 +13,8 @@ export class HeroArchetype extends Archetype {
   public readonly kind: ArchetypeKind = ArchetypeKind.Hero;
   public data: HeroData;
 
-  public constructor(dto: CreateHeroDto) {
-    const { id, universeId, name, ...data } = dto;
-    super({ id, universeId, name });
+  public constructor({ id, universeId, name, order, ...data }: CreateHeroDto) {
+    super({ id, universeId, name, order });
     this.data = data;
   }
 

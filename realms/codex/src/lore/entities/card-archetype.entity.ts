@@ -2,7 +2,7 @@ import { CardDto, CreateCardDto } from '@dod/api-contract';
 
 import { Archetype, ArchetypeKind } from './archetype.entity';
 
-type CardData = Omit<CardDto, 'id' | 'universeId' | 'name'>;
+type CardData = Omit<CardDto, 'id' | 'universeId' | 'name' | 'order'>;
 
 /**
  * The primary playable object's prototype. Cards live in decks, are played by
@@ -14,9 +14,8 @@ export class CardArchetype extends Archetype {
   public readonly kind: ArchetypeKind = ArchetypeKind.Card;
   public data: CardData;
 
-  public constructor(dto: CreateCardDto) {
-    const { id, universeId, name, ...data } = dto;
-    super({ id, universeId, name });
+  public constructor({ id, universeId, name, order, ...data }: CreateCardDto) {
+    super({ id, universeId, name, order });
     this.data = data;
     this.enforceInvariants();
   }

@@ -2,7 +2,7 @@ import { CreateStatDto, StatDto } from '@dod/api-contract';
 
 import { Archetype, ArchetypeKind } from './archetype.entity';
 
-type StatData = Omit<StatDto, 'id' | 'universeId' | 'name'>;
+type StatData = Omit<StatDto, 'id' | 'universeId' | 'name' | 'order'>;
 
 /**
  * A numeric attribute slug a Universe permits on its entities (e.g. attack,
@@ -14,8 +14,8 @@ export class StatArchetype extends Archetype {
   public readonly kind: ArchetypeKind = ArchetypeKind.Stat;
   public data: StatData;
 
-  public constructor({ id, universeId, name, ...data }: CreateStatDto) {
-    super({ id, universeId, name });
+  public constructor({ id, universeId, name, order, ...data }: CreateStatDto) {
+    super({ id, universeId, name, order });
     this.data = data;
   }
 

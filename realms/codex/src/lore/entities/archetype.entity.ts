@@ -1,4 +1,5 @@
 import { Entity } from '@dod/core';
+import { pickDefined } from '@dod/core/collection';
 
 export enum ArchetypeKind {
   Element = 'element',
@@ -13,6 +14,7 @@ export type ArchetypeIdentity = {
   id: string;
   universeId: string;
   name: string;
+  order?: number;
 };
 
 /**
@@ -25,6 +27,7 @@ export abstract class Archetype extends Entity {
   public readonly id: string;
   public readonly universeId: string;
   public name: string;
+  public order?: number;
 
   public abstract readonly kind: ArchetypeKind;
 
@@ -33,6 +36,7 @@ export abstract class Archetype extends Entity {
     this.id = params.id;
     this.universeId = params.universeId;
     this.name = params.name;
+    this.order = params.order;
   }
 
   public override update<T>(fields: Partial<T>): Set<keyof T> {
@@ -42,11 +46,12 @@ export abstract class Archetype extends Entity {
   }
 
   public toDto(): ArchetypeIdentity {
-    return {
+    return pickDefined({
       id: this.id,
       universeId: this.universeId,
       name: this.name,
-    };
+      order: this.order,
+    });
   }
 
   /**

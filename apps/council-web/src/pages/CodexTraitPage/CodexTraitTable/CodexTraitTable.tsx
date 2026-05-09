@@ -1,7 +1,8 @@
 import type { TraitDto } from '@dod/api-contract';
 
+import { useUpdateTrait } from '@/api/codex';
 import { Card } from '@/components/Card';
-import { Table } from '@/components/Table';
+import { SortableTable } from '@/components/SortableTable';
 import { Text } from '@/components/Text';
 
 interface Props {
@@ -10,9 +11,10 @@ interface Props {
 }
 
 export function CodexTraitTable({ traits, onEdit }: Props) {
+  const { mutate } = useUpdateTrait();
   return (
     <Card noPadding>
-      <Table
+      <SortableTable
         rows={traits}
         columns={[
           {
@@ -34,6 +36,7 @@ export function CodexTraitTable({ traits, onEdit }: Props) {
           },
         ]}
         onRowClick={onEdit}
+        onSetOrder={(id, order) => mutate({ id, order })}
         empty="No traits yet."
       />
     </Card>

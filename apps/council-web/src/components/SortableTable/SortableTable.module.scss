@@ -1,0 +1,36 @@
+.handleCol {
+  width: 2rem;
+}
+
+.handleCell {
+  width: 2rem;
+  padding-right: 0 !important;
+}
+
+.handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--space-1);
+  background: transparent;
+  color: var(--light-muted);
+  cursor: grab;
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--muted);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+}

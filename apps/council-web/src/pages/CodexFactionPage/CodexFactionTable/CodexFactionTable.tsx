@@ -1,7 +1,8 @@
 import type { ElementDto, FactionDto } from '@dod/api-contract';
 
+import { useUpdateFaction } from '@/api/codex';
 import { Card } from '@/components/Card';
-import { Table } from '@/components/Table';
+import { SortableTable } from '@/components/SortableTable';
 import { Text } from '@/components/Text';
 
 interface Props {
@@ -11,13 +12,14 @@ interface Props {
 }
 
 export function CodexFactionTable({ factions, elements, onEdit }: Props) {
+  const { mutate } = useUpdateFaction();
   const elementNameById = new Map(
     elements.map((element) => [element.id, element.name]),
   );
 
   return (
     <Card noPadding>
-      <Table
+      <SortableTable
         rows={factions}
         columns={[
           {
@@ -32,9 +34,9 @@ export function CodexFactionTable({ factions, elements, onEdit }: Props) {
           {
             header: 'Elements',
             cell: (faction) => {
-              const elements = faction.elements ?? [];
-              return elements.length > 0
-                ? elements
+              const factionElements = faction.elements ?? [];
+              return factionElements.length > 0
+                ? factionElements
                     .map((slug) => elementNameById.get(slug) ?? slug)
                     .join(', ')
                 : '—';
@@ -42,6 +44,7 @@ export function CodexFactionTable({ factions, elements, onEdit }: Props) {
           },
         ]}
         onRowClick={onEdit}
+        onSetOrder={(id, order) => mutate({ id, order })}
         empty="No factions yet."
       />
     </Card>

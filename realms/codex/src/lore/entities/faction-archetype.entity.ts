@@ -2,7 +2,7 @@ import { CreateFactionDto, FactionDto } from '@dod/api-contract';
 
 import { Archetype, ArchetypeKind } from './archetype.entity';
 
-type FactionData = Omit<FactionDto, 'id' | 'universeId' | 'name'>;
+type FactionData = Omit<FactionDto, 'id' | 'universeId' | 'name' | 'order'>;
 
 /**
  * A grouping of Heroes and Cards inside a Universe. Expresses identity and
@@ -14,8 +14,14 @@ export class FactionArchetype extends Archetype {
   public readonly kind: ArchetypeKind = ArchetypeKind.Faction;
   public data: FactionData;
 
-  public constructor({ id, universeId, name, ...data }: CreateFactionDto) {
-    super({ id, universeId, name });
+  public constructor({
+    id,
+    universeId,
+    name,
+    order,
+    ...data
+  }: CreateFactionDto) {
+    super({ id, universeId, name, order });
     this.data = data;
   }
 

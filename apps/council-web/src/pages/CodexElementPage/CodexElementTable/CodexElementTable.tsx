@@ -1,7 +1,8 @@
 import type { ElementDto } from '@dod/api-contract';
 
+import { useUpdateElement } from '@/api/codex';
 import { Card } from '@/components/Card';
-import { Table } from '@/components/Table';
+import { SortableTable } from '@/components/SortableTable';
 import { Text } from '@/components/Text';
 
 interface Props {
@@ -10,9 +11,10 @@ interface Props {
 }
 
 export function CodexElementTable({ elements, onEdit }: Props) {
+  const { mutate } = useUpdateElement();
   return (
     <Card noPadding>
-      <Table
+      <SortableTable
         rows={elements}
         columns={[
           {
@@ -26,6 +28,7 @@ export function CodexElementTable({ elements, onEdit }: Props) {
           { header: 'Name', cell: (element) => element.name },
         ]}
         onRowClick={onEdit}
+        onSetOrder={(id, order) => mutate({ id, order })}
         empty="No elements yet. Create the first to start authoring this Universe."
       />
     </Card>

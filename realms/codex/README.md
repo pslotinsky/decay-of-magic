@@ -111,6 +111,7 @@ classDiagram
       +string id
       +string universeId
       +string name
+      +number order
       +update()
       +toDto()
       #enforceInvariants()
@@ -126,6 +127,8 @@ classDiagram
     }
     class FactionArchetype {
       +ArchetypeKind kind
+      +FactionData data
+      +toDto()
     }
     class HeroArchetype {
       +ArchetypeKind kind
@@ -134,7 +137,7 @@ classDiagram
     }
     class StatArchetype {
       +ArchetypeKind kind
-      +AppliesTo appliesTo
+      +StatData data
       +toDto()
     }
     class TraitArchetype {
@@ -172,9 +175,9 @@ classDiagram
 | entities/[Archetype](src/lore/entities/archetype.entity.ts) | Base class for codex content prototypes — designer-authored, universe-scoped<br>definitions of the things that exist in a game. Subclasses split into<br>content (Hero, Card) and dictionaries (Element, Faction, Stat, Trait) that<br>content references.<br><br>Abstract · Extends `Entity` |
 | entities/[CardArchetype](src/lore/entities/card-archetype.entity.ts) | The primary playable object's prototype. Cards live in decks, are played by<br>spending their Cost, and either resolve immediately as spells or summon a<br>persistent minion onto the battlefield. Summon-style cards carry the<br>minion's stats and traits inline.<br><br>Extends [Archetype](src/lore/entities/archetype.entity.ts) |
 | entities/[ElementArchetype](src/lore/entities/element-archetype.entity.ts) | A fundamental kind of currency, affinity, or school in a Universe (e.g.<br>fire, credits, tide). Used as Cost on Cards, as the starting pool on Heroes,<br>and as a mechanical axis for abilities.<br><br>Extends [Archetype](src/lore/entities/archetype.entity.ts) |
-| entities/[FactionArchetype](src/lore/entities/faction-archetype.entity.ts) | A grouping of Heroes and Cards inside a Universe. Expresses identity and<br>mechanical synergy; entities may belong to zero, one, or many.<br><br>Extends [Archetype](src/lore/entities/archetype.entity.ts) |
+| entities/[FactionArchetype](src/lore/entities/faction-archetype.entity.ts) | A grouping of Heroes and Cards inside a Universe. Expresses identity and<br>mechanical synergy; entities may belong to zero, one, or many. Optionally<br>binds to a set of Elements that restrict cost choices for cards in the<br>Faction.<br><br>Extends [Archetype](src/lore/entities/archetype.entity.ts) |
 | entities/[HeroArchetype](src/lore/entities/hero-archetype.entity.ts) | A playable character prototype. Defines identity, an Element pool, optional<br>Stats/Traits/Abilities, and an optional Faction — the player's state at<br>match start.<br><br>Extends [Archetype](src/lore/entities/archetype.entity.ts) |
-| entities/[StatArchetype](src/lore/entities/stat-archetype.entity.ts) | A numeric attribute slug a Universe permits on its entities (e.g. attack,<br>health, armor). Declares which entity types it may attach to via<br>`appliesTo`; runtime semantics belong to the engine, not the dictionary.<br><br>Extends [Archetype](src/lore/entities/archetype.entity.ts) |
+| entities/[StatArchetype](src/lore/entities/stat-archetype.entity.ts) | A numeric attribute slug a Universe permits on its entities (e.g. attack,<br>health, armor). Declares which entity types it may attach to via<br>`appliesTo`; runtime semantics belong to the engine, not the dictionary.<br>`required` flags whether entity editors render an inline input by default.<br><br>Extends [Archetype](src/lore/entities/archetype.entity.ts) |
 | entities/[TraitArchetype](src/lore/entities/trait-archetype.entity.ts) | A named tag slug a Universe permits on its entities (e.g. wall, charge,<br>spell). Drives keyword abilities, targeting filters, and damage-source<br>classification; declares which entity types it may attach to via<br>`appliesTo`.<br><br>Extends [Archetype](src/lore/entities/archetype.entity.ts) |
 | repositories/[ArchetypeRepository](src/lore/repositories/archetype.repository.ts) | Repository for codex archetypes. Scoped per Universe; entries are keyed by<br>(universeId, id).<br><br>Abstract · Extends `EntityRepository` |
 

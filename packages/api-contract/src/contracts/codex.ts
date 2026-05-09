@@ -5,6 +5,7 @@ const ShortName = z.string().min(1).max(50);
 const LongName = z.string().min(1).max(100);
 const Description = z.string().max(500);
 const UniverseId = z.string().min(1);
+const Order = z.int().nonnegative();
 
 export const APPLIES_TO_VALUES = ['minion', 'hero', 'card'] as const;
 export const AppliesToSchema = z.array(z.enum(APPLIES_TO_VALUES)).min(1);
@@ -248,25 +249,44 @@ export const AbilitySchema = z.union([
 ]);
 export type AbilityDto = z.infer<typeof AbilitySchema>;
 
-export const ElementSchema = z.object({
+const ArchetypeIdentitySchema = z.object({
   id: Slug,
   universeId: UniverseId,
+  order: Order.optional(),
+});
+
+const DictionaryArchetypeSchema = ArchetypeIdentitySchema.extend({
   name: ShortName,
 });
+
+const DictionaryArchetypeUpdateSchema = z.object({
+  name: ShortName.optional(),
+  order: Order.optional(),
+});
+
+const ContentArchetypeSchema = ArchetypeIdentitySchema.extend({
+  name: LongName,
+  description: Description.optional(),
+  art: z.url().optional(),
+});
+
+const ContentArchetypeUpdateSchema = z.object({
+  name: LongName.optional(),
+  description: Description.optional(),
+  art: z.url().optional(),
+  order: Order.optional(),
+});
+
+export const ElementSchema = DictionaryArchetypeSchema;
 export type ElementDto = z.infer<typeof ElementSchema>;
 
 export const CreateElementSchema = ElementSchema;
 export type CreateElementDto = z.infer<typeof CreateElementSchema>;
 
-export const UpdateElementSchema = z.object({
-  name: ShortName.optional(),
-});
+export const UpdateElementSchema = DictionaryArchetypeUpdateSchema;
 export type UpdateElementDto = z.infer<typeof UpdateElementSchema>;
 
-export const FactionSchema = z.object({
-  id: Slug,
-  universeId: UniverseId,
-  name: ShortName,
+export const FactionSchema = DictionaryArchetypeSchema.extend({
   elements: z.array(Slug).optional(),
 });
 export type FactionDto = z.infer<typeof FactionSchema>;
@@ -274,16 +294,12 @@ export type FactionDto = z.infer<typeof FactionSchema>;
 export const CreateFactionSchema = FactionSchema;
 export type CreateFactionDto = z.infer<typeof CreateFactionSchema>;
 
-export const UpdateFactionSchema = z.object({
-  name: ShortName.optional(),
+export const UpdateFactionSchema = DictionaryArchetypeUpdateSchema.extend({
   elements: z.array(Slug).optional(),
 });
 export type UpdateFactionDto = z.infer<typeof UpdateFactionSchema>;
 
-export const StatSchema = z.object({
-  id: Slug,
-  universeId: UniverseId,
-  name: ShortName,
+export const StatSchema = DictionaryArchetypeSchema.extend({
   appliesTo: AppliesToSchema,
   required: z.boolean().optional(),
 });
@@ -292,17 +308,13 @@ export type StatDto = z.infer<typeof StatSchema>;
 export const CreateStatSchema = StatSchema;
 export type CreateStatDto = z.infer<typeof CreateStatSchema>;
 
-export const UpdateStatSchema = z.object({
-  name: ShortName.optional(),
+export const UpdateStatSchema = DictionaryArchetypeUpdateSchema.extend({
   appliesTo: AppliesToSchema.optional(),
   required: z.boolean().optional(),
 });
 export type UpdateStatDto = z.infer<typeof UpdateStatSchema>;
 
-export const TraitSchema = z.object({
-  id: Slug,
-  universeId: UniverseId,
-  name: ShortName,
+export const TraitSchema = DictionaryArchetypeSchema.extend({
   appliesTo: AppliesToSchema,
 });
 export type TraitDto = z.infer<typeof TraitSchema>;
@@ -310,8 +322,7 @@ export type TraitDto = z.infer<typeof TraitSchema>;
 export const CreateTraitSchema = TraitSchema;
 export type CreateTraitDto = z.infer<typeof CreateTraitSchema>;
 
-export const UpdateTraitSchema = z.object({
-  name: ShortName.optional(),
+export const UpdateTraitSchema = DictionaryArchetypeUpdateSchema.extend({
   appliesTo: AppliesToSchema.optional(),
 });
 export type UpdateTraitDto = z.infer<typeof UpdateTraitSchema>;
@@ -324,61 +335,44 @@ const cardActivationStatsCoupling = (data: {
 const cardActivationStatsMessage =
   '`stats` is required when `activation` is `emptySlot` and forbidden otherwise';
 
-export const CardSchema = z
-  .object({
-    id: Slug,
-    universeId: UniverseId,
-    name: LongName,
-    description: Description.optional(),
-    art: z.url().optional(),
-    factions: z.array(Slug).optional(),
-    cost: CostSchema.optional(),
-    stats: StatBlockSchema.optional(),
-    traits: z.array(Slug).optional(),
-    activation: ActivationSchema,
-    abilities: z.array(AbilitySchema).optional(),
-  })
-  .refine(cardActivationStatsCoupling, {
-    message: cardActivationStatsMessage,
-    path: ['stats'],
-  });
+export const CardSchema = ContentArchetypeSchema.extend({
+  factions: z.array(Slug).optional(),
+  cost: CostSchema.optional(),
+  stats: StatBlockSchema.optional(),
+  traits: z.array(Slug).optional(),
+  activation: ActivationSchema,
+  abilities: z.array(AbilitySchema).optional(),
+}).refine(cardActivationStatsCoupling, {
+  message: cardActivationStatsMessage,
+  path: ['stats'],
+});
 export type CardDto = z.infer<typeof CardSchema>;
 
 export const CreateCardSchema = CardSchema;
 export type CreateCardDto = z.infer<typeof CreateCardSchema>;
 
-export const UpdateCardSchema = z
-  .object({
-    name: LongName.optional(),
-    description: Description.optional(),
-    art: z.url().optional(),
-    factions: z.array(Slug).optional(),
-    cost: CostSchema.optional(),
-    stats: StatBlockSchema.optional(),
-    traits: z.array(Slug).optional(),
-    activation: ActivationSchema.optional(),
-    abilities: z.array(AbilitySchema).optional(),
-  })
-  .refine(
-    (data) =>
-      !(
-        data.activation !== undefined &&
-        data.activation !== 'emptySlot' &&
-        data.stats !== undefined
-      ),
-    {
-      message: cardActivationStatsMessage,
-      path: ['stats'],
-    },
-  );
+export const UpdateCardSchema = ContentArchetypeUpdateSchema.extend({
+  factions: z.array(Slug).optional(),
+  cost: CostSchema.optional(),
+  stats: StatBlockSchema.optional(),
+  traits: z.array(Slug).optional(),
+  activation: ActivationSchema.optional(),
+  abilities: z.array(AbilitySchema).optional(),
+}).refine(
+  (data) =>
+    !(
+      data.activation !== undefined &&
+      data.activation !== 'emptySlot' &&
+      data.stats !== undefined
+    ),
+  {
+    message: cardActivationStatsMessage,
+    path: ['stats'],
+  },
+);
 export type UpdateCardDto = z.infer<typeof UpdateCardSchema>;
 
-export const HeroSchema = z.object({
-  id: Slug,
-  universeId: UniverseId,
-  name: LongName,
-  description: Description.optional(),
-  art: z.url().optional(),
+export const HeroSchema = ContentArchetypeSchema.extend({
   faction: Slug.optional(),
   elements: ElementsPoolSchema,
   stats: StatBlockSchema.optional(),
@@ -390,10 +384,7 @@ export type HeroDto = z.infer<typeof HeroSchema>;
 export const CreateHeroSchema = HeroSchema;
 export type CreateHeroDto = z.infer<typeof CreateHeroSchema>;
 
-export const UpdateHeroSchema = z.object({
-  name: LongName.optional(),
-  description: Description.optional(),
-  art: z.url().optional(),
+export const UpdateHeroSchema = ContentArchetypeUpdateSchema.extend({
   faction: Slug.optional(),
   elements: ElementsPoolSchema.optional(),
   stats: StatBlockSchema.optional(),

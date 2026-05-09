@@ -1,7 +1,8 @@
 import type { StatDto } from '@dod/api-contract';
 
+import { useUpdateStat } from '@/api/codex';
 import { Card } from '@/components/Card';
-import { Table } from '@/components/Table';
+import { SortableTable } from '@/components/SortableTable';
 import { Text } from '@/components/Text';
 
 interface Props {
@@ -10,9 +11,10 @@ interface Props {
 }
 
 export function CodexStatTable({ stats, onEdit }: Props) {
+  const { mutate } = useUpdateStat();
   return (
     <Card noPadding>
-      <Table
+      <SortableTable
         rows={stats}
         columns={[
           {
@@ -38,6 +40,7 @@ export function CodexStatTable({ stats, onEdit }: Props) {
           },
         ]}
         onRowClick={onEdit}
+        onSetOrder={(id, order) => mutate({ id, order })}
         empty="No stats yet."
       />
     </Card>
