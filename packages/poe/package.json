@@ -15,7 +15,7 @@
   "devDependencies": {
     "@dod/config": "*",
     "@types/lodash": "^4.17.24",
-    "@types/node": "^25.6.0",
+    "@types/node": "^25.6.2",
     "eslint": "^10.3.0",
     "prettier": "^3.8.3",
     "tsc-alias": "^1.8.17",
@@ -24,6 +24,6 @@
   },
   "dependencies": {
     "lodash": "^4.18.1",
-    "zod": "^4.4.2"
+    "zod": "^4.4.3"
   }
 }
