@@ -1,4 +1,4 @@
-import { CardDto, CreateCardDto } from '@dod/api-contract';
+import { CardDto, CreateCardDto, isMinionActivation } from '@dod/api-contract';
 
 import { Archetype, ArchetypeKind } from './archetype.entity';
 
@@ -28,7 +28,7 @@ export class CardArchetype extends Archetype {
   }
 
   protected override enforceInvariants(): void {
-    if (this.data.activation !== 'emptySlot' && this.data.stats) {
+    if (!isMinionActivation(this.data.activation) && this.data.stats) {
       const { stats: _drop, ...rest } = this.data;
       void _drop;
       this.data = rest;

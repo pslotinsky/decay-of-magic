@@ -4,6 +4,7 @@ import type { Expression } from '@dod/api-contract';
 
 import { IconButton } from '@/components/IconButton';
 
+import { CollectionPicker } from './CollectionPicker';
 import { useExpressionEditorContext } from './context';
 import { ExpressionEditor } from './ExpressionEditor';
 import {
@@ -11,14 +12,19 @@ import {
   arity,
   BINARY_OPERATORS,
   buildOperator,
+  defaultForKind,
   defaultOperands,
   detectListKind,
   detectOperator,
   type ListKind,
+  type OperandSpec,
+  operandSpec,
   operatorOperands,
+  TERNARY_OPERATORS,
   UNARY_OPERATORS,
   VARIADIC_OPERATORS,
 } from './expressions';
+import { StatPicker } from './StatPicker';
 
 import styles from './ExpressionEditor.module.scss';
 
@@ -40,14 +46,30 @@ export function OperatorBody({ value, onChange }: Props) {
       return;
     }
     const nextArity = arity(next);
-    let nextOperands: Expression[];
+    const defaults = defaultOperands(next);
+    let count: number;
     if (nextArity === 'unary') {
-      nextOperands = [operands[0] ?? 0];
+      count = 1;
     } else if (nextArity === 'binary') {
-      nextOperands = [operands[0] ?? 0, operands[1] ?? 0];
+      count = 2;
+    } else if (nextArity === 'ternary') {
+      count = 3;
     } else {
-      nextOperands = operands.length >= 2 ? operands : defaultOperands(next);
+      count = Math.max(operands.length, 2);
     }
+
+    const nextOperands: Expression[] = [];
+    for (let index = 0; index < count; index += 1) {
+      const oldKind = operandSpec(op, index).kind;
+      const newKind = operandSpec(next, index).kind;
+      const previous = operands[index];
+      if (oldKind === newKind && previous !== undefined) {
+        nextOperands.push(previous);
+      } else {
+        nextOperands.push(defaults[index] ?? defaultForKind(newKind));
+      }
+    }
+
     onChange(buildOperator(next, nextOperands));
   }
 
@@ -58,7 +80,8 @@ export function OperatorBody({ value, onChange }: Props) {
   }
 
   function addOperand() {
-    onChange(buildOperator(op, [...operands, 0]));
+    const spec = operandSpec(op, operands.length);
+    onChange(buildOperator(op, [...operands, defaultForKind(spec.kind)]));
   }
 
   function removeOperand(index: number) {
@@ -94,6 +117,13 @@ export function OperatorBody({ value, onChange }: Props) {
             </option>
           ))}
         </optgroup>
+        <optgroup label="ternary">
+          {TERNARY_OPERATORS.map((entry) => (
+            <option key={entry} value={entry}>
+              {entry}
+            </option>
+          ))}
+        </optgroup>
         <optgroup label="unary">
           {UNARY_OPERATORS.map((entry) => (
             <option key={entry} value={entry}>
@@ -105,10 +135,12 @@ export function OperatorBody({ value, onChange }: Props) {
 
       <div className={styles.operands}>
         {operands.map((operand, index) => {
+          const spec = operandSpec(op, index);
           const showItemPicker = containsListKind !== null && index === 1;
           return (
             <div key={index} className={styles.operandRow}>
               <div className={styles.operandEditor}>
+                <span className={styles.operandLabel}>{spec.label}</span>
                 {showItemPicker ? (
                   <ListItemPicker
                     kind={containsListKind!}
@@ -116,7 +148,8 @@ export function OperatorBody({ value, onChange }: Props) {
                     onChange={(expression) => updateOperand(index, expression)}
                   />
                 ) : (
-                  <ExpressionEditor
+                  <SlotEditor
+                    spec={spec}
                     value={operand}
                     onChange={(expression) => updateOperand(index, expression)}
                   />
@@ -141,6 +174,47 @@ export function OperatorBody({ value, onChange }: Props) {
         )}
       </div>
     </div>
+  );
+}
+
+interface SlotEditorProps {
+  spec: OperandSpec;
+  value: Expression;
+  onChange: (next: Expression) => void;
+}
+
+function SlotEditor({ spec, value, onChange }: SlotEditorProps) {
+  switch (spec.kind) {
+    case 'collection':
+      return <CollectionPicker value={value} onChange={onChange} />;
+    case 'statSlug':
+      return <StatPicker value={value} onChange={onChange} />;
+    case 'number':
+      return <NumberSlot value={value} onChange={onChange} />;
+    case 'expression':
+      return <ExpressionEditor value={value} onChange={onChange} />;
+  }
+}
+
+interface NumberSlotProps {
+  value: Expression;
+  onChange: (next: Expression) => void;
+}
+
+function NumberSlot({ value, onChange }: NumberSlotProps) {
+  const numeric = typeof value === 'number' ? value : 0;
+  return (
+    <input
+      type="number"
+      step="any"
+      value={numeric}
+      onFocus={(event) => event.currentTarget.select()}
+      onWheel={(event) => event.currentTarget.blur()}
+      onChange={(event) => {
+        const raw = event.target.value;
+        onChange(raw === '' ? 0 : Number(raw));
+      }}
+    />
   );
 }
 

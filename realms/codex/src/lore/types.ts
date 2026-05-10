@@ -2,26 +2,35 @@ export type AppliesTo = 'minion' | 'hero' | 'card';
 
 export type Activation =
   | 'emptySlot'
+  | 'replaceOwnerMinion'
   | 'enemyMinion'
   | 'ownerMinion'
   | 'immediate';
 
 export type Trigger =
   | 'onPlay'
+  | 'onAfterPlay'
   | 'onTurnStart'
   | 'onTurnEnd'
   | 'onDeath'
   | 'onDamaged'
   | 'onBeforeDamage'
+  | 'onDealDamage'
   | 'onAttack'
   | 'onBeforeAttack'
-  | 'onSummon';
+  | 'onSummon'
+  | 'onOwnerMinionSummoned'
+  | 'onEnemyMinionSummoned'
+  | 'onOwnerMinionDied'
+  | 'onEnemyMinionDied';
 
 export type Target =
   | 'self'
   | 'ownerHero'
   | 'enemyHero'
   | 'chosen'
+  | 'event'
+  | 'oppositeSlot'
   | 'neighbors'
   | 'ownerMinions'
   | 'enemyMinions'
@@ -45,13 +54,16 @@ export type EffectKind =
   | 'destroy'
   | 'attackNow'
   | 'preventDamage'
-  | 'reflectDamage';
+  | 'reflectDamage'
+  | 'replaceWith';
 
 export type Expression =
   | string
   | number
   | boolean
   | { not: Expression }
+  | { ceil: Expression }
+  | { count: Expression }
   | { and: Expression[] }
   | { or: Expression[] }
   | { eq: [Expression, Expression] }
@@ -66,7 +78,10 @@ export type Expression =
   | { div: [Expression, Expression] }
   | { min: Expression[] }
   | { max: Expression[] }
-  | { contains: [Expression, Expression] };
+  | { contains: [Expression, Expression] }
+  | { maxBy: [Expression, Expression] }
+  | { rankBy: [Expression, Expression] }
+  | { sumTopBy: [Expression, Expression, Expression] };
 
 export type Effect =
   | { kind: 'damage'; params: { amount: Expression }; filter?: Expression }
@@ -114,7 +129,7 @@ export type Effect =
     }
   | { kind: 'summon'; params: { minion: string }; filter?: Expression }
   | { kind: 'destroy'; params: Record<string, never>; filter?: Expression }
-  | { kind: 'attackNow'; params: Record<string, never>; filter?: Expression }
+  | { kind: 'attackNow'; params: { target?: Target }; filter?: Expression }
   | {
       kind: 'preventDamage';
       params: Record<string, never>;
@@ -124,7 +139,8 @@ export type Effect =
       kind: 'reflectDamage';
       params: Record<string, never>;
       filter?: Expression;
-    };
+    }
+  | { kind: 'replaceWith'; params: { card: string }; filter?: Expression };
 
 export type Ability =
   | {

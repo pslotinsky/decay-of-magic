@@ -27,9 +27,14 @@ interface ParsedPath {
 function parsePath(value: Expression): ParsedPath {
   const display = typeof value === 'string' ? value : 'self';
   const head = display.split('.')[0] ?? 'self';
-  const rest = display.includes('.') ? display.slice(head.length + 1) : '';
-  const root = (PATH_ROOTS as readonly string[]).includes(head) ? head : 'self';
-  return { display, root, rest };
+  const isStandard = (PATH_ROOTS as readonly string[]).includes(head);
+  const rest =
+    isStandard && display.includes('.') ? display.slice(head.length + 1) : '';
+  return {
+    display,
+    root: isStandard ? head : 'self',
+    rest,
+  };
 }
 
 export function PathBody({ value, onChange }: Props) {
@@ -97,17 +102,19 @@ interface RootsStageProps {
 function RootsStage({ onPick }: RootsStageProps) {
   return (
     <div className={styles.pathMenu}>
-      <Menu role="menu">
-        {PATH_ROOTS.map((entry) => (
-          <MenuItem
-            key={entry}
-            extra={<ChevronRight size={14} />}
-            onClick={() => onPick(entry)}
-          >
-            {entry}
-          </MenuItem>
-        ))}
-      </Menu>
+      <div className={styles.pathMenuScroll}>
+        <Menu role="menu">
+          {PATH_ROOTS.map((entry) => (
+            <MenuItem
+              key={entry}
+              extra={<ChevronRight size={14} />}
+              onClick={() => onPick(entry)}
+            >
+              {entry}
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
     </div>
   );
 }
@@ -136,27 +143,29 @@ function FieldsStage({
         <ChevronLeft size={14} />
         <span>{root}</span>
       </button>
-      <Menu role="menu">
-        <MenuItem onClick={() => onPick('')}>
-          <span className={styles.pathMenuMuted}>(root only)</span>
-        </MenuItem>
-        {groups.map((group) => (
-          <MenuGroup key={group.label} label={group.label}>
-            {group.options.map((field) => (
-              <MenuItem key={field} onClick={() => onPick(field)}>
-                {field}
-              </MenuItem>
-            ))}
-          </MenuGroup>
-        ))}
-      </Menu>
-      <div className={styles.pathMenuCustom}>
-        <span className={styles.pathMenuGroupLabel}>custom</span>
-        <input
-          value={customDraft}
-          onChange={(event) => onCustomChange(event.target.value)}
-          placeholder="custom.path"
-        />
+      <div className={styles.pathMenuScroll}>
+        <Menu role="menu">
+          <MenuItem onClick={() => onPick('')}>
+            <span className={styles.pathMenuMuted}>(root only)</span>
+          </MenuItem>
+          {groups.map((group) => (
+            <MenuGroup key={group.label} label={group.label}>
+              {group.options.map((field) => (
+                <MenuItem key={field} onClick={() => onPick(field)}>
+                  {field}
+                </MenuItem>
+              ))}
+            </MenuGroup>
+          ))}
+        </Menu>
+        <div className={styles.pathMenuCustom}>
+          <span className={styles.pathMenuGroupLabel}>custom</span>
+          <input
+            value={customDraft}
+            onChange={(event) => onCustomChange(event.target.value)}
+            placeholder="custom.path"
+          />
+        </div>
       </div>
     </div>
   );

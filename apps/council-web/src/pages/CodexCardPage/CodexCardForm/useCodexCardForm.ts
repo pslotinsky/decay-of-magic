@@ -1,14 +1,15 @@
 import { type SyntheticEvent, useMemo, useState } from 'react';
 
-import type {
-  AbilityDto,
-  Activation,
-  CardDto,
-  ElementDto,
-  Expression,
-  FactionDto,
-  StatDto,
-  TraitDto,
+import {
+  type AbilityDto,
+  type Activation,
+  type CardDto,
+  type ElementDto,
+  type Expression,
+  type FactionDto,
+  isMinionActivation,
+  type StatDto,
+  type TraitDto,
 } from '@dod/api-contract';
 
 import { nameToSlug } from '@/util/slug';
@@ -164,7 +165,7 @@ export function useCodexCardForm({
     return elements.filter((element) => allowed.has(element.id));
   }, [elements, factions, factionIds]);
 
-  const traitScope = activation === 'emptySlot' ? 'minion' : 'card';
+  const traitScope = isMinionActivation(activation) ? 'minion' : 'card';
   const filteredTraits = useMemo(
     () => traits.filter((trait) => trait.appliesTo.includes(traitScope)),
     [traits, traitScope],
@@ -266,7 +267,7 @@ function buildPayload(state: BuildArgs): CardFormPayload {
   if (state.art) payload.art = state.art;
   if (state.factionIds.size > 0) payload.factions = [...state.factionIds];
   if (Object.keys(filteredCost).length > 0) payload.cost = filteredCost;
-  if (state.activation === 'emptySlot') {
+  if (isMinionActivation(state.activation)) {
     const filteredStats: Record<string, Expression> = {};
     for (const stat of state.minionStats) {
       const value = state.statValues[stat.id];

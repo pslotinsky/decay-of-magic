@@ -71,5 +71,7 @@ export function emptyEffect(kind: EffectKind): EffectDto {
       return { kind, params: { traits: [] } };
     case 'summon':
       return { kind, params: { minion: '' } };
+    case 'replaceWith':
+      return { kind, params: { card: '' } };
   }
 }

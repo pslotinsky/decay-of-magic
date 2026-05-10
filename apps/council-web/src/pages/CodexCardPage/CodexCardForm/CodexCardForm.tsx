@@ -4,6 +4,7 @@ import {
   type CardDto,
   type ElementDto,
   type FactionDto,
+  isMinionActivation,
   type StatDto,
   type TraitDto,
 } from '@dod/api-contract';
@@ -130,7 +131,7 @@ export function CodexCardForm({
             </div>
           </FormField>
         )}
-        {form.activation === 'emptySlot' && form.minionStats.length > 0 && (
+        {isMinionActivation(form.activation) && form.minionStats.length > 0 && (
           <FormField label="Stats">
             <div className={styles.expressionGrid}>
               {form.visibleMinionStats.map((stat) => (

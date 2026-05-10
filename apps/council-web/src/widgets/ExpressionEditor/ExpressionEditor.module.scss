@@ -67,9 +67,14 @@
   border-radius: var(--space-1);
   box-shadow: 0 6px 18px rgba(20, 24, 38, 0.12);
   min-width: 14rem;
-  max-height: 22rem;
-  overflow-y: auto;
+  max-height: inherit;
   font-family: var(--font-mono, monospace);
+}
+
+.pathMenuScroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .pathMenuBack {
@@ -151,8 +156,18 @@
 }
 
 .operandEditor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
   flex: 1;
   min-width: 0;
+}
+
+.operandLabel {
+  font-size: var(--type-body-medium-size);
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  color: var(--muted);
 }
 
 .addOperand {

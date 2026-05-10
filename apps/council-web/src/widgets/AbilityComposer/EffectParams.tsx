@@ -1,5 +1,12 @@
-import type { EffectDto, Expression } from '@dod/api-contract';
+import {
+  type EffectDto,
+  type Expression,
+  isMinionActivation,
+  type Target,
+  TARGET_VALUES,
+} from '@dod/api-contract';
 
+import { ButtonSelect } from '@/components/ButtonSelect';
 import { PillToggle } from '@/components/PillToggle';
 import { ExpressionEditor } from '@/widgets/ExpressionEditor';
 
@@ -26,15 +33,39 @@ export function EffectParams({ effect, context, onChange }: Props) {
       );
     case 'fullHeal':
     case 'destroy':
-    case 'attackNow':
     case 'preventDamage':
     case 'reflectDamage':
       return null;
+    case 'attackNow': {
+      const params = effect.params;
+      return (
+        <label className={styles.field}>
+          <span className={styles.label}>Target (override)</span>
+          <select
+            value={params.target ?? ''}
+            onChange={(event) => {
+              const value = event.target.value;
+              onChange({
+                ...effect,
+                params: value === '' ? {} : { target: value as Target },
+              });
+            }}
+          >
+            {TARGET_VALUES.map((value) => (
+              <option key={value} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </label>
+      );
+    }
     case 'gainElement':
     case 'decreaseElement':
       return (
         <SlugRecordField
           label="Per element"
+          addLabel="+ Add element"
           options={context.elements}
           value={effect.params}
           onChange={(params) => onChange({ ...effect, params })}
@@ -47,6 +78,7 @@ export function EffectParams({ effect, context, onChange }: Props) {
       return (
         <SlugRecordField
           label="Per stat"
+          addLabel="+ Add stat"
           options={context.stats}
           value={effect.params}
           onChange={(params) => onChange({ ...effect, params })}
@@ -109,12 +141,34 @@ export function EffectParams({ effect, context, onChange }: Props) {
           >
             <option value="">— pick a card —</option>
             {context.cards
-              .filter((card) => card.activation === 'emptySlot')
+              .filter((card) => isMinionActivation(card.activation))
               .map((card) => (
                 <option key={card.id} value={card.id}>
                   {card.name}
                 </option>
               ))}
+          </select>
+        </label>
+      );
+    case 'replaceWith':
+      return (
+        <label className={styles.field}>
+          <span className={styles.label}>Replacement card</span>
+          <select
+            value={effect.params.card}
+            onChange={(event) =>
+              onChange({
+                ...effect,
+                params: { card: event.target.value },
+              })
+            }
+          >
+            <option value="">— pick a card —</option>
+            {context.cards.map((card) => (
+              <option key={card.id} value={card.id}>
+                {card.name}
+              </option>
+            ))}
           </select>
         </label>
       );
@@ -138,17 +192,23 @@ function ExpressionField({ label, value, onChange }: ExpressionFieldProps) {
 
 interface SlugRecordFieldProps {
   label: string;
-  options: { id: string; name: string }[];
+  addLabel: string;
+  options: { id: string; name: string; order?: number }[];
   value: Record<string, Expression>;
   onChange: (next: Record<string, Expression>) => void;
 }
 
 function SlugRecordField({
   label,
+  addLabel,
   options,
   value,
   onChange,
 }: SlugRecordFieldProps) {
+  const sorted = sortByOrder(options);
+  const visible = sorted.filter((option) => option.id in value);
+  const addable = sorted.filter((option) => !(option.id in value));
+
   function remove(slug: string) {
     const next = { ...value };
     delete next[slug];
@@ -158,27 +218,42 @@ function SlugRecordField({
   return (
     <div className={styles.field}>
       <span className={styles.label}>{label}</span>
-      <div className={styles.slugRecord}>
-        {options.map((option) => (
-          <div key={option.id} className={styles.slugRow}>
-            <div className={styles.slugLabelRow}>
-              <span className={styles.slugLabel}>{option.name}</span>
+      {visible.length > 0 && (
+        <div className={styles.slugRecord}>
+          {visible.map((option) => (
+            <div key={option.id} className={styles.slugRow}>
+              <div className={styles.slugLabelRow}>
+                <span className={styles.slugLabel}>{option.name}</span>
+              </div>
+              <ExpressionEditor
+                value={value[option.id]}
+                onChange={(next) => onChange({ ...value, [option.id]: next })}
+                onClear={() => remove(option.id)}
+              />
             </div>
-            <ExpressionEditor
-              value={value[option.id]}
-              onChange={(next) => onChange({ ...value, [option.id]: next })}
-              onClear={() => remove(option.id)}
-            />
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
+      {addable.length > 0 && (
+        <ButtonSelect
+          value=""
+          onChange={(slug) => onChange({ ...value, [slug]: 0 })}
+          options={addable.map((option) => ({
+            value: option.id,
+            label: option.name,
+          }))}
+          placeholder={addLabel}
+          variant="label"
+          ariaLabel={addLabel}
+        />
+      )}
     </div>
   );
 }
 
 interface TraitListFieldProps {
   label: string;
-  options: { id: string; name: string }[];
+  options: { id: string; name: string; order?: number }[];
   value: string[];
   onChange: (next: string[]) => void;
 }
@@ -189,6 +264,7 @@ function TraitListField({
   value,
   onChange,
 }: TraitListFieldProps) {
+  const sorted = sortByOrder(options);
   function toggle(id: string) {
     onChange(
       value.includes(id)
@@ -201,7 +277,7 @@ function TraitListField({
     <div className={styles.field}>
       <span className={styles.label}>{label}</span>
       <div className={styles.pillRow}>
-        {options.map((option) => (
+        {sorted.map((option) => (
           <PillToggle
             key={option.id}
             selected={value.includes(option.id)}
@@ -213,4 +289,17 @@ function TraitListField({
       </div>
     </div>
   );
+}
+
+function sortByOrder<T extends { name: string; order?: number }>(
+  items: readonly T[],
+): T[] {
+  return [...items].sort((a, b) => {
+    const aOrder = a.order ?? Number.POSITIVE_INFINITY;
+    const bOrder = b.order ?? Number.POSITIVE_INFINITY;
+    if (aOrder !== bOrder) {
+      return aOrder - bOrder;
+    }
+    return a.name.localeCompare(b.name);
+  });
 }

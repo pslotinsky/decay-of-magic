@@ -1,4 +1,6 @@
 .layer {
   position: fixed;
   z-index: 200;
+  display: flex;
+  overflow: hidden;
 }

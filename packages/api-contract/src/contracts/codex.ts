@@ -13,14 +13,20 @@ export type AppliesTo = z.infer<typeof AppliesToSchema>;
 
 export const TRIGGER_VALUES = [
   'onPlay',
+  'onAfterPlay',
   'onTurnStart',
   'onTurnEnd',
   'onDeath',
   'onDamaged',
   'onBeforeDamage',
+  'onDealDamage',
   'onAttack',
   'onBeforeAttack',
   'onSummon',
+  'onOwnerMinionSummoned',
+  'onEnemyMinionSummoned',
+  'onOwnerMinionDied',
+  'onEnemyMinionDied',
 ] as const;
 export const TriggerSchema = z.enum(TRIGGER_VALUES);
 export type Trigger = z.infer<typeof TriggerSchema>;
@@ -30,6 +36,8 @@ export const TARGET_VALUES = [
   'ownerHero',
   'enemyHero',
   'chosen',
+  'event',
+  'oppositeSlot',
   'neighbors',
   'ownerMinions',
   'enemyMinions',
@@ -37,6 +45,13 @@ export const TARGET_VALUES = [
 ] as const;
 export const TargetSchema = z.enum(TARGET_VALUES);
 export type Target = z.infer<typeof TargetSchema>;
+
+export const COLLECTION_VALUES = [
+  'enemyMinions',
+  'ownerMinions',
+  'allMinions',
+  'neighbors',
+] as const;
 
 export const TargetsSchema = z.union([
   TargetSchema,
@@ -46,6 +61,7 @@ export type Targets = z.infer<typeof TargetsSchema>;
 
 export const ACTIVATION_VALUES = [
   'emptySlot',
+  'replaceOwnerMinion',
   'enemyMinion',
   'ownerMinion',
   'immediate',
@@ -70,6 +86,7 @@ export const EFFECT_KIND_VALUES = [
   'attackNow',
   'preventDamage',
   'reflectDamage',
+  'replaceWith',
 ] as const;
 export const EffectKindSchema = z.enum(EFFECT_KIND_VALUES);
 export type EffectKind = z.infer<typeof EffectKindSchema>;
@@ -79,6 +96,8 @@ export type Expression =
   | number
   | boolean
   | { not: Expression }
+  | { ceil: Expression }
+  | { count: Expression }
   | { and: Expression[] }
   | { or: Expression[] }
   | { eq: [Expression, Expression] }
@@ -93,7 +112,10 @@ export type Expression =
   | { div: [Expression, Expression] }
   | { min: Expression[] }
   | { max: Expression[] }
-  | { contains: [Expression, Expression] };
+  | { contains: [Expression, Expression] }
+  | { maxBy: [Expression, Expression] }
+  | { rankBy: [Expression, Expression] }
+  | { sumTopBy: [Expression, Expression, Expression] };
 
 export const ExpressionSchema: z.ZodType<Expression> = z.lazy(() =>
   z.union([
@@ -101,6 +123,8 @@ export const ExpressionSchema: z.ZodType<Expression> = z.lazy(() =>
     z.number(),
     z.boolean(),
     z.strictObject({ not: ExpressionSchema }),
+    z.strictObject({ ceil: ExpressionSchema }),
+    z.strictObject({ count: ExpressionSchema }),
     z.strictObject({ and: z.array(ExpressionSchema).min(2) }),
     z.strictObject({ or: z.array(ExpressionSchema).min(2) }),
     z.strictObject({
@@ -133,6 +157,15 @@ export const ExpressionSchema: z.ZodType<Expression> = z.lazy(() =>
     z.strictObject({ max: z.array(ExpressionSchema).min(2) }),
     z.strictObject({
       contains: z.tuple([ExpressionSchema, ExpressionSchema]),
+    }),
+    z.strictObject({
+      maxBy: z.tuple([ExpressionSchema, ExpressionSchema]),
+    }),
+    z.strictObject({
+      rankBy: z.tuple([ExpressionSchema, ExpressionSchema]),
+    }),
+    z.strictObject({
+      sumTopBy: z.tuple([ExpressionSchema, ExpressionSchema, ExpressionSchema]),
     }),
   ]),
 );
@@ -212,7 +245,7 @@ const EffectSchema = z.discriminatedUnion('kind', [
   }),
   z.object({
     kind: z.literal('attackNow'),
-    params: z.strictObject({}),
+    params: z.strictObject({ target: TargetSchema.optional() }),
     filter: ExpressionSchema.optional(),
   }),
   z.object({
@@ -223,6 +256,11 @@ const EffectSchema = z.discriminatedUnion('kind', [
   z.object({
     kind: z.literal('reflectDamage'),
     params: z.strictObject({}),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('replaceWith'),
+    params: z.strictObject({ card: Slug }),
     filter: ExpressionSchema.optional(),
   }),
 ]);
@@ -327,13 +365,23 @@ export const UpdateTraitSchema = DictionaryArchetypeUpdateSchema.extend({
 });
 export type UpdateTraitDto = z.infer<typeof UpdateTraitSchema>;
 
+const MINION_ACTIVATIONS = new Set<Activation>([
+  'emptySlot',
+  'replaceOwnerMinion',
+]);
+
+export function isMinionActivation(activation: Activation): boolean {
+  return MINION_ACTIVATIONS.has(activation);
+}
+
 const cardActivationStatsCoupling = (data: {
   activation: Activation;
   stats?: unknown;
-}): boolean => (data.activation === 'emptySlot') === (data.stats !== undefined);
+}): boolean =>
+  isMinionActivation(data.activation) === (data.stats !== undefined);
 
 const cardActivationStatsMessage =
-  '`stats` is required when `activation` is `emptySlot` and forbidden otherwise';
+  '`stats` is required for minion activations (`emptySlot`, `replaceOwnerMinion`) and forbidden otherwise';
 
 export const CardSchema = ContentArchetypeSchema.extend({
   factions: z.array(Slug).optional(),
@@ -362,7 +410,7 @@ export const UpdateCardSchema = ContentArchetypeUpdateSchema.extend({
   (data) =>
     !(
       data.activation !== undefined &&
-      data.activation !== 'emptySlot' &&
+      !isMinionActivation(data.activation) &&
       data.stats !== undefined
     ),
   {

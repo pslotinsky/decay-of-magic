@@ -1,4 +1,4 @@
-import type { Expression } from '@dod/api-contract';
+import { COLLECTION_VALUES, type Expression } from '@dod/api-contract';
 
 import type { ExpressionEditorContextValue } from './context';
 
@@ -13,6 +13,8 @@ export const PATH_ROOTS = [
   'source',
   'event',
 ] as const;
+
+export { COLLECTION_VALUES };
 
 const LIST_FIELDS = ['traits', 'factions'] as const;
 
@@ -31,7 +33,10 @@ export const BINARY_OPERATORS = [
   'sub',
   'div',
   'contains',
+  'maxBy',
+  'rankBy',
 ] as const;
+export const TERNARY_OPERATORS = ['sumTopBy'] as const;
 export const VARIADIC_OPERATORS = [
   'and',
   'or',
@@ -40,15 +45,17 @@ export const VARIADIC_OPERATORS = [
   'min',
   'max',
 ] as const;
-export const UNARY_OPERATORS = ['not'] as const;
+export const UNARY_OPERATORS = ['not', 'ceil', 'count'] as const;
 
 type BinaryOp = (typeof BINARY_OPERATORS)[number];
+type TernaryOp = (typeof TERNARY_OPERATORS)[number];
 type VariadicOp = (typeof VARIADIC_OPERATORS)[number];
 type UnaryOp = (typeof UNARY_OPERATORS)[number];
-export type AnyOp = BinaryOp | VariadicOp | UnaryOp;
+export type AnyOp = BinaryOp | TernaryOp | VariadicOp | UnaryOp;
 
 const ALL_OPERATORS: AnyOp[] = [
   ...BINARY_OPERATORS,
+  ...TERNARY_OPERATORS,
   ...VARIADIC_OPERATORS,
   ...UNARY_OPERATORS,
 ];
@@ -87,9 +94,10 @@ export function defaultForMode(mode: Mode): Expression {
   }
 }
 
+const PATH_PATTERN = /^[a-z][a-zA-Z0-9]*(\.[a-z][a-zA-Z0-9]*)*$/;
+
 function looksLikePath(value: string): boolean {
-  const head = value.split('.')[0];
-  return (PATH_ROOTS as readonly string[]).includes(head ?? '');
+  return PATH_PATTERN.test(value);
 }
 
 export function detectListKind(value: Expression): ListKind | null {
@@ -138,16 +146,124 @@ export function buildOperator(op: AnyOp, operands: Expression[]): Expression {
   return { [op]: operands } as Expression;
 }
 
-export function defaultOperands(op: AnyOp): Expression[] {
-  return arity(op) === 'unary' ? [0] : [0, 0];
+export type OperandKind = 'expression' | 'collection' | 'statSlug' | 'number';
+
+export interface OperandSpec {
+  kind: OperandKind;
+  label: string;
 }
 
-export function arity(op: AnyOp): 'unary' | 'binary' | 'variadic' {
+interface OperatorSignature {
+  args?: OperandSpec[];
+  variadic?: OperandSpec;
+}
+
+const EXPR_LEFT: OperandSpec = { kind: 'expression', label: 'left' };
+const EXPR_RIGHT: OperandSpec = { kind: 'expression', label: 'right' };
+const VARIADIC_OPERAND: OperandSpec = { kind: 'expression', label: 'operand' };
+
+const OPERATOR_SIGNATURES: Record<AnyOp, OperatorSignature> = {
+  not: { args: [{ kind: 'expression', label: 'value' }] },
+  ceil: { args: [{ kind: 'expression', label: 'value' }] },
+  count: { args: [{ kind: 'collection', label: 'collection' }] },
+  eq: { args: [EXPR_LEFT, EXPR_RIGHT] },
+  ne: { args: [EXPR_LEFT, EXPR_RIGHT] },
+  lt: { args: [EXPR_LEFT, EXPR_RIGHT] },
+  lte: { args: [EXPR_LEFT, EXPR_RIGHT] },
+  gt: { args: [EXPR_LEFT, EXPR_RIGHT] },
+  gte: { args: [EXPR_LEFT, EXPR_RIGHT] },
+  sub: {
+    args: [
+      { kind: 'expression', label: 'minuend' },
+      { kind: 'expression', label: 'subtrahend' },
+    ],
+  },
+  div: {
+    args: [
+      { kind: 'expression', label: 'numerator' },
+      { kind: 'expression', label: 'denominator' },
+    ],
+  },
+  contains: {
+    args: [
+      { kind: 'expression', label: 'list' },
+      { kind: 'expression', label: 'item' },
+    ],
+  },
+  maxBy: {
+    args: [
+      { kind: 'collection', label: 'collection' },
+      { kind: 'statSlug', label: 'stat' },
+    ],
+  },
+  rankBy: {
+    args: [
+      { kind: 'collection', label: 'collection' },
+      { kind: 'statSlug', label: 'rank by' },
+    ],
+  },
+  sumTopBy: {
+    args: [
+      { kind: 'collection', label: 'collection' },
+      { kind: 'number', label: 'top N' },
+      { kind: 'statSlug', label: 'by stat' },
+    ],
+  },
+  and: { variadic: VARIADIC_OPERAND },
+  or: { variadic: VARIADIC_OPERAND },
+  add: { variadic: VARIADIC_OPERAND },
+  mul: { variadic: VARIADIC_OPERAND },
+  min: { variadic: VARIADIC_OPERAND },
+  max: { variadic: VARIADIC_OPERAND },
+};
+
+export function operandSpec(op: AnyOp, index: number): OperandSpec {
+  const sig = OPERATOR_SIGNATURES[op];
+  if (sig.args && index < sig.args.length) {
+    return sig.args[index]!;
+  }
+  if (sig.variadic) {
+    return sig.variadic;
+  }
+  return { kind: 'expression', label: 'value' };
+}
+
+export function defaultForKind(kind: OperandKind): Expression {
+  switch (kind) {
+    case 'collection':
+      return 'enemyMinions';
+    case 'statSlug':
+      return '';
+    case 'number':
+      return 0;
+    case 'expression':
+      return 0;
+  }
+}
+
+export function defaultOperands(op: AnyOp): Expression[] {
+  const sig = OPERATOR_SIGNATURES[op];
+  if (sig.args) {
+    return sig.args.map((spec) => defaultForKind(spec.kind));
+  }
+  if (sig.variadic) {
+    return [
+      defaultForKind(sig.variadic.kind),
+      defaultForKind(sig.variadic.kind),
+    ];
+  }
+  return [0, 0];
+}
+
+export function arity(op: AnyOp): 'unary' | 'binary' | 'ternary' | 'variadic' {
   if ((UNARY_OPERATORS as readonly string[]).includes(op)) {
     return 'unary';
   }
   if ((BINARY_OPERATORS as readonly string[]).includes(op)) {
     return 'binary';
+  }
+  if ((TERNARY_OPERATORS as readonly string[]).includes(op)) {
+    return 'ternary';
   }
   return 'variadic';
 }

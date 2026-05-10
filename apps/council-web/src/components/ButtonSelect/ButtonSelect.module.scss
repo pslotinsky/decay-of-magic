@@ -44,6 +44,6 @@
   border-radius: var(--space-1);
   box-shadow: 0 6px 18px rgba(20, 24, 38, 0.12);
   min-width: 10rem;
-  max-height: 18rem;
+  max-height: inherit;
   overflow-y: auto;
 }
