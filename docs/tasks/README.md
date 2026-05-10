@@ -23,6 +23,6 @@
 - [x] [DOD-0020: Codex contracts + todo tests](./DOD-0020_codex-contracts-todo-tests.md)
 - [x] [DOD-0021: Codex law & lore](./DOD-0021_codex-law-lore.md)
 - [x] [DOD-0022: Codex ground](./DOD-0022_codex-ground.md)
-- [ ] [DOD-0023: Codex part of Council](./DOD-0023_codex-part-of-council.md)
+- [x] [DOD-0023: Codex part of Council](./DOD-0023_codex-part-of-council.md)
 - [x] [DOD-0024: Universe settings](./DOD-0024_universe-settings.md)
 <!-- TOC.END -->

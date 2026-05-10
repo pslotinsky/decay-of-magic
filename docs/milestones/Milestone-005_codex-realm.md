@@ -2,13 +2,13 @@
 
 | Field   | Value                                |
 | ------- | ------------------------------------ |
-| Status  | In progress                          |
+| Status  | Done                                 |
 | Roadmap | [MVP](../roadmaps/Roadmap-01_mvp.md) |
 | Created | 2026-04-22                           |
 
 ## Goal
 
-Introduce **Codex** as the repository of game content — the canonical templates of everything that *can exist* in a game (Elements, Factions, Stats, Traits, Heroes, and Cards, plus the abilities and effects those cards carry).
+Introduce **Codex** as the repository of game content — the canonical templates of everything that _can exist_ in a game (Elements, Factions, Stats, Traits, Heroes, and Cards, plus the abilities and effects those cards carry).
 
 Codex is read-only at runtime: Council authors content into it; Battle and Lab load a per-match snapshot at match start and never call back mid-match. Every record belongs to exactly one Universe, and no query crosses tenants.
 
@@ -54,9 +54,10 @@ This slice is **not MVP-blocking**: the rest of the milestone (DOD-0020 → DOD-
 ## Tasks
 
 <!-- TOC.START: task -->
+
 - [x] [DOD-0020: Codex contracts + todo tests](../tasks/DOD-0020_codex-contracts-todo-tests.md)
 - [x] [DOD-0021: Codex law & lore](../tasks/DOD-0021_codex-law-lore.md)
 - [x] [DOD-0022: Codex ground](../tasks/DOD-0022_codex-ground.md)
-- [ ] [DOD-0023: Codex part of Council](../tasks/DOD-0023_codex-part-of-council.md)
+- [x] [DOD-0023: Codex part of Council](../tasks/DOD-0023_codex-part-of-council.md)
 - [x] [DOD-0024: Universe settings](../tasks/DOD-0024_universe-settings.md)
 <!-- TOC.END -->
