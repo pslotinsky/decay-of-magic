@@ -1,0 +1,128 @@
+.cardItem {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 240px;
+  cursor: pointer;
+}
+
+.art {
+  width: calc(100% + 2 * var(--space-4));
+  margin: calc(-1 * var(--space-4)) calc(-1 * var(--space-4)) var(--space-4);
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.artPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% + 2 * var(--space-4));
+  margin: calc(-1 * var(--space-4)) calc(-1 * var(--space-4)) var(--space-4);
+  aspect-ratio: 1;
+  background: var(--border-light);
+  color: var(--muted);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex-grow: 1;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.name {
+  flex: 1;
+  font-family: var(--font-heading);
+  font-size: var(--type-title-large-size);
+  font-weight: var(--type-title-large-weight);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.edit {
+  flex-shrink: 0;
+  opacity: 0;
+  transition:
+    opacity 0.15s,
+    color 0.15s;
+}
+
+.cardItem:hover .edit {
+  opacity: 1;
+}
+
+.description {
+  margin: 0;
+  font-size: var(--type-body-medium-size);
+  font-weight: var(--type-body-medium-weight);
+  line-height: var(--type-body-medium-line-height);
+  color: var(--muted);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-family: var(--font-heading);
+  font-size: var(--type-label-small-size);
+  font-weight: var(--type-label-small-weight);
+  line-height: var(--type-label-small-line-height);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.chipKey {
+  color: var(--muted);
+}
+
+.chipValue {
+  color: inherit;
+  font-weight: 600;
+}
+
+.chipCost {
+  background: var(--border-light);
+  color: var(--dark);
+}
+
+.chipStat {
+  background: rgba(199, 152, 81, 0.18);
+  color: var(--dark);
+}
+
+.chipAbility {
+  background: var(--dark);
+  color: var(--bg);
+  cursor: help;
+
+  .chipKey {
+    color: var(--light-muted);
+  }
+}
+
+.chipTrait {
+  background: transparent;
+  border-color: var(--gold);
+  color: var(--dark);
+}

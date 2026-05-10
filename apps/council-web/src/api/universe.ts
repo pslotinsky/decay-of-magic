@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type {
   CreateUniverseDto,
   UniverseDto,
+  UniverseSummaryDto,
   UpdateUniverseDto,
 } from '@dod/api-contract';
 
@@ -16,16 +17,17 @@ const universeKeys = {
 export function useUniverses() {
   return useQuery({
     queryKey: universeKeys.all,
-    queryFn: () => client.get<UniverseDto[]>('/api/v1/universe'),
+    queryFn: () => client.get<UniverseSummaryDto[]>('/api/v1/universe'),
     select: (envelope) => envelope.data,
   });
 }
 
-export function useUniverse(id: string) {
+export function useUniverse(id: string = '') {
   return useQuery({
     queryKey: universeKeys.detail(id),
     queryFn: () => client.get<UniverseDto>(`/api/v1/universe/${id}`),
     select: (envelope) => envelope.data,
+    enabled: !!id,
   });
 }
 

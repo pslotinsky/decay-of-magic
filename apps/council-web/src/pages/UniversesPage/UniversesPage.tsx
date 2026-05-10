@@ -1,27 +1,26 @@
 import { useState } from 'react';
 
-import type { UniverseDto } from '@dod/api-contract';
-
 import { useUniverses } from '@/api/universe';
 import { Button } from '@/components/Button';
+import { RootNav } from '@/components/NavMenu';
 import { Page, PageHeader } from '@/components/Page';
+import { UniverseDrawer } from '@/widgets/UniverseDrawer';
 
 import { UniversesPageList } from './UniversesPageList';
 import { UniversesPageUniverseCreation } from './UniversesPageUniverseCreation';
-import { UniversesPageUniverseEditing } from './UniversesPageUniverseEditing';
 
 export function UniversesPage() {
   const { data: universes = [], isLoading, error } = useUniverses();
   const [createOpen, setCreateOpen] = useState(false);
-  const [editTarget, setEditTarget] = useState<UniverseDto | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   return (
     <>
       <Page
+        nav={<RootNav />}
         header={
           <PageHeader
             title="Universes"
-            breadcrumbs={[{ label: 'Home', to: '/' }]}
             action={
               <Button onClick={() => setCreateOpen(true)}>
                 Create Universe
@@ -34,7 +33,7 @@ export function UniversesPage() {
           universes={universes}
           loading={isLoading}
           error={error?.message ?? null}
-          onEdit={setEditTarget}
+          onEdit={setEditingId}
         />
       </Page>
 
@@ -43,10 +42,10 @@ export function UniversesPage() {
         onClose={() => setCreateOpen(false)}
       />
 
-      <UniversesPageUniverseEditing
-        key={editTarget?.id ?? ''}
-        universe={editTarget}
-        onClose={() => setEditTarget(null)}
+      <UniverseDrawer
+        key={editingId ?? ''}
+        universeId={editingId}
+        onClose={() => setEditingId(null)}
       />
     </>
   );

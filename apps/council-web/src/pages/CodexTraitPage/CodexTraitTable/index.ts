@@ -1,0 +1,1 @@
+export { CodexTraitTable } from './CodexTraitTable';

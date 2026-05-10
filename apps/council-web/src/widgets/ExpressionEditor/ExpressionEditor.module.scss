@@ -1,0 +1,185 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.kindRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-3);
+
+  > input:not([type='checkbox']):not([type='radio']),
+  > .pathRow,
+  > label {
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+  }
+}
+
+.kindSelect {
+  flex: 0 0 auto;
+}
+
+.pathRow {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.pathTrigger {
+  display: inline-flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  padding: var(--space-2) 0;
+  font-family: var(--font-body);
+  font-size: var(--type-body-large-size);
+  font-weight: var(--type-body-large-weight);
+  color: var(--dark);
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: border-color 0.2s;
+
+  &[aria-expanded='true'],
+  &:focus {
+    border-bottom-color: var(--gold);
+    outline: none;
+  }
+}
+
+.pathMenu {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: var(--space-1);
+  background: var(--parchment, #fff);
+  border: 1px solid var(--border-light);
+  border-radius: var(--space-1);
+  box-shadow: 0 6px 18px rgba(20, 24, 38, 0.12);
+  min-width: 14rem;
+  max-height: inherit;
+  font-family: var(--font-mono, monospace);
+}
+
+.pathMenuScroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.pathMenuBack {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  width: 100%;
+  padding: var(--space-2);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  border-radius: 0;
+  font: inherit;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--type-body-medium-size);
+  color: var(--muted);
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--dark);
+  }
+}
+
+.pathMenuMuted {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.pathMenuGroupLabel {
+  padding: var(--space-2) var(--space-2) var(--space-1);
+  font-size: var(--type-body-medium-size);
+  font-variant: small-caps;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.pathMenuCustom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2) var(--space-2);
+  border-top: 1px solid var(--border-light);
+
+  input {
+    width: 100%;
+    padding: var(--space-1) var(--space-2);
+    font-family: var(--font-mono, monospace);
+    font-size: var(--type-body-medium-size);
+  }
+}
+
+.operatorBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+  gap: var(--space-2);
+}
+
+.operatorSelect {
+  align-self: flex-start;
+  width: auto;
+}
+
+.operands {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--border-light);
+}
+
+.operandRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.operandEditor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 0;
+}
+
+.operandLabel {
+  font-size: var(--type-body-medium-size);
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.addOperand {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px dashed var(--border-light);
+  border-radius: var(--space-1);
+  color: var(--muted);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--type-body-medium-size);
+}

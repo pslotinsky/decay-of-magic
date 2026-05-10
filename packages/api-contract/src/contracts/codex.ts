@@ -1,40 +1,459 @@
 import { z } from 'zod';
 
-export const ManaTypeSchema = z.enum(['Common', 'Special']);
-export type ManaType = z.infer<typeof ManaTypeSchema>;
+const Slug = z.string().regex(/^[a-z][a-zA-Z0-9]*$/, 'must be camelCase');
+const ShortName = z.string().min(1).max(50);
+const LongName = z.string().min(1).max(100);
+const Description = z.string().max(500);
+const UniverseId = z.string().min(1);
+const Order = z.int().nonnegative();
 
-export const ManaSchema = z.object({
-  id: z.uuid(),
-  name: z.string(),
-  type: ManaTypeSchema,
+export const APPLIES_TO_VALUES = ['minion', 'hero', 'card'] as const;
+export const AppliesToSchema = z.array(z.enum(APPLIES_TO_VALUES)).min(1);
+export type AppliesTo = z.infer<typeof AppliesToSchema>;
+
+export const TRIGGER_VALUES = [
+  'onPlay',
+  'onAfterPlay',
+  'onTurnStart',
+  'onTurnEnd',
+  'onDeath',
+  'onDamaged',
+  'onBeforeDamage',
+  'onDealDamage',
+  'onAttack',
+  'onBeforeAttack',
+  'onSummon',
+  'onOwnerMinionSummoned',
+  'onEnemyMinionSummoned',
+  'onOwnerMinionDied',
+  'onEnemyMinionDied',
+] as const;
+export const TriggerSchema = z.enum(TRIGGER_VALUES);
+export type Trigger = z.infer<typeof TriggerSchema>;
+
+export const TARGET_VALUES = [
+  'self',
+  'ownerHero',
+  'enemyHero',
+  'chosen',
+  'event',
+  'oppositeSlot',
+  'neighbors',
+  'ownerMinions',
+  'enemyMinions',
+  'allMinions',
+] as const;
+export const TargetSchema = z.enum(TARGET_VALUES);
+export type Target = z.infer<typeof TargetSchema>;
+
+export const COLLECTION_VALUES = [
+  'enemyMinions',
+  'ownerMinions',
+  'allMinions',
+  'neighbors',
+] as const;
+
+export const TargetsSchema = z.union([
+  TargetSchema,
+  z.array(TargetSchema).min(1),
+]);
+export type Targets = z.infer<typeof TargetsSchema>;
+
+export const ACTIVATION_VALUES = [
+  'emptySlot',
+  'replaceOwnerMinion',
+  'enemyMinion',
+  'ownerMinion',
+  'immediate',
+] as const;
+export const ActivationSchema = z.enum(ACTIVATION_VALUES);
+export type Activation = z.infer<typeof ActivationSchema>;
+
+export const EFFECT_KIND_VALUES = [
+  'damage',
+  'heal',
+  'fullHeal',
+  'gainElement',
+  'decreaseElement',
+  'increaseStat',
+  'decreaseStat',
+  'multiplyStat',
+  'setStat',
+  'giveTraits',
+  'removeTraits',
+  'summon',
+  'destroy',
+  'attackNow',
+  'preventDamage',
+  'reflectDamage',
+  'replaceWith',
+] as const;
+export const EffectKindSchema = z.enum(EFFECT_KIND_VALUES);
+export type EffectKind = z.infer<typeof EffectKindSchema>;
+
+export type Expression =
+  | string
+  | number
+  | boolean
+  | { not: Expression }
+  | { ceil: Expression }
+  | { count: Expression }
+  | { and: Expression[] }
+  | { or: Expression[] }
+  | { eq: [Expression, Expression] }
+  | { ne: [Expression, Expression] }
+  | { lt: [Expression, Expression] }
+  | { lte: [Expression, Expression] }
+  | { gt: [Expression, Expression] }
+  | { gte: [Expression, Expression] }
+  | { add: Expression[] }
+  | { sub: [Expression, Expression] }
+  | { mul: Expression[] }
+  | { div: [Expression, Expression] }
+  | { min: Expression[] }
+  | { max: Expression[] }
+  | { contains: [Expression, Expression] }
+  | { maxBy: [Expression, Expression] }
+  | { rankBy: [Expression, Expression] }
+  | { sumTopBy: [Expression, Expression, Expression] };
+
+export const ExpressionSchema: z.ZodType<Expression> = z.lazy(() =>
+  z.union([
+    z.string(),
+    z.number(),
+    z.boolean(),
+    z.strictObject({ not: ExpressionSchema }),
+    z.strictObject({ ceil: ExpressionSchema }),
+    z.strictObject({ count: ExpressionSchema }),
+    z.strictObject({ and: z.array(ExpressionSchema).min(2) }),
+    z.strictObject({ or: z.array(ExpressionSchema).min(2) }),
+    z.strictObject({
+      eq: z.tuple([ExpressionSchema, ExpressionSchema]),
+    }),
+    z.strictObject({
+      ne: z.tuple([ExpressionSchema, ExpressionSchema]),
+    }),
+    z.strictObject({
+      lt: z.tuple([ExpressionSchema, ExpressionSchema]),
+    }),
+    z.strictObject({
+      lte: z.tuple([ExpressionSchema, ExpressionSchema]),
+    }),
+    z.strictObject({
+      gt: z.tuple([ExpressionSchema, ExpressionSchema]),
+    }),
+    z.strictObject({
+      gte: z.tuple([ExpressionSchema, ExpressionSchema]),
+    }),
+    z.strictObject({ add: z.array(ExpressionSchema).min(2) }),
+    z.strictObject({
+      sub: z.tuple([ExpressionSchema, ExpressionSchema]),
+    }),
+    z.strictObject({ mul: z.array(ExpressionSchema).min(2) }),
+    z.strictObject({
+      div: z.tuple([ExpressionSchema, ExpressionSchema]),
+    }),
+    z.strictObject({ min: z.array(ExpressionSchema).min(2) }),
+    z.strictObject({ max: z.array(ExpressionSchema).min(2) }),
+    z.strictObject({
+      contains: z.tuple([ExpressionSchema, ExpressionSchema]),
+    }),
+    z.strictObject({
+      maxBy: z.tuple([ExpressionSchema, ExpressionSchema]),
+    }),
+    z.strictObject({
+      rankBy: z.tuple([ExpressionSchema, ExpressionSchema]),
+    }),
+    z.strictObject({
+      sumTopBy: z.tuple([ExpressionSchema, ExpressionSchema, ExpressionSchema]),
+    }),
+  ]),
+);
+
+const StatBlockSchema = z.record(Slug, ExpressionSchema);
+const CostSchema = z.record(Slug, z.int().positive());
+const ElementsPoolSchema = z.record(Slug, z.int().nonnegative());
+
+const EffectSchema = z.discriminatedUnion('kind', [
+  z.object({
+    kind: z.literal('damage'),
+    params: z.strictObject({ amount: ExpressionSchema }),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('heal'),
+    params: z.strictObject({ amount: ExpressionSchema }),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('fullHeal'),
+    params: z.strictObject({}),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('gainElement'),
+    params: z.record(Slug, ExpressionSchema),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('decreaseElement'),
+    params: z.record(Slug, ExpressionSchema),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('increaseStat'),
+    params: z.record(Slug, ExpressionSchema),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('decreaseStat'),
+    params: z.record(Slug, ExpressionSchema),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('multiplyStat'),
+    params: z.record(Slug, ExpressionSchema),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('setStat'),
+    params: z.record(Slug, ExpressionSchema),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('giveTraits'),
+    params: z.strictObject({
+      traits: z.array(Slug).min(1),
+      duration: z.int().positive().optional(),
+    }),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('removeTraits'),
+    params: z.strictObject({ traits: z.array(Slug).min(1) }),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('summon'),
+    params: z.strictObject({ minion: Slug }),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('destroy'),
+    params: z.strictObject({}),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('attackNow'),
+    params: z.strictObject({ target: TargetSchema.optional() }),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('preventDamage'),
+    params: z.strictObject({}),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('reflectDamage'),
+    params: z.strictObject({}),
+    filter: ExpressionSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal('replaceWith'),
+    params: z.strictObject({ card: Slug }),
+    filter: ExpressionSchema.optional(),
+  }),
+]);
+export type EffectDto = z.infer<typeof EffectSchema>;
+export { EffectSchema };
+
+const TriggeredAbilitySchema = z.strictObject({
+  trigger: TriggerSchema,
+  target: TargetsSchema,
+  exclude: ExpressionSchema.optional(),
+  effects: z.array(EffectSchema).min(1),
 });
-export type ManaDto = z.infer<typeof ManaSchema>;
 
-export const CreateManaSchema = z.object({
-  id: z.uuid(),
-  name: z.string(),
-  type: ManaTypeSchema,
+const PassiveAbilitySchema = z.strictObject({
+  passive: z.literal(true),
+  target: TargetsSchema,
+  exclude: ExpressionSchema.optional(),
+  effects: z.array(EffectSchema).min(1),
 });
-export type CreateManaDto = z.infer<typeof CreateManaSchema>;
 
-export const CardSchema = z.object({
-  id: z.uuid(),
-  name: z.string(),
-  imageUrl: z.string(),
-  description: z.string(),
-  level: z.int(),
-  cost: z.int(),
-  manaId: z.uuid(),
+export const AbilitySchema = z.union([
+  TriggeredAbilitySchema,
+  PassiveAbilitySchema,
+]);
+export type AbilityDto = z.infer<typeof AbilitySchema>;
+
+const ArchetypeIdentitySchema = z.object({
+  id: Slug,
+  universeId: UniverseId,
+  order: Order.optional(),
+});
+
+const DictionaryArchetypeSchema = ArchetypeIdentitySchema.extend({
+  name: ShortName,
+});
+
+const DictionaryArchetypeUpdateSchema = z.object({
+  name: ShortName.optional(),
+  order: Order.optional(),
+});
+
+const ContentArchetypeSchema = ArchetypeIdentitySchema.extend({
+  name: LongName,
+  description: Description.optional(),
+  art: z.url().optional(),
+});
+
+const ContentArchetypeUpdateSchema = z.object({
+  name: LongName.optional(),
+  description: Description.optional(),
+  art: z.url().optional(),
+  order: Order.optional(),
+});
+
+export const ElementSchema = DictionaryArchetypeSchema;
+export type ElementDto = z.infer<typeof ElementSchema>;
+
+export const CreateElementSchema = ElementSchema;
+export type CreateElementDto = z.infer<typeof CreateElementSchema>;
+
+export const UpdateElementSchema = DictionaryArchetypeUpdateSchema;
+export type UpdateElementDto = z.infer<typeof UpdateElementSchema>;
+
+export const FactionSchema = DictionaryArchetypeSchema.extend({
+  elements: z.array(Slug).optional(),
+});
+export type FactionDto = z.infer<typeof FactionSchema>;
+
+export const CreateFactionSchema = FactionSchema;
+export type CreateFactionDto = z.infer<typeof CreateFactionSchema>;
+
+export const UpdateFactionSchema = DictionaryArchetypeUpdateSchema.extend({
+  elements: z.array(Slug).optional(),
+});
+export type UpdateFactionDto = z.infer<typeof UpdateFactionSchema>;
+
+export const StatSchema = DictionaryArchetypeSchema.extend({
+  appliesTo: AppliesToSchema,
+  required: z.boolean().optional(),
+});
+export type StatDto = z.infer<typeof StatSchema>;
+
+export const CreateStatSchema = StatSchema;
+export type CreateStatDto = z.infer<typeof CreateStatSchema>;
+
+export const UpdateStatSchema = DictionaryArchetypeUpdateSchema.extend({
+  appliesTo: AppliesToSchema.optional(),
+  required: z.boolean().optional(),
+});
+export type UpdateStatDto = z.infer<typeof UpdateStatSchema>;
+
+export const TraitSchema = DictionaryArchetypeSchema.extend({
+  appliesTo: AppliesToSchema,
+});
+export type TraitDto = z.infer<typeof TraitSchema>;
+
+export const CreateTraitSchema = TraitSchema;
+export type CreateTraitDto = z.infer<typeof CreateTraitSchema>;
+
+export const UpdateTraitSchema = DictionaryArchetypeUpdateSchema.extend({
+  appliesTo: AppliesToSchema.optional(),
+});
+export type UpdateTraitDto = z.infer<typeof UpdateTraitSchema>;
+
+const MINION_ACTIVATIONS = new Set<Activation>([
+  'emptySlot',
+  'replaceOwnerMinion',
+]);
+
+export function isMinionActivation(activation: Activation): boolean {
+  return MINION_ACTIVATIONS.has(activation);
+}
+
+const cardActivationStatsCoupling = (data: {
+  activation: Activation;
+  stats?: unknown;
+}): boolean =>
+  isMinionActivation(data.activation) === (data.stats !== undefined);
+
+const cardActivationStatsMessage =
+  '`stats` is required for minion activations (`emptySlot`, `replaceOwnerMinion`) and forbidden otherwise';
+
+export const CardSchema = ContentArchetypeSchema.extend({
+  factions: z.array(Slug).optional(),
+  cost: CostSchema.optional(),
+  stats: StatBlockSchema.optional(),
+  traits: z.array(Slug).optional(),
+  activation: ActivationSchema,
+  abilities: z.array(AbilitySchema).optional(),
+}).refine(cardActivationStatsCoupling, {
+  message: cardActivationStatsMessage,
+  path: ['stats'],
 });
 export type CardDto = z.infer<typeof CardSchema>;
 
-export const CreateCardSchema = z.object({
-  id: z.uuid(),
-  name: z.string(),
-  imageUrl: z.string(),
-  description: z.string(),
-  level: z.int().min(1),
-  cost: z.int().min(0),
-  manaId: z.uuid(),
-});
+export const CreateCardSchema = CardSchema;
 export type CreateCardDto = z.infer<typeof CreateCardSchema>;
+
+export const UpdateCardSchema = ContentArchetypeUpdateSchema.extend({
+  factions: z.array(Slug).optional(),
+  cost: CostSchema.optional(),
+  stats: StatBlockSchema.optional(),
+  traits: z.array(Slug).optional(),
+  activation: ActivationSchema.optional(),
+  abilities: z.array(AbilitySchema).optional(),
+}).refine(
+  (data) =>
+    !(
+      data.activation !== undefined &&
+      !isMinionActivation(data.activation) &&
+      data.stats !== undefined
+    ),
+  {
+    message: cardActivationStatsMessage,
+    path: ['stats'],
+  },
+);
+export type UpdateCardDto = z.infer<typeof UpdateCardSchema>;
+
+export const HeroSchema = ContentArchetypeSchema.extend({
+  faction: Slug.optional(),
+  elements: ElementsPoolSchema,
+  stats: StatBlockSchema.optional(),
+  traits: z.array(Slug).optional(),
+  abilities: z.array(AbilitySchema).optional(),
+});
+export type HeroDto = z.infer<typeof HeroSchema>;
+
+export const CreateHeroSchema = HeroSchema;
+export type CreateHeroDto = z.infer<typeof CreateHeroSchema>;
+
+export const UpdateHeroSchema = ContentArchetypeUpdateSchema.extend({
+  faction: Slug.optional(),
+  elements: ElementsPoolSchema.optional(),
+  stats: StatBlockSchema.optional(),
+  traits: z.array(Slug).optional(),
+  abilities: z.array(AbilitySchema).optional(),
+});
+export type UpdateHeroDto = z.infer<typeof UpdateHeroSchema>;
+
+const CardArtSettingsSchema = z.object({
+  aspect: z.number().positive().max(10),
+  width: z.int().min(64).max(4096),
+});
+export type CardArtSettings = z.infer<typeof CardArtSettingsSchema>;
+
+export const CodexSettingsSchema = z.object({
+  cardArt: CardArtSettingsSchema,
+});
+export type CodexSettings = z.infer<typeof CodexSettingsSchema>;
+
+export const DEFAULT_CARD_ART: CardArtSettings = { aspect: 1, width: 1600 };
+
+export const DEFAULT_CODEX_SETTINGS: CodexSettings = {
+  cardArt: DEFAULT_CARD_ART,
+};

@@ -2,46 +2,48 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TerminusModule } from '@nestjs/terminus';
 
-import { CardGate } from './frontier/gates/card.gate';
-import { HealthGate } from './frontier/gates/health.gate';
-import { ManaGate } from './frontier/gates/mana.gate';
-import { PrismaService } from './ground/prisma.service';
-import { PrismaCardRepository } from './ground/repositories/prisma-card.repository';
-import { PrismaManaRepository } from './ground/repositories/prisma-mana.repository';
-import { CreateCardHandler } from './law/commands/create-card.command';
-import { CreateManaHandler } from './law/commands/create-mana.command';
-import { GetCardHandler } from './law/queries/get-card.query';
-import { GetManaHandler } from './law/queries/get-mana.query';
-import { ListCardsHandler } from './law/queries/list-cards.query';
-import { ListManaHandler } from './law/queries/list-mana.query';
-import { CardRepository } from './lore/repositories/card.repository';
-import { ManaRepository } from './lore/repositories/mana.repository';
+import { CoreHttpModule } from '@dod/core';
 
-const queryHandlers = [
-  GetCardHandler,
-  ListCardsHandler,
-  GetManaHandler,
-  ListManaHandler,
-];
-const commandHandlers = [CreateCardHandler, CreateManaHandler];
+import { CardGate } from './frontier/gates/card.gate';
+import { ElementGate } from './frontier/gates/element.gate';
+import { FactionGate } from './frontier/gates/faction.gate';
+import { HealthGate } from './frontier/gates/health.gate';
+import { HeroGate } from './frontier/gates/hero.gate';
+import { StatGate } from './frontier/gates/stat.gate';
+import { TraitGate } from './frontier/gates/trait.gate';
+import { PrismaService } from './ground/prisma.service';
+import { PrismaArchetypeRepository } from './ground/repositories/prisma-archetype.repository';
+import { CreateArchetypeHandler } from './law/commands/create-archetype.command';
+import { UpdateArchetypeHandler } from './law/commands/update-archetype.command';
+import { GetArchetypeHandler } from './law/queries/get-archetype.query';
+import { ListArchetypesHandler } from './law/queries/list-archetypes.query';
+import { ArchetypeFactory } from './lore/archetype-factory';
+import { ArchetypeRepository } from './lore/repositories/archetype.repository';
+
+const commandHandlers = [CreateArchetypeHandler, UpdateArchetypeHandler];
+
+const queryHandlers = [GetArchetypeHandler, ListArchetypesHandler];
+
 const repositories = [
-  {
-    provide: CardRepository,
-    useClass: PrismaCardRepository,
-  },
-  {
-    provide: ManaRepository,
-    useClass: PrismaManaRepository,
-  },
+  { provide: ArchetypeRepository, useClass: PrismaArchetypeRepository },
 ];
-const services = [PrismaService];
+
+const services = [ArchetypeFactory, PrismaService];
 
 @Module({
-  imports: [CqrsModule, TerminusModule],
-  controllers: [CardGate, HealthGate, ManaGate],
+  imports: [CoreHttpModule, CqrsModule, TerminusModule],
+  controllers: [
+    HealthGate,
+    ElementGate,
+    FactionGate,
+    StatGate,
+    TraitGate,
+    CardGate,
+    HeroGate,
+  ],
   providers: [
-    ...queryHandlers,
     ...commandHandlers,
+    ...queryHandlers,
     ...repositories,
     ...services,
   ],

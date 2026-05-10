@@ -1,25 +1,26 @@
 import { Globe, Pencil } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
-import type { UniverseDto } from '@dod/api-contract';
+import type { UniverseSummaryDto } from '@dod/api-contract';
 
 import { Card } from '@/components/Card';
+import { ErrorText } from '@/components/ErrorText';
 import { IconButton } from '@/components/IconButton';
 
 import styles from './UniversesPageList.module.scss';
 
 interface Props {
-  universes: UniverseDto[];
+  universes: UniverseSummaryDto[];
   loading: boolean;
   error: string | null;
-  onEdit: (universe: UniverseDto) => void;
+  onEdit: (universeId: string) => void;
 }
 
 export function UniversesPageList({ universes, error, onEdit }: Props) {
   const navigate = useNavigate();
 
   if (error) {
-    return <p className={styles.error}>{error}</p>;
+    return <ErrorText message={error} />;
   }
 
   if (universes.length === 0) {
@@ -53,7 +54,7 @@ export function UniversesPageList({ universes, error, onEdit }: Props) {
                 className={styles.edit}
                 onClick={(event) => {
                   event.stopPropagation();
-                  onEdit(universe);
+                  onEdit(universe.id);
                 }}
               >
                 <Pencil size={16} />

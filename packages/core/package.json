@@ -4,6 +4,16 @@
   "private": true,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./collection": {
+      "types": "./dist/collection/index.d.ts",
+      "default": "./dist/collection/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "lint": "eslint \"src/**/*.ts\" --fix",
@@ -13,7 +23,8 @@
     "docs": "poe inspect"
   },
   "dependencies": {
-    "@dod/api-contract": "*"
+    "@dod/api-contract": "*",
+    "lodash": "^4.18.1"
   },
   "peerDependencies": {
     "@nestjs/common": "^11.0.0",
@@ -25,6 +36,7 @@
     "@dod/config": "*",
     "@nestjs/common": "^11.1.19",
     "@nestjs/core": "^11.1.19",
+    "@types/lodash": "^4.17.24",
     "eslint": "^10.3.0",
     "prettier": "^3.8.3",
     "rxjs": "^7.8.2",

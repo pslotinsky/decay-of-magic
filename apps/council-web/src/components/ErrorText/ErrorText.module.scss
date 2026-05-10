@@ -1,0 +1,15 @@
+.field {
+  display: block;
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  color: var(--rust);
+  font-style: italic;
+}
+
+.form {
+  margin: 0;
+  font-size: var(--type-body-medium-size);
+  font-weight: var(--type-body-medium-weight);
+  color: var(--rust);
+  font-style: italic;
+}

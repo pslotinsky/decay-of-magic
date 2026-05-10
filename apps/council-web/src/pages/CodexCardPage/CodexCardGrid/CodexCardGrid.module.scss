@@ -1,0 +1,10 @@
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.empty {
+  color: var(--muted);
+  font-style: italic;
+}

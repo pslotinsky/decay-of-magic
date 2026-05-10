@@ -37,7 +37,7 @@ export class ChangeStatusDutyInstruction extends DutyInstruction<
       );
     }
 
-    const values = field.values as unknown as Record<string, string>;
+    const values = field.values;
     const value = values[statusKey ?? ''];
 
     if (!value) {

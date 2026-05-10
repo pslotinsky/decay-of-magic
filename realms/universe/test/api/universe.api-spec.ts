@@ -3,8 +3,13 @@ import { INestApplication } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { UniverseDto, unwrap } from '@dod/api-contract';
-import { EnvelopeInterceptor, ErrorFilter } from '@dod/core';
+import {
+  DEFAULT_UNIVERSE_SETTINGS,
+  UniverseDto,
+  UniverseSummaryDto,
+  unwrap,
+} from '@dod/api-contract';
+import { EnvelopeInterceptor } from '@dod/core';
 
 import { AppModule } from '../../src/app.module';
 import { PrismaService } from '../../src/ground/prisma.service';
@@ -21,7 +26,6 @@ describe('UniverseGate (api)', () => {
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('/api');
     app.useGlobalInterceptors(new EnvelopeInterceptor(app.get(Reflector)));
-    app.useGlobalFilters(new ErrorFilter());
     await app.init();
 
     prisma = moduleFixture.get(PrismaService);
@@ -107,6 +111,53 @@ describe('UniverseGate (api)', () => {
         .send({ id: 'eldoria', name: 'Eldoria', description: 'a'.repeat(501) })
         .expect(400);
     });
+
+    it('applies default settings when settings are omitted', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({ id: 'eldoria', name: 'Eldoria' })
+        .expect(201);
+      const universe = unwrap<UniverseDto>(response.body);
+
+      expect(universe.settings).toEqual(DEFAULT_UNIVERSE_SETTINGS);
+    });
+
+    it('echoes explicit settings', async () => {
+      const settings = {
+        codex: { cardArt: { aspect: 1.33, width: 800 } },
+      };
+      const response = await request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({ id: 'eldoria', name: 'Eldoria', settings })
+        .expect(201);
+      const universe = unwrap<UniverseDto>(response.body);
+
+      expect(universe.settings).toEqual(settings);
+    });
+
+    it('returns 400 when settings.codex.cardArt has invalid aspect', () => {
+      return request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({
+          id: 'eldoria',
+          name: 'Eldoria',
+          settings: {
+            codex: { cardArt: { aspect: -1, width: 600 } },
+          },
+        })
+        .expect(400);
+    });
+
+    it('returns 400 when settings.codex omits cardArt', () => {
+      return request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({
+          id: 'eldoria',
+          name: 'Eldoria',
+          settings: { codex: {} },
+        })
+        .expect(400);
+    });
   });
 
   describe('PATCH /api/v1/universe/:id', () => {
@@ -184,6 +235,102 @@ describe('UniverseGate (api)', () => {
         .send({ cover: 'not-a-url' })
         .expect(400);
     });
+
+    it('replaces the codex settings sub-object wholesale', async () => {
+      const createResponse = await request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({ id: 'eldoria', name: 'Eldoria' })
+        .expect(201);
+      const universe = unwrap<UniverseDto>(createResponse.body);
+
+      const newCardArt = { aspect: 1.33, width: 800 };
+      const updateResponse = await request(app.getHttpServer())
+        .patch(`/api/v1/universe/${universe.id}`)
+        .send({ settings: { codex: { cardArt: newCardArt } } })
+        .expect(200);
+      const updated = unwrap<UniverseDto>(updateResponse.body);
+
+      expect(updated.settings).toEqual({ codex: { cardArt: newCardArt } });
+    });
+
+    it('preserves existing settings when payload omits settings', async () => {
+      const createResponse = await request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({ id: 'eldoria', name: 'Eldoria' })
+        .expect(201);
+      const universe = unwrap<UniverseDto>(createResponse.body);
+
+      const updateResponse = await request(app.getHttpServer())
+        .patch(`/api/v1/universe/${universe.id}`)
+        .send({ name: 'Eldoria Reborn' })
+        .expect(200);
+      const updated = unwrap<UniverseDto>(updateResponse.body);
+
+      expect(updated.settings).toEqual(DEFAULT_UNIVERSE_SETTINGS);
+    });
+
+    it('preserves existing settings when payload sends empty settings', async () => {
+      const createResponse = await request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({ id: 'eldoria', name: 'Eldoria' })
+        .expect(201);
+      const universe = unwrap<UniverseDto>(createResponse.body);
+
+      const updateResponse = await request(app.getHttpServer())
+        .patch(`/api/v1/universe/${universe.id}`)
+        .send({ settings: {} })
+        .expect(200);
+      const updated = unwrap<UniverseDto>(updateResponse.body);
+
+      expect(updated.settings).toEqual(DEFAULT_UNIVERSE_SETTINGS);
+    });
+
+    it('returns 400 when settings payload is invalid', async () => {
+      const createResponse = await request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({ id: 'eldoria', name: 'Eldoria' })
+        .expect(201);
+      const universe = unwrap<UniverseDto>(createResponse.body);
+
+      return request(app.getHttpServer())
+        .patch(`/api/v1/universe/${universe.id}`)
+        .send({
+          settings: { codex: { cardArt: { aspect: 'wide', width: 600 } } },
+        })
+        .expect(400);
+    });
+
+    it('preserves unknown future realm keys in storage', async () => {
+      const createResponse = await request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({ id: 'eldoria', name: 'Eldoria' })
+        .expect(201);
+      const universe = unwrap<UniverseDto>(createResponse.body);
+
+      await prisma.universe.update({
+        where: { id: universe.id },
+        data: {
+          settings: {
+            ...DEFAULT_UNIVERSE_SETTINGS,
+            battle: { boardSize: 7 },
+          },
+        },
+      });
+
+      await request(app.getHttpServer())
+        .patch(`/api/v1/universe/${universe.id}`)
+        .send({
+          settings: {
+            codex: { cardArt: { aspect: 1.33, width: 800 } },
+          },
+        })
+        .expect(200);
+
+      const stored = await prisma.universe.findFirstOrThrow({
+        where: { id: universe.id },
+      });
+      expect(stored.settings).toMatchObject({ battle: { boardSize: 7 } });
+    });
   });
 
   describe('GET /api/v1/universe/:id', () => {
@@ -201,6 +348,7 @@ describe('UniverseGate (api)', () => {
 
       expect(found.id).toBe(universe.id);
       expect(found.name).toBe('Eldoria');
+      expect(found.settings).toEqual(DEFAULT_UNIVERSE_SETTINGS);
     });
 
     it('returns 404 when universe not found', () => {
@@ -225,7 +373,7 @@ describe('UniverseGate (api)', () => {
       const listResponse = await request(app.getHttpServer())
         .get('/api/v1/universe')
         .expect(200);
-      const universes = unwrap<UniverseDto[]>(listResponse.body);
+      const universes = unwrap<UniverseSummaryDto[]>(listResponse.body);
 
       expect(universes).toHaveLength(2);
       expect(universes.map((universe) => universe.name)).toContain('Eldoria');
@@ -234,11 +382,26 @@ describe('UniverseGate (api)', () => {
       );
     });
 
+    it('omits settings from list items to keep the list light', async () => {
+      await request(app.getHttpServer())
+        .post('/api/v1/universe')
+        .send({ id: 'eldoria', name: 'Eldoria' })
+        .expect(201);
+
+      const listResponse = await request(app.getHttpServer())
+        .get('/api/v1/universe')
+        .expect(200);
+      const universes = unwrap<UniverseSummaryDto[]>(listResponse.body);
+
+      expect(universes).toHaveLength(1);
+      expect('settings' in universes[0]).toBe(false);
+    });
+
     it('returns empty array when no universes exist', async () => {
       const listResponse = await request(app.getHttpServer())
         .get('/api/v1/universe')
         .expect(200);
-      const universes = unwrap<UniverseDto[]>(listResponse.body);
+      const universes = unwrap<UniverseSummaryDto[]>(listResponse.body);
 
       expect(universes).toEqual([]);
     });

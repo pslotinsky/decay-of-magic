@@ -4,6 +4,7 @@
     "types": ["node"],
     "target": "ES2023",
     "module": "commonjs",
+    "moduleResolution": "bundler",
     "declaration": true,
     "removeComments": true,
     "allowSyntheticDefaultImports": true,

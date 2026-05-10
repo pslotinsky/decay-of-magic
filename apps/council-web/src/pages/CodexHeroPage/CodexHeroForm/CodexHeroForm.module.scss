@@ -1,0 +1,39 @@
+.numberGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-3);
+}
+
+.numberRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.numberLabel {
+  font-size: var(--type-body-medium-size);
+  color: var(--muted);
+}
+
+.expressionGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.expressionRow {
+  display: grid;
+  grid-template-columns: minmax(80px, max-content) 1fr;
+  gap: var(--space-3);
+  align-items: center;
+  min-width: 0;
+
+  .numberLabel {
+    align-self: center;
+  }
+}
+
+.addStat {
+  align-self: flex-start;
+  margin-top: var(--space-3);
+}

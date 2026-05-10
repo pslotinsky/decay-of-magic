@@ -1,15 +1,16 @@
-export abstract class Entity {
-  public update<T extends object>(this: T, params: Partial<T>): Set<keyof T> {
-    const changed = new Set<keyof T>();
+import { isEqual, isUndefined, toPairs } from 'lodash';
 
-    for (const key of Object.keys(params) as Array<keyof T & string>) {
-      const value = params[key];
-      if (value !== undefined && value !== this[key]) {
+export abstract class Entity {
+  public update<T>(fields: Partial<T>): Set<keyof T> {
+    const changes = new Set<keyof T>();
+
+    for (const [key, value] of toPairs(fields)) {
+      if (!isUndefined(value) && !isEqual(this[key], value)) {
         this[key] = value;
-        changed.add(key);
+        changes.add(key as keyof T);
       }
     }
 
-    return changed;
+    return changes;
   }
 }

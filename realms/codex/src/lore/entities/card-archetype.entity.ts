@@ -1,0 +1,37 @@
+import { CardDto, CreateCardDto, isMinionActivation } from '@dod/api-contract';
+
+import { Archetype, ArchetypeKind } from './archetype.entity';
+
+type CardData = Omit<CardDto, 'id' | 'universeId' | 'name' | 'order'>;
+
+/**
+ * The primary playable object's prototype. Cards live in decks, are played by
+ * spending their Cost, and either resolve immediately as spells or summon a
+ * persistent minion onto the battlefield. Summon-style cards carry the
+ * minion's stats and traits inline.
+ */
+export class CardArchetype extends Archetype {
+  public readonly kind: ArchetypeKind = ArchetypeKind.Card;
+  public data: CardData;
+
+  public constructor({ id, universeId, name, order, ...data }: CreateCardDto) {
+    super({ id, universeId, name, order });
+    this.data = data;
+    this.enforceInvariants();
+  }
+
+  public override toDto(): CardDto {
+    return {
+      ...super.toDto(),
+      ...this.data,
+    };
+  }
+
+  protected override enforceInvariants(): void {
+    if (!isMinionActivation(this.data.activation) && this.data.stats) {
+      const { stats: _drop, ...rest } = this.data;
+      void _drop;
+      this.data = rest;
+    }
+  }
+}

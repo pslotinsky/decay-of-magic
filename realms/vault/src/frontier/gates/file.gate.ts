@@ -27,13 +27,15 @@ export class FileGate {
     @ZodBody(UploadFileSchema) body: UploadFileDto,
     @UploadedFile() uploadedFile: Express.Multer.File,
   ): Promise<FileDto> {
+    const { transform, ...rest } = body;
+
     const file = File.create({
-      ...body,
+      ...rest,
       buffer: uploadedFile.buffer,
       name: uploadedFile.originalname,
       mimetype: uploadedFile.mimetype,
     });
 
-    return this.commandBus.execute(new UploadFileCommand(file));
+    return this.commandBus.execute(new UploadFileCommand(file, transform));
   }
 }

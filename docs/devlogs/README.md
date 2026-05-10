@@ -7,4 +7,5 @@
 - [DevLog-004: First Zok's devlog](./DevLog-004_first-zoks-devlog.md)
 - [DevLog-005: It's been long-long time](./DevLog-005_its-been-long-long-time.md)
 - [DevLog-006: First Zok, now Poe!](./DevLog-006_first-zok-now-poe.md)
+- [DevLog-007: Codex draft](./DevLog-007_codex-draft.md)
 <!-- TOC.END -->

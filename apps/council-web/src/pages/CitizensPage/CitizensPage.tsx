@@ -4,6 +4,7 @@ import type { CitizenDto } from '@dod/api-contract';
 
 import { useCitizens } from '@/api/citizen';
 import { Button } from '@/components/Button';
+import { RootNav } from '@/components/NavMenu';
 import { Page, PageHeader } from '@/components/Page';
 
 import { CitizensPageCitizenEditing } from './CitizensPageCitizenEditing';
@@ -18,10 +19,10 @@ export function CitizensPage() {
   return (
     <>
       <Page
+        nav={<RootNav />}
         header={
           <PageHeader
             title="Register of Citizens"
-            breadcrumbs={[{ label: 'Home', to: '/' }]}
             action={
               <Button onClick={() => setEnrollOpen(true)}>
                 Enroll Citizen
