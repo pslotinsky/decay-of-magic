@@ -28,6 +28,7 @@
 - [x] [Milestone-001: Infrastructure and documentation](../milestones/Milestone-001_infrastructure-and-documentation.md)
 - [x] [Milestone-002: Citizen Realm](../milestones/Milestone-002_citizen-realm.md)
 - [x] [Milestone-003: Universe Realm](../milestones/Milestone-003_universe-realm.md)
-- [x] [Milestone-004: Platform Baseline & Consistency](../milestones/Milestone-004_platform-baseline-consistency.md)
+- [x] [Milestone-004: Tidy Up](../milestones/Milestone-004_tidy-up.md)
 - [x] [Milestone-005: Codex Realm](../milestones/Milestone-005_codex-realm.md)
+- [ ] [Milestone-006: Tidy Up II](../milestones/Milestone-006_tidy-up-ii.md)
 <!-- TOC.END -->

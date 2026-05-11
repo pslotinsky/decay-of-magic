@@ -7,4 +7,5 @@
 - [ADR-004: OOP — Ork Oriented Programming](./ADR-004_oop-ork-oriented-programming.md)
 - [ADR-005: REST In Peace](./ADR-005_rest-in-peace.md)
 - [ADR-006: Git Doublethink](./ADR-006_git-doublethink.md)
+- [ADR-007: Zebra Cadence](./ADR-007_zebra-cadence.md)
 <!-- TOC.END -->
