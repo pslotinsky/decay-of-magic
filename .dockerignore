@@ -1,5 +1,45 @@
+# Dependencies & build outputs
 **/node_modules
 **/dist
+**/build
 **/.turbo
 **/*.tsbuildinfo
+**/coverage
+**/.nyc_output
+
+# Regenerated inside the image
+**/prisma/generated
+
+# Git / CI
 .git
+.gitignore
+.gitattributes
+.github
+
+# IDE
+.vscode
+.idea
+*.sublime-workspace
+*.suo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env / logs
+.env
+.env.*
+**/*.log
+**/logs
+
+# Docs (not used at build time)
+docs
+**/*.md
+
+# Test sources (containers build prod artifacts only)
+**/test
+**/__tests__
+**/*.spec.ts
+**/*.spec.tsx
+**/*.test.ts
+**/*.test.tsx

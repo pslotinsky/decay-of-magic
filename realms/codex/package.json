@@ -1,7 +1,7 @@
 {
   "name": "codex",
   "version": "0.0.1",
-  "description": "",
+  "description": "Game content management — cards, mana, mages, abilities",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
@@ -14,7 +14,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "npm run test:unit && npm run test:flow && npm run test:api",
+    "test": "pnpm run test:unit && pnpm run test:flow && pnpm run test:api",
     "test:unit": "jest --passWithNoTests",
     "test:flow": "jest --config ./test/jest-flow.json",
     "test:api": "jest --config ./test/jest-api.json",
@@ -30,8 +30,8 @@
     "docs": "poe inspect"
   },
   "dependencies": {
-    "@dod/api-contract": "*",
-    "@dod/core": "*",
+    "@dod/api-contract": "workspace:*",
+    "@dod/core": "workspace:*",
     "@nestjs/common": "^11.1.19",
     "@nestjs/core": "^11.1.19",
     "@nestjs/cqrs": "^11.0.3",
@@ -39,32 +39,27 @@
     "@nestjs/terminus": "^11.1.1",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
-    "pg": "^8.20.0",
+    "dotenv": "^17.4.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "zod": "^4.4.2"
   },
   "devDependencies": {
-    "@dod/config": "*",
-    "@eslint/eslintrc": "^3.3.5",
+    "@dod/config": "workspace:*",
     "@nestjs/cli": "^11.0.21",
     "@nestjs/schematics": "^11.1.0",
     "@nestjs/testing": "^11.1.19",
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.15.33",
-    "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.6.2",
-    "@types/pg": "^8.20.0",
     "@types/supertest": "^7.2.0",
     "eslint": "^10.3.0",
     "jest": "^30.4.2",
     "prettier": "^3.8.3",
     "prisma": "^7.8.0",
-    "source-map-support": "^0.5.21",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.9",
-    "ts-loader": "^9.5.7",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^6.0.3"
@@ -78,10 +73,10 @@
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.ts$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"

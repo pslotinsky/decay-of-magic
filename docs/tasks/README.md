@@ -25,4 +25,8 @@
 - [x] [DOD-0022: Codex ground](./DOD-0022_codex-ground.md)
 - [x] [DOD-0023: Codex part of Council](./DOD-0023_codex-part-of-council.md)
 - [x] [DOD-0024: Universe settings](./DOD-0024_universe-settings.md)
+- [x] [DOD-0025: Tidy up structure and CI](./DOD-0025_tidy-up-structure-and-ci.md)
+- [x] [DOD-0026: Improve Poe and Zok](./DOD-0026_improve-poe-and-zok.md)
+- [x] [DOD-0027: Migrate to pnpm](./DOD-0027_migrate-to-pnpm.md)
+- [x] [DOD-0028: Migrate to Biome](./DOD-0028_migrate-to-biome.md)
 <!-- TOC.END -->

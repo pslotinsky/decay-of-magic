@@ -1,0 +1,81 @@
+import type { ClassRegistry } from '../ClassRegistry/ClassRegistry';
+import type { InspectedClass } from '../ClassRegistry/InspectedClass';
+import type { LayerConfig } from '../Config/PoeConfig';
+import type { Endpoint } from '../Endpoints/Endpoint';
+import type { Renderer } from './Renderer';
+import { TypeLinker } from './TypeLinker';
+
+/**
+ * Renders a layer as per-controller endpoint tables
+ */
+export class ApiRenderer implements Renderer {
+  public render(
+    layer: LayerConfig,
+    _classes: InspectedClass[],
+    registry: ClassRegistry,
+  ): string {
+    const endpoints = registry.getLayerEndpoints(layer.title);
+
+    if (endpoints.length === 0) {
+      return '';
+    }
+
+    const linker = new TypeLinker(registry);
+    const groups = this.groupByController(endpoints);
+
+    return Object.entries(groups)
+      .map(([className, controllerEndpoints]) =>
+        this.renderController(className, controllerEndpoints, linker),
+      )
+      .join('\n\n');
+  }
+
+  private groupByController(endpoints: Endpoint[]): Record<string, Endpoint[]> {
+    const groups: Record<string, Endpoint[]> = {};
+
+    for (const endpoint of endpoints) {
+      (groups[endpoint.className] ??= []).push(endpoint);
+    }
+
+    return groups;
+  }
+
+  private renderController(
+    className: string,
+    endpoints: Endpoint[],
+    linker: TypeLinker,
+  ): string {
+    const title = this.controllerTitle(className);
+    const file = endpoints[0].file;
+    const rows = [
+      '| Endpoint | Description |',
+      '|----------|-------------|',
+      ...endpoints.map((endpoint) => this.row(endpoint, linker)),
+    ];
+
+    return `### [${title}](${file})\n\n${rows.join('\n')}`;
+  }
+
+  private row(endpoint: Endpoint, linker: TypeLinker): string {
+    const name = `${endpoint.method} ${endpoint.path}`;
+    const description = this.descriptionCell(endpoint, linker);
+
+    return `| ${name} | ${description} |`;
+  }
+
+  private descriptionCell(endpoint: Endpoint, linker: TypeLinker): string {
+    const signature = linker
+      .renderSignature(endpoint.params, endpoint.returns)
+      .join('<br>');
+    const paragraphs: string[] = [];
+
+    if (signature) paragraphs.push(signature);
+    if (endpoint.description) paragraphs.push(endpoint.description);
+
+    return paragraphs.join('<br><br>');
+  }
+
+  private controllerTitle(className: string): string {
+    return className.replace(/(Gate|Controller)$/, '');
+  }
+}

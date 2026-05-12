@@ -6,9 +6,12 @@ For a full description of planned realms and entities see [Design-003: Realms my
 
 ## Active realms
 
+<!-- poe:children:start -->
 | Realm | Description |
 | ----- | ----------- |
-| [Codex](codex/README.md) | Game content management — cards, mana, mages, abilities |
 | [Citizen](citizen/) | Citizenship registry — player accounts and sessions |
-| [Vault](vault/README.md) | File vault — upload, storage, and serving of assets |
-| [Gateway](gateway/README.md) | API gateway — routes requests to downstream realms |
+| [Codex](codex/) | Game content management — cards, mana, mages, abilities |
+| [Gateway](gateway/) | API gateway — routes requests to downstream realms |
+| [Universe](universe/) | Game world registry — universes, settings, and ownership boundaries |
+| [Vault](vault/) | File vault — upload, storage, and serving of assets |
+<!-- poe:children:end -->

@@ -1,9 +1,11 @@
 # @dod/core
 
+<!-- poe:header:start -->
+Framework-agnostic runtime kernels — Entity, ZodBody, error types
+<!-- poe:header:end -->
+
 <!-- poe:classes:start -->
 ## Classes
-
-### Classes
 
 ```mermaid
 classDiagram
@@ -91,21 +93,25 @@ classDiagram
 
 | Entity | Description |
 |--------|-------------|
-| [Entity](src/entity.ts) | Abstract |
-| errors/[BadRequestError](src/errors/bad-request.error.ts) | Signals a malformed or unacceptable request that doesn't fit the more<br>specific domain errors.<br><br>Extends [DomainError](src/errors/domain.error.ts) |
-| errors/[ConflictError](src/errors/conflict.error.ts) | Signals that the operation conflicts with current state, such as a duplicate<br>identifier or a concurrent modification.<br><br>Extends [DomainError](src/errors/domain.error.ts) |
-| errors/[DomainError](src/errors/domain.error.ts) | Base class for errors raised by the domain and application layers.<br>Frontier-level code (HTTP filters, RPC handlers) maps these to transport responses.<br><br>Abstract · Extends `Error` |
-| errors/[ForbiddenError](src/errors/forbidden.error.ts) | Signals that the caller is authenticated but not authorized for the<br>requested operation.<br><br>Extends [DomainError](src/errors/domain.error.ts) |
-| errors/[NotFoundError](src/errors/not-found.error.ts) | Signals that the requested resource does not exist.<br><br>Extends [DomainError](src/errors/domain.error.ts) |
-| errors/[UnauthenticatedError](src/errors/unauthenticated.error.ts) | Signals that the caller is not authenticated.<br><br>Extends [DomainError](src/errors/domain.error.ts) |
-| errors/[UnprocessableError](src/errors/unprocessable.error.ts) | Signals that the request is well-formed but rejected on semantic grounds —<br>a domain rule prevents the operation from completing.<br><br>Extends [DomainError](src/errors/domain.error.ts) |
-| errors/[ValidationFailedError](src/errors/validation-failed.error.ts) | Signals that input failed schema validation. Carries per-field details so<br>callers can surface structured feedback.<br><br>Extends [DomainError](src/errors/domain.error.ts) |
-| http/[CoreHttpModule](src/http/core-http.module.ts) |  |
-| http/[EnvelopeInterceptor](src/http/envelope.interceptor.ts) | Implements `NestInterceptor` |
-| http/[ErrorFilter](src/http/error.filter.ts) | Implements `ExceptionFilter` |
-| http/[ErrorLogger](src/http/error.logger.ts) |  |
-| http/[ZodPipe](src/http/zod.pipe.ts) |  |
-| repositories/[EntityRepository](src/repositories/entity.repository.ts) | Abstract base for domain repositories. Defines the standard CRUD contract<br>that all entity repositories must implement.<br><br>Abstract |
-| repositories/[InMemoryRepository](src/repositories/in-memory.repository.ts) | In-memory implementation of EntityRepository. Provides getById, find, and<br>save via a per-instance Map; intended for tests and prototypes where<br>persistence is out of scope.<br><br>Abstract |
-| repositories/[PrismaRepository](src/repositories/prisma.repository.ts) | Prisma-backed implementation of EntityRepository. Provides getById, find,<br>and save via a model delegate, handling entity↔model mapping via subclasses.<br><br>Abstract |
+| [Entity](src/entity.ts#L2) | Abstract |
+| errors/[BadRequestError](src/errors/bad-request.error.ts#L4) | Signals a malformed or unacceptable request that doesn't fit the more<br>specific domain errors.<br><br>Extends [DomainError](src/errors/domain.error.ts#L2) |
+| errors/[ConflictError](src/errors/conflict.error.ts#L4) | Signals that the operation conflicts with current state, such as a duplicate<br>identifier or a concurrent modification.<br><br>Extends [DomainError](src/errors/domain.error.ts#L2) |
+| errors/[DomainError](src/errors/domain.error.ts#L2) | Base class for errors raised by the domain and application layers.<br>Frontier-level code (HTTP filters, RPC handlers) maps these to transport responses.<br><br>Abstract · Extends `Error` |
+| errors/[ForbiddenError](src/errors/forbidden.error.ts#L4) | Signals that the caller is authenticated but not authorized for the<br>requested operation.<br><br>Extends [DomainError](src/errors/domain.error.ts#L2) |
+| errors/[NotFoundError](src/errors/not-found.error.ts#L4) | Signals that the requested resource does not exist.<br><br>Extends [DomainError](src/errors/domain.error.ts#L2) |
+| errors/[UnauthenticatedError](src/errors/unauthenticated.error.ts#L4) | Signals that the caller is not authenticated.<br><br>Extends [DomainError](src/errors/domain.error.ts#L2) |
+| errors/[UnprocessableError](src/errors/unprocessable.error.ts#L4) | Signals that the request is well-formed but rejected on semantic grounds —<br>a domain rule prevents the operation from completing.<br><br>Extends [DomainError](src/errors/domain.error.ts#L2) |
+| errors/[ValidationFailedError](src/errors/validation-failed.error.ts#L4) | Signals that input failed schema validation. Carries per-field details so<br>callers can surface structured feedback.<br><br>Extends [DomainError](src/errors/domain.error.ts#L2) |
+| http/[CoreHttpModule](src/http/core-http.module.ts#L16) |  |
+| http/[EnvelopeInterceptor](src/http/envelope.interceptor.ts#L13) | Implements `NestInterceptor` |
+| http/[ErrorFilter](src/http/error.filter.ts#L50) | Implements `ExceptionFilter` |
+| http/[ErrorLogger](src/http/error.logger.ts#L17) |  |
+| http/[ZodPipe](src/http/zod.pipe.ts#L29) |  |
+| repositories/[EntityRepository](src/repositories/entity.repository.ts#L2) | Abstract base for domain repositories. Defines the standard CRUD contract<br>that all entity repositories must implement.<br><br>Abstract |
+| repositories/[InMemoryRepository](src/repositories/in-memory.repository.ts#L3) | In-memory implementation of EntityRepository. Provides getById, find, and<br>save via a per-instance Map; intended for tests and prototypes where<br>persistence is out of scope.<br><br>Abstract |
+| repositories/[PrismaRepository](src/repositories/prisma.repository.ts#L9) | Prisma-backed implementation of EntityRepository. Provides getById, find,<br>and save via a model delegate, handling entity↔model mapping via subclasses.<br><br>Abstract |
 <!-- poe:classes:end -->
+
+<!-- poe:footer:start -->
+> This document was inspected and assembled by Inspector Poe.
+<!-- poe:footer:end -->

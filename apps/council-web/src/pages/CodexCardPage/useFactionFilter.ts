@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router';
 
 import type { FactionDto } from '@dod/api-contract';
@@ -12,22 +12,25 @@ export function useFactionFilter(
   const [searchParams, setSearchParams] = useSearchParams();
   const factionFilter = searchParams.get(PARAM_KEY) ?? '';
 
-  function setFactionFilter(value: string) {
-    setSearchParams(
-      (current) => {
-        const next = new URLSearchParams(current);
+  const setFactionFilter = useCallback(
+    (value: string) => {
+      setSearchParams(
+        (current) => {
+          const next = new URLSearchParams(current);
 
-        if (value) {
-          next.set(PARAM_KEY, value);
-        } else {
-          next.delete(PARAM_KEY);
-        }
+          if (value) {
+            next.set(PARAM_KEY, value);
+          } else {
+            next.delete(PARAM_KEY);
+          }
 
-        return next;
-      },
-      { replace: true },
-    );
-  }
+          return next;
+        },
+        { replace: true },
+      );
+    },
+    [setSearchParams],
+  );
 
   useEffect(() => {
     if (loading) return;
@@ -38,8 +41,7 @@ export function useFactionFilter(
     if (!factions.some((faction) => faction.id === factionFilter)) {
       setFactionFilter(factions[0].id);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [factions, factionFilter, loading]);
+  }, [factions, factionFilter, loading, setFactionFilter]);
 
   return [factionFilter, setFactionFilter];
 }

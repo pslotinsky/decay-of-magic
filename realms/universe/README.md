@@ -1,42 +1,51 @@
 # universe
 
+<!-- poe:header:start -->
+Game world registry — universes, settings, and ownership boundaries
+
+**On this page**
+
+- [Frontier](#frontier)
+- [Law](#law)
+- [Lore](#lore)
+- [Ground](#ground)
+<!-- poe:header:end -->
+
 <!-- poe:classes:start -->
-## Classes
+## Frontier
 
-### Frontier
-
-#### [Health](src/frontier/gates/health.gate.ts)
+### [Health](src/frontier/gates/health.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
 | GET /v1/health | Returns: `HealthCheckResult` |
 
-#### [Universe](src/frontier/gates/universe.gate.ts)
+### [Universe](src/frontier/gates/universe.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
-| POST /v1/universe | Params: `(dto: CreateUniverseDto)`<br>Returns: `UniverseDto` |
-| PATCH /v1/universe/:id | Params: `(id: string, dto: UpdateUniverseDto)`<br>Returns: `UniverseDto` |
-| GET /v1/universe/:id | Params: `(id: string)`<br>Returns: `UniverseDto` |
-| GET /v1/universe | Returns: `UniverseSummaryDto[]` |
+| POST /v1/universe | Param `dto`: [`CreateUniverseDto`](../../packages/api-contract/src/contracts/universe.ts#L38)<br>Returns: [`UniverseDto`](../../packages/api-contract/src/contracts/universe.ts#L29) |
+| PATCH /v1/universe/:id | Param `id`: `string`<br>Param `dto`: [`UpdateUniverseDto`](../../packages/api-contract/src/contracts/universe.ts#L46)<br>Returns: [`UniverseDto`](../../packages/api-contract/src/contracts/universe.ts#L29) |
+| GET /v1/universe/:id | Param `id`: `string`<br>Returns: [`UniverseDto`](../../packages/api-contract/src/contracts/universe.ts#L29) |
+| GET /v1/universe | Returns: [`UniverseSummaryDto`](../../packages/api-contract/src/contracts/universe.ts#L24)[] |
 
-### Law
+## Law
 
-#### Universe
-
-| Use case | Description |
-|----------|-------------|
-| [CreateUniverseCommand](src/law/commands/create-universe.command.ts) | Params: `(payload: CreateUniverseDto)`<br>Returns: `UniverseDto`<br><br>Creates a new universe. Fails when the name is already taken |
-| [UpdateUniverseCommand](src/law/commands/update-universe.command.ts) | Params: `(id: string, payload: UpdateUniverseDto)`<br>Returns: `UniverseDto`<br><br>Updates an existing universe. Only fields present in the payload<br>are changed. Fails if the new name collides with another universe |
-| [GetUniverseQuery](src/law/queries/get-universe.query.ts) | Params: `(id: string)`<br>Returns: `UniverseDto`<br><br>Fetches a single universe by id. Fails when the id is unknown |
-
-#### UniverseSummary
+### Universe
 
 | Use case | Description |
 |----------|-------------|
-| [ListUniversesQuery](src/law/queries/list-universes.query.ts) | Returns: `UniverseSummaryDto[]`<br><br>Lists every universe currently registered in the realm. Returns the<br>summary projection (no settings) to keep the list view light |
+| [CreateUniverseCommand](src/law/commands/create-universe.command.ts#L13) | Param `payload`: [`CreateUniverseDto`](../../packages/api-contract/src/contracts/universe.ts#L38)<br>Returns: [`UniverseDto`](../../packages/api-contract/src/contracts/universe.ts#L29)<br><br>Creates a new universe. Fails when the name is already taken |
+| [UpdateUniverseCommand](src/law/commands/update-universe.command.ts#L12) | Param `id`: `string`<br>Param `payload`: [`UpdateUniverseDto`](../../packages/api-contract/src/contracts/universe.ts#L46)<br>Returns: [`UniverseDto`](../../packages/api-contract/src/contracts/universe.ts#L29)<br><br>Updates an existing universe. Only fields present in the payload<br>are changed. Fails if the new name collides with another universe |
+| [GetUniverseQuery](src/law/queries/get-universe.query.ts#L7) | Param `id`: `string`<br>Returns: [`UniverseDto`](../../packages/api-contract/src/contracts/universe.ts#L29)<br><br>Fetches a single universe by id. Fails when the id is unknown |
 
-### Lore
+### UniverseSummary
+
+| Use case | Description |
+|----------|-------------|
+| [ListUniversesQuery](src/law/queries/list-universes.query.ts#L7) | Returns: [`UniverseSummaryDto`](../../packages/api-contract/src/contracts/universe.ts#L24)[]<br><br>Lists every universe currently registered in the realm. Returns the<br>summary projection (no settings) to keep the list view light |
+
+## Lore
 
 ```mermaid
 classDiagram
@@ -63,10 +72,10 @@ classDiagram
 
 | Entity | Description |
 |--------|-------------|
-| entities/[Universe](src/lore/entities/universe.entity.ts) | Extends `Entity` |
-| repositories/[UniverseRepository](src/lore/repositories/universe.repository.ts) | Abstract · Extends `EntityRepository` |
+| entities/[Universe](src/lore/entities/universe.entity.ts#L14) | Extends `Entity` |
+| repositories/[UniverseRepository](src/lore/repositories/universe.repository.ts#L4) | Abstract · Extends `EntityRepository` |
 
-### Ground
+## Ground
 
 ```mermaid
 erDiagram
@@ -79,3 +88,7 @@ erDiagram
   }
 ```
 <!-- poe:classes:end -->
+
+<!-- poe:footer:start -->
+> This document was inspected and assembled by Inspector Poe.
+<!-- poe:footer:end -->

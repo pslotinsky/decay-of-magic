@@ -14,7 +14,9 @@ export class ListArchetypesQuery<TDto = unknown> extends Query<TDto[]> {
 }
 
 @QueryHandler(ListArchetypesQuery)
-export class ListArchetypesHandler implements IQueryHandler<ListArchetypesQuery> {
+export class ListArchetypesHandler
+  implements IQueryHandler<ListArchetypesQuery>
+{
   @Inject() private readonly archetypeRepository!: ArchetypeRepository;
 
   public async execute({

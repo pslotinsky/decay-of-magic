@@ -1,10 +1,10 @@
 # DOD-0015: Define testing strategy for realm services
 
-| Field     | Value                                                                                           |
-| --------- | ----------------------------------------------------------------------------------------------- |
-| Status    | Done |
-| Milestone | [Platform Baseline & Consistency](../milestones/Milestone-004_platform-baseline-consistency.md) |
-| Created   | 2026-04-19                                                                                      |
+| Field     | Value                                             |
+| --------- | ------------------------------------------------- |
+| Status    | Done                                              |
+| Milestone | [Tidy Up](../milestones/Milestone-004_tidy-up.md) |
+| Created   | 2026-04-19                                        |
 
 ## Description
 

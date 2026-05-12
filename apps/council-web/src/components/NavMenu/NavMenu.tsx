@@ -23,7 +23,11 @@ export function NavMenu({ children }: Props) {
       <div className={styles.inner}>
         {children}
         <span className={styles.citizen}>{citizen?.nickname}</span>
-        <button className={styles.logout} onClick={() => void logout()}>
+        <button
+          type="button"
+          className={styles.logout}
+          onClick={() => void logout()}
+        >
           <LogOut />
           Dismiss
         </button>

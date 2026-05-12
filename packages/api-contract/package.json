@@ -1,28 +1,27 @@
 {
   "name": "@dod/api-contract",
   "version": "0.0.1",
+  "description": "Shared API contracts — Zod schemas and DTOs consumed by every realm",
   "private": true,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint \"src/**/*.ts\" --fix",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "format:check": "prettier --check \"src/**/*.ts\"",
     "typecheck": "tsc --noEmit",
-    "test": "npm run test:unit",
+    "test": "pnpm run test:unit",
     "test:unit": "jest --config ./test/jest-unit.json",
-    "docs": "poe inspect"
+    "docs": "poe inspect",
+    "format": "biome format --write src",
+    "lint": "biome lint --write src"
   },
   "dependencies": {
     "zod": "^4.4.2"
   },
   "devDependencies": {
-    "@dod/config": "*",
+    "@dod/config": "workspace:*",
     "@types/jest": "^30.0.0",
-    "eslint": "^10.3.0",
+    "@types/node": "^25.6.2",
     "jest": "^30.4.2",
-    "prettier": "^3.8.3",
     "ts-jest": "^29.4.9",
     "typescript": "^6.0.3"
   }

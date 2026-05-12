@@ -1,16 +1,16 @@
-export type FileCrop = {
+type FileCrop = {
   x: number;
   y: number;
   width: number;
   height: number;
 };
 
-export type FileResize = {
+type FileResize = {
   width: number;
   height: number;
 };
 
-export type FileFormat = 'webp';
+type FileFormat = 'webp';
 
 export type FileTransform = {
   crop?: FileCrop;

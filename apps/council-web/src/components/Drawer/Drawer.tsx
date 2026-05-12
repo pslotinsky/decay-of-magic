@@ -23,6 +23,7 @@ export function Drawer({
   return (
     <>
       <div
+        aria-hidden="true"
         className={clsx(styles.overlay, open && styles.open)}
         onClick={onClose}
       />
@@ -32,7 +33,7 @@ export function Drawer({
             <h2 className={styles.title}>{title}</h2>
             {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
           </div>
-          <button className={styles.close} onClick={onClose}>
+          <button type="button" className={styles.close} onClick={onClose}>
             ✕
           </button>
         </div>

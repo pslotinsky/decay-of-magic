@@ -15,7 +15,9 @@ export class UpdateCitizenCommand extends Command<CitizenDto> {
 }
 
 @CommandHandler(UpdateCitizenCommand)
-export class UpdateCitizenHandler implements ICommandHandler<UpdateCitizenCommand> {
+export class UpdateCitizenHandler
+  implements ICommandHandler<UpdateCitizenCommand>
+{
   @Inject() private readonly citizenRepository!: CitizenRepository;
 
   public async execute({

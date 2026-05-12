@@ -1,0 +1,29 @@
+name: Setup
+description: Install Node + pnpm, install dependencies, restore turbo cache
+
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/action-setup@v6
+
+    - uses: actions/setup-node@v6
+      with:
+        node-version-file: '.nvmrc'
+        cache: pnpm
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile
+
+    - name: Restore turbo cache
+      uses: actions/cache@v5
+      with:
+        path: |
+          .turbo
+          apps/*/.turbo
+          realms/*/.turbo
+          packages/*/.turbo
+          tools/*/.turbo
+        key: turbo-${{ runner.os }}-${{ github.sha }}
+        restore-keys: |
+          turbo-${{ runner.os }}-

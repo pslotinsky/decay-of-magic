@@ -38,6 +38,7 @@ export function CitizensPageList({ citizens, error, onEdit }: Props) {
               <td className={styles.id}>{citizen.id}</td>
               <td className={styles.actions}>
                 <button
+                  type="button"
                   className={styles.action}
                   onClick={() => onEdit(citizen)}
                 >

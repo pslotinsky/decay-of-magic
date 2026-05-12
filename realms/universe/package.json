@@ -1,6 +1,7 @@
 {
   "name": "universe",
   "version": "0.0.1",
+  "description": "Game world registry — universes, settings, and ownership boundaries",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\"",
@@ -10,7 +11,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "npm run test:unit && npm run test:api",
+    "test": "pnpm run test:unit && pnpm run test:api",
     "test:unit": "jest --passWithNoTests",
     "test:api": "jest --config ./test/jest-api.json",
     "typecheck": "tsc --noEmit",
@@ -21,8 +22,8 @@
     "docs": "poe inspect"
   },
   "dependencies": {
-    "@dod/api-contract": "*",
-    "@dod/core": "*",
+    "@dod/api-contract": "workspace:*",
+    "@dod/core": "workspace:*",
     "@nestjs/common": "^11.1.19",
     "@nestjs/core": "^11.1.19",
     "@nestjs/cqrs": "^11.0.3",
@@ -31,20 +32,18 @@
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "lodash": "^4.18.1",
-    "pg": "^8.20.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "zod": "^4.4.2"
   },
   "devDependencies": {
-    "@dod/config": "*",
+    "@dod/config": "workspace:*",
     "@nestjs/cli": "^11.0.21",
     "@nestjs/schematics": "^11.1.0",
     "@nestjs/testing": "^11.1.19",
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.24",
     "@types/node": "^25.6.2",
-    "@types/pg": "^8.20.0",
     "@types/supertest": "^7.2.0",
     "dotenv": "^17.4.2",
     "eslint": "^10.3.0",

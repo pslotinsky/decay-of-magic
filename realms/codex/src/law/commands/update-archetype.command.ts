@@ -17,7 +17,9 @@ export class UpdateArchetypeCommand<TDto = unknown> extends Command<TDto> {
 }
 
 @CommandHandler(UpdateArchetypeCommand)
-export class UpdateArchetypeHandler implements ICommandHandler<UpdateArchetypeCommand> {
+export class UpdateArchetypeHandler
+  implements ICommandHandler<UpdateArchetypeCommand>
+{
   @Inject() private readonly archetypeRepository!: ArchetypeRepository;
 
   public async execute({

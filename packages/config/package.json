@@ -1,27 +1,11 @@
 {
   "name": "@dod/config",
   "version": "0.0.1",
+  "description": "Shared toolchain configuration — TypeScript and Poe layers",
   "private": true,
   "type": "module",
   "exports": {
-    "./eslint/base": "./eslint/base.js",
-    "./eslint/nestjs": "./eslint/nestjs.js",
-    "./eslint/react": "./eslint/react.js",
     "./poe/library": "./poe/library.js",
     "./poe/realm": "./poe/realm.js"
-  },
-  "dependencies": {
-    "@eslint/js": "^10.0.1",
-    "eslint": "^10.3.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.5",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.2",
-    "globals": "^17.6.0",
-    "prettier": "^3.8.3",
-    "typescript-eslint": "^8.59.1"
-  },
-  "devDependencies": {
-    "eslint-plugin-simple-import-sort": "^13.0.0"
   }
 }

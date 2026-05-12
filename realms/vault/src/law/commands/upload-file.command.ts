@@ -36,10 +36,9 @@ export class UploadFileCommand extends Command<FileDto> {
 }
 
 @CommandHandler(UploadFileCommand)
-export class UploadFileUseCase implements ICommandHandler<
-  UploadFileCommand,
-  FileDto
-> {
+export class UploadFileUseCase
+  implements ICommandHandler<UploadFileCommand, FileDto>
+{
   @Inject() private readonly commandBus!: CommandBus;
 
   private readonly client = new S3({

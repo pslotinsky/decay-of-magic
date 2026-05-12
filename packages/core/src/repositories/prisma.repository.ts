@@ -2,9 +2,9 @@ import { NotFoundError } from '../errors/not-found.error';
 import { EntityRepository } from './entity.repository';
 
 type Delegate<TModel extends { id: string }> = {
-  findFirst(args?: any): Promise<TModel | null>;
-  findMany(args?: any): Promise<TModel[]>;
-  upsert(args: any): Promise<any>;
+  findFirst(args?: unknown): Promise<TModel | null>;
+  findMany(args?: unknown): Promise<TModel[]>;
+  upsert(args: unknown): Promise<unknown>;
 };
 
 /**

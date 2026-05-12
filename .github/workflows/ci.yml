@@ -6,125 +6,52 @@ on:
   pull_request:
     branches: [master]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/setup
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
-      - uses: actions/upload-artifact@v7
-        with:
-          name: dist
-          path: |
-            packages/*/dist
-            apps/*/dist
-            realms/*/dist
-            node_modules/.prisma/client
-
-  lint:
+  check:
     name: Check
     runs-on: ubuntu-latest
     needs: build
+    timeout-minutes: 5
 
     steps:
       - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - uses: actions/download-artifact@v8
-        with:
-          name: dist
+      - uses: ./.github/actions/setup
 
       - name: Check
-        run: npm run check
+        run: pnpm run check:ci
+
+      - name: Check workspace READMEs
+        if: always()
+        run: npx turbo run docs -- --check
+
+      - name: Check root index READMEs
+        if: always()
+        run: ./tools/poe/bin/poe index --check realms tools packages apps
 
   test:
     name: Test
     runs-on: ubuntu-latest
     needs: build
-
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - uses: actions/download-artifact@v8
-        with:
-          name: dist
-
-      - name: Test
-        run: npx turbo test:unit
-
-  docs:
-    name: Docs
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - uses: actions/download-artifact@v8
-        with:
-          name: dist
-
-      - name: Relink workspace bins
-        run: |
-          chmod +x packages/poe/dist/index.js
-          npm rebuild --workspaces
-
-      - name: Regenerate docs
-        run: npx turbo run docs
-
-      - name: Assert docs are up to date
-        run: |
-          if ! git diff --quiet; then
-            echo "::error::README files are out of date. Run 'npm run docs' and commit the result."
-            git diff
-            exit 1
-          fi
-
-  test-api:
-    name: API Tests (${{ matrix.realm }})
-    runs-on: ubuntu-latest
-    needs: build
-
-    strategy:
-      fail-fast: false
-      matrix:
-        realm: [citizen, universe]
+    timeout-minutes: 15
 
     services:
       postgres:
@@ -142,20 +69,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
 
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-          cache: 'npm'
+      - name: Unit + Flow
+        run: npx turbo test:unit test:flow
 
-      - name: Install dependencies
-        run: npm ci
-
-      - uses: actions/download-artifact@v8
-        with:
-          name: dist
-
-      - name: API Tests
-        run: npx turbo test:api --filter=${{ matrix.realm }}
+      - name: API Tests (citizen)
+        if: always()
+        run: npx turbo test:api --filter=citizen
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/${{ matrix.realm }}
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/citizen
+
+      - name: API Tests (codex)
+        if: always()
+        run: npx turbo test:api --filter=codex
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/codex
+
+      - name: API Tests (universe)
+        if: always()
+        run: npx turbo test:api --filter=universe
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/universe

@@ -27,7 +27,7 @@ A melancholic and meticulous Inspector Poe studies the code and organizes the pr
 ### Bash command example
 
 ```sh
-poe inspect packages/zok
+poe inspect tools/zok
 
 inspecting zok...
 classes found: 23

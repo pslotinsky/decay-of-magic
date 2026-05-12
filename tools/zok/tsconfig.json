@@ -1,0 +1,15 @@
+{
+  "extends": "../../packages/config/tsconfig/node.json",
+  "compilerOptions": {
+    "target": "es2024",
+    "ignoreDeprecations": "6.0",
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "strict": true
+  },
+  "include": ["src/**/*", "test/**/*"]
+}

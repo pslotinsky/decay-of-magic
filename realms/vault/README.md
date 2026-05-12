@@ -1,34 +1,42 @@
 # Vault service
 
+<!-- poe:header:start -->
+File vault — upload, storage, and serving of assets
+
+**On this page**
+
+- [Frontier](#frontier)
+- [Law](#law)
+- [Lore](#lore)
+<!-- poe:header:end -->
+
 Manages files: upload, storage, etc
 
 <!-- poe:classes:start -->
-## Classes
+## Frontier
 
-### Frontier
-
-#### [File](src/frontier/gates/file.gate.ts)
+### [File](src/frontier/gates/file.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
-| POST /v1/file | Params: `(body: UploadFileDto, uploadedFile: Express.Multer.File)`<br>Returns: `FileDto` |
+| POST /v1/file | Param `body`: [`UploadFileDto`](../../packages/api-contract/src/contracts/vault.ts#L54)<br>Param `uploadedFile`: `Express`.`Multer`.[`File`](src/lore/file.entity.ts#L12)<br>Returns: [`FileDto`](../../packages/api-contract/src/contracts/vault.ts#L10) |
 
-#### [Health](src/frontier/gates/health.gate.ts)
+### [Health](src/frontier/gates/health.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
 | GET /v1/health | Returns: `HealthCheckResult` |
 
-### Law
+## Law
 
-#### File
+### File
 
 | Use case | Description |
 |----------|-------------|
-| [TransformFileCommand](src/law/commands/transform-file.command.ts) | Params: `(file: File, transform: FileTransform)`<br>Returns: `File` |
-| [UploadFileCommand](src/law/commands/upload-file.command.ts) | Params: `(file: File, transform: FileTransform)`<br>Returns: `FileDto` |
+| [TransformFileCommand](src/law/commands/transform-file.command.ts#L10) | Param `file`: [`File`](src/lore/file.entity.ts#L12)<br>Param `transform`: `FileTransform`<br>Returns: [`File`](src/lore/file.entity.ts#L12) |
+| [UploadFileCommand](src/law/commands/upload-file.command.ts#L28) | Param `file`: [`File`](src/lore/file.entity.ts#L12)<br>Param `transform`: `FileTransform`<br>Returns: [`FileDto`](../../packages/api-contract/src/contracts/vault.ts#L10) |
 
-### Lore
+## Lore
 
 ```mermaid
 classDiagram
@@ -45,5 +53,9 @@ classDiagram
 
 | Entity |
 |--------|
-| [File](src/lore/file.entity.ts) |
+| [File](src/lore/file.entity.ts#L12) |
 <!-- poe:classes:end -->
+
+<!-- poe:footer:start -->
+> This document was inspected and assembled by Inspector Poe.
+<!-- poe:footer:end -->

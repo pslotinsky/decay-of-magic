@@ -21,7 +21,9 @@ export class CreateUniverseCommand extends Command<UniverseDto> {
 }
 
 @CommandHandler(CreateUniverseCommand)
-export class CreateUniverseHandler implements ICommandHandler<CreateUniverseCommand> {
+export class CreateUniverseHandler
+  implements ICommandHandler<CreateUniverseCommand>
+{
   @Inject() private readonly universeRepository!: UniverseRepository;
 
   public async execute({

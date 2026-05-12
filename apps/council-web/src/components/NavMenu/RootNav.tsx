@@ -1,7 +1,7 @@
 import { Globe, Users } from 'lucide-react';
 import { NavLink } from 'react-router';
 
-import { navLinkClass, NavMenu } from './NavMenu';
+import { NavMenu, navLinkClass } from './NavMenu';
 
 import styles from './NavMenu.module.scss';
 

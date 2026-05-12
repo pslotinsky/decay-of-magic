@@ -3,7 +3,7 @@
 | Field     | Value                                                                                           |
 | --------- | ----------------------------------------------------------------------------------------------- |
 | Status    | Done |
-| Milestone | [Platform Baseline & Consistency](../milestones/Milestone-004_platform-baseline-consistency.md) |
+| Milestone | [Tidy Up](../milestones/Milestone-004_tidy-up.md) |
 | Created   | 2026-04-19                                                                                      |
 
 ## Description

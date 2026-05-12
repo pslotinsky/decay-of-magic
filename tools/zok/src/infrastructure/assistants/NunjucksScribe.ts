@@ -1,0 +1,85 @@
+import { join } from 'node:path';
+
+import { format } from 'date-fns';
+import nunjucks from 'nunjucks';
+import prettier from 'prettier';
+
+import { Scribe } from '@/domain/assistants';
+import {
+  type DocumentLink,
+  type DocumentMetadata,
+  Dossier,
+  type FieldDefinition,
+  FieldType,
+  type Plea,
+} from '@/domain/entities';
+
+const { ZOK_TEMPLATES_PATH = join(__dirname, '../../../config/templates') } =
+  process.env;
+
+export class NunjucksScribe extends Scribe {
+  public readonly dossier = new Dossier({
+    name: 'Mira',
+    age: 26,
+    race: 'Human',
+    gender: 'female',
+    bio: 'Firmly convinced she is destined to become the greatest author in history. Temporarily tolerates clerical work while awaiting recognition of her genius.',
+  });
+
+  private readonly env: nunjucks.Environment;
+
+  constructor() {
+    super();
+
+    this.env = nunjucks.configure(ZOK_TEMPLATES_PATH, {
+      autoescape: false,
+    });
+
+    this.env.addFilter('time', (date: Date) => date.toTimeString().slice(0, 8));
+  }
+
+  public renderRecord(plea: Plea): Promise<string> {
+    return Promise.resolve(this.env.render('plea-record.nj', { plea }).trim());
+  }
+
+  protected async fillDocumentContent(
+    metadata: DocumentMetadata,
+  ): Promise<string> {
+    const { protocol } = metadata;
+    const templateName = protocol.template;
+    const fields = this.formatFields(metadata);
+    const document = { ...metadata, fields };
+
+    try {
+      const raw = this.env.render(templateName, { document });
+
+      return prettier.format(raw, { parser: 'markdown' });
+    } catch (error) {
+      throw new Error(
+        `Failed to render document: ${metadata.id} with template: ${templateName} → ${String(error)}`,
+        { cause: error },
+      );
+    }
+  }
+
+  private formatFields(metadata: DocumentMetadata): Record<string, unknown> {
+    const entries = Object.entries(metadata.fields).map(([key, value]) => {
+      const field = metadata.protocol.getField(key);
+
+      return [field.name, this.formatField(field, value)] as [string, string];
+    });
+
+    return Object.fromEntries(entries);
+  }
+
+  private formatField(field: FieldDefinition, value: unknown): string {
+    switch (field.type) {
+      case FieldType.Date:
+        return format(value as Date, 'yyyy-MM-dd');
+      case FieldType.Link:
+        return value ? (value as DocumentLink).toString() : '';
+      default:
+        return value ? (value as string) : '';
+    }
+  }
+}

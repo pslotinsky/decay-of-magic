@@ -19,6 +19,8 @@ export function Card({
   onClick,
 }: Props) {
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: clickable card surface; semantic button would break grid layout
+    // biome-ignore lint/a11y/useKeyWithClickEvents: card interaction is mouse-driven; keyboard reaches inner controls
     <div
       className={clsx(
         styles.card,

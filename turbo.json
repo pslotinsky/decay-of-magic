@@ -7,7 +7,7 @@
       "outputs": ["dist/**"]
     },
     "prisma:generate": {
-      "outputs": ["../../node_modules/.prisma/client/**"]
+      "outputs": ["prisma/generated/**"]
     },
     "dev": {
       "dependsOn": ["^build"],
@@ -15,25 +15,23 @@
       "cache": false
     },
     "test:unit": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build", "prisma:generate"]
+    },
+    "test:flow": {
+      "dependsOn": ["^build", "prisma:generate"]
     },
     "test:api": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "prisma:generate"],
       "cache": false
     },
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build", "prisma:generate"]
     },
-    "lint": {},
-    "typecheck": {},
-    "format": {
-      "cache": false
-    },
-    "format:check": {
-      "cache": false
+    "typecheck": {
+      "dependsOn": ["^build", "prisma:generate"]
     },
     "docs": {
-      "dependsOn": ["@dod/poe#build"],
+      "dependsOn": ["poe#build"],
       "cache": false
     }
   }

@@ -1,8 +1,8 @@
-import { z } from 'zod';
+import type { z } from 'zod';
 
-import { DEFAULT_UNIVERSE_SETTINGS } from '../src/contracts/universe';
 import {
   CreateUniverseSchema,
+  DEFAULT_UNIVERSE_SETTINGS,
   UniverseSchema,
   UniverseSettingsSchema,
   UniverseSummarySchema,

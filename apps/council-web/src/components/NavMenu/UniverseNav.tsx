@@ -10,7 +10,7 @@ import type { ComponentType } from 'react';
 import { NavLink } from 'react-router';
 
 import { useUniverse } from '../../api/universe';
-import { navLinkClass, NavMenu } from './NavMenu';
+import { NavMenu, navLinkClass } from './NavMenu';
 
 import styles from './NavMenu.module.scss';
 

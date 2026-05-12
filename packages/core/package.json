@@ -1,6 +1,7 @@
 {
   "name": "@dod/core",
   "version": "0.0.1",
+  "description": "Framework-agnostic runtime kernels — Entity, ZodBody, error types",
   "private": true,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -23,7 +24,7 @@
     "docs": "poe inspect"
   },
   "dependencies": {
-    "@dod/api-contract": "*",
+    "@dod/api-contract": "workspace:*",
     "lodash": "^4.18.1"
   },
   "peerDependencies": {
@@ -33,10 +34,11 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@dod/config": "*",
+    "@dod/config": "workspace:*",
     "@nestjs/common": "^11.1.19",
     "@nestjs/core": "^11.1.19",
     "@types/lodash": "^4.17.24",
+    "@types/node": "^25.6.2",
     "eslint": "^10.3.0",
     "prettier": "^3.8.3",
     "rxjs": "^7.8.2",

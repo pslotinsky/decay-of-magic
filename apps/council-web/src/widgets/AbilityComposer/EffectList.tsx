@@ -4,8 +4,8 @@ import type { EffectDto } from '@dod/api-contract';
 
 import { Button } from '@/components/Button';
 
-import { defaultEffect } from './abilities';
 import type { AbilityComposerContext } from './AbilityComposer';
+import { defaultEffect } from './abilities';
 import { EffectEditor } from './EffectEditor';
 
 import styles from './AbilityComposer.module.scss';

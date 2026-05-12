@@ -12,8 +12,8 @@ import type {
 import { Button } from '@/components/Button';
 import { ExpressionEditorProvider } from '@/widgets/ExpressionEditor';
 
-import { defaultAbility } from './abilities';
 import { AbilityEditor } from './AbilityEditor';
+import { defaultAbility } from './abilities';
 
 import styles from './AbilityComposer.module.scss';
 
