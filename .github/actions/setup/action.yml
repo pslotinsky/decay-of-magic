@@ -1,5 +1,5 @@
 name: Setup
-description: Install Node, restore turbo cache, install npm dependencies
+description: Install Node, restore caches, install npm dependencies if needed
 
 runs:
   using: composite
@@ -9,7 +9,19 @@ runs:
         node-version: '24'
         cache: npm
 
-    - uses: actions/cache@v4
+    - name: Restore node_modules
+      id: node-modules
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+    - if: steps.node-modules.outputs.cache-hit != 'true'
+      shell: bash
+      run: npm ci
+
+    - name: Restore turbo cache
+      uses: actions/cache@v4
       with:
         path: |
           .turbo
@@ -20,6 +32,3 @@ runs:
         key: turbo-${{ runner.os }}-${{ github.sha }}
         restore-keys: |
           turbo-${{ runner.os }}-
-
-    - shell: bash
-      run: npm ci

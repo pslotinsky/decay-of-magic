@@ -7,7 +7,7 @@
       "outputs": ["dist/**"]
     },
     "prisma:generate": {
-      "outputs": ["../../node_modules/.prisma/client/**"]
+      "outputs": ["prisma/generated/**"]
     },
     "dev": {
       "dependsOn": ["^build"],
