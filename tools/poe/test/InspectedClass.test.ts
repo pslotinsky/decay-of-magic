@@ -9,6 +9,7 @@ function cls(name: string, members?: InspectedClassMember[]): InspectedClass {
   return new InspectedClass({
     name,
     file: 'Foo.ts',
+    line: 1,
     layer: 'root',
     body: '',
     abstract: false,

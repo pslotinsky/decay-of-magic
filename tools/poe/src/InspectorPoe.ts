@@ -1,11 +1,13 @@
 import { readFile } from 'fs/promises';
 import { basename, join, resolve } from 'path';
 
+import { ClassRegistry } from './ClassRegistry/ClassRegistry';
 import { ClassRegistryParser } from './ClassRegistryParser/ClassRegistryParser';
 import { ConfigLoader } from './Config/ConfigLoader';
 import { HeaderBuilder } from './ReadmeWriter/HeaderBuilder';
 import { PackageReport } from './ReadmeWriter/PackageReport';
 import { ReadmeWriter } from './ReadmeWriter/ReadmeWriter';
+import { ExternalTypeScanner } from './Scanner/ExternalTypeScanner';
 import { Scanner } from './Scanner/Scanner';
 import { SchemaReader } from './Schema/SchemaReader';
 
@@ -35,7 +37,18 @@ export class InspectorPoe {
       new Scanner(packagePath, config.layers).scan(),
       this.schemaReader.read(packagePath),
     ]);
-    const classes = new ClassRegistryParser().parse(files, schema);
+    const parsed = new ClassRegistryParser().parse(files, schema);
+    const externalTypes = await new ExternalTypeScanner().scan(
+      packagePath,
+      parsed.externalSources,
+    );
+    const classes = new ClassRegistry(
+      parsed.items,
+      parsed.externalSources,
+      parsed.endpoints,
+      parsed.schema,
+      externalTypes,
+    );
 
     console.info(`classes found: ${classes.items.length}`);
 

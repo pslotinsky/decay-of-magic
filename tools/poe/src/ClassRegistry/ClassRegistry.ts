@@ -1,6 +1,12 @@
 import { Endpoint } from '../Endpoints/Endpoint';
+import { ExternalTypeLocation } from '../Scanner/ExternalTypeScanner';
 import { PrismaSchema } from '../Schema/PrismaSchema';
 import { InspectedClass } from './InspectedClass';
+
+export type Location = {
+  file: string;
+  line: number;
+};
 
 /**
  * Collection of inspected classes plus any extracted endpoints and schema
@@ -12,12 +18,26 @@ export class ClassRegistry {
     public readonly externalSources: Map<string, string> = new Map(),
     public readonly endpoints: Endpoint[] = [],
     public readonly schema: PrismaSchema | undefined = undefined,
+    public readonly externalTypes: Map<
+      string,
+      ExternalTypeLocation
+    > = new Map(),
   ) {
     this.classMap = new Map(items.map((cls) => [cls.name, cls]));
   }
 
   public getExternalSource(name: string): string | undefined {
     return this.externalSources.get(name);
+  }
+
+  public getLocation(name: string): Location | undefined {
+    const cls = this.classMap.get(name);
+
+    if (cls) {
+      return { file: cls.file, line: cls.line };
+    }
+
+    return this.externalTypes.get(name);
   }
 
   public get isEmpty(): boolean {

@@ -34,11 +34,11 @@ classDiagram
 
 | Entity | Description |
 |--------|-------------|
-| [AppModule](src/app.module.ts) | Implements `NestModule` |
-| auth/[JwtMiddleware](src/auth/jwt.middleware.ts) | Implements `NestMiddleware` |
-| citizen/[CitizenController](src/citizen/citizen.controller.ts) |  |
-| health/[HealthController](src/health/health.controller.ts) |  |
-| session/[SessionController](src/session/session.controller.ts) |  |
+| [AppModule](src/app.module.ts#L47) | Implements `NestModule` |
+| auth/[JwtMiddleware](src/auth/jwt.middleware.ts#L8) | Implements `NestMiddleware` |
+| citizen/[CitizenController](src/citizen/citizen.controller.ts#L5) |  |
+| health/[HealthController](src/health/health.controller.ts#L11) |  |
+| session/[SessionController](src/session/session.controller.ts#L20) |  |
 <!-- poe:classes:end -->
 
 <!-- poe:footer:start -->

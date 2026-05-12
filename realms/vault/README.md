@@ -17,7 +17,7 @@ Manages files: upload, storage, etc
 
 | Endpoint | Description |
 |----------|-------------|
-| POST /v1/file | Params: `(body: UploadFileDto, uploadedFile: Express.Multer.File)`<br>Returns: `FileDto` |
+| POST /v1/file | Param `body`: [`UploadFileDto`](../../packages/api-contract/src/contracts/vault.ts#L54)<br>Param `uploadedFile`: `Express`.`Multer`.[`File`](src/lore/file.entity.ts#L12)<br>Returns: [`FileDto`](../../packages/api-contract/src/contracts/vault.ts#L10) |
 
 ### [Health](src/frontier/gates/health.gate.ts)
 
@@ -31,8 +31,8 @@ Manages files: upload, storage, etc
 
 | Use case | Description |
 |----------|-------------|
-| [TransformFileCommand](src/law/commands/transform-file.command.ts) | Params: `(file: File, transform: FileTransform)`<br>Returns: `File` |
-| [UploadFileCommand](src/law/commands/upload-file.command.ts) | Params: `(file: File, transform: FileTransform)`<br>Returns: `FileDto` |
+| [TransformFileCommand](src/law/commands/transform-file.command.ts#L10) | Param `file`: [`File`](src/lore/file.entity.ts#L12)<br>Param `transform`: `FileTransform`<br>Returns: [`File`](src/lore/file.entity.ts#L12) |
+| [UploadFileCommand](src/law/commands/upload-file.command.ts#L28) | Param `file`: [`File`](src/lore/file.entity.ts#L12)<br>Param `transform`: `FileTransform`<br>Returns: [`FileDto`](../../packages/api-contract/src/contracts/vault.ts#L10) |
 
 ## Lore
 
@@ -51,7 +51,7 @@ classDiagram
 
 | Entity |
 |--------|
-| [File](src/lore/file.entity.ts) |
+| [File](src/lore/file.entity.ts#L12) |
 <!-- poe:classes:end -->
 
 <!-- poe:footer:start -->

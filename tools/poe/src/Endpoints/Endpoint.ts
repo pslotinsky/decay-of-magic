@@ -9,7 +9,7 @@ export class Endpoint {
     public readonly method: string,
     public readonly path: string,
     public readonly handler: string,
-    public readonly params?: string,
+    public readonly params: readonly string[] = [],
     public readonly returns?: string,
     public readonly description?: string,
   ) {}

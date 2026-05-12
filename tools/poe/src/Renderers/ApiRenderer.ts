@@ -3,6 +3,7 @@ import { InspectedClass } from '../ClassRegistry/InspectedClass';
 import { LayerConfig } from '../Config/PoeConfig';
 import { Endpoint } from '../Endpoints/Endpoint';
 import { Renderer } from './Renderer';
+import { TypeLinker } from './TypeLinker';
 
 /**
  * Renders a layer as per-controller endpoint tables
@@ -19,11 +20,12 @@ export class ApiRenderer implements Renderer {
       return '';
     }
 
+    const linker = new TypeLinker(registry);
     const groups = this.groupByController(endpoints);
 
     return Object.entries(groups)
       .map(([className, controllerEndpoints]) =>
-        this.renderController(className, controllerEndpoints),
+        this.renderController(className, controllerEndpoints, linker),
       )
       .join('\n\n');
   }
@@ -38,47 +40,39 @@ export class ApiRenderer implements Renderer {
     return groups;
   }
 
-  private renderController(className: string, endpoints: Endpoint[]): string {
+  private renderController(
+    className: string,
+    endpoints: Endpoint[],
+    linker: TypeLinker,
+  ): string {
     const title = this.controllerTitle(className);
     const file = endpoints[0].file;
     const rows = [
       '| Endpoint | Description |',
       '|----------|-------------|',
-      ...endpoints.map((endpoint) => this.row(endpoint)),
+      ...endpoints.map((endpoint) => this.row(endpoint, linker)),
     ];
 
     return `### [${title}](${file})\n\n${rows.join('\n')}`;
   }
 
-  private row(endpoint: Endpoint): string {
+  private row(endpoint: Endpoint, linker: TypeLinker): string {
     const name = `${endpoint.method} ${endpoint.path}`;
-    const description = this.descriptionCell(endpoint);
+    const description = this.descriptionCell(endpoint, linker);
 
     return `| ${name} | ${description} |`;
   }
 
-  private descriptionCell(endpoint: Endpoint): string {
-    const lines: string[] = [];
-
-    if (endpoint.params) {
-      lines.push(`Params: \`${this.escape(`(${endpoint.params})`)}\``);
-    }
-
-    if (endpoint.returns) {
-      lines.push(`Returns: \`${this.escape(endpoint.returns)}\``);
-    }
-
-    const signature = lines.join('<br>');
+  private descriptionCell(endpoint: Endpoint, linker: TypeLinker): string {
+    const signature = linker
+      .renderSignature(endpoint.params, endpoint.returns)
+      .join('<br>');
     const paragraphs: string[] = [];
 
     if (signature) paragraphs.push(signature);
     if (endpoint.description) paragraphs.push(endpoint.description);
 
     return paragraphs.join('<br><br>');
-  }
-
-  private escape(text: string): string {
-    return text.replace(/\|/g, '\\|');
   }
 
   private controllerTitle(className: string): string {

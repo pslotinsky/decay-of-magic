@@ -1,6 +1,8 @@
+import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
 import { InspectedClass } from '../ClassRegistry/InspectedClass';
 import { LayerConfig } from '../Config/PoeConfig';
 import { Renderer } from './Renderer';
+import { TypeLinker } from './TypeLinker';
 
 const HANDLER_INTERFACES = new Set(['ICommandHandler', 'IQueryHandler']);
 
@@ -12,7 +14,11 @@ const OTHER_GROUP = 'Other';
  * hidden as implementation detail.
  */
 export class ApplicationRenderer implements Renderer {
-  public render(_layer: LayerConfig, classes: InspectedClass[]): string {
+  public render(
+    _layer: LayerConfig,
+    classes: InspectedClass[],
+    registry: ClassRegistry,
+  ): string {
     const visible = classes.filter((cls) => this.isVisible(cls));
     const useCases = visible.filter((cls) => cls.parent !== undefined);
     const entryPoints = visible.filter((cls) => cls.parent === undefined);
@@ -21,6 +27,7 @@ export class ApplicationRenderer implements Renderer {
       return '';
     }
 
+    const linker = new TypeLinker(registry);
     const sections: string[] = [];
 
     if (entryPoints.length > 0) {
@@ -28,7 +35,7 @@ export class ApplicationRenderer implements Renderer {
     }
 
     for (const [entity, group] of this.groupByEntity(useCases)) {
-      sections.push(this.renderEntitySection(entity, group));
+      sections.push(this.renderEntitySection(entity, group, linker));
     }
 
     return sections.join('\n\n');
@@ -71,11 +78,12 @@ export class ApplicationRenderer implements Renderer {
   private renderEntitySection(
     entity: string,
     useCases: InspectedClass[],
+    linker: TypeLinker,
   ): string {
     const rows = [
       '| Use case | Description |',
       '|----------|-------------|',
-      ...useCases.map((cls) => this.useCaseRow(cls)),
+      ...useCases.map((cls) => this.useCaseRow(cls, linker)),
     ];
 
     return `### ${entity}\n\n${rows.join('\n')}`;
@@ -101,15 +109,16 @@ export class ApplicationRenderer implements Renderer {
     return !cls.interfaces?.some((name) => HANDLER_INTERFACES.has(name));
   }
 
-  private useCaseRow(cls: InspectedClass): string {
-    const description = this.descriptionCell(cls);
+  private useCaseRow(cls: InspectedClass, linker: TypeLinker): string {
+    const description = this.descriptionCell(cls, linker);
 
     return `| ${cls.link} | ${description} |`;
   }
 
-  private descriptionCell(cls: InspectedClass): string {
-    const signatureLines = this.signatureLines(cls);
-    const signature = signatureLines.join('<br>');
+  private descriptionCell(cls: InspectedClass, linker: TypeLinker): string {
+    const signature = linker
+      .renderSignature(this.params(cls), this.returnType(cls) || undefined)
+      .join('<br>');
     const paragraphs: string[] = [];
 
     if (signature) {
@@ -123,42 +132,12 @@ export class ApplicationRenderer implements Renderer {
     return paragraphs.join('<br><br>');
   }
 
-  private signatureLines(cls: InspectedClass): string[] {
-    const lines: string[] = [];
-
-    const params = this.params(cls);
-
-    if (params) {
-      lines.push(`Params: \`${this.escape(params)}\``);
-    }
-
-    const returnType = this.returnType(cls);
-
-    if (returnType) {
-      lines.push(`Returns: \`${this.escape(returnType)}\``);
-    }
-
-    return lines;
-  }
-
-  private escape(text: string): string {
-    return text.replace(/\|/g, '\\|');
-  }
-
-  private params(cls: InspectedClass): string {
+  private params(cls: InspectedClass): string[] {
     const fields = (cls.members ?? []).filter((member) => !member.isMethod);
 
-    if (fields.length === 0) {
-      return '';
-    }
-
-    const args = fields
-      .map((member) =>
-        member.type ? `${member.name}: ${member.type}` : member.name,
-      )
-      .join(', ');
-
-    return `(${args})`;
+    return fields.map((member) =>
+      member.type ? `${member.name}: ${member.type}` : member.name,
+    );
   }
 
   private returnType(cls: InspectedClass): string {

@@ -106,7 +106,7 @@ export class EndpointExtractor {
   private findMethodSignature(
     body: string,
     fromIndex: number,
-  ): { name: string; params: string; returns?: string } | undefined {
+  ): { name: string; params: string[]; returns?: string } | undefined {
     METHOD_SIGNATURE_PATTERN.lastIndex = fromIndex;
     const match = METHOD_SIGNATURE_PATTERN.exec(body);
 
@@ -126,18 +126,14 @@ export class EndpointExtractor {
     return { name, params, returns };
   }
 
-  private stripParams(raw: string): string {
+  private stripParams(raw: string): string[] {
     const collapsed = raw.replace(/\s+/g, ' ').trim();
 
-    if (!collapsed) return '';
+    if (!collapsed) return [];
 
-    // Split on top-level commas and strip decorators/defaults from each part
-    const parts = this.splitTopLevel(collapsed, ',');
-
-    return parts
+    return this.splitTopLevel(collapsed, ',')
       .map((part) => this.stripParamAnnotations(part))
-      .filter(Boolean)
-      .join(', ');
+      .filter((part) => part.length > 0);
   }
 
   private stripParamAnnotations(param: string): string {

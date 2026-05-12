@@ -7,6 +7,7 @@ export { InspectedClassRelation } from './InspectedClassRelation';
 type InspectedClassParams = {
   name: string;
   file: string;
+  line: number;
   layer: string;
   body: string;
   abstract: boolean;
@@ -32,6 +33,7 @@ export class InspectedClass {
 
   readonly name: string;
   readonly file: string;
+  readonly line: number;
   readonly layer: string;
   readonly body: string;
   readonly abstract: boolean;
@@ -46,6 +48,7 @@ export class InspectedClass {
   constructor(params: InspectedClassParams) {
     this.name = params.name;
     this.file = params.file;
+    this.line = params.line;
     this.layer = params.layer;
     this.body = params.body;
     this.abstract = params.abstract;
@@ -59,7 +62,11 @@ export class InspectedClass {
   }
 
   public get link(): string {
-    return `[${this.name}](${this.file})`;
+    return `[${this.name}](${this.location})`;
+  }
+
+  public get location(): string {
+    return `${this.file}#L${this.line}`;
   }
 
   public isEqual(other: InspectedClass): boolean {

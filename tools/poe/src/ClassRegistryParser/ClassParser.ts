@@ -48,11 +48,13 @@ export class ClassParser {
       const body =
         this.extractDeclarationTail(this.file.content, bodyStart) +
         this.extractClassBody(this.file.content, bodyStart);
+      const line = this.lineOf(match.index);
 
       results.push(
         new InspectedClass({
           name,
           file: this.file.path,
+          line,
           layer: this.file.layer,
           body,
           abstract: !!abstractKeyword,
@@ -215,6 +217,18 @@ export class ClassParser {
     }
 
     return members;
+  }
+
+  private lineOf(offset: number): number {
+    let line = 1;
+
+    for (let pos = 0; pos < offset; pos++) {
+      if (this.file.content[pos] === '\n') {
+        line++;
+      }
+    }
+
+    return line;
   }
 
   private extractFieldTypes(body: string): string[] {
