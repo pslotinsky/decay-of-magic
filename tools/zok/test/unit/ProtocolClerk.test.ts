@@ -28,4 +28,29 @@ test.describe('Unit: ProtocolClerk', () => {
 
     assert.throws(() => protocolist.getProtocol('goblin'), NotFoundError);
   });
+
+  test(`infers protocol from a document id prefix`, async () => {
+    const protocolist = await MockFactory.createInitializedProtocolClerk();
+
+    const protocol = protocolist.findByDocumentId('DOD-0001');
+
+    assert.strictEqual(protocol.id, protocols.task.id);
+  });
+
+  test(`infers milestone protocol from a milestone id`, async () => {
+    const protocolist = await MockFactory.createInitializedProtocolClerk();
+
+    const protocol = protocolist.findByDocumentId('Milestone-006');
+
+    assert.strictEqual(protocol.id, protocols.milestone.id);
+  });
+
+  test(`throws NotFoundError when prefix does not match any protocol`, async () => {
+    const protocolist = await MockFactory.createInitializedProtocolClerk();
+
+    assert.throws(
+      () => protocolist.findByDocumentId('Goblin-0001'),
+      NotFoundError,
+    );
+  });
 });

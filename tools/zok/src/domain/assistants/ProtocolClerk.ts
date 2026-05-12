@@ -25,6 +25,18 @@ export abstract class ProtocolClerk extends Assistant {
     return this.protocols.has(id);
   }
 
+  public findByDocumentId(documentId: string): DocumentProtocol {
+    const prefix = documentId.split('-')[0];
+    const protocols = Array.from(this.protocols.values());
+    const protocol = protocols.find((candidate) => candidate.prefix === prefix);
+
+    if (!protocol) {
+      throw new NotFoundError(DocumentProtocol.Name, { documentId });
+    }
+
+    return protocol;
+  }
+
   public getChildProtocols(parentProtocolId: string): DocumentProtocol[] {
     const protocols = Array.from(this.protocols.values());
 

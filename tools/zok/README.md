@@ -70,6 +70,7 @@ classDiagram
       #Map protocols
       +getProtocol()
       +hasProtocol()
+      +findByDocumentId()
       +getChildProtocols()
       #findByAlias()
     }

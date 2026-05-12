@@ -154,6 +154,10 @@ export class Zok {
     return this.assistants.archiveKeeper.find({ protocol, prefix });
   }
 
+  public inferProtocolFromDocumentId(documentId: string): string {
+    return this.assistants.protocolClerk.findByDocumentId(documentId).id;
+  }
+
   public async init(): Promise<void> {
     for (const assistant of Object.values(this.assistants)) {
       await assistant.init();
