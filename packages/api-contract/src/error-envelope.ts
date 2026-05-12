@@ -1,4 +1,4 @@
-import { ErrorCode } from './codes';
+import type { ErrorCode } from './codes';
 
 export type ErrorDetail = {
   code: string;

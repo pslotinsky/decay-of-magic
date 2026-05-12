@@ -1,7 +1,7 @@
 import {
-  PrismaField,
+  type PrismaField,
   PrismaModel,
-  PrismaRelation,
+  type PrismaRelation,
   PrismaSchema,
 } from './PrismaSchema';
 

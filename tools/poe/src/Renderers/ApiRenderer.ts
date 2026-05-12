@@ -1,8 +1,8 @@
-import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
-import { InspectedClass } from '../ClassRegistry/InspectedClass';
-import { LayerConfig } from '../Config/PoeConfig';
-import { Endpoint } from '../Endpoints/Endpoint';
-import { Renderer } from './Renderer';
+import type { ClassRegistry } from '../ClassRegistry/ClassRegistry';
+import type { InspectedClass } from '../ClassRegistry/InspectedClass';
+import type { LayerConfig } from '../Config/PoeConfig';
+import type { Endpoint } from '../Endpoints/Endpoint';
+import type { Renderer } from './Renderer';
 import { TypeLinker } from './TypeLinker';
 
 /**

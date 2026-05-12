@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import test, { beforeEach } from 'node:test';
 
-import { Zok } from '@/application/Zok';
+import type { Zok } from '@/application/Zok';
 import { NotFoundError } from '@/domain/errors';
 
 import { createTask, listDocuments } from '../helpers/document';

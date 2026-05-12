@@ -1,4 +1,4 @@
-import { DocumentToc } from '@/domain/entities';
+import type { DocumentToc } from '@/domain/entities';
 import { MalformedDocumentError } from '@/domain/errors';
 
 import { DocumentTocLineParser } from './DocumentTocLineParser';
@@ -17,7 +17,7 @@ export class DocumentTocParser {
   }
 
   public parse(): DocumentToc | undefined {
-    let toc = undefined;
+    let toc: DocumentToc | undefined;
     const lines = this.content.split('\n').map((item) => item.trim());
     const startIndex = lines.findIndex((line) =>
       line.startsWith('<!-- TOC.START'),

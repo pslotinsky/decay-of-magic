@@ -11,7 +11,7 @@ async function bootstrap() {
   app.use(helmet());
   app.useGlobalInterceptors(new EnvelopeInterceptor(app.get(Reflector)));
 
-  await app.listen(process.env['PORT'] ?? 3000);
+  await app.listen(process.env.PORT ?? 3000);
 }
 
 void bootstrap();

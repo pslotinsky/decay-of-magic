@@ -1,5 +1,5 @@
-import { Zok } from '@/application/Zok';
-import { Document, PleaType } from '@/domain/entities';
+import type { Zok } from '@/application/Zok';
+import { type Document, PleaType } from '@/domain/entities';
 
 export async function createMilestone(
   zok: Zok,

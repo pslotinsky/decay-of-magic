@@ -6,15 +6,17 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "test": "turbo test",
-    "lint": "turbo lint",
     "typecheck": "turbo typecheck",
-    "format": "turbo format",
-    "check": "turbo format:check && turbo lint && turbo typecheck && pnpm run knip",
+    "format": "biome format --write",
+    "lint": "biome lint --write",
+    "check": "biome check --write && turbo typecheck && pnpm run knip",
+    "check:ci": "biome check && turbo typecheck && pnpm run knip",
     "docs": "turbo run docs && pnpm run docs:index",
     "docs:index": "./tools/poe/bin/poe index realms tools packages apps",
     "knip": "knip"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.15",
     "knip": "^6.12.2",
     "turbo": "^2.9.12"
   }

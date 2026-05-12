@@ -17,7 +17,12 @@
       "entry": ["src/main.ts", "poe.config.mjs", "test/api/*.api-spec.ts"]
     },
     "realms/codex": {
-      "entry": ["src/main.ts", "poe.config.mjs", "test/api/*.api-spec.ts", "test/flow/*.flow-spec.ts"]
+      "entry": [
+        "src/main.ts",
+        "poe.config.mjs",
+        "test/api/*.api-spec.ts",
+        "test/flow/*.flow-spec.ts"
+      ]
     },
     "realms/universe": {
       "entry": ["src/main.ts", "poe.config.mjs", "test/api/*.api-spec.ts"]

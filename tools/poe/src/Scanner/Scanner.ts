@@ -1,8 +1,8 @@
-import { type Dirent } from 'fs';
-import { readdir, readFile } from 'fs/promises';
-import { join } from 'path';
+import type { Dirent } from 'node:fs';
+import { readdir, readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 
-import { LayerConfig } from '../Config/PoeConfig';
+import type { LayerConfig } from '../Config/PoeConfig';
 import { ScannedFile } from './ScannedFile';
 
 /**

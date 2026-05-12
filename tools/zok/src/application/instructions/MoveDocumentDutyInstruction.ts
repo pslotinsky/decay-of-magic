@@ -1,12 +1,12 @@
 import {
   Document,
   DocumentLink,
-  DocumentProtocol,
-  Remark,
+  type DocumentProtocol,
+  type Remark,
 } from '@/domain/entities';
 import { UnexpectedValueError } from '@/domain/errors';
 
-import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
+import { DutyInstruction, type DutyInstructionParams } from './DutyInstruction';
 import { UpdateDocumentRelationsDutyInstruction } from './UpdateDocumentRelationsDutyInstruction';
 
 interface MoveDocumentDutyInstructionParams extends DutyInstructionParams {

@@ -3,8 +3,8 @@ import { mkdir, readdir, readFile, unlink, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { createInterface } from 'node:readline';
 
-import { Document, DocumentProtocol } from '@/domain/entities';
-import { Archive, DocumentQueryObject } from '@/domain/tools';
+import type { Document, DocumentProtocol } from '@/domain/entities';
+import { Archive, type DocumentQueryObject } from '@/domain/tools';
 
 const { DOC_PATH } = process.env;
 const DEFAULT_DOC_PATH = resolve(__dirname, '../../../../../docs');

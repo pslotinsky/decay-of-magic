@@ -1,9 +1,10 @@
-import { access } from 'fs/promises';
+import { access } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { resolve } from 'path';
+
 import { z } from 'zod';
 
-import { PoeConfig, PoeConfigSchema } from './PoeConfig';
+import { type PoeConfig, PoeConfigSchema } from './PoeConfig';
 
 const CONFIG_FILE = 'poe.config.mjs';
 

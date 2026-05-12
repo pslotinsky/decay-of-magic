@@ -27,10 +27,9 @@ function flatten(error: z.ZodError): ErrorDetail[] {
   }));
 }
 
-export class ZodPipe<TSchema extends z.ZodTypeAny> implements PipeTransform<
-  unknown,
-  z.output<TSchema>
-> {
+export class ZodPipe<TSchema extends z.ZodTypeAny>
+  implements PipeTransform<unknown, z.output<TSchema>>
+{
   constructor(private readonly schema: TSchema) {}
 
   public transform(value: unknown): z.output<TSchema> {

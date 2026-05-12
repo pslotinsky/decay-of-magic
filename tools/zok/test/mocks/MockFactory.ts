@@ -1,58 +1,56 @@
 import { Zok } from '@/application/Zok';
-import { Assistant } from '@/domain/assistants';
+import type { Assistant } from '@/domain/assistants';
 
 import { MockArchiveKeeper } from './MockArchiveKeeper';
 import { MockPleaFormalist } from './MockPleaFormalist';
 import { MockProtocolClerk } from './MockProtocolClerk';
 import { MockScribe } from './MockScribe';
 
-export class MockFactory {
-  public static createZok(): Zok {
+export const MockFactory = {
+  createZok(): Zok {
     return Zok.revealItself({
       protocolClerk: MockFactory.createProtocolClerk(),
       archiveKeeper: MockFactory.createArchiveKeeper(),
       pleaFormalist: MockFactory.createPleaFormalist(),
       scribe: MockFactory.createScribe(),
     });
-  }
+  },
 
-  public static createPleaFormalist(): MockPleaFormalist {
+  createPleaFormalist(): MockPleaFormalist {
     return new MockPleaFormalist();
-  }
+  },
 
-  static createProtocolClerk(): MockProtocolClerk {
+  createProtocolClerk(): MockProtocolClerk {
     return new MockProtocolClerk();
-  }
+  },
 
-  public static createArchiveKeeper(): MockArchiveKeeper {
+  createArchiveKeeper(): MockArchiveKeeper {
     return new MockArchiveKeeper();
-  }
+  },
 
-  public static createScribe(): MockScribe {
+  createScribe(): MockScribe {
     return new MockScribe();
-  }
+  },
 
-  public static async createInitializedPleaFormalist(): Promise<MockPleaFormalist> {
-    return MockFactory.initialize(new MockPleaFormalist());
-  }
+  async createInitializedPleaFormalist(): Promise<MockPleaFormalist> {
+    return initialize(new MockPleaFormalist());
+  },
 
-  public static async createInitializedProtocolClerk(): Promise<MockProtocolClerk> {
-    return MockFactory.initialize(new MockProtocolClerk());
-  }
+  async createInitializedProtocolClerk(): Promise<MockProtocolClerk> {
+    return initialize(new MockProtocolClerk());
+  },
 
-  public static async createInitializedArchiveKeeper(): Promise<MockArchiveKeeper> {
-    return MockFactory.initialize(new MockArchiveKeeper());
-  }
+  async createInitializedArchiveKeeper(): Promise<MockArchiveKeeper> {
+    return initialize(new MockArchiveKeeper());
+  },
 
-  public static async createInitializedScribe(): Promise<MockScribe> {
-    return MockFactory.initialize(new MockScribe());
-  }
+  async createInitializedScribe(): Promise<MockScribe> {
+    return initialize(new MockScribe());
+  },
+};
 
-  private static async initialize<T extends Assistant>(
-    assistant: T,
-  ): Promise<T> {
-    await assistant.init();
+async function initialize<T extends Assistant>(assistant: T): Promise<T> {
+  await assistant.init();
 
-    return assistant;
-  }
+  return assistant;
 }

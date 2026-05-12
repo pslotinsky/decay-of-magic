@@ -14,12 +14,12 @@ import {
 } from '@dnd-kit/sortable';
 
 import type { TableColumn } from '@/components/Table';
+import tableStyles from '@/components/Table/Table.module.scss';
 
 import { SortableRow } from './SortableRow';
 import type { Orderable } from './types';
 
 import styles from './SortableTable.module.scss';
-import tableStyles from '@/components/Table/Table.module.scss';
 
 interface Props<T extends Orderable> {
   rows: readonly T[];
@@ -86,7 +86,7 @@ export function SortableTable<T extends Orderable>({
         <table className={tableStyles.table}>
           <thead>
             <tr>
-              <th className={styles.handleCol} aria-hidden="true" />
+              <th className={styles.handleCol} />
               {columns.map((column, index) => (
                 <th key={index}>{column.header}</th>
               ))}

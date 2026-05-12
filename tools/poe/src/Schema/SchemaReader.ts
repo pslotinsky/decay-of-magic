@@ -1,7 +1,7 @@
-import { readFile } from 'fs/promises';
-import { resolve } from 'path';
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 
-import { PrismaSchema } from './PrismaSchema';
+import type { PrismaSchema } from './PrismaSchema';
 import { SchemaParser } from './SchemaParser';
 
 const DEFAULT_SCHEMA_PATH = 'prisma/schema.prisma';

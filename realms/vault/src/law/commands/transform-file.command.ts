@@ -18,10 +18,9 @@ export class TransformFileCommand extends Command<File> {
 }
 
 @CommandHandler(TransformFileCommand)
-export class TransformFileUseCase implements ICommandHandler<
-  TransformFileCommand,
-  File
-> {
+export class TransformFileUseCase
+  implements ICommandHandler<TransformFileCommand, File>
+{
   public async execute({
     file,
     transform,

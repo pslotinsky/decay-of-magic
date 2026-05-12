@@ -1,8 +1,8 @@
 import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
-import { Endpoint } from '../Endpoints/Endpoint';
+import type { Endpoint } from '../Endpoints/Endpoint';
 import { EndpointExtractor } from '../Endpoints/EndpointExtractor';
-import { ScannedFile } from '../Scanner/ScannedFile';
-import { PrismaSchema } from '../Schema/PrismaSchema';
+import type { ScannedFile } from '../Scanner/ScannedFile';
+import type { PrismaSchema } from '../Schema/PrismaSchema';
 import { ClassParser } from './ClassParser';
 import { RelationBuilder } from './RelationBuilder';
 

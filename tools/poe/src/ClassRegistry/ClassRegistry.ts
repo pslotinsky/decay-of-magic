@@ -1,7 +1,7 @@
-import { Endpoint } from '../Endpoints/Endpoint';
-import { ExternalTypeLocation } from '../Scanner/ExternalTypeScanner';
-import { PrismaSchema } from '../Schema/PrismaSchema';
-import { InspectedClass } from './InspectedClass';
+import type { Endpoint } from '../Endpoints/Endpoint';
+import type { ExternalTypeLocation } from '../Scanner/ExternalTypeScanner';
+import type { PrismaSchema } from '../Schema/PrismaSchema';
+import type { InspectedClass } from './InspectedClass';
 
 export type Location = {
   file: string;

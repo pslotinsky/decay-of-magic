@@ -1,17 +1,17 @@
 import {
-  ArchiveKeeper,
+  type ArchiveKeeper,
   HumorAdvisor,
-  PleaFormalist,
-  ProtocolClerk,
-  Scribe,
+  type PleaFormalist,
+  type ProtocolClerk,
+  type Scribe,
 } from '@/domain/assistants';
 import {
   Document,
   Dossier,
-  Plea,
-  PleaDraft,
+  type Plea,
+  type PleaDraft,
   PleaType,
-  Remark,
+  type Remark,
 } from '@/domain/entities';
 import { pleaContext } from '@/domain/PleaContext';
 
@@ -19,15 +19,15 @@ import {
   ChangeStatusDutyInstruction,
   CreateDocumentDutyInstruction,
   DeleteDocumentDutyInstruction,
-  DutyInstruction,
-  DutyInstructionParams,
+  type DutyInstruction,
+  type DutyInstructionParams,
   ListDocumentsDutyInstruction,
   MoveDocumentDutyInstruction,
   RenameDocumentDutyInstruction,
   UpdateDocumentRelationsDutyInstruction,
   UpdateReadmeDutyInstruction,
 } from './instructions';
-import { ZokAssistants } from './ZokAssistants';
+import type { ZokAssistants } from './ZokAssistants';
 
 type NewZokAssistants = Partial<ZokAssistants> & {
   pleaFormalist: PleaFormalist;

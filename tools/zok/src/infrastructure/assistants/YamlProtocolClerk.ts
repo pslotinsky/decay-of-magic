@@ -1,11 +1,12 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+
 import yaml from 'yaml';
 
 import { ProtocolClerk } from '@/domain/assistants';
-import { DocumentProtocol, Dossier, PleaType } from '@/domain/entities';
+import { DocumentProtocol, Dossier, type PleaType } from '@/domain/entities';
 
-import { Protocols } from '../types/config';
+import type { Protocols } from '../types/config';
 
 const { ZOK_CONFIG_PATH } = process.env;
 const DEFAULT_CONFIG_PATH = path.resolve(
@@ -25,12 +26,9 @@ export class YamlProtocolClerk extends ProtocolClerk {
   public override async init(): Promise<void> {
     const protocols = await this.loadProtocols();
 
-    let id;
-    let protocol;
-
     for (const [key, value] of Object.entries(protocols)) {
-      id = key as PleaType;
-      protocol = DocumentProtocol.init({ id, ...value });
+      const id = key as PleaType;
+      const protocol = DocumentProtocol.init({ id, ...value });
 
       this.protocols.set(key, protocol);
     }

@@ -2,12 +2,12 @@ import { format } from 'date-fns';
 
 import { Scribe } from '@/domain/assistants';
 import {
-  DocumentLink,
-  DocumentMetadata,
+  type DocumentLink,
+  type DocumentMetadata,
   Dossier,
-  FieldDefinition,
+  type FieldDefinition,
   FieldType,
-  Plea,
+  type Plea,
 } from '@/domain/entities';
 
 export class MockScribe extends Scribe {

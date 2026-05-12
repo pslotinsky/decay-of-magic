@@ -1,4 +1,4 @@
-import { Dossier } from '../entities';
+import type { Dossier } from '../entities';
 import { pleaContext } from '../PleaContext';
 
 export abstract class Assistant {

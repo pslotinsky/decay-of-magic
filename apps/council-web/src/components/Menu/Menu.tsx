@@ -43,6 +43,7 @@ export function MenuItem({
   const role = useContext(MenuRoleContext);
   const itemRole = role === 'listbox' ? 'option' : 'menuitem';
   return (
+    // biome-ignore lint/a11y/useAriaPropsSupportedByRole: aria-selected is conditional on listbox role at runtime
     <li
       role={itemRole}
       aria-selected={role === 'listbox' ? !!selected : undefined}
@@ -71,6 +72,7 @@ interface MenuGroupProps {
 
 export function MenuGroup({ label, children }: MenuGroupProps) {
   return (
+    // biome-ignore lint/a11y/useSemanticElements: <li> is required inside Menu's <ul> container
     <li className={styles.group} role="group" aria-label={label}>
       <div className={styles.groupLabel}>{label}</div>
       <ul className={styles.list}>{children}</ul>

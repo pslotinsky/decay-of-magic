@@ -1,5 +1,6 @@
-import bcrypt from 'bcryptjs';
 import crypto from 'node:crypto';
+
+import bcrypt from 'bcryptjs';
 import { Inject } from '@nestjs/common';
 import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
@@ -22,7 +23,9 @@ export class RegisterCitizenCommand extends Command<CitizenDto> {
 }
 
 @CommandHandler(RegisterCitizenCommand)
-export class RegisterCitizenHandler implements ICommandHandler<RegisterCitizenCommand> {
+export class RegisterCitizenHandler
+  implements ICommandHandler<RegisterCitizenCommand>
+{
   @Inject() private readonly citizenRepository!: CitizenRepository;
   @Inject() private readonly citizenPermitRepository!: CitizenPermitRepository;
 

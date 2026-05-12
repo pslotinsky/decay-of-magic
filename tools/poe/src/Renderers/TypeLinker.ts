@@ -1,4 +1,4 @@
-import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
+import type { ClassRegistry } from '../ClassRegistry/ClassRegistry';
 
 const TYPE_PATTERN = /\b[A-Z]\w*\b/g;
 

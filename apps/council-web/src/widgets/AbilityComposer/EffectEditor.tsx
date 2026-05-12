@@ -11,8 +11,8 @@ import { Checkbox } from '@/components/Checkbox';
 import { IconButton } from '@/components/IconButton';
 import { ExpressionEditor } from '@/widgets/ExpressionEditor';
 
-import { emptyEffect } from './abilities';
 import type { AbilityComposerContext } from './AbilityComposer';
+import { emptyEffect } from './abilities';
 import { EffectParams } from './EffectParams';
 
 import styles from './AbilityComposer.module.scss';

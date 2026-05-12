@@ -9,9 +9,7 @@ export class JwtMiddleware implements NestMiddleware {
   constructor(private readonly jwtService: JwtService) {}
 
   public async use(req: Request, _res: Response, next: NextFunction) {
-    const token = (req.cookies as Record<string, string> | undefined)?.[
-      'token'
-    ];
+    const token = (req.cookies as Record<string, string> | undefined)?.token;
 
     if (!token) {
       throw new UnauthenticatedError('Missing token');

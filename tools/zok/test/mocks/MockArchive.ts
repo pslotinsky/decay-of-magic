@@ -1,5 +1,5 @@
-import { Document } from '@/domain/entities';
-import { Archive, DocumentQueryObject } from '@/domain/tools';
+import type { Document } from '@/domain/entities';
+import { Archive, type DocumentQueryObject } from '@/domain/tools';
 
 export class MockArchive extends Archive {
   private items: Record<string, Document> = {};

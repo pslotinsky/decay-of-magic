@@ -1,4 +1,4 @@
-import { Plea, PleaDraft } from '../entities';
+import { Plea, type PleaDraft } from '../entities';
 import { pleaContext } from '../PleaContext';
 import { Assistant } from './Assistant';
 

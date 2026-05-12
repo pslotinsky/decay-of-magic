@@ -1,5 +1,6 @@
-import { program } from 'commander';
 import { exit } from 'node:process';
+
+import { program } from 'commander';
 
 import { Zok } from '@/application/Zok';
 import { PleaType } from '@/domain/entities';

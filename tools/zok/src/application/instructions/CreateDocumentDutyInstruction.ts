@@ -1,11 +1,11 @@
 import {
-  Document,
+  type Document,
   DocumentLink,
-  DocumentProtocol,
-  Remark,
+  type DocumentProtocol,
+  type Remark,
 } from '@/domain/entities';
 
-import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
+import { DutyInstruction, type DutyInstructionParams } from './DutyInstruction';
 
 interface CreateDocumentDutyInstructionParams extends DutyInstructionParams {
   protocol: DocumentProtocol;
@@ -50,7 +50,7 @@ export class CreateDocumentDutyInstruction extends DutyInstruction<
   ): Promise<Document | undefined> {
     const parentProtocolId = protocol.parentProtocolId;
 
-    let result: Document | undefined = undefined;
+    let result: Document | undefined;
 
     if (parentProtocolId) {
       const parentProtocol =

@@ -1,6 +1,6 @@
 import { ArchiveKeeper } from '@/domain/assistants';
 import { Dossier } from '@/domain/entities';
-import { Archive } from '@/domain/tools';
+import type { Archive } from '@/domain/tools';
 
 import { FileSystemArchive } from '../archive';
 

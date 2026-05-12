@@ -1,4 +1,4 @@
-import { DocumentStatus, DocumentTocLine } from '@/domain/entities';
+import { DocumentStatus, type DocumentTocLine } from '@/domain/entities';
 import { MalformedDocumentError } from '@/domain/errors';
 
 import { TextExtractor } from './TextExtractor';

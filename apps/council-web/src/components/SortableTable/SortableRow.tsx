@@ -5,11 +5,11 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 import type { TableColumn } from '@/components/Table';
+import tableStyles from '@/components/Table/Table.module.scss';
 
 import type { Orderable } from './types';
 
 import styles from './SortableTable.module.scss';
-import tableStyles from '@/components/Table/Table.module.scss';
 
 interface Props<T extends Orderable> {
   row: T;
@@ -44,6 +44,7 @@ export function SortableRow<T extends Orderable>({
       className={clsx(onRowClick && tableStyles.rowClickable)}
       onClick={onRowClick ? () => onRowClick(row) : undefined}
     >
+      {/* biome-ignore lint/a11y/useKeyWithClickEvents: stopPropagation guard on drag-handle cell; not user-interactive */}
       <td
         className={styles.handleCell}
         onClick={(event) => event.stopPropagation()}

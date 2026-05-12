@@ -1,7 +1,8 @@
-import { kebabCase } from 'lodash';
 import { join } from 'node:path';
 
-import { DocumentProtocol } from './DocumentProtocol';
+import { kebabCase } from 'lodash';
+
+import type { DocumentProtocol } from './DocumentProtocol';
 
 type DocumentParams = {
   metadata: DocumentMetadata;

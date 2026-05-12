@@ -1,6 +1,6 @@
-import { Document, DocumentProtocol } from '../entities';
+import type { Document, DocumentProtocol } from '../entities';
 import { NotFoundError } from '../errors';
-import { Archive, DocumentQueryObject } from '../tools';
+import type { Archive, DocumentQueryObject } from '../tools';
 import { Assistant } from './Assistant';
 
 export abstract class ArchiveKeeper extends Assistant {

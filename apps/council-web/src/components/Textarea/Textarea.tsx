@@ -15,7 +15,7 @@ export function Textarea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
     el.style.height = `${el.scrollHeight}px`;
   }
 
-  useEffect(resize, [props.value]);
+  useEffect(resize, []);
 
   function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
     if (event.key === 'Enter') {

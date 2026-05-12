@@ -1,5 +1,5 @@
-import { readFile } from 'fs/promises';
-import { basename, join, resolve } from 'path';
+import { readFile } from 'node:fs/promises';
+import { basename, join, resolve } from 'node:path';
 
 import { ClassRegistry } from './ClassRegistry/ClassRegistry';
 import { ClassRegistryParser } from './ClassRegistryParser/ClassRegistryParser';

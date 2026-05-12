@@ -1,4 +1,4 @@
-import { Document, DocumentProtocol } from '@/domain/entities';
+import type { Document, DocumentProtocol } from '@/domain/entities';
 
 import { DocumentParser } from './parser/DocumentParser';
 

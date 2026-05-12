@@ -20,7 +20,9 @@ export class CreateArchetypeCommand<TDto = unknown> extends Command<TDto> {
 }
 
 @CommandHandler(CreateArchetypeCommand)
-export class CreateArchetypeHandler implements ICommandHandler<CreateArchetypeCommand> {
+export class CreateArchetypeHandler
+  implements ICommandHandler<CreateArchetypeCommand>
+{
   @Inject() private readonly archetypeRepository!: ArchetypeRepository;
   @Inject() private readonly archetypeFactory!: ArchetypeFactory;
 

@@ -3,9 +3,9 @@ import { compact } from 'lodash';
 import {
   Document,
   DocumentLink,
-  DocumentMetadata,
-  DocumentProtocol,
-  DocumentToc,
+  type DocumentMetadata,
+  type DocumentProtocol,
+  type DocumentToc,
   FieldType,
 } from '../../entities';
 import { MalformedDocumentError, UnexpectedValueError } from '../../errors';
@@ -83,7 +83,7 @@ export class DocumentParser {
     const key = protocol.findFieldKeyByName(name);
     const field = protocol.getField(key);
 
-    let value = undefined;
+    let value: unknown;
     const valueString = restParts.join('|').trim();
 
     if (valueString) {
@@ -105,7 +105,7 @@ export class DocumentParser {
   private parseDateField(valueString: string): Date {
     const date = new Date(valueString);
 
-    if (isNaN(date.getTime())) {
+    if (Number.isNaN(date.getTime())) {
       throw new UnexpectedValueError(
         valueString,
         `Field value is invalid date`,

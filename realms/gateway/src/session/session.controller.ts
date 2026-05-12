@@ -24,7 +24,7 @@ export class SessionController {
     @Res() res: Response,
   ): Promise<void> {
     const upstream = await fetch(
-      `${process.env['CITIZEN_REALM_URL']}/api/v1/session`,
+      `${process.env.CITIZEN_REALM_URL}/api/v1/session`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -44,7 +44,7 @@ export class SessionController {
     res.cookie(COOKIE_NAME, data.accessToken, {
       httpOnly: true,
       sameSite: 'strict',
-      secure: process.env['NODE_ENV'] === 'production',
+      secure: process.env.NODE_ENV === 'production',
       maxAge: COOKIE_TTL_MS,
       path: '/',
     });

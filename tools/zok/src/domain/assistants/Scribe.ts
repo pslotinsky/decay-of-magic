@@ -1,8 +1,8 @@
 import {
   Document,
-  DocumentMetadata,
-  DocumentProtocol,
-  Plea,
+  type DocumentMetadata,
+  type DocumentProtocol,
+  type Plea,
 } from '../entities';
 import { Assistant } from './Assistant';
 
@@ -42,7 +42,7 @@ export abstract class Scribe extends Assistant {
   ): Record<string, unknown> {
     const fields: Record<string, unknown> = {};
     const defaultValues = this.getDefaultFieldValues();
-    let value;
+    let value: unknown;
 
     for (const key of Object.keys(protocol.fields)) {
       value = plea.getValue(key, defaultValues[key]);

@@ -1,7 +1,7 @@
 import {
   DocumentStatus,
-  DocumentToc,
-  DocumentTocLine,
+  type DocumentToc,
+  type DocumentTocLine,
 } from '@/domain/entities';
 
 export class DocumentTocRender {

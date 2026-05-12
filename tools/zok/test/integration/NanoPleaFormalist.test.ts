@@ -1,5 +1,5 @@
-import test from 'node:test';
 import assert from 'node:assert';
+import test from 'node:test';
 
 import { NanoPleaFormalist } from '@/infrastructure/assistants';
 
@@ -8,8 +8,8 @@ test.describe('Integration: NanoPleaFormalist', () => {
     const formalist = new NanoPleaFormalist();
     const ids = new Set<string>();
 
-    for (let i = 0, plea; i < 1000; i++) {
-      plea = await formalist.formalizePlea({});
+    for (let i = 0; i < 1000; i++) {
+      const plea = await formalist.formalizePlea({});
 
       ids.add(plea.id);
     }

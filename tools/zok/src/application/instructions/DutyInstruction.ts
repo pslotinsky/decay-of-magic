@@ -1,6 +1,11 @@
-import { Document, DocumentProtocol, Plea, Remark } from '@/domain/entities';
+import type {
+  Document,
+  DocumentProtocol,
+  Plea,
+  Remark,
+} from '@/domain/entities';
 
-import { ZokAssistants } from '../ZokAssistants';
+import type { ZokAssistants } from '../ZokAssistants';
 
 export type DutyInstructionParams = {
   assistants: ZokAssistants;

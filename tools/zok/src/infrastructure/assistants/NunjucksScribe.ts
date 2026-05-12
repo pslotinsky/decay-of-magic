@@ -1,16 +1,17 @@
-import { format } from 'date-fns';
 import { join } from 'node:path';
+
+import { format } from 'date-fns';
 import nunjucks from 'nunjucks';
 import prettier from 'prettier';
 
 import { Scribe } from '@/domain/assistants';
 import {
-  DocumentLink,
-  DocumentMetadata,
+  type DocumentLink,
+  type DocumentMetadata,
   Dossier,
-  FieldDefinition,
+  type FieldDefinition,
   FieldType,
-  Plea,
+  type Plea,
 } from '@/domain/entities';
 
 const { ZOK_TEMPLATES_PATH = join(__dirname, '../../../config/templates') } =

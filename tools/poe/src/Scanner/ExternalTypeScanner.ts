@@ -1,5 +1,5 @@
-import { readdir, readFile, realpath } from 'fs/promises';
-import { join, relative } from 'path';
+import { readdir, readFile, realpath } from 'node:fs/promises';
+import { join, relative } from 'node:path';
 
 export type ExternalTypeLocation = {
   file: string;

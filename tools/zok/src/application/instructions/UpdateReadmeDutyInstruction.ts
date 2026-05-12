@@ -2,13 +2,13 @@ import { startCase } from 'lodash';
 
 import {
   Document,
-  DocumentProtocol,
-  DocumentToc,
-  Remark,
+  type DocumentProtocol,
+  type DocumentToc,
+  type Remark,
 } from '@/domain/entities';
 import { DocumentTocRender } from '@/domain/tools';
 
-import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
+import { DutyInstruction, type DutyInstructionParams } from './DutyInstruction';
 
 interface UpdateReadmeDutyInstructionParams extends DutyInstructionParams {
   document: Document;

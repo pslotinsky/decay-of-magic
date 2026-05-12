@@ -1,4 +1,4 @@
-import { Document } from './Document';
+import type { Document } from './Document';
 
 export class DocumentLink {
   public static from(document: Document): DocumentLink {
@@ -6,7 +6,7 @@ export class DocumentLink {
   }
 
   public static parse(value: string): DocumentLink | undefined {
-    let result: DocumentLink | undefined = undefined;
+    let result: DocumentLink | undefined;
 
     const match = value.match(/^\[([^\]]*)\]\(([^)]*)\)$/);
 

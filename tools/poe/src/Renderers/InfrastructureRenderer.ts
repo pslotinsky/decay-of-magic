@@ -1,13 +1,13 @@
-import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
-import { InspectedClass } from '../ClassRegistry/InspectedClass';
-import { LayerConfig } from '../Config/PoeConfig';
-import {
+import type { ClassRegistry } from '../ClassRegistry/ClassRegistry';
+import type { InspectedClass } from '../ClassRegistry/InspectedClass';
+import type { LayerConfig } from '../Config/PoeConfig';
+import type {
   PrismaField,
   PrismaModel,
   PrismaRelation,
   PrismaSchema,
 } from '../Schema/PrismaSchema';
-import { Renderer } from './Renderer';
+import type { Renderer } from './Renderer';
 
 /**
  * Renders a layer as an ER diagram derived from the Prisma schema

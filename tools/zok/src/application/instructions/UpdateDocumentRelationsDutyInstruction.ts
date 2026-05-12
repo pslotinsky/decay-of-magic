@@ -1,4 +1,4 @@
-import {
+import type {
   Document,
   DocumentLink,
   DocumentProtocol,
@@ -7,9 +7,10 @@ import {
 } from '@/domain/entities';
 import { DocumentTocRender } from '@/domain/tools';
 
-import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
+import { DutyInstruction, type DutyInstructionParams } from './DutyInstruction';
 
-interface UpdateDocumentRelationsDutyInstructionParams extends DutyInstructionParams {
+interface UpdateDocumentRelationsDutyInstructionParams
+  extends DutyInstructionParams {
   document: Document;
 }
 
@@ -35,7 +36,7 @@ export class UpdateDocumentRelationsDutyInstruction extends DutyInstruction<
   private async getDocumentParent(
     document: Document,
   ): Promise<Document | undefined> {
-    let result = undefined;
+    let result: Document | undefined;
 
     const parentId = document.getField<DocumentLink>('parent')?.id;
     const parentProtocolId = document.protocol.parentProtocolId;

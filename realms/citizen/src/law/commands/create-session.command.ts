@@ -16,7 +16,9 @@ export class CreateSessionCommand extends Command<SessionDto> {
 }
 
 @CommandHandler(CreateSessionCommand)
-export class CreateSessionHandler implements ICommandHandler<CreateSessionCommand> {
+export class CreateSessionHandler
+  implements ICommandHandler<CreateSessionCommand>
+{
   @Inject() private readonly citizenRepository!: CitizenRepository;
   @Inject() private readonly citizenPermitRepository!: CitizenPermitRepository;
   @Inject() private readonly jwtService!: JwtService;

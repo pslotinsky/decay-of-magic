@@ -1,11 +1,11 @@
 import {
-  Document,
+  type Document,
   DocumentLink,
-  DocumentProtocol,
-  Remark,
+  type DocumentProtocol,
+  type Remark,
 } from '@/domain/entities';
 
-import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
+import { DutyInstruction, type DutyInstructionParams } from './DutyInstruction';
 
 interface RenameDocumentDutyInstructionParams extends DutyInstructionParams {
   protocol: DocumentProtocol;

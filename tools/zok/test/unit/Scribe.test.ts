@@ -1,6 +1,7 @@
-import { isEqual } from 'date-fns';
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
+
+import { isEqual } from 'date-fns';
 
 import { Plea, PleaType } from '@/domain/entities';
 

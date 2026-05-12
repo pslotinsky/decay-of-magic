@@ -1,5 +1,5 @@
 import { UnexpectedValueError } from '../errors';
-import { FieldDefinition, FieldType } from './FieldDefinition';
+import { type FieldDefinition, FieldType } from './FieldDefinition';
 
 type DocumentProtocolParams = {
   id: string;

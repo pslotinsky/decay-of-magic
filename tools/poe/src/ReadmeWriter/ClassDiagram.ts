@@ -1,7 +1,7 @@
 import { snakeCase } from 'lodash';
 
-import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
-import { InspectedClass } from '../ClassRegistry/InspectedClass';
+import type { ClassRegistry } from '../ClassRegistry/ClassRegistry';
+import type { InspectedClass } from '../ClassRegistry/InspectedClass';
 
 /**
  * Generates a Mermaid class diagram for a single layer

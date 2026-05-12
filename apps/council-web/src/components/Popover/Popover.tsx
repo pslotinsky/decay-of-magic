@@ -1,6 +1,6 @@
 import {
-  cloneElement,
   type CSSProperties,
+  cloneElement,
   isValidElement,
   type MouseEvent,
   type ReactElement,

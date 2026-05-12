@@ -1,12 +1,12 @@
 import {
-  Document,
-  DocumentProtocol,
+  type Document,
+  type DocumentProtocol,
   FieldType,
-  Remark,
+  type Remark,
 } from '@/domain/entities';
 import { UnexpectedValueError } from '@/domain/errors';
 
-import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
+import { DutyInstruction, type DutyInstructionParams } from './DutyInstruction';
 
 interface ChangeStatusDutyInstructionParams extends DutyInstructionParams {
   protocol: DocumentProtocol;

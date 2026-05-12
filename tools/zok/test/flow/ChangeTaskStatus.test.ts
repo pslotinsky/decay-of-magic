@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import test, { beforeEach } from 'node:test';
 
-import { Zok } from '@/application/Zok';
-import { Document } from '@/domain/entities';
+import type { Zok } from '@/application/Zok';
+import type { Document } from '@/domain/entities';
 import { NotFoundError, UnexpectedValueError } from '@/domain/errors';
 
 import {

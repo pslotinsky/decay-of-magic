@@ -1,9 +1,9 @@
-import { RendererKind } from '../Config/PoeConfig';
+import type { RendererKind } from '../Config/PoeConfig';
 import { ApiRenderer } from './ApiRenderer';
 import { ApplicationRenderer } from './ApplicationRenderer';
 import { DomainRenderer } from './DomainRenderer';
 import { InfrastructureRenderer } from './InfrastructureRenderer';
-import { Renderer } from './Renderer';
+import type { Renderer } from './Renderer';
 
 /**
  * Resolves a renderer by kind

@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import test from 'node:test';
 
-import { DocumentStatus, DocumentToc } from '@/domain/entities';
+import { DocumentStatus, type DocumentToc } from '@/domain/entities';
 import { DocumentTocRender } from '@/domain/tools';
 
 test.describe('Unit: DocumentTocRender', () => {

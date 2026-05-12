@@ -1,9 +1,9 @@
 import { InspectedClass } from '../ClassRegistry/InspectedClass';
 import {
   InspectedClassMember,
-  Visibility,
+  type Visibility,
 } from '../ClassRegistry/InspectedClassMember';
-import { ScannedFile } from '../Scanner/ScannedFile';
+import type { ScannedFile } from '../Scanner/ScannedFile';
 
 const CLASS_PATTERN =
   /^\s*(?:\/\*\*([\s\S]*?)\*\/\s*)?(?:export\s+)?(?:default\s+)?(abstract\s+)?class\s+(\w+)(?:\s+extends\s+(\w+)(?:<([^>]*)>)?)?(?:\s+implements\s+([\w,\s]+))?/gm;

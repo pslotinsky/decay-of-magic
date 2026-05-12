@@ -1,5 +1,5 @@
-import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
-import { InspectedClass } from '../ClassRegistry/InspectedClass';
+import type { ClassRegistry } from '../ClassRegistry/ClassRegistry';
+import type { InspectedClass } from '../ClassRegistry/InspectedClass';
 
 /**
  * Renders a markdown table of inspected classes
@@ -55,7 +55,7 @@ export class ClassTable {
   }
 
   private renderRow(cols: string[]): string {
-    return '| ' + cols.join(' | ') + ' |';
+    return `| ${cols.join(' | ')} |`;
   }
 
   private entityCell(cls: InspectedClass): string {

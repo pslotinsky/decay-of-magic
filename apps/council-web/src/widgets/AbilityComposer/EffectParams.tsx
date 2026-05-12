@@ -2,8 +2,8 @@ import {
   type EffectDto,
   type Expression,
   isMinionActivation,
-  type Target,
   TARGET_VALUES,
+  type Target,
 } from '@dod/api-contract';
 
 import { ButtonSelect } from '@/components/ButtonSelect';

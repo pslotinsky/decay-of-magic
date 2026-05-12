@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import test, { beforeEach } from 'node:test';
 
-import { Zok } from '@/application/Zok';
-import { Document, DocumentLink } from '@/domain/entities';
+import type { Zok } from '@/application/Zok';
+import type { Document, DocumentLink } from '@/domain/entities';
 
 import {
   createMilestone,
@@ -15,7 +15,7 @@ test.describe('Flow: Task creation', () => {
   let zok!: Zok;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let doneMilestone!: Document;
+  let _doneMilestone!: Document;
   let plannedMilestone!: Document;
   let inProgressMilestone!: Document;
 
@@ -24,7 +24,7 @@ test.describe('Flow: Task creation', () => {
 
     await zok.init();
 
-    doneMilestone = await createMilestone(zok, { status: 'Done' });
+    _doneMilestone = await createMilestone(zok, { status: 'Done' });
     inProgressMilestone = await createMilestone(zok, { status: 'In progress' });
     plannedMilestone = await createMilestone(zok, { status: 'Planned' });
   });

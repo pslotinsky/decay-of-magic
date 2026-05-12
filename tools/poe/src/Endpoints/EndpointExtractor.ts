@@ -1,4 +1,4 @@
-import { ScannedFile } from '../Scanner/ScannedFile';
+import type { ScannedFile } from '../Scanner/ScannedFile';
 import { Endpoint } from './Endpoint';
 
 const CONTROLLER_PATTERN =

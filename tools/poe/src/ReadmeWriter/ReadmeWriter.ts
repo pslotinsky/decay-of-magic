@@ -1,5 +1,5 @@
-import { readFile, writeFile } from 'fs/promises';
-import { basename, join, resolve } from 'path';
+import { readFile, writeFile } from 'node:fs/promises';
+import { basename, join, resolve } from 'node:path';
 
 export type WritePosition = 'top' | 'bottom';
 
@@ -120,7 +120,7 @@ export class ReadmeWriter {
       return this.insertAfterTitle(readme, section);
     }
 
-    return readme.trimEnd() + `\n\n${section}\n`;
+    return `${readme.trimEnd()}\n\n${section}\n`;
   }
 
   private insertAfterTitle(readme: string, section: string): string {
@@ -133,7 +133,7 @@ export class ReadmeWriter {
     const insertAt = titleMatch.index + titleMatch[0].length;
     const trailing = readme.slice(insertAt).replace(/^\n+/, '');
 
-    return readme.slice(0, insertAt) + `\n${section}\n\n${trailing}`;
+    return `${readme.slice(0, insertAt)}\n${section}\n\n${trailing}`;
   }
 
   private async readPackageName(): Promise<string> {

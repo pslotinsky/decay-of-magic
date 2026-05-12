@@ -1,4 +1,4 @@
-import { FieldDefinition } from '@/domain/entities';
+import type { FieldDefinition } from '@/domain/entities';
 
 export type Protocols = Record<string, ProtocolConfig>;
 

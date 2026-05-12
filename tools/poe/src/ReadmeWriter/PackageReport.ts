@@ -1,5 +1,5 @@
-import { ClassRegistry } from '../ClassRegistry/ClassRegistry';
-import { PoeConfig } from '../Config/PoeConfig';
+import type { ClassRegistry } from '../ClassRegistry/ClassRegistry';
+import type { PoeConfig } from '../Config/PoeConfig';
 import { RendererRegistry } from '../Renderers/RendererRegistry';
 
 /**

@@ -1,6 +1,6 @@
-import { Document, DocumentProtocol, Remark } from '@/domain/entities';
+import type { Document, DocumentProtocol, Remark } from '@/domain/entities';
 
-import { DutyInstruction, DutyInstructionParams } from './DutyInstruction';
+import { DutyInstruction, type DutyInstructionParams } from './DutyInstruction';
 
 interface DeleteDocumentDutyInstructionParams extends DutyInstructionParams {
   protocol: DocumentProtocol;

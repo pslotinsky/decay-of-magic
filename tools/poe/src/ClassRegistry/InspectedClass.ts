@@ -1,5 +1,5 @@
-import { InspectedClassMember } from './InspectedClassMember';
-import { InspectedClassRelation } from './InspectedClassRelation';
+import type { InspectedClassMember } from './InspectedClassMember';
+import type { InspectedClassRelation } from './InspectedClassRelation';
 
 export { InspectedClassMember } from './InspectedClassMember';
 export { InspectedClassRelation } from './InspectedClassRelation';
