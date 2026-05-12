@@ -4,9 +4,6 @@
     "duplicates": "off"
   },
   "workspaces": {
-    ".": {
-      "ignoreBinaries": ["poe"]
-    },
     "packages/config": {
       "entry": []
     },
