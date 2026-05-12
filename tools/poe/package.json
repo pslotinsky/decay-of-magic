@@ -2,7 +2,7 @@
   "name": "poe",
   "version": "0.0.1",
   "private": true,
-  "bin": "./dist/index.js",
+  "bin": "./bin/poe",
   "scripts": {
     "build": "tsc -p tsconfig.build.json && tsc-alias",
     "test": "tsx --test 'test/**/*.test.ts'",

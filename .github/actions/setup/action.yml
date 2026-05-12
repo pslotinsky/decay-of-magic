@@ -1,0 +1,25 @@
+name: Setup
+description: Install Node, restore turbo cache, install npm dependencies
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v6
+      with:
+        node-version: '24'
+        cache: npm
+
+    - uses: actions/cache@v4
+      with:
+        path: |
+          .turbo
+          apps/*/.turbo
+          realms/*/.turbo
+          packages/*/.turbo
+          tools/*/.turbo
+        key: turbo-${{ runner.os }}-${{ github.sha }}
+        restore-keys: |
+          turbo-${{ runner.os }}-
+
+    - shell: bash
+      run: npm ci

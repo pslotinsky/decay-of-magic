@@ -13,27 +13,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/setup
 
       - name: Build
         run: npm run build
-
-      - uses: actions/upload-artifact@v7
-        with:
-          name: dist
-          path: |
-            packages/*/dist
-            apps/*/dist
-            realms/*/dist
-            tools/*/dist
-            node_modules/.prisma/client
 
   lint:
     name: Check
@@ -42,18 +25,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - uses: actions/download-artifact@v8
-        with:
-          name: dist
+      - uses: ./.github/actions/setup
 
       - name: Check
         run: npm run check
@@ -65,18 +37,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - uses: actions/download-artifact@v8
-        with:
-          name: dist
+      - uses: ./.github/actions/setup
 
       - name: Test
         run: npx turbo test:unit test:flow
@@ -88,23 +49,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - uses: actions/download-artifact@v8
-        with:
-          name: dist
-
-      - name: Relink workspace bins
-        run: |
-          chmod +x tools/poe/dist/index.js
-          npm rebuild --workspaces
+      - uses: ./.github/actions/setup
 
       - name: Regenerate docs
         run: npx turbo run docs
@@ -143,18 +88,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - uses: actions/download-artifact@v8
-        with:
-          name: dist
+      - uses: ./.github/actions/setup
 
       - name: API Tests
         run: npx turbo test:api --filter=${{ matrix.realm }}
