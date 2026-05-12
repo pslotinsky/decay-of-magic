@@ -17,6 +17,9 @@
     "test:unit": {
       "dependsOn": ["^build"]
     },
+    "test:flow": {
+      "dependsOn": ["^build"]
+    },
     "test:api": {
       "dependsOn": ["^build"],
       "cache": false

@@ -79,7 +79,7 @@ jobs:
           name: dist
 
       - name: Test
-        run: npx turbo test:unit
+        run: npx turbo test:unit test:flow
 
   docs:
     name: Docs
@@ -125,7 +125,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        realm: [citizen, universe]
+        realm: [citizen, codex, universe]
 
     services:
       postgres:
