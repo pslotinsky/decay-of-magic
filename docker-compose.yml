@@ -58,8 +58,12 @@ services:
   gateway:
     build:
       context: .
-      dockerfile: realms/gateway/Dockerfile
+      dockerfile: realms/Dockerfile
       target: dev
+      args:
+        REALM: gateway
+        WITH_PRISMA: "false"
+        PORT: "3000"
     depends_on:
       codex:
         condition: service_healthy
@@ -114,8 +118,12 @@ services:
   codex-migrate:
     build:
       context: .
-      dockerfile: realms/codex/Dockerfile
+      dockerfile: realms/Dockerfile
       target: installer
+      args:
+        REALM: codex
+        WITH_PRISMA: "true"
+        PORT: "3001"
     depends_on:
       db-init:
         condition: service_completed_successfully
@@ -127,8 +135,12 @@ services:
   codex:
     build:
       context: .
-      dockerfile: realms/codex/Dockerfile
+      dockerfile: realms/Dockerfile
       target: dev
+      args:
+        REALM: codex
+        WITH_PRISMA: "true"
+        PORT: "3001"
     depends_on:
       codex-migrate:
         condition: service_completed_successfully
@@ -150,8 +162,12 @@ services:
   vault:
     build:
       context: .
-      dockerfile: realms/vault/Dockerfile
+      dockerfile: realms/Dockerfile
       target: dev
+      args:
+        REALM: vault
+        WITH_PRISMA: "false"
+        PORT: "3002"
     depends_on:
       s3-init:
         condition: service_completed_successfully
@@ -177,8 +193,12 @@ services:
   citizen-migrate:
     build:
       context: .
-      dockerfile: realms/citizen/Dockerfile
+      dockerfile: realms/Dockerfile
       target: installer
+      args:
+        REALM: citizen
+        WITH_PRISMA: "true"
+        PORT: "3003"
     depends_on:
       db-init:
         condition: service_completed_successfully
@@ -190,8 +210,12 @@ services:
   citizen:
     build:
       context: .
-      dockerfile: realms/citizen/Dockerfile
+      dockerfile: realms/Dockerfile
       target: dev
+      args:
+        REALM: citizen
+        WITH_PRISMA: "true"
+        PORT: "3003"
     depends_on:
       citizen-migrate:
         condition: service_completed_successfully
@@ -213,8 +237,12 @@ services:
   universe-migrate:
     build:
       context: .
-      dockerfile: realms/universe/Dockerfile
+      dockerfile: realms/Dockerfile
       target: installer
+      args:
+        REALM: universe
+        WITH_PRISMA: "true"
+        PORT: "3004"
     depends_on:
       db-init:
         condition: service_completed_successfully
@@ -226,8 +254,12 @@ services:
   universe:
     build:
       context: .
-      dockerfile: realms/universe/Dockerfile
+      dockerfile: realms/Dockerfile
       target: dev
+      args:
+        REALM: universe
+        WITH_PRISMA: "true"
+        PORT: "3004"
     depends_on:
       universe-migrate:
         condition: service_completed_successfully
