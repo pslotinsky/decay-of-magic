@@ -26,7 +26,7 @@ jobs:
       - name: Build
         run: pnpm run build
 
-  lint:
+  check:
     name: Check
     runs-on: ubuntu-latest
     needs: build
@@ -39,40 +39,19 @@ jobs:
       - name: Check
         run: pnpm run check:ci
 
+      - name: Check workspace READMEs
+        if: always()
+        run: npx turbo run docs -- --check
+
+      - name: Check root index READMEs
+        if: always()
+        run: ./tools/poe/bin/poe index --check realms tools packages apps
+
   test:
     name: Test
     runs-on: ubuntu-latest
     needs: build
-    timeout-minutes: 10
-
-    steps:
-      - uses: actions/checkout@v6
-      - uses: ./.github/actions/setup
-
-      - name: Test
-        run: npx turbo test:unit test:flow
-
-  docs:
-    name: Docs
-    runs-on: ubuntu-latest
-    needs: build
-    timeout-minutes: 5
-
-    steps:
-      - uses: actions/checkout@v6
-      - uses: ./.github/actions/setup
-
-      - name: Check workspace READMEs
-        run: npx turbo run docs -- --check
-
-      - name: Check root index READMEs
-        run: ./tools/poe/bin/poe index --check realms tools packages apps
-
-  test-api:
-    name: API Tests
-    runs-on: ubuntu-latest
-    needs: build
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     services:
       postgres:
@@ -92,7 +71,11 @@ jobs:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
 
+      - name: Unit + Flow
+        run: npx turbo test:unit test:flow
+
       - name: API Tests (citizen)
+        if: always()
         run: npx turbo test:api --filter=citizen
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/citizen
