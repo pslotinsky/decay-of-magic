@@ -33,7 +33,7 @@
       "cache": false
     },
     "docs": {
-      "dependsOn": ["@dod/poe#build"],
+      "dependsOn": ["poe#build"],
       "cache": false
     }
   }

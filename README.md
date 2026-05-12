@@ -11,7 +11,8 @@ _In this world, magic dies, but battles live on._
 ```sh
 ├── apps/           # client applications: council-web, ...
 ├── realms/         # microservices: gateway, citizen, universe, codex, vault, ...
-├── packages/       # shared libs: @dod/core, @dod/api-contract, @dod/poe, zok, @dod/config
+├── packages/       # shared libs: @dod/core, @dod/api-contract, @dod/config
+├── tools/          # project tools: poe (doc inspector), zok (doc archivist)
 └── docs/           # roadmaps, milestones, tasks, adr, designs, ideas, devlogs
 ```
 

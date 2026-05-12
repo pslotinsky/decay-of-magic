@@ -32,6 +32,7 @@ jobs:
             packages/*/dist
             apps/*/dist
             realms/*/dist
+            tools/*/dist
             node_modules/.prisma/client
 
   lint:
@@ -102,7 +103,7 @@ jobs:
 
       - name: Relink workspace bins
         run: |
-          chmod +x packages/poe/dist/index.js
+          chmod +x tools/poe/dist/index.js
           npm rebuild --workspaces
 
       - name: Regenerate docs

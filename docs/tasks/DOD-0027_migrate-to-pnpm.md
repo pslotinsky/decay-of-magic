@@ -14,7 +14,7 @@ The migration sequences **after [DOD-0025](./DOD-0025_tidy-up-structure-and-ci.m
 
 ## Why pnpm for this project
 
-- **Strict resolution becomes enforced, not just linted.** Phantom dependencies are physically unimportable. Knip catches them at lint time; pnpm catches them at runtime. For five NestJS realms with reflection-based DI, that's a real correctness improvement.
+- **Strict resolution becomes enforced, not just linted.** Phantom dependencies cannot be imported at all. Knip catches them at lint time; pnpm catches them at runtime. For five NestJS realms with reflection-based DI, that's a real correctness improvement.
 - **The council-web devDeps-only convention becomes a tooling rule.** pnpm respects the `dependencies` / `devDependencies` boundary that npm currently treats as a hint.
 - **Lockfile diffs become readable** — `pnpm-lock.yaml` is git-diff-friendly, which matches the docs-as-code discipline.
 - **Better trajectory than npm** — for a long-running pet project, choosing the tool with active improvement compounds.
