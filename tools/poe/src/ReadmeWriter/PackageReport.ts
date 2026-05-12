@@ -19,13 +19,14 @@ export class PackageReport {
 
   public render(): string {
     const sections = this.config.layers
-      .map((layer) => this.renderLayer(layer))
-      .filter((section) => section.length > 0);
+      .map((layer) => ({ layer, body: this.renderLayerBody(layer) }))
+      .filter((entry) => entry.body.length > 0)
+      .map(({ layer, body }) => `## ${layer.title}\n\n${body}`);
 
-    return sections.length > 0 ? `## Classes\n\n${sections.join('\n\n')}` : '';
+    return sections.join('\n\n');
   }
 
-  private renderLayer(layer: PoeConfig['layers'][number]): string {
+  private renderLayerBody(layer: PoeConfig['layers'][number]): string {
     const classes = this.classRegistry.getLayer(layer.title);
 
     if (classes.length === 0) {
@@ -33,8 +34,7 @@ export class PackageReport {
     }
 
     const renderer = this.renderers.resolve(layer.renderer);
-    const body = renderer.render(layer, classes, this.classRegistry);
 
-    return body ? `### ${layer.title}\n\n${body}` : '';
+    return renderer.render(layer, classes, this.classRegistry);
   }
 }

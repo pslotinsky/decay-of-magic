@@ -5,8 +5,6 @@ A classical gateway proxy that sits between clients and services.
 <!-- poe:classes:start -->
 ## Classes
 
-### Classes
-
 ```mermaid
 classDiagram
   namespace classes {
@@ -42,3 +40,7 @@ classDiagram
 | health/[HealthController](src/health/health.controller.ts) |  |
 | session/[SessionController](src/session/session.controller.ts) |  |
 <!-- poe:classes:end -->
+
+<!-- poe:footer:start -->
+> This document was inspected and assembled by Inspector Poe.
+<!-- poe:footer:end -->

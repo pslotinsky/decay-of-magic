@@ -38,11 +38,16 @@ export class InspectorPoe {
     console.info(`classes found: ${classes.items.length}`);
 
     const content = new PackageReport(config, classes).render();
+    const writer = new ReadmeWriter(packagePath);
 
-    await new ReadmeWriter(packagePath).write(content, 'classes');
+    await writer.write(content, 'classes');
+    await writer.write(InspectorPoe.FOOTER, 'footer');
 
     console.info('classes generated');
 
     console.timeEnd('inspection completed');
   }
+
+  private static readonly FOOTER =
+    '> This document was inspected and assembled by Inspector Poe.';
 }

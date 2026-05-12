@@ -3,32 +3,30 @@
 Manages files: upload, storage, etc
 
 <!-- poe:classes:start -->
-## Classes
+## Frontier
 
-### Frontier
-
-#### [File](src/frontier/gates/file.gate.ts)
+### [File](src/frontier/gates/file.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
 | POST /v1/file | Params: `(body: UploadFileDto, uploadedFile: Express.Multer.File)`<br>Returns: `FileDto` |
 
-#### [Health](src/frontier/gates/health.gate.ts)
+### [Health](src/frontier/gates/health.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
 | GET /v1/health | Returns: `HealthCheckResult` |
 
-### Law
+## Law
 
-#### File
+### File
 
 | Use case | Description |
 |----------|-------------|
 | [TransformFileCommand](src/law/commands/transform-file.command.ts) | Params: `(file: File, transform: FileTransform)`<br>Returns: `File` |
 | [UploadFileCommand](src/law/commands/upload-file.command.ts) | Params: `(file: File, transform: FileTransform)`<br>Returns: `FileDto` |
 
-### Lore
+## Lore
 
 ```mermaid
 classDiagram
@@ -47,3 +45,7 @@ classDiagram
 |--------|
 | [File](src/lore/file.entity.ts) |
 <!-- poe:classes:end -->
+
+<!-- poe:footer:start -->
+> This document was inspected and assembled by Inspector Poe.
+<!-- poe:footer:end -->

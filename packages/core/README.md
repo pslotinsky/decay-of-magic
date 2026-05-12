@@ -3,8 +3,6 @@
 <!-- poe:classes:start -->
 ## Classes
 
-### Classes
-
 ```mermaid
 classDiagram
   namespace classes {
@@ -109,3 +107,7 @@ classDiagram
 | repositories/[InMemoryRepository](src/repositories/in-memory.repository.ts) | In-memory implementation of EntityRepository. Provides getById, find, and<br>save via a per-instance Map; intended for tests and prototypes where<br>persistence is out of scope.<br><br>Abstract |
 | repositories/[PrismaRepository](src/repositories/prisma.repository.ts) | Prisma-backed implementation of EntityRepository. Provides getById, find,<br>and save via a model delegate, handling entity↔model mapping via subclasses.<br><br>Abstract |
 <!-- poe:classes:end -->
+
+<!-- poe:footer:start -->
+> This document was inspected and assembled by Inspector Poe.
+<!-- poe:footer:end -->

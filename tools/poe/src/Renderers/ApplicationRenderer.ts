@@ -78,7 +78,7 @@ export class ApplicationRenderer implements Renderer {
       ...useCases.map((cls) => this.useCaseRow(cls)),
     ];
 
-    return `#### ${entity}\n\n${rows.join('\n')}`;
+    return `### ${entity}\n\n${rows.join('\n')}`;
   }
 
   private renderEntryPointsSection(entryPoints: InspectedClass[]): string {
@@ -90,7 +90,7 @@ export class ApplicationRenderer implements Renderer {
       )
       .join('\n');
 
-    return `#### Entry points\n\n${list}`;
+    return `### Entry points\n\n${list}`;
   }
 
   private isVisible(cls: InspectedClass): boolean {

@@ -1,17 +1,15 @@
 # universe
 
 <!-- poe:classes:start -->
-## Classes
+## Frontier
 
-### Frontier
-
-#### [Health](src/frontier/gates/health.gate.ts)
+### [Health](src/frontier/gates/health.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
 | GET /v1/health | Returns: `HealthCheckResult` |
 
-#### [Universe](src/frontier/gates/universe.gate.ts)
+### [Universe](src/frontier/gates/universe.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
@@ -20,9 +18,9 @@
 | GET /v1/universe/:id | Params: `(id: string)`<br>Returns: `UniverseDto` |
 | GET /v1/universe | Returns: `UniverseSummaryDto[]` |
 
-### Law
+## Law
 
-#### Universe
+### Universe
 
 | Use case | Description |
 |----------|-------------|
@@ -30,13 +28,13 @@
 | [UpdateUniverseCommand](src/law/commands/update-universe.command.ts) | Params: `(id: string, payload: UpdateUniverseDto)`<br>Returns: `UniverseDto`<br><br>Updates an existing universe. Only fields present in the payload<br>are changed. Fails if the new name collides with another universe |
 | [GetUniverseQuery](src/law/queries/get-universe.query.ts) | Params: `(id: string)`<br>Returns: `UniverseDto`<br><br>Fetches a single universe by id. Fails when the id is unknown |
 
-#### UniverseSummary
+### UniverseSummary
 
 | Use case | Description |
 |----------|-------------|
 | [ListUniversesQuery](src/law/queries/list-universes.query.ts) | Returns: `UniverseSummaryDto[]`<br><br>Lists every universe currently registered in the realm. Returns the<br>summary projection (no settings) to keep the list view light |
 
-### Lore
+## Lore
 
 ```mermaid
 classDiagram
@@ -66,7 +64,7 @@ classDiagram
 | entities/[Universe](src/lore/entities/universe.entity.ts) | Extends `Entity` |
 | repositories/[UniverseRepository](src/lore/repositories/universe.repository.ts) | Abstract · Extends `EntityRepository` |
 
-### Ground
+## Ground
 
 ```mermaid
 erDiagram
@@ -79,3 +77,7 @@ erDiagram
   }
 ```
 <!-- poe:classes:end -->
+
+<!-- poe:footer:start -->
+> This document was inspected and assembled by Inspector Poe.
+<!-- poe:footer:end -->

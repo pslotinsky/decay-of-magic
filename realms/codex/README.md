@@ -26,11 +26,9 @@ pnpm run prisma:migrate:dev
 ```
 
 <!-- poe:classes:start -->
-## Classes
+## Frontier
 
-### Frontier
-
-#### [Card](src/frontier/gates/card.gate.ts)
+### [Card](src/frontier/gates/card.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
@@ -39,7 +37,7 @@ pnpm run prisma:migrate:dev
 | GET /v1/card/:id | Params: `(id: string)`<br>Returns: `CardDto` |
 | GET /v1/card | Params: `(universeId: string)`<br>Returns: `CardDto[]` |
 
-#### [Element](src/frontier/gates/element.gate.ts)
+### [Element](src/frontier/gates/element.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
@@ -48,7 +46,7 @@ pnpm run prisma:migrate:dev
 | GET /v1/element/:id | Params: `(id: string)`<br>Returns: `ElementDto` |
 | GET /v1/element | Params: `(universeId: string)`<br>Returns: `ElementDto[]` |
 
-#### [Faction](src/frontier/gates/faction.gate.ts)
+### [Faction](src/frontier/gates/faction.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
@@ -57,13 +55,13 @@ pnpm run prisma:migrate:dev
 | GET /v1/faction/:id | Params: `(id: string)`<br>Returns: `FactionDto` |
 | GET /v1/faction | Params: `(universeId: string)`<br>Returns: `FactionDto[]` |
 
-#### [Health](src/frontier/gates/health.gate.ts)
+### [Health](src/frontier/gates/health.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
 | GET /v1/health | Returns: `HealthCheckResult` |
 
-#### [Hero](src/frontier/gates/hero.gate.ts)
+### [Hero](src/frontier/gates/hero.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
@@ -72,7 +70,7 @@ pnpm run prisma:migrate:dev
 | GET /v1/hero/:id | Params: `(id: string)`<br>Returns: `HeroDto` |
 | GET /v1/hero | Params: `(universeId: string)`<br>Returns: `HeroDto[]` |
 
-#### [Stat](src/frontier/gates/stat.gate.ts)
+### [Stat](src/frontier/gates/stat.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
@@ -81,7 +79,7 @@ pnpm run prisma:migrate:dev
 | GET /v1/stat/:id | Params: `(id: string)`<br>Returns: `StatDto` |
 | GET /v1/stat | Params: `(universeId: string)`<br>Returns: `StatDto[]` |
 
-#### [Trait](src/frontier/gates/trait.gate.ts)
+### [Trait](src/frontier/gates/trait.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
@@ -90,16 +88,16 @@ pnpm run prisma:migrate:dev
 | GET /v1/trait/:id | Params: `(id: string)`<br>Returns: `TraitDto` |
 | GET /v1/trait | Params: `(universeId: string)`<br>Returns: `TraitDto[]` |
 
-### Law
+## Law
 
-#### Entry points
+### Entry points
 
 - [CreateArchetypeCommand](src/law/commands/create-archetype.command.ts)
 - [UpdateArchetypeCommand](src/law/commands/update-archetype.command.ts)
 - [GetArchetypeQuery](src/law/queries/get-archetype.query.ts)
 - [ListArchetypesQuery](src/law/queries/list-archetypes.query.ts)
 
-### Lore
+## Lore
 
 ```mermaid
 classDiagram
@@ -181,7 +179,7 @@ classDiagram
 | entities/[TraitArchetype](src/lore/entities/trait-archetype.entity.ts) | A named tag slug a Universe permits on its entities (e.g. wall, charge,<br>spell). Drives keyword abilities, targeting filters, and damage-source<br>classification; declares which entity types it may attach to via<br>`appliesTo`.<br><br>Extends [Archetype](src/lore/entities/archetype.entity.ts) |
 | repositories/[ArchetypeRepository](src/lore/repositories/archetype.repository.ts) | Repository for codex archetypes. Scoped per Universe; entries are keyed by<br>(universeId, id).<br><br>Abstract · Extends `EntityRepository` |
 
-### Ground
+## Ground
 
 ```mermaid
 erDiagram
@@ -194,3 +192,7 @@ erDiagram
   }
 ```
 <!-- poe:classes:end -->
+
+<!-- poe:footer:start -->
+> This document was inspected and assembled by Inspector Poe.
+<!-- poe:footer:end -->

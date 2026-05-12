@@ -47,7 +47,7 @@ export class ApiRenderer implements Renderer {
       ...endpoints.map((endpoint) => this.row(endpoint)),
     ];
 
-    return `#### [${title}](${file})\n\n${rows.join('\n')}`;
+    return `### [${title}](${file})\n\n${rows.join('\n')}`;
   }
 
   private row(endpoint: Endpoint): string {

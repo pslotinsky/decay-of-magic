@@ -3,8 +3,6 @@
 <!-- poe:classes:start -->
 ## Classes
 
-### Classes
-
 ```mermaid
 classDiagram
   namespace classes {
@@ -129,7 +127,7 @@ classDiagram
       -ClassRegistry classRegistry
       -RendererRegistry renderers
       +render()
-      -renderLayer()
+      -renderLayerBody()
     }
     class ReadmeWriter {
       -string basePath
@@ -302,3 +300,8 @@ classDiagram
 | Schema/[SchemaParser](src/Schema/SchemaParser.ts) | Parses a Prisma schema file into a PrismaSchema |
 | Schema/[SchemaReader](src/Schema/SchemaReader.ts) | Reads and parses the Prisma schema for a package, if present |
 <!-- poe:classes:end -->
+s:end -->
+
+<!-- poe:footer:start -->
+> This document was inspected and assembled by Inspector Poe.
+<!-- poe:footer:end -->

@@ -24,11 +24,9 @@ pnpm run cli -- citizen:create --nickname <name> --password <secret>
 | `--password` | yes | Citizen password (min 8 characters) |
 
 <!-- poe:classes:start -->
-## Classes
+## Frontier
 
-### Frontier
-
-#### [Citizen](src/frontier/gates/citizen.gate.ts)
+### [Citizen](src/frontier/gates/citizen.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
@@ -37,21 +35,21 @@ pnpm run cli -- citizen:create --nickname <name> --password <secret>
 | GET /v1/citizen/:id | Params: `(id: string)`<br>Returns: `CitizenDto` |
 | GET /v1/citizen | Returns: `CitizenDto[]` |
 
-#### [Health](src/frontier/gates/health.gate.ts)
+### [Health](src/frontier/gates/health.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
 | GET /v1/health | Returns: `HealthCheckResult` |
 
-#### [Session](src/frontier/gates/session.gate.ts)
+### [Session](src/frontier/gates/session.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
 | POST /v1/session | Params: `(dto: CreateSessionDto)`<br>Returns: `SessionDto` |
 
-### Law
+## Law
 
-#### Citizen
+### Citizen
 
 | Use case | Description |
 |----------|-------------|
@@ -60,13 +58,13 @@ pnpm run cli -- citizen:create --nickname <name> --password <secret>
 | [GetCitizenQuery](src/law/queries/get-citizen.query.ts) | Params: `(id: string)`<br>Returns: `CitizenDto` |
 | [ListCitizensQuery](src/law/queries/list-citizens.query.ts) | Returns: `CitizenDto[]` |
 
-#### Session
+### Session
 
 | Use case | Description |
 |----------|-------------|
 | [CreateSessionCommand](src/law/commands/create-session.command.ts) | Params: `(payload: CreateSessionDto)`<br>Returns: `SessionDto` |
 
-### Lore
+## Lore
 
 ```mermaid
 classDiagram
@@ -101,7 +99,7 @@ classDiagram
 | repositories/[CitizenPermitRepository](src/lore/repositories/citizen-permit.repository.ts) | Abstract · Extends `EntityRepository` |
 | repositories/[CitizenRepository](src/lore/repositories/citizen.repository.ts) | Abstract · Extends `EntityRepository` |
 
-### Ground
+## Ground
 
 ```mermaid
 erDiagram
@@ -117,3 +115,7 @@ erDiagram
   CitizenPermit ||--|| Citizen : citizen
 ```
 <!-- poe:classes:end -->
+
+<!-- poe:footer:start -->
+> This document was inspected and assembled by Inspector Poe.
+<!-- poe:footer:end -->

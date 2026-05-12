@@ -1,15 +1,13 @@
 # zok
 
 <!-- poe:classes:start -->
-## Classes
+## Application
 
-### Application
-
-#### Entry points
+### Entry points
 
 - [Zok](src/application/Zok.ts)
 
-#### Document
+### Document
 
 | Use case | Description |
 |----------|-------------|
@@ -21,13 +19,13 @@
 | [RenameDocumentDutyInstruction](src/application/instructions/RenameDocumentDutyInstruction.ts) | Returns: `Document` |
 | [UpdateDocumentRelationsDutyInstruction](src/application/instructions/UpdateDocumentRelationsDutyInstruction.ts) | Returns: `Document \| undefined` |
 
-#### Other
+### Other
 
 | Use case | Description |
 |----------|-------------|
 | [UpdateReadmeDutyInstruction](src/application/instructions/UpdateReadmeDutyInstruction.ts) |  |
 
-### Domain
+## Domain
 
 ```mermaid
 classDiagram
@@ -271,3 +269,7 @@ classDiagram
 | tools/parser/[TextExtractor](src/domain/tools/parser/TextExtractor.ts) |  |
 | tools/render/[DocumentTocRender](src/domain/tools/render/DocumentTocRender.ts) |  |
 <!-- poe:classes:end -->
+
+<!-- poe:footer:start -->
+> This document was inspected and assembled by Inspector Poe.
+<!-- poe:footer:end -->
