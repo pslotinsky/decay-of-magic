@@ -1,5 +1,16 @@
 # Codex service
 
+<!-- poe:header:start -->
+**On this page**
+
+- [Entities](#entities)
+- [Bash commands](#bash-commands)
+- [Frontier](#frontier)
+- [Law](#law)
+- [Lore](#lore)
+- [Ground](#ground)
+<!-- poe:header:end -->
+
 Game content management service
 
 ## Entities

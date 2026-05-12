@@ -1,6 +1,8 @@
 import { readFile, writeFile } from 'fs/promises';
 import { basename, join, resolve } from 'path';
 
+export type WritePosition = 'top' | 'bottom';
+
 /**
  * Updates README files with generated class tables
  */
@@ -13,10 +15,18 @@ export class ReadmeWriter {
     this.readmePath = resolve(basePath, 'README.md');
   }
 
-  public async write(content: string, type: string): Promise<void> {
+  public async read(): Promise<string> {
+    return this.load();
+  }
+
+  public async write(
+    content: string,
+    type: string,
+    position: WritePosition = 'bottom',
+  ): Promise<void> {
     let readme = await this.load();
 
-    readme = this.updateContent(readme, content, type);
+    readme = this.updateContent(readme, content, type, position);
 
     await this.save(readme);
   }
@@ -34,17 +44,42 @@ export class ReadmeWriter {
     }
   }
 
-  private updateContent(readme: string, content: string, type: string): string {
+  private updateContent(
+    readme: string,
+    content: string,
+    type: string,
+    position: WritePosition,
+  ): string {
     const startTag = `<!-- poe:${type}:start -->`;
     const endTag = `<!-- poe:${type}:end -->`;
     const section = `${startTag}\n${content}\n${endTag}`;
     const start = readme.indexOf(startTag);
     const end = readme.indexOf(endTag);
-    const isExists = start !== -1 && end !== -1;
 
-    return isExists
-      ? readme.slice(0, start) + section + readme.slice(end + endTag.length)
-      : readme.trimEnd() + `\n\n${section}\n`;
+    if (start !== -1 && end !== -1) {
+      return (
+        readme.slice(0, start) + section + readme.slice(end + endTag.length)
+      );
+    }
+
+    if (position === 'top') {
+      return this.insertAfterTitle(readme, section);
+    }
+
+    return readme.trimEnd() + `\n\n${section}\n`;
+  }
+
+  private insertAfterTitle(readme: string, section: string): string {
+    const titleMatch = /^# .+\n/m.exec(readme);
+
+    if (!titleMatch) {
+      return `${section}\n\n${readme}`;
+    }
+
+    const insertAt = titleMatch.index + titleMatch[0].length;
+    const trailing = readme.slice(insertAt).replace(/^\n+/, '');
+
+    return readme.slice(0, insertAt) + `\n${section}\n\n${trailing}`;
   }
 
   private async readPackageName(): Promise<string> {

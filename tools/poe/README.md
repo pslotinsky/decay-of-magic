@@ -91,6 +91,7 @@ classDiagram
       -ConfigLoader configLoader
       -SchemaReader schemaReader
       +inspect()
+      -readPackageDescription()
     }
     class ClassDiagram {
       -ClassRegistry classRegistry
@@ -122,6 +123,13 @@ classDiagram
       -descriptionCell()
       -renderNotes()
     }
+    class HeaderBuilder {
+      +build()
+      +hasContent()
+      -buildToc()
+      -collectHeadings()
+      -slugify()
+    }
     class PackageReport {
       -PoeConfig config
       -ClassRegistry classRegistry
@@ -132,10 +140,12 @@ classDiagram
     class ReadmeWriter {
       -string basePath
       -string readmePath
+      +read()
       +write()
       -save()
       -load()
       -updateContent()
+      -insertAfterTitle()
       -readPackageName()
     }
     class ApiRenderer {
@@ -238,6 +248,7 @@ classDiagram
   InspectorPoe *-- SchemaReader
   InspectorPoe --> ClassRegistry
   InspectorPoe --> ClassRegistryParser
+  InspectorPoe --> HeaderBuilder
   InspectorPoe --> PackageReport
   InspectorPoe --> ReadmeWriter
   InspectorPoe --> Scanner
@@ -286,6 +297,7 @@ classDiagram
 | [InspectorPoe](src/InspectorPoe.ts) | Inspector Poe himself. Coordinates the inspection process |
 | ReadmeWriter/[ClassDiagram](src/ReadmeWriter/ClassDiagram.ts) | Generates a Mermaid class diagram for a single layer |
 | ReadmeWriter/[ClassTable](src/ReadmeWriter/ClassTable.ts) | Renders a markdown table of inspected classes |
+| ReadmeWriter/[HeaderBuilder](src/ReadmeWriter/HeaderBuilder.ts) | Assembles the README header block: package description plus a<br>table of contents that mirrors the document's top-level sections |
 | ReadmeWriter/[PackageReport](src/ReadmeWriter/PackageReport.ts) | Renders the full package report by dispatching each configured<br>layer to its matching renderer |
 | ReadmeWriter/[ReadmeWriter](src/ReadmeWriter/ReadmeWriter.ts) | Updates README files with generated class tables |
 | Renderers/[ApiRenderer](src/Renderers/ApiRenderer.ts) | Renders a layer as per-controller endpoint tables<br><br>Implements `Renderer` |

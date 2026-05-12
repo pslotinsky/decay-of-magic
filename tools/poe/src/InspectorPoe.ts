@@ -1,7 +1,9 @@
-import { basename, resolve } from 'path';
+import { readFile } from 'fs/promises';
+import { basename, join, resolve } from 'path';
 
 import { ClassRegistryParser } from './ClassRegistryParser/ClassRegistryParser';
 import { ConfigLoader } from './Config/ConfigLoader';
+import { HeaderBuilder } from './ReadmeWriter/HeaderBuilder';
 import { PackageReport } from './ReadmeWriter/PackageReport';
 import { ReadmeWriter } from './ReadmeWriter/ReadmeWriter';
 import { Scanner } from './Scanner/Scanner';
@@ -43,9 +45,30 @@ export class InspectorPoe {
     await writer.write(content, 'classes');
     await writer.write(InspectorPoe.FOOTER, 'footer');
 
+    const description = await this.readPackageDescription(packagePath);
+    const builder = new HeaderBuilder();
+    const readme = await writer.read();
+
+    if (builder.hasContent(description, readme)) {
+      const header = builder.build(description, readme);
+      await writer.write(header, 'header', 'top');
+    }
+
     console.info('classes generated');
 
     console.timeEnd('inspection completed');
+  }
+
+  private async readPackageDescription(
+    packagePath: string,
+  ): Promise<string | undefined> {
+    try {
+      const raw = await readFile(join(packagePath, 'package.json'), 'utf-8');
+      const pkg = JSON.parse(raw) as { description?: string };
+      return pkg.description?.trim() || undefined;
+    } catch {
+      return undefined;
+    }
   }
 
   private static readonly FOOTER =

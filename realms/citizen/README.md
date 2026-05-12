@@ -1,5 +1,15 @@
 # citizen
 
+<!-- poe:header:start -->
+**On this page**
+
+- [CLI](#cli)
+- [Frontier](#frontier)
+- [Law](#law)
+- [Lore](#lore)
+- [Ground](#ground)
+<!-- poe:header:end -->
+
 ## CLI
 
 Run administrative commands via the NestJS application context (requires `DATABASE_URL` in `.env` or environment):

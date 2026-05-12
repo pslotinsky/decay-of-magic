@@ -1,5 +1,13 @@
 # Vault service
 
+<!-- poe:header:start -->
+**On this page**
+
+- [Frontier](#frontier)
+- [Law](#law)
+- [Lore](#lore)
+<!-- poe:header:end -->
+
 Manages files: upload, storage, etc
 
 <!-- poe:classes:start -->
