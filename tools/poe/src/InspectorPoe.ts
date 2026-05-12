@@ -4,6 +4,7 @@ import { basename, join, resolve } from 'path';
 import { ClassRegistry } from './ClassRegistry/ClassRegistry';
 import { ClassRegistryParser } from './ClassRegistryParser/ClassRegistryParser';
 import { ConfigLoader } from './Config/ConfigLoader';
+import { ChildrenTable } from './Index/ChildrenTable';
 import { HeaderBuilder } from './ReadmeWriter/HeaderBuilder';
 import { PackageReport } from './ReadmeWriter/PackageReport';
 import { ReadmeWriter } from './ReadmeWriter/ReadmeWriter';
@@ -70,6 +71,39 @@ export class InspectorPoe {
     console.info('classes generated');
 
     console.timeEnd('inspection completed');
+  }
+
+  public async index(path: string): Promise<void> {
+    const folderPath = resolve(this.basePath, path);
+
+    console.info();
+    console.info(`indexing ${basename(folderPath)}...`);
+    console.time('index completed');
+
+    const table = await new ChildrenTable().build(folderPath);
+
+    if (table.length === 0) {
+      console.info('no children found');
+      console.timeEnd('index completed');
+      return;
+    }
+
+    const writer = new ReadmeWriter(folderPath);
+
+    await writer.write(table, 'children');
+
+    const description = await this.readPackageDescription(folderPath);
+    const builder = new HeaderBuilder();
+    const readme = await writer.read();
+
+    if (builder.hasContent(description, readme)) {
+      const header = builder.build(description, readme);
+      await writer.write(header, 'header', 'top');
+    }
+
+    console.info('index generated');
+
+    console.timeEnd('index completed');
   }
 
   private async readPackageDescription(

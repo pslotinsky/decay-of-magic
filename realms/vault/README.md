@@ -1,6 +1,8 @@
 # Vault service
 
 <!-- poe:header:start -->
+File vault — upload, storage, and serving of assets
+
 **On this page**
 
 - [Frontier](#frontier)

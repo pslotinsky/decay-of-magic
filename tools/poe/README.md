@@ -1,5 +1,9 @@
 # @dod/poe
 
+<!-- poe:header:start -->
+The inspector — generates README documentation by scanning workspace sources
+<!-- poe:header:end -->
+
 <!-- poe:classes:start -->
 ## Classes
 
@@ -89,11 +93,19 @@ classDiagram
       -extractBracedBlock()
       -splitTopLevel()
     }
+    class ChildrenTable {
+      +build()
+      -collectChildren()
+      -readPackage()
+      -columnHeader()
+      -titleCase()
+    }
     class InspectorPoe {
       -string basePath
       -ConfigLoader configLoader
       -SchemaReader schemaReader
       +inspect()
+      +index()
       -readPackageDescription()
     }
     class ClassDiagram {
@@ -147,6 +159,7 @@ classDiagram
       +write()
       -save()
       -load()
+      -titleCase()
       -updateContent()
       -insertAfterTitle()
       -readPackageName()
@@ -264,6 +277,7 @@ classDiagram
   InspectorPoe *-- SchemaReader
   InspectorPoe --> ClassRegistry
   InspectorPoe --> ClassRegistryParser
+  InspectorPoe --> ChildrenTable
   InspectorPoe --> HeaderBuilder
   InspectorPoe --> PackageReport
   InspectorPoe --> ReadmeWriter
@@ -315,7 +329,8 @@ classDiagram
 | Config/[ConfigLoader](src/Config/ConfigLoader.ts#L15) | Resolves and loads the Poe configuration for a target package |
 | Endpoints/[Endpoint](src/Endpoints/Endpoint.ts#L1) | A single HTTP endpoint exposed by a controller |
 | Endpoints/[EndpointExtractor](src/Endpoints/EndpointExtractor.ts#L12) | Parses controller source files and extracts HTTP endpoints |
-| [InspectorPoe](src/InspectorPoe.ts#L13) | Inspector Poe himself. Coordinates the inspection process |
+| Index/[ChildrenTable](src/Index/ChildrenTable.ts#L9) | Scans a folder for child workspaces (subdirs with a package.json) and<br>builds a markdown table that lists each child with its description |
+| [InspectorPoe](src/InspectorPoe.ts#L14) | Inspector Poe himself. Coordinates the inspection process |
 | ReadmeWriter/[ClassDiagram](src/ReadmeWriter/ClassDiagram.ts#L5) | Generates a Mermaid class diagram for a single layer |
 | ReadmeWriter/[ClassTable](src/ReadmeWriter/ClassTable.ts#L3) | Renders a markdown table of inspected classes |
 | ReadmeWriter/[HeaderBuilder](src/ReadmeWriter/HeaderBuilder.ts#L2) | Assembles the README header block: package description plus a<br>table of contents that mirrors the document's top-level sections |

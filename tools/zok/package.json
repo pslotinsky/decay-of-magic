@@ -2,6 +2,7 @@
   "name": "zok",
   "private": true,
   "version": "0.0.1",
+  "description": "The archivist — CLI for managing tasks, milestones, ADRs, and design docs",
   "bin": "./bin/zok",
   "scripts": {
     "build": "tsc -p tsconfig.build.json && tsc-alias",

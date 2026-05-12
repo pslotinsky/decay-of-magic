@@ -1,5 +1,9 @@
 # Gateway service
 
+<!-- poe:header:start -->
+API gateway — routes requests to downstream realms
+<!-- poe:header:end -->
+
 A classical gateway proxy that sits between clients and services.
 
 <!-- poe:classes:start -->

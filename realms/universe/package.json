@@ -1,6 +1,7 @@
 {
   "name": "universe",
   "version": "0.0.1",
+  "description": "Game world registry — universes, settings, and ownership boundaries",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\"",

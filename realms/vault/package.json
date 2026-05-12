@@ -1,7 +1,7 @@
 {
   "name": "vault",
   "version": "0.0.1",
-  "description": "",
+  "description": "File vault — upload, storage, and serving of assets",
   "author": "",
   "private": true,
   "license": "UNLICENSED",

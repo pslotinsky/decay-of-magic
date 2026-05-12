@@ -5,8 +5,8 @@ import { InspectorPoe } from './InspectorPoe';
 async function main(): Promise<void> {
   const [command, ...paths] = process.argv.slice(2);
 
-  if (command !== 'inspect') {
-    console.error('Usage: poe inspect [package-path ...]');
+  if (command !== 'inspect' && command !== 'index') {
+    console.error('Usage: poe <inspect|index> [path ...]');
     process.exit(1);
   }
 
@@ -14,7 +14,11 @@ async function main(): Promise<void> {
   const targets = paths.length > 0 ? paths : ['.'];
 
   for (const path of targets) {
-    await poe.inspect(path);
+    if (command === 'inspect') {
+      await poe.inspect(path);
+    } else {
+      await poe.index(path);
+    }
   }
 }
 

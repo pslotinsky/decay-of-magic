@@ -1,7 +1,7 @@
 {
   "name": "gateway",
   "version": "0.0.1",
-  "description": "",
+  "description": "API gateway — routes requests to downstream realms",
   "author": "",
   "private": true,
   "license": "UNLICENSED",

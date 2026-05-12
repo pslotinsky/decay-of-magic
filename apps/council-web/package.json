@@ -2,6 +2,7 @@
   "name": "council-web",
   "private": true,
   "version": "0.0.0",
+  "description": "Admin panel for managing universes, codex content, and citizens",
   "type": "module",
   "scripts": {
     "dev": "vite",

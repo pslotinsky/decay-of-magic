@@ -40,8 +40,16 @@ export class ReadmeWriter {
       return await readFile(this.readmePath, 'utf-8');
     } catch {
       const name = await this.readPackageName();
-      return `# ${name}\n\n`;
+      return `# ${this.titleCase(name)}\n\n`;
     }
+  }
+
+  private titleCase(text: string): string {
+    return text
+      .split('-')
+      .filter((part) => part.length > 0)
+      .map((part) => part[0].toUpperCase() + part.slice(1))
+      .join(' ');
   }
 
   private updateContent(

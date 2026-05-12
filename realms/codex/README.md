@@ -1,6 +1,8 @@
 # Codex service
 
 <!-- poe:header:start -->
+Game content management — cards, mana, mages, abilities
+
 **On this page**
 
 - [Entities](#entities)

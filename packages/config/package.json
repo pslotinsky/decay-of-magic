@@ -1,6 +1,7 @@
 {
   "name": "@dod/config",
   "version": "0.0.1",
+  "description": "Shared toolchain configuration — TypeScript, ESLint, Prettier, Poe layers",
   "private": true,
   "type": "module",
   "exports": {

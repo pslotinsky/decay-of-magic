@@ -1,6 +1,7 @@
 {
   "name": "poe",
   "version": "0.0.1",
+  "description": "The inspector — generates README documentation by scanning workspace sources",
   "private": true,
   "bin": "./bin/poe",
   "scripts": {

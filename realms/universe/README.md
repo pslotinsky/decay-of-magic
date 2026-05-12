@@ -1,6 +1,8 @@
 # universe
 
 <!-- poe:header:start -->
+Game world registry — universes, settings, and ownership boundaries
+
 **On this page**
 
 - [Frontier](#frontier)

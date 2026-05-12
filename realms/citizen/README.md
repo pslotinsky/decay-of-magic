@@ -1,6 +1,8 @@
 # citizen
 
 <!-- poe:header:start -->
+Citizenship registry — player accounts and sessions
+
 **On this page**
 
 - [CLI](#cli)

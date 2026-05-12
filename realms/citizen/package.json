@@ -1,7 +1,7 @@
 {
   "name": "citizen",
   "version": "0.0.1",
-  "description": "",
+  "description": "Citizenship registry — player accounts and sessions",
   "author": "",
   "private": true,
   "license": "UNLICENSED",

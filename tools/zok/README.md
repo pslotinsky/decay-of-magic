@@ -1,6 +1,8 @@
 # zok
 
 <!-- poe:header:start -->
+The archivist — CLI for managing tasks, milestones, ADRs, and design docs
+
 **On this page**
 
 - [Application](#application)

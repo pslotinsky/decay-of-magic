@@ -1,6 +1,7 @@
 {
   "name": "@dod/api-contract",
   "version": "0.0.1",
+  "description": "Shared API contracts — Zod schemas and DTOs consumed by every realm",
   "private": true,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

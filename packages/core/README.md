@@ -1,5 +1,9 @@
 # @dod/core
 
+<!-- poe:header:start -->
+Framework-agnostic runtime kernels — Entity, ZodBody, error types
+<!-- poe:header:end -->
+
 <!-- poe:classes:start -->
 ## Classes
 

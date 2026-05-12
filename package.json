@@ -10,7 +10,8 @@
     "typecheck": "turbo typecheck",
     "format": "turbo format",
     "check": "turbo format:check && turbo lint && turbo typecheck && pnpm run knip",
-    "docs": "turbo run docs",
+    "docs": "turbo run docs && pnpm run docs:index",
+    "docs:index": "./tools/poe/bin/poe index realms tools packages apps",
     "knip": "knip"
   },
   "devDependencies": {
