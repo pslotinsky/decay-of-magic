@@ -16,9 +16,11 @@
     "typecheck": "turbo typecheck",
     "format": "turbo format",
     "check": "turbo format:check && turbo lint && turbo typecheck",
-    "docs": "turbo run docs"
+    "docs": "turbo run docs",
+    "knip": "knip"
   },
   "devDependencies": {
+    "knip": "^6.12.2",
     "turbo": "^2.9.12"
   }
 }

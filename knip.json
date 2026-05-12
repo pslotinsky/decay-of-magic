@@ -1,0 +1,32 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "workspaces": {
+    ".": {
+      "ignoreBinaries": ["poe"]
+    },
+    "packages/config": {
+      "entry": []
+    },
+    "packages/*": {
+      "entry": ["poe.config.mjs"]
+    },
+    "tools/*": {
+      "entry": ["src/index.ts", "poe.config.mjs"]
+    },
+    "realms/citizen": {
+      "entry": ["src/main.ts", "poe.config.mjs", "test/api/*.api-spec.ts"]
+    },
+    "realms/codex": {
+      "entry": ["src/main.ts", "poe.config.mjs", "test/api/*.api-spec.ts", "test/flow/*.flow-spec.ts"]
+    },
+    "realms/universe": {
+      "entry": ["src/main.ts", "poe.config.mjs", "test/api/*.api-spec.ts"]
+    },
+    "realms/gateway": {
+      "entry": ["src/main.ts", "poe.config.mjs"]
+    },
+    "realms/vault": {
+      "entry": ["src/main.ts", "poe.config.mjs"]
+    }
+  }
+}
