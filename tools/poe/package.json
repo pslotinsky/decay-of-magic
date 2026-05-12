@@ -10,10 +10,10 @@
     "lint": "eslint \"src/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
-    "docs": "poe inspect"
+    "docs": "./bin/poe inspect"
   },
   "devDependencies": {
-    "@dod/config": "*",
+    "@dod/config": "workspace:*",
     "@types/lodash": "^4.17.24",
     "@types/node": "^25.6.2",
     "eslint": "^10.3.0",

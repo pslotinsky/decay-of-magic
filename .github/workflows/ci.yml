@@ -16,7 +16,7 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
   lint:
     name: Check
@@ -28,7 +28,7 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: Check
-        run: npm run check
+        run: pnpm run check
 
   test:
     name: Test
@@ -57,7 +57,7 @@ jobs:
       - name: Assert docs are up to date
         run: |
           if ! git diff --quiet; then
-            echo "::error::README files are out of date. Run 'npm run docs' and commit the result."
+            echo "::error::README files are out of date. Run 'pnpm run docs' and commit the result."
             git diff
             exit 1
           fi

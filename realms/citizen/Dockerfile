@@ -11,23 +11,28 @@ RUN turbo prune citizen --docker
 # 📦 Stage: Install
 # ================================
 FROM node:26-alpine AS installer
+RUN corepack enable
 WORKDIR /app
 
-COPY --from=pruner /app/out/json/ .
-COPY --from=pruner /app/out/package-lock.json ./package-lock.json
+# Fetch dependencies — keyed only on the lockfile, so this layer survives package.json edits
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+RUN pnpm fetch --frozen-lockfile
 
-# Copy Prisma schema before npm ci so postinstall (prisma generate) can run
+COPY --from=pruner /app/out/json/ .
+COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+
+# Copy Prisma schema before pnpm install so postinstall (prisma generate) can run
 COPY --from=pruner /app/out/full/realms/citizen/prisma ./realms/citizen/prisma
 COPY --from=pruner /app/out/full/realms/citizen/prisma.config.ts ./realms/citizen/prisma.config.ts
 COPY --from=pruner /app/out/full/realms/citizen/tsconfig*.json ./realms/citizen/
 
-RUN npm ci
+RUN pnpm install --frozen-lockfile --offline
 
 # Build internal deps used at compile and runtime
 COPY --from=pruner /app/packages/config ./packages/config
 COPY --from=pruner /app/out/full/packages/api-contract ./packages/api-contract
 COPY --from=pruner /app/out/full/packages/core ./packages/core
-RUN npm run build -w packages/api-contract -w packages/core
+RUN pnpm --filter @dod/api-contract --filter @dod/core run build
 
 # ================================
 # 🔨 Stage: Builder
@@ -38,13 +43,14 @@ WORKDIR /app
 COPY --from=pruner /app/out/full/realms/citizen/src ./realms/citizen/src
 
 WORKDIR /app/realms/citizen
-RUN npm run build
+RUN pnpm run build
 
 # ================================
 # 🚀 Stage: Development
 # Source is volume-mounted by docker-compose
 # ================================
 FROM node:26-alpine AS dev
+RUN corepack enable
 WORKDIR /app
 
 COPY --from=installer /app/node_modules ./node_modules
@@ -59,12 +65,13 @@ COPY --from=installer /app/realms/citizen/tsconfig*.json ./realms/citizen/
 COPY --from=installer /app/realms/citizen/prisma/generated ./realms/citizen/prisma/generated
 
 WORKDIR /app/realms/citizen
-CMD ["npm", "run", "start:debug"]
+CMD ["pnpm", "run", "start:debug"]
 
 # ================================
 # 🚀 Stage: Production
 # ================================
 FROM node:26-alpine AS prod
+RUN corepack enable
 WORKDIR /app
 
 COPY --from=builder /app/node_modules ./node_modules
@@ -77,8 +84,8 @@ COPY --from=builder /app/realms/citizen/dist ./realms/citizen/dist
 COPY --from=builder /app/realms/citizen/package.json ./realms/citizen/
 
 WORKDIR /app/realms/citizen
-RUN npm prune --production
+RUN pnpm prune --prod
 
 ENV NODE_ENV=production
 EXPOSE 3003
-CMD ["npm", "run", "start:prod"]
+CMD ["pnpm", "run", "start:prod"]

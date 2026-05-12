@@ -19,10 +19,10 @@ Game content management service
 psql -h 127.0.0.1 -U ruler -d codex
 
 # Generate a migration
-npm run prisma:generate migration_name
+pnpm run prisma:generate migration_name
 
 # Apply migrations to dev DB
-npm run prisma:migrate:dev
+pnpm run prisma:migrate:dev
 ```
 
 <!-- poe:classes:start -->

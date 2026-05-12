@@ -5,7 +5,7 @@
 Run administrative commands via the NestJS application context (requires `DATABASE_URL` in `.env` or environment):
 
 ```bash
-npm run cli -- <command> [options]
+pnpm run cli -- <command> [options]
 ```
 
 ### Commands
@@ -15,7 +15,7 @@ npm run cli -- <command> [options]
 Register a new citizen with a hashed password.
 
 ```bash
-npm run cli -- citizen:create --nickname <name> --password <secret>
+pnpm run cli -- citizen:create --nickname <name> --password <secret>
 ```
 
 | Option | Required | Description |

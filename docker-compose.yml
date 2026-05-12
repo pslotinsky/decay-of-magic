@@ -122,7 +122,7 @@ services:
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/codex"
     working_dir: /app/realms/codex
-    command: npm run prisma:migrate:deploy
+    command: pnpm run prisma:migrate:deploy
 
   codex:
     build:
@@ -185,7 +185,7 @@ services:
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/citizen"
     working_dir: /app/realms/citizen
-    command: npm run prisma:migrate:deploy
+    command: pnpm run prisma:migrate:deploy
 
   citizen:
     build:
@@ -221,7 +221,7 @@ services:
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/universe"
     working_dir: /app/realms/universe
-    command: npm run prisma:migrate:deploy
+    command: pnpm run prisma:migrate:deploy
 
   universe:
     build:

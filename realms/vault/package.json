@@ -14,7 +14,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "npm run test:unit",
+    "test": "pnpm run test:unit",
     "test:unit": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
@@ -24,8 +24,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1045.0",
-    "@dod/api-contract": "*",
-    "@dod/core": "*",
+    "@dod/api-contract": "workspace:*",
+    "@dod/core": "workspace:*",
     "@nestjs/common": "^11.1.19",
     "@nestjs/core": "^11.1.19",
     "@nestjs/cqrs": "^11.0.3",
@@ -38,7 +38,8 @@
     "zod": "^4.4.2"
   },
   "devDependencies": {
-    "@dod/config": "*",
+    "@dod/config": "workspace:*",
+    "poe": "workspace:*",
     "@nestjs/cli": "^11.0.21",
     "@nestjs/schematics": "^11.1.0",
     "@swc/cli": "^0.8.1",

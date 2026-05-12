@@ -11,17 +11,22 @@ RUN turbo prune vault --docker
 # 📦 Stage: Install
 # ================================
 FROM node:26-alpine AS installer
+RUN corepack enable
 WORKDIR /app
 
+# Fetch dependencies — keyed only on the lockfile, so this layer survives package.json edits
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+RUN pnpm fetch --frozen-lockfile
+
 COPY --from=pruner /app/out/json/ .
-COPY --from=pruner /app/out/package-lock.json ./package-lock.json
-RUN npm ci
+COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+RUN pnpm install --frozen-lockfile --offline
 
 # Build internal deps used at compile and runtime
 COPY --from=pruner /app/packages/config ./packages/config
 COPY --from=pruner /app/out/full/packages/api-contract ./packages/api-contract
 COPY --from=pruner /app/out/full/packages/core ./packages/core
-RUN npm run build -w packages/api-contract -w packages/core
+RUN pnpm --filter @dod/api-contract --filter @dod/core run build
 
 # ================================
 # 🔨 Stage: Builder
@@ -33,13 +38,14 @@ COPY --from=pruner /app/out/full/realms/vault/tsconfig*.json ./realms/vault/
 COPY --from=pruner /app/out/full/realms/vault/src ./realms/vault/src
 
 WORKDIR /app/realms/vault
-RUN npm run build
+RUN pnpm run build
 
 # ================================
 # 🚀 Stage: Development
 # Source is volume-mounted by docker-compose
 # ================================
 FROM node:26-alpine AS dev
+RUN corepack enable
 WORKDIR /app
 
 COPY --from=installer /app/node_modules ./node_modules
@@ -53,12 +59,13 @@ COPY --from=installer /app/realms/vault/package.json ./realms/vault/
 COPY --from=pruner /app/out/full/realms/vault/tsconfig*.json ./realms/vault/
 
 WORKDIR /app/realms/vault
-CMD ["npm", "run", "start:debug"]
+CMD ["pnpm", "run", "start:debug"]
 
 # ================================
 # 🚀 Stage: Production
 # ================================
 FROM node:26-alpine AS prod
+RUN corepack enable
 WORKDIR /app
 
 COPY --from=builder /app/node_modules ./node_modules
@@ -71,8 +78,8 @@ COPY --from=builder /app/realms/vault/dist ./realms/vault/dist
 COPY --from=builder /app/realms/vault/package.json ./realms/vault/
 
 WORKDIR /app/realms/vault
-RUN npm prune --production
+RUN pnpm prune --prod
 
 ENV NODE_ENV=production
 EXPOSE 3002
-CMD ["npm", "run", "start:prod"]
+CMD ["pnpm", "run", "start:prod"]
