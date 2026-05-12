@@ -20,13 +20,13 @@ The archivist — CLI for managing tasks, milestones, ADRs, and design docs
 
 | Use case | Description |
 |----------|-------------|
-| [ChangeStatusDutyInstruction](src/application/instructions/ChangeStatusDutyInstruction.ts#L14) | Returns: [`Document`](src/domain/entities/Document.ts#L37) |
-| [CreateDocumentDutyInstruction](src/application/instructions/CreateDocumentDutyInstruction.ts#L13) | Returns: [`Document`](src/domain/entities/Document.ts#L37) |
-| [DeleteDocumentDutyInstruction](src/application/instructions/DeleteDocumentDutyInstruction.ts#L8) | Returns: [`Document`](src/domain/entities/Document.ts#L37) |
-| [ListDocumentsDutyInstruction](src/application/instructions/ListDocumentsDutyInstruction.ts#L8) | Returns: [`Document`](src/domain/entities/Document.ts#L37)[] |
-| [MoveDocumentDutyInstruction](src/application/instructions/MoveDocumentDutyInstruction.ts#L15) | Returns: [`Document`](src/domain/entities/Document.ts#L37) |
-| [RenameDocumentDutyInstruction](src/application/instructions/RenameDocumentDutyInstruction.ts#L13) | Returns: [`Document`](src/domain/entities/Document.ts#L37) |
-| [UpdateDocumentRelationsDutyInstruction](src/application/instructions/UpdateDocumentRelationsDutyInstruction.ts#L15) | Returns: [`Document`](src/domain/entities/Document.ts#L37) \| undefined |
+| [ChangeStatusDutyInstruction](src/application/instructions/ChangeStatusDutyInstruction.ts#L14) | Returns: [`Document`](src/domain/entities/Document.ts#L38) |
+| [CreateDocumentDutyInstruction](src/application/instructions/CreateDocumentDutyInstruction.ts#L13) | Returns: [`Document`](src/domain/entities/Document.ts#L38) |
+| [DeleteDocumentDutyInstruction](src/application/instructions/DeleteDocumentDutyInstruction.ts#L8) | Returns: [`Document`](src/domain/entities/Document.ts#L38) |
+| [ListDocumentsDutyInstruction](src/application/instructions/ListDocumentsDutyInstruction.ts#L8) | Returns: [`Document`](src/domain/entities/Document.ts#L38)[] |
+| [MoveDocumentDutyInstruction](src/application/instructions/MoveDocumentDutyInstruction.ts#L15) | Returns: [`Document`](src/domain/entities/Document.ts#L38) |
+| [RenameDocumentDutyInstruction](src/application/instructions/RenameDocumentDutyInstruction.ts#L13) | Returns: [`Document`](src/domain/entities/Document.ts#L38) |
+| [UpdateDocumentRelationsDutyInstruction](src/application/instructions/UpdateDocumentRelationsDutyInstruction.ts#L16) | Returns: [`Document`](src/domain/entities/Document.ts#L38) \| undefined |
 
 ### Other
 
@@ -262,7 +262,7 @@ classDiagram
 | assistants/[PleaFormalist](src/domain/assistants/PleaFormalist.ts#L4) | Abstract · Extends [Assistant](src/domain/assistants/Assistant.ts#L3) |
 | assistants/[ProtocolClerk](src/domain/assistants/ProtocolClerk.ts#L4) | Abstract · Extends [Assistant](src/domain/assistants/Assistant.ts#L3) |
 | assistants/[Scribe](src/domain/assistants/Scribe.ts#L16) | Abstract · Extends [Assistant](src/domain/assistants/Assistant.ts#L3) |
-| entities/[Document](src/domain/entities/Document.ts#L37) |  |
+| entities/[Document](src/domain/entities/Document.ts#L38) |  |
 | entities/[DocumentLink](src/domain/entities/DocumentLink.ts#L2) |  |
 | entities/[DocumentProtocol](src/domain/entities/DocumentProtocol.ts#L13) |  |
 | entities/[Dossier](src/domain/entities/Dossier.ts#L8) |  |

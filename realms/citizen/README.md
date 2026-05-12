@@ -65,7 +65,7 @@ pnpm run cli -- citizen:create --nickname <name> --password <secret>
 
 | Use case | Description |
 |----------|-------------|
-| [RegisterCitizenCommand](src/law/commands/register-citizen.command.ts#L17) | Param `payload`: [`RegisterCitizenDto`](../../packages/api-contract/src/contracts/citizen.ts#L13)<br>Returns: [`CitizenDto`](../../packages/api-contract/src/contracts/citizen.ts#L7) |
+| [RegisterCitizenCommand](src/law/commands/register-citizen.command.ts#L18) | Param `payload`: [`RegisterCitizenDto`](../../packages/api-contract/src/contracts/citizen.ts#L13)<br>Returns: [`CitizenDto`](../../packages/api-contract/src/contracts/citizen.ts#L7) |
 | [UpdateCitizenCommand](src/law/commands/update-citizen.command.ts#L7) | Param `id`: `string`<br>Param `payload`: [`UpdateCitizenDto`](../../packages/api-contract/src/contracts/citizen.ts#L18)<br>Returns: [`CitizenDto`](../../packages/api-contract/src/contracts/citizen.ts#L7) |
 | [GetCitizenQuery](src/law/queries/get-citizen.query.ts#L7) | Param `id`: `string`<br>Returns: [`CitizenDto`](../../packages/api-contract/src/contracts/citizen.ts#L7) |
 | [ListCitizensQuery](src/law/queries/list-citizens.query.ts#L7) | Returns: [`CitizenDto`](../../packages/api-contract/src/contracts/citizen.ts#L7)[] |

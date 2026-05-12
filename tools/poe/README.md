@@ -336,7 +336,7 @@ classDiagram
 | ClassRegistryParser/[ClassParser](src/ClassRegistryParser/ClassParser.ts#L25) | Parses a single scanned file and extracts class definitions and imports |
 | ClassRegistryParser/[ClassRegistryParser](src/ClassRegistryParser/ClassRegistryParser.ts#L8) | Parses a collection of scanned files into a ClassRegistry |
 | ClassRegistryParser/[RelationBuilder](src/ClassRegistryParser/RelationBuilder.ts#L4) | Builds relations between inspected classes |
-| Config/[ConfigLoader](src/Config/ConfigLoader.ts#L15) | Resolves and loads the Poe configuration for a target package |
+| Config/[ConfigLoader](src/Config/ConfigLoader.ts#L16) | Resolves and loads the Poe configuration for a target package |
 | Endpoints/[Endpoint](src/Endpoints/Endpoint.ts#L1) | A single HTTP endpoint exposed by a controller |
 | Endpoints/[EndpointExtractor](src/Endpoints/EndpointExtractor.ts#L12) | Parses controller source files and extracts HTTP endpoints |
 | Index/[ChildrenTable](src/Index/ChildrenTable.ts#L9) | Scans a folder for child workspaces (subdirs with a package.json) and<br>builds a markdown table that lists each child with its description |
