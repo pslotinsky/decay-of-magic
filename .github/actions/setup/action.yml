@@ -1,34 +1,22 @@
 name: Setup
-description: Install Node + pnpm, restore caches, install dependencies if needed
+description: Install Node + pnpm, install dependencies, restore turbo cache
 
 runs:
   using: composite
   steps:
-    - uses: pnpm/action-setup@v4
+    - uses: pnpm/action-setup@v6
 
     - uses: actions/setup-node@v6
       with:
         node-version: '24'
         cache: pnpm
 
-    - name: Restore node_modules
-      id: node-modules
-      uses: actions/cache@v4
-      with:
-        path: |
-          node_modules
-          apps/*/node_modules
-          realms/*/node_modules
-          packages/*/node_modules
-          tools/*/node_modules
-        key: node-modules-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-
-    - if: steps.node-modules.outputs.cache-hit != 'true'
+    - name: Install dependencies
       shell: bash
       run: pnpm install --frozen-lockfile
 
     - name: Restore turbo cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           .turbo

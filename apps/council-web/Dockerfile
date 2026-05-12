@@ -11,16 +11,20 @@ RUN turbo prune council-web --docker
 # 📦 Stage: Install
 # ================================
 FROM node:26-alpine AS installer
+ENV PNPM_HOME=/pnpm
+ENV PATH=$PNPM_HOME:$PATH
 RUN npm install -g pnpm@10.33.0
 WORKDIR /app
 
 # Fetch dependencies — keyed only on the lockfile, so this layer survives package.json edits
 COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
-RUN pnpm fetch --frozen-lockfile
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm fetch --frozen-lockfile
 
 COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
-RUN pnpm install --frozen-lockfile --offline
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm install --frozen-lockfile --offline
 
 # Build @dod/api-contract (consumed by the web app)
 COPY --from=pruner /app/packages/config ./packages/config
@@ -35,7 +39,7 @@ FROM node:26-alpine AS dev
 RUN npm install -g pnpm@10.33.0
 WORKDIR /app
 
-COPY --from=installer /app/.npmrc /app/package.json /app/pnpm-workspace.yaml ./
+COPY --from=installer /app/package.json /app/pnpm-workspace.yaml ./
 COPY --from=installer /app/node_modules ./node_modules
 COPY --from=installer /app/apps/council-web/node_modules ./apps/council-web/node_modules
 COPY --from=installer /app/packages/api-contract/dist ./packages/api-contract/dist

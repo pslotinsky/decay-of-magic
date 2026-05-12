@@ -4,6 +4,9 @@ packages:
   - packages/*
   - tools/*
 
+nodeLinker: hoisted
+autoInstallPeers: true
+
 allowBuilds:
   '@nestjs/core': true
   '@parcel/watcher': true

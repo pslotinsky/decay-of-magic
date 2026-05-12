@@ -26,11 +26,14 @@ RUN turbo prune ${REALM} --docker
 # ================================
 FROM node:26-alpine AS installer-base
 ARG REALM
+ENV PNPM_HOME=/pnpm
+ENV PATH=$PNPM_HOME:$PATH
 RUN npm install -g pnpm@10.33.0
 WORKDIR /app
 
 COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
-RUN pnpm fetch --frozen-lockfile
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm fetch --frozen-lockfile
 
 COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
@@ -45,13 +48,15 @@ FROM installer-base AS installer-prisma-true
 ARG REALM
 COPY --from=pruner /app/out/full/realms/${REALM}/prisma ./realms/${REALM}/prisma
 COPY --from=pruner /app/out/full/realms/${REALM}/prisma.config.ts ./realms/${REALM}/prisma.config.ts
-RUN pnpm install --frozen-lockfile --offline
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm install --frozen-lockfile --offline
 
 # ================================
 # 📦 Stage: Install (non-prisma realms)
 # ================================
 FROM installer-base AS installer-prisma-false
-RUN pnpm install --frozen-lockfile --offline
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm install --frozen-lockfile --offline
 
 # ================================
 # 📦 Stage: Installer
@@ -85,7 +90,7 @@ ARG PORT
 RUN npm install -g pnpm@10.33.0
 WORKDIR /app
 
-COPY --from=installer /app/.npmrc /app/package.json /app/pnpm-workspace.yaml ./
+COPY --from=installer /app/package.json /app/pnpm-workspace.yaml ./
 COPY --from=installer /app/node_modules ./node_modules
 COPY --from=installer /app/realms/${REALM}/ ./realms/${REALM}/
 COPY --from=installer /app/packages/api-contract/dist ./packages/api-contract/dist
@@ -109,21 +114,21 @@ ARG PORT
 RUN npm install -g pnpm@10.33.0
 WORKDIR /app
 
-COPY --from=builder /app/.npmrc /app/package.json /app/pnpm-workspace.yaml ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/realms/${REALM}/node_modules ./realms/${REALM}/node_modules
-COPY --from=builder /app/realms/${REALM}/dist ./realms/${REALM}/dist
-COPY --from=builder /app/realms/${REALM}/package.json ./realms/${REALM}/
-COPY --from=builder /app/packages/api-contract/dist ./packages/api-contract/dist
-COPY --from=builder /app/packages/api-contract/node_modules ./packages/api-contract/node_modules
-COPY --from=builder /app/packages/api-contract/package.json ./packages/api-contract/
-COPY --from=builder /app/packages/core/dist ./packages/core/dist
-COPY --from=builder /app/packages/core/node_modules ./packages/core/node_modules
-COPY --from=builder /app/packages/core/package.json ./packages/core/
+COPY --from=builder --chown=node:node /app/package.json /app/pnpm-workspace.yaml ./
+COPY --from=builder --chown=node:node /app/node_modules ./node_modules
+COPY --from=builder --chown=node:node /app/realms/${REALM}/node_modules ./realms/${REALM}/node_modules
+COPY --from=builder --chown=node:node /app/realms/${REALM}/dist ./realms/${REALM}/dist
+COPY --from=builder --chown=node:node /app/realms/${REALM}/package.json ./realms/${REALM}/
+COPY --from=builder --chown=node:node /app/packages/api-contract/dist ./packages/api-contract/dist
+COPY --from=builder --chown=node:node /app/packages/api-contract/node_modules ./packages/api-contract/node_modules
+COPY --from=builder --chown=node:node /app/packages/api-contract/package.json ./packages/api-contract/
+COPY --from=builder --chown=node:node /app/packages/core/dist ./packages/core/dist
+COPY --from=builder --chown=node:node /app/packages/core/node_modules ./packages/core/node_modules
+COPY --from=builder --chown=node:node /app/packages/core/package.json ./packages/core/
 
 WORKDIR /app/realms/${REALM}
-RUN pnpm prune --prod
 
+USER node
 ENV NODE_ENV=production
 EXPOSE ${PORT}
 CMD ["pnpm", "run", "start:prod"]
