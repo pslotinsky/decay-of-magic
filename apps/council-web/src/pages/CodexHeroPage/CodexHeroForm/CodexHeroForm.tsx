@@ -21,8 +21,6 @@ import { type HeroFormPayload, useCodexHeroForm } from './useCodexHeroForm';
 
 import styles from './CodexHeroForm.module.scss';
 
-export type { HeroFormPayload };
-
 interface Props {
   formId: string;
   initial?: HeroDto;

@@ -15,7 +15,7 @@
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "format": "turbo format",
-    "check": "turbo format:check && turbo lint && turbo typecheck",
+    "check": "turbo format:check && turbo lint && turbo typecheck && npm run knip",
     "docs": "turbo run docs",
     "knip": "knip"
   },

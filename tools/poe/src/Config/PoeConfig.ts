@@ -1,13 +1,13 @@
 import { z } from 'zod';
 
-export const RendererKindSchema = z.enum([
+const RendererKindSchema = z.enum([
   'api',
   'application',
   'domain',
   'infrastructure',
 ]);
 
-export const LayerConfigSchema = z.object({
+const LayerConfigSchema = z.object({
   title: z.string().min(1),
   root: z.string().min(1),
   renderer: RendererKindSchema,

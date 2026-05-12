@@ -24,8 +24,6 @@ import { type CardFormPayload, useCodexCardForm } from './useCodexCardForm';
 
 import styles from './CodexCardForm.module.scss';
 
-export type { CardFormPayload };
-
 interface Props {
   formId: string;
   initial?: Partial<CardDto>;
