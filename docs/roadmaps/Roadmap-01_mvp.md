@@ -30,5 +30,5 @@
 - [x] [Milestone-003: Universe Realm](../milestones/Milestone-003_universe-realm.md)
 - [x] [Milestone-004: Tidy Up](../milestones/Milestone-004_tidy-up.md)
 - [x] [Milestone-005: Codex Realm](../milestones/Milestone-005_codex-realm.md)
-- [ ] [Milestone-006: Tidy Up II](../milestones/Milestone-006_tidy-up-ii.md)
+- [x] [Milestone-006: Tidy Up II](../milestones/Milestone-006_tidy-up-ii.md)
 <!-- TOC.END -->
