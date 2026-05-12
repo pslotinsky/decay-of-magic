@@ -23,7 +23,7 @@ Key goals:
 ## Tasks
 
 <!-- TOC.START: task -->
-- [ ] [DOD-0025: Tidy up structure and CI](../tasks/DOD-0025_tidy-up-structure-and-ci.md)
+- [x] [DOD-0025: Tidy up structure and CI](../tasks/DOD-0025_tidy-up-structure-and-ci.md)
 - [ ] [DOD-0026: Improve Poe and Zok](../tasks/DOD-0026_improve-poe-and-zok.md)
 - [ ] [DOD-0027: Migrate to pnpm](../tasks/DOD-0027_migrate-to-pnpm.md)
 <!-- TOC.END -->
