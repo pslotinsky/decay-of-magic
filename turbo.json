@@ -15,20 +15,20 @@
       "cache": false
     },
     "test:unit": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build", "prisma:generate"]
     },
     "test:flow": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build", "prisma:generate"]
     },
     "test:api": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "prisma:generate"],
       "cache": false
     },
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build", "prisma:generate"]
     },
     "typecheck": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build", "prisma:generate"]
     },
     "docs": {
       "dependsOn": ["poe#build"],
