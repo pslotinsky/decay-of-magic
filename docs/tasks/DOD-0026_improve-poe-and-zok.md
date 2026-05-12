@@ -2,7 +2,7 @@
 
 | Field     | Value                                                   |
 | --------- | ------------------------------------------------------- |
-| Status    | In progress                                             |
+| Status    | Done                                                    |
 | Milestone | [Tidy Up II](../milestones/Milestone-006_tidy-up-ii.md) |
 | Created   | 2026-05-12                                              |
 
