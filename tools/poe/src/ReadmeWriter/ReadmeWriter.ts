@@ -4,15 +4,25 @@ import { basename, join, resolve } from 'path';
 export type WritePosition = 'top' | 'bottom';
 
 /**
- * Updates README files with generated class tables
+ * Updates README files with generated class tables. In check mode,
+ * writes accumulate in memory without touching disk so callers can
+ * compare against the original to detect drift
  */
 export class ReadmeWriter {
   private readonly basePath: string;
   private readonly readmePath: string;
+  private readonly checkMode: boolean;
+  private originalContent: string | null | undefined;
+  private currentContent: string | undefined;
 
-  constructor(basePath: string) {
+  constructor(basePath: string, options: { check?: boolean } = {}) {
     this.basePath = basePath;
     this.readmePath = resolve(basePath, 'README.md');
+    this.checkMode = options.check ?? false;
+  }
+
+  public get path(): string {
+    return this.readmePath;
   }
 
   public async read(): Promise<string> {
@@ -24,24 +34,60 @@ export class ReadmeWriter {
     type: string,
     position: WritePosition = 'bottom',
   ): Promise<void> {
-    let readme = await this.load();
+    const readme = await this.load();
+    const updated = this.updateContent(readme, content, type, position);
 
-    readme = this.updateContent(readme, content, type, position);
+    this.currentContent = updated;
 
-    await this.save(readme);
+    if (!this.checkMode) {
+      await writeFile(this.readmePath, updated, 'utf-8');
+    }
   }
 
-  private async save(readme: string): Promise<void> {
-    await writeFile(this.readmePath, readme, 'utf-8');
+  public async isStale(): Promise<boolean> {
+    if (this.currentContent === undefined) return false;
+
+    const original = await this.readOriginal();
+
+    return original !== this.currentContent;
+  }
+
+  public async originalSnapshot(): Promise<string> {
+    return (await this.readOriginal()) ?? '';
+  }
+
+  public currentSnapshot(): string {
+    return this.currentContent ?? '';
   }
 
   private async load(): Promise<string> {
-    try {
-      return await readFile(this.readmePath, 'utf-8');
-    } catch {
-      const name = await this.readPackageName();
-      return `# ${this.titleCase(name)}\n\n`;
+    if (this.currentContent !== undefined) {
+      return this.currentContent;
     }
+
+    const original = await this.readOriginal();
+
+    if (original !== null) {
+      return original;
+    }
+
+    const name = await this.readPackageName();
+
+    return `# ${this.titleCase(name)}\n\n`;
+  }
+
+  private async readOriginal(): Promise<string | null> {
+    if (this.originalContent !== undefined) {
+      return this.originalContent;
+    }
+
+    try {
+      this.originalContent = await readFile(this.readmePath, 'utf-8');
+    } catch {
+      this.originalContent = null;
+    }
+
+    return this.originalContent;
   }
 
   private titleCase(text: string): string {

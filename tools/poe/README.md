@@ -104,8 +104,11 @@ classDiagram
       -string basePath
       -ConfigLoader configLoader
       -SchemaReader schemaReader
+      -ReadmeWriter writers
       +inspect()
       +index()
+      +staleReadmes()
+      -createWriter()
       -readPackageDescription()
     }
     class ClassDiagram {
@@ -155,10 +158,17 @@ classDiagram
     class ReadmeWriter {
       -string basePath
       -string readmePath
+      -boolean checkMode
+      -string originalContent
+      -string currentContent
+      +string path
       +read()
       +write()
-      -save()
+      +isStale()
+      +originalSnapshot()
+      +currentSnapshot()
       -load()
+      -readOriginal()
       -titleCase()
       -updateContent()
       -insertAfterTitle()
@@ -275,12 +285,12 @@ classDiagram
   EndpointExtractor --> ScannedFile
   InspectorPoe *-- ConfigLoader
   InspectorPoe *-- SchemaReader
+  InspectorPoe *-- ReadmeWriter
   InspectorPoe --> ClassRegistry
   InspectorPoe --> ClassRegistryParser
   InspectorPoe --> ChildrenTable
   InspectorPoe --> HeaderBuilder
   InspectorPoe --> PackageReport
-  InspectorPoe --> ReadmeWriter
   InspectorPoe --> ExternalTypeScanner
   InspectorPoe --> Scanner
   ClassDiagram *-- ClassRegistry
@@ -330,12 +340,12 @@ classDiagram
 | Endpoints/[Endpoint](src/Endpoints/Endpoint.ts#L1) | A single HTTP endpoint exposed by a controller |
 | Endpoints/[EndpointExtractor](src/Endpoints/EndpointExtractor.ts#L12) | Parses controller source files and extracts HTTP endpoints |
 | Index/[ChildrenTable](src/Index/ChildrenTable.ts#L9) | Scans a folder for child workspaces (subdirs with a package.json) and<br>builds a markdown table that lists each child with its description |
-| [InspectorPoe](src/InspectorPoe.ts#L14) | Inspector Poe himself. Coordinates the inspection process |
+| [InspectorPoe](src/InspectorPoe.ts#L18) | Inspector Poe himself. Coordinates the inspection process |
 | ReadmeWriter/[ClassDiagram](src/ReadmeWriter/ClassDiagram.ts#L5) | Generates a Mermaid class diagram for a single layer |
 | ReadmeWriter/[ClassTable](src/ReadmeWriter/ClassTable.ts#L3) | Renders a markdown table of inspected classes |
 | ReadmeWriter/[HeaderBuilder](src/ReadmeWriter/HeaderBuilder.ts#L2) | Assembles the README header block: package description plus a<br>table of contents that mirrors the document's top-level sections |
 | ReadmeWriter/[PackageReport](src/ReadmeWriter/PackageReport.ts#L4) | Renders the full package report by dispatching each configured<br>layer to its matching renderer |
-| ReadmeWriter/[ReadmeWriter](src/ReadmeWriter/ReadmeWriter.ts#L5) | Updates README files with generated class tables |
+| ReadmeWriter/[ReadmeWriter](src/ReadmeWriter/ReadmeWriter.ts#L5) | Updates README files with generated class tables. In check mode,<br>writes accumulate in memory without touching disk so callers can<br>compare against the original to detect drift |
 | Renderers/[ApiRenderer](src/Renderers/ApiRenderer.ts#L7) | Renders a layer as per-controller endpoint tables<br><br>Implements `Renderer` |
 | Renderers/[ApplicationRenderer](src/Renderers/ApplicationRenderer.ts#L10) | Renders a layer as a use-case table. Entry points (facades without a<br>parent base) get a separate section. Handlers and abstract bases are<br>hidden as implementation detail.<br><br>Implements `Renderer` |
 | Renderers/[DomainRenderer](src/Renderers/DomainRenderer.ts#L7) | Renders a layer as a Mermaid class diagram plus a table of its classes<br><br>Implements `Renderer` |

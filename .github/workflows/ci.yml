@@ -51,16 +51,11 @@ jobs:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
 
-      - name: Regenerate docs
-        run: npx turbo run docs
+      - name: Check workspace READMEs
+        run: npx turbo run docs -- --check
 
-      - name: Assert docs are up to date
-        run: |
-          if ! git diff --quiet; then
-            echo "::error::README files are out of date. Run 'pnpm run docs' and commit the result."
-            git diff
-            exit 1
-          fi
+      - name: Check root index READMEs
+        run: ./tools/poe/bin/poe index --check realms tools packages apps
 
   test-api:
     name: API Tests (${{ matrix.realm }})

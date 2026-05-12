@@ -12,6 +12,10 @@ import { ExternalTypeScanner } from './Scanner/ExternalTypeScanner';
 import { Scanner } from './Scanner/Scanner';
 import { SchemaReader } from './Schema/SchemaReader';
 
+export type InspectorOptions = {
+  check?: boolean;
+};
+
 /**
  * Inspector Poe himself. Coordinates the inspection process
  */
@@ -19,6 +23,7 @@ export class InspectorPoe {
   private readonly basePath: string;
   private readonly configLoader: ConfigLoader;
   private readonly schemaReader: SchemaReader;
+  private readonly writers: ReadmeWriter[] = [];
 
   constructor(basePath: string) {
     this.basePath = basePath;
@@ -26,7 +31,10 @@ export class InspectorPoe {
     this.schemaReader = new SchemaReader();
   }
 
-  public async inspect(path: string): Promise<void> {
+  public async inspect(
+    path: string,
+    options: InspectorOptions = {},
+  ): Promise<void> {
     const packagePath = resolve(this.basePath, path);
 
     console.info();
@@ -54,7 +62,7 @@ export class InspectorPoe {
     console.info(`classes found: ${classes.items.length}`);
 
     const content = new PackageReport(config, classes).render();
-    const writer = new ReadmeWriter(packagePath);
+    const writer = this.createWriter(packagePath, options);
 
     await writer.write(content, 'classes');
     await writer.write(InspectorPoe.FOOTER, 'footer');
@@ -73,7 +81,10 @@ export class InspectorPoe {
     console.timeEnd('inspection completed');
   }
 
-  public async index(path: string): Promise<void> {
+  public async index(
+    path: string,
+    options: InspectorOptions = {},
+  ): Promise<void> {
     const folderPath = resolve(this.basePath, path);
 
     console.info();
@@ -88,7 +99,7 @@ export class InspectorPoe {
       return;
     }
 
-    const writer = new ReadmeWriter(folderPath);
+    const writer = this.createWriter(folderPath, options);
 
     await writer.write(table, 'children');
 
@@ -104,6 +115,29 @@ export class InspectorPoe {
     console.info('index generated');
 
     console.timeEnd('index completed');
+  }
+
+  public async staleReadmes(): Promise<string[]> {
+    const stale: string[] = [];
+
+    for (const writer of this.writers) {
+      if (await writer.isStale()) {
+        stale.push(writer.path);
+      }
+    }
+
+    return stale;
+  }
+
+  private createWriter(
+    targetPath: string,
+    options: InspectorOptions,
+  ): ReadmeWriter {
+    const writer = new ReadmeWriter(targetPath, { check: options.check });
+
+    this.writers.push(writer);
+
+    return writer;
   }
 
   private async readPackageDescription(
