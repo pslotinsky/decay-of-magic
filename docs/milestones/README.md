@@ -7,4 +7,5 @@
 - [x] [Milestone-004: Tidy Up](./Milestone-004_tidy-up.md)
 - [x] [Milestone-005: Codex Realm](./Milestone-005_codex-realm.md)
 - [x] [Milestone-006: Tidy Up II](./Milestone-006_tidy-up-ii.md)
+- [ ] [Milestone-007: Lab + Engine](./Milestone-007_lab-engine.md)
 <!-- TOC.END -->

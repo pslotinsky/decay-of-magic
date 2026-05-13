@@ -31,4 +31,5 @@
 - [x] [Milestone-004: Tidy Up](../milestones/Milestone-004_tidy-up.md)
 - [x] [Milestone-005: Codex Realm](../milestones/Milestone-005_codex-realm.md)
 - [x] [Milestone-006: Tidy Up II](../milestones/Milestone-006_tidy-up-ii.md)
+- [ ] [Milestone-007: Lab + Engine](../milestones/Milestone-007_lab-engine.md)
 <!-- TOC.END -->

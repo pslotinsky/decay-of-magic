@@ -9,4 +9,5 @@
 - [Design-006: Realms Testing](./Design-006_realms-testing.md)
 - [Design-007: Codex Realm](./Design-007_codex-realm.md)
 - [Design-008: Card DSL](./Design-008_card-dsl.md)
+- [Design-009: Lab Realm](./Design-009_lab-realm.md)
 <!-- TOC.END -->
