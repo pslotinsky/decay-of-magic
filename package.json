@@ -17,8 +17,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.15",
-    "knip": "^6.12.2",
+    "knip": "^6.14.1",
     "poe": "workspace:*",
-    "turbo": "^2.9.12"
+    "turbo": "^2.9.14"
   }
 }
