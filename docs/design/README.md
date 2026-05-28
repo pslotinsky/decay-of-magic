@@ -10,4 +10,5 @@
 - [Design-007: Codex Realm](./Design-007_codex-realm.md)
 - [Design-008: Card DSL](./Design-008_card-dsl.md)
 - [Design-009: Lab Realm](./Design-009_lab-realm.md)
+- [Design-010: Engine](./Design-010_engine-prototype.md)
 <!-- TOC.END -->
