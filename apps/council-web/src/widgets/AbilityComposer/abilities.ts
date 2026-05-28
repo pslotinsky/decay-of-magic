@@ -55,8 +55,6 @@ export function emptyEffect(kind: EffectKind): EffectDto {
     case 'fullHeal':
     case 'destroy':
     case 'attackNow':
-    case 'preventDamage':
-    case 'reflectDamage':
       return { kind, params: {} };
     case 'gainElement':
     case 'decreaseElement':

@@ -33,8 +33,6 @@ export function EffectParams({ effect, context, onChange }: Props) {
       );
     case 'fullHeal':
     case 'destroy':
-    case 'preventDamage':
-    case 'reflectDamage':
       return null;
     case 'attackNow': {
       const params = effect.params;

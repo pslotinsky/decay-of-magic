@@ -153,30 +153,27 @@ A trigger names the engine event that fires the ability. Triggers are camelCase,
 ```yaml
 trigger: onPlay              # card was just played
 trigger: onTurnStart         # at start of owner's turn
-trigger: onTurnEnd           # at end of owner's turn
 trigger: onDeath             # this minion died
 trigger: onDamaged           # this entity took damage
-trigger: onBeforeDamage      # damage about to be dealt; replacement window
-trigger: onAttack            # this minion attacked
-trigger: onBeforeAttack      # this minion is about to attack; replacement window
-trigger: onSummon            # an ally was summoned
+trigger: onDealDamage        # this entity dealt damage
+trigger: onSummon            # this minion entered play
 ```
 
-Triggers are universe-agnostic. Universe-specific concepts (e.g., "before spell damage") are expressed by combining a generic trigger (`onBeforeDamage`) with a filter on source traits — see [Damage events](#damage-events).
+Triggers are universe-agnostic. Universe-specific concepts (e.g., "took spell damage") are expressed by combining a generic trigger (`onDamaged`) with a filter on source traits — see [Damage events](#damage-events).
 
-Damage triggers (`onBeforeDamage`, `onDamaged`) fire on the *target* of the damage. The attacker's reactivity uses `onBeforeAttack` / `onAttack` instead — those fire on the source side and are kept distinct from damage-side hooks.
+Damage triggers split by side: `onDamaged` fires on the *target* of the damage; `onDealDamage` fires on the *source*. Target-side and source-side hooks are deliberately separate so an ability never has to disambiguate which side of a damage event it's reacting to.
 
 ### Passive
 
-`passive: true` marks an ability that is in force while the card is on the board. The engine activates it on enter-board and deactivates it on leave-board. Passive abilities typically apply modifiers; they may also reference other passive state.
+`passive: true` marks an ability that is in force while the card is on the board. Its effect is *continuous*, not a stored change: an affected entity carries the bonus exactly while the passive is active and the entity is in the passive's target scope. The engine derives this on read rather than applying and reverting a record (see [Design-010 — Battle model](./Design-010_engine-prototype.md#notes-on-contents)).
 
-Lifecycle:
+Lifecycle (observable behavior):
 
-- **On enter-board** — the target set is resolved, `exclude` is evaluated per candidate, and modifiers apply to surviving candidates.
-- **While active** — the target set is reactive: entities entering scope (e.g., a new neighbor) are evaluated against `exclude` and gain the modifier if they pass; entities leaving scope (moved, died, removed) have the modifier reverted. `exclude` is checked when an entity enters scope, not retroactively as that entity's own state evolves.
-- **On leave-board** — every modifier the passive applied is reverted.
+- **On enter-board** — the passive's target set is resolved and `exclude` is evaluated per candidate; surviving candidates carry the bonus.
+- **While active** — the target set is reactive: an entity entering scope (e.g., a new neighbor) is evaluated against `exclude` and carries the bonus if it passes; an entity leaving scope (moved, died, removed) stops carrying it. `exclude` is checked when an entity enters scope, not retroactively as that entity's own state evolves.
+- **On leave-board** — the passive stops contributing, so every bonus it was granting disappears at once.
 
-A `passive` `increaseStat` therefore behaves like a tracked binding, not a one-shot mutation: when the passive deactivates, the bonus disappears. (Permanent stat mutations come from triggered abilities, not passives.)
+A `passive` `increaseStat` is therefore continuous, not a one-shot mutation: when the passive deactivates, the bonus vanishes with it. (Permanent stat mutations come from triggered abilities, not passives.)
 
 ```yaml
 - passive: true
@@ -382,8 +379,6 @@ Reference set (universe-agnostic):
 | `summon`        | `{ minion: <prototype-ref> }`                        | Summon a minion. Slot grammar TBD; see [Summon slot — TBD](#summon-slot--tbd). |
 | `destroy`       | `{}`                                                 | Remove each target from play (no damage event).                        |
 | `attackNow`     | `{}`                                                 | Each target attacks immediately, ignoring summoning sickness.          |
-| `preventDamage` | `{}`                                                 | Used inside `onBeforeDamage` to cancel the damage event.               |
-| `reflectDamage` | `{}`                                                 | Used inside `onBeforeDamage` to redirect damage back at the source.    |
 
 Stat-modification effects (`increaseStat`, `decreaseStat`, `multiplyStat`, `setStat`) accept multi-stat objects so authors can express "+2 attack and +3 health" as one effect node. Each key must be a valid stat slug for the target's entity type.
 
@@ -401,28 +396,25 @@ Until a card forces the choice, `summon` ships without a `slot` parameter. Autho
 
 ## Damage events
 
-There is one engine event for damage about to be dealt: **`onBeforeDamage`**. There is no `onBeforeSpellDamage`, `onBeforeAttackDamage`, etc. — those would bake universe-specific damage taxonomies into the engine.
-
-`onBeforeDamage` and `onDamaged` fire on the *target* of the damage. Source-side reactivity (e.g., "when this minion attacks") uses `onBeforeAttack` / `onAttack` instead — those fire on the attacker, not on the damaged entity. Target-side and source-side hooks are deliberately separate so an ability never has to disambiguate which side of a damage event it's reacting to.
+Damage is one engine event, not a family split by source. There is no `spellDamaged`, `attackDamaged`, etc. — those would bake universe-specific damage taxonomies into the engine. A single damage event fires `onDamaged` on the *target* and `onDealDamage` on the *source*; content distinguishes spell-vs-attack-vs-ability damage with a filter on the source's traits, not with extra trigger names. Target-side and source-side hooks are deliberately separate so an ability never has to disambiguate which side of a damage event it's reacting to.
 
 The damage event payload includes a **source** reference. The source's traits are accessed via the standard expression grammar:
 
 ```yaml
-# Ice Golem: immune to spell damage
-abilities:
-  - trigger: onBeforeDamage
-    target: self
-    effects:
-      - kind: preventDamage
-        params: {}
-        filter: { contains: [event.source.traits, 'spell'] }
+# Phoenix: rebirth blocked by "destruction" damage sources
+- trigger: onDeath
+  target: self
+  exclude: { contains: [event.source.traits, 'destruction'] }
+  effects:
+    - kind: summon
+      params: { minion: phoenix }
 ```
 
 The same shape works in any Universe by changing the trait slug:
 
 ```yaml
-# Robots universe: armor plating, immune to kinetic damage
-filter: { contains: [event.source.traits, 'kinetic'] }
+# Robots universe: armor plating immune to kinetic sources
+exclude: { contains: [event.source.traits, 'kinetic'] }
 ```
 
 Damage source taxonomy is content-side. The trait dictionary owns it. The Card prototype's `traits` field is what makes a spell card carry the `spell` trait — that's the same trait dictionary, used at the source side instead of the target side.
@@ -442,23 +434,7 @@ Semantics:
 
 - `duration` is a positive integer. It counts the number of owner-turn-ends the trait survives.
 - A trait without `duration` is permanent — it stays on the entity until explicitly removed.
-- "Until X" cases that are not turn-counted (e.g. "until next attack") are not represented as durations. They are modeled as a removal trigger on the granting card or on the recipient:
-
-```yaml
-# Hypothetical: "give a minion charge until it attacks"
-- trigger: onPlay
-  target: ownerMinion
-  effects:
-    - kind: giveTraits
-      params: { traits: [charge] }
-- trigger: onAttack
-  target: chosen
-  effects:
-    - kind: removeTraits
-      params: { traits: [charge] }
-```
-
-This keeps `duration` purely numeric and avoids a special-token vocabulary (`thisTurn`, `untilAttack`, `permanent`). Permanent is "absent". Numeric is integer. Anything else is a removal trigger.
+- "Until X" cases that are not turn-counted are modeled as a removal trigger on the granting card or on the recipient: a paired ability that fires `removeTraits` when the engine emits the relevant trigger. This keeps `duration` purely numeric and avoids a special-token vocabulary (`thisTurn`, `untilAttack`, `permanent`). Permanent is "absent". Numeric is integer. Anything else is a removal trigger.
 
 ## Worked examples
 
@@ -612,24 +588,17 @@ abilities:
 
 ### Ice Golem · 4·4/12
 
-Minion. Immune to spell damage — modeled with the `immuneToSpells` trait, plus a `onBeforeDamage` ability that fires `preventDamage` when the damage source carries the `spell` trait.
+Minion. Immune to spell damage — modeled with the engine-handled `spellImmunity` trait. The trait is content-declared; the damage pipeline reads it and nullifies any damage whose source carries the `spell` trait.
 
 ```yaml
 name: Ice Golem
 cost: { water: 4 }
 stats: { attack: 4, health: 12 }
-traits: [immuneToSpells]
+traits: [spellImmunity]
 activation: emptySlot
-abilities:
-  - trigger: onBeforeDamage
-    target: self
-    effects:
-      - kind: preventDamage
-        params: {}
-        filter: { contains: [event.source.traits, 'spell'] }
 ```
 
-The `immuneToSpells` trait by itself is descriptive — it carries no engine semantics. The ability is what implements the immunity. (In a future iteration, "named keyword abilities" can collapse this pair into a single trait reference; see [Future work](#future-work).)
+Damage-pipeline traits like `spellImmunity`, `armor`, and `damageMultiplier` are engine vocabulary: their slugs appear in content, but the engine — not a content ability — implements their semantics. Adding a new pipeline trait is an engine change.
 
 ### Fire Elemental · 10·?/37
 

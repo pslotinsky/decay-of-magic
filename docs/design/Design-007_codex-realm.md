@@ -230,9 +230,9 @@ A passive ability is in force while the card is on the board (the engine activat
 
 ### Trigger
 
-Names the engine event that fires an ability. Triggers are camelCase and drawn from a small engine-published vocabulary that all Universes share. Examples: `onPlay`, `onTurnStart`, `onTurnEnd`, `onDeath`, `onDamaged`, `onBeforeDamage`, `onAttack`, `onSummon`.
+Names the engine event that fires an ability. Triggers are camelCase and drawn from a small engine-published vocabulary that all Universes share. Examples: `onPlay`, `onTurnStart`, `onDeath`, `onDamaged`, `onDealDamage`, `onSummon`.
 
-Universe-specific concepts (e.g., "before spell damage") are expressed by combining a generic trigger (`onBeforeDamage`) with a per-effect filter on source Traits — never by adding new trigger names to the vocabulary.
+Universe-specific concepts (e.g., "took spell damage") are expressed by combining a generic trigger (`onDamaged`) with a per-effect filter on source Traits — never by adding new trigger names to the vocabulary.
 
 ### Target
 
@@ -250,7 +250,7 @@ An Effect carries:
 - **`params`** — kind-specific arguments (each registry entry declares its own param schema),
 - an optional **`filter`** Expression — narrows the ability's target set further for this specific effect.
 
-The reference set of registry kinds (universe-agnostic): `damage`, `heal`, `fullHeal`, `gainElement`, `increaseStat`, `decreaseStat`, `multiplyStat`, `setStat`, `giveTraits`, `removeTraits`, `summon`, `destroy`, `attackNow`, `preventDamage`, `reflectDamage`. Universes don't add new effect functions — they add Stats, Traits, and Elements that effect functions reference.
+The reference set of registry kinds (universe-agnostic): `damage`, `heal`, `fullHeal`, `gainElement`, `increaseStat`, `decreaseStat`, `multiplyStat`, `setStat`, `giveTraits`, `removeTraits`, `summon`, `destroy`, `attackNow`. Universes don't add new effect functions — they add Stats, Traits, and Elements that effect functions reference.
 
 ### Expression
 

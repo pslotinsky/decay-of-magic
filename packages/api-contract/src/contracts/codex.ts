@@ -15,16 +15,12 @@ export const TRIGGER_VALUES = [
   'onPlay',
   'onAfterPlay',
   'onTurnStart',
-  'onTurnEnd',
-  'onDeath',
   'onDamaged',
-  'onBeforeDamage',
   'onDealDamage',
-  'onAttack',
-  'onBeforeAttack',
   'onSummon',
   'onOwnerMinionSummoned',
   'onEnemyMinionSummoned',
+  'onDeath',
   'onOwnerMinionDied',
   'onEnemyMinionDied',
 ] as const;
@@ -36,7 +32,7 @@ export const TARGET_VALUES = [
   'ownerHero',
   'enemyHero',
   'chosen',
-  'event',
+  'eventSubject',
   'oppositeSlot',
   'neighbors',
   'ownerMinions',
@@ -84,8 +80,6 @@ export const EFFECT_KIND_VALUES = [
   'summon',
   'destroy',
   'attackNow',
-  'preventDamage',
-  'reflectDamage',
   'replaceWith',
 ] as const;
 export const EffectKindSchema = z.enum(EFFECT_KIND_VALUES);
@@ -246,16 +240,6 @@ const EffectSchema = z.discriminatedUnion('kind', [
   z.object({
     kind: z.literal('attackNow'),
     params: z.strictObject({ target: TargetSchema.optional() }),
-    filter: ExpressionSchema.optional(),
-  }),
-  z.object({
-    kind: z.literal('preventDamage'),
-    params: z.strictObject({}),
-    filter: ExpressionSchema.optional(),
-  }),
-  z.object({
-    kind: z.literal('reflectDamage'),
-    params: z.strictObject({}),
     filter: ExpressionSchema.optional(),
   }),
   z.object({

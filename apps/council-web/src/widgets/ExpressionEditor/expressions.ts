@@ -10,7 +10,6 @@ export const PATH_ROOTS = [
   'enemyHero',
   'target',
   'chosen',
-  'source',
   'event',
 ] as const;
 
