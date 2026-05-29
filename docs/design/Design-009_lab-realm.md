@@ -8,7 +8,7 @@
 
 Lab is the platform's simulation realm. It emulates matches against a deterministic engine to produce balance signal — win rates, score trajectories, per-Card frequency, Guinea Pig comparisons.
 
-Lab is the first real consumer of the engine API. It drives the same step/yield loop a human player would, with an AI policy supplying actions instead of a human. The engine is policy-free; Battle (future) and Lab (now) share one API.
+Lab is the first real consumer of the engine API. It drives the same Observe / Submit loop a human player would, with a Guinea Pig supplying actions instead of a human. The engine is policy-free; Battle (future) and Lab (now) share one API.
 
 Lab consumes Codex (Universe content snapshotted at experiment start) and the engine (one session per Trial; engine resolved per Universe). Council renders Lab's read API. Human play is Battle's concern, not Lab's.
 
@@ -35,17 +35,18 @@ flowchart LR
 | **Trial** | One simulated game within an Experiment (entity) |
 | **Criterion** | Named weighted feature set for scoring states (entity) |
 | **Findings** | Aggregated conclusions of an Experiment (value object) |
-| **Observation** | Per-yield-point record within a Trial (value object) |
-| **Guinea Pig** | Action-selection policy used inside Trials (code module, not entity) |
+| **Observation** | Per-decision-point record within a Trial (value object) |
+| **Guinea Pig** | A configured player used inside Trials — a character plus its params (value object) |
+| **Character** | An action-selection strategy a Guinea Pig plays with (code module) |
 
 ## Functionality
 
 Lab's MVP capabilities. Each maps to one or more use cases.
 
-- **Run one trial.** Emulate a complete trial end-to-end from a Protocol (Heroes, decks, Guinea Pig per side). Produces a Trial record — full observation log plus engine event log.
+- **Run one trial.** Emulate a complete trial end-to-end from a Protocol (Heroes, decks, Guinea Pig per side). Produces a Trial record — the observation log (each entry carrying its engine event delta) plus the outcome.
 - **Run a batch.** Repeat single-trial emulation N times with fresh seeds against the same Protocol. Produces an Experiment containing N Trials and aggregated Findings.
-- **Compare.** A batch variant: hold most of a Protocol constant, vary one axis per side — Guinea Pig, Criterion, or both. Used to compare AI policies and to research which Criterion best models a Universe. Produces Findings stratified by the axis that varied.
-- **Inspect a Trial.** Read a Trial's full observation log — every yield point, the action chosen, the alternatives considered with their scores, the engine event delta, the resulting score delta. Surfaces *critical moments* (largest score swings) so a designer can find a trial's turning point without scrolling the whole log.
+- **Compare.** A batch variant: hold most of a Protocol constant, vary one axis per side — Guinea Pig, Criterion, or both. Used to compare Guinea Pigs and to research which Criterion best models a Universe. Produces Findings stratified by the axis that varied.
+- **Inspect a Trial.** Read a Trial's full observation log — every decision point, the action chosen, the alternatives considered with their scores, the engine event delta, the resulting score delta. Surfaces *critical moments* (largest score swings) so a designer can find a trial's turning point without scrolling the whole log.
 - **Inspect an Experiment.** Read an Experiment's aggregated Findings — win rate per side (and per Guinea Pig if applicable), trial-length distribution, per-turn score trajectories with confidence bands, per-Card frequency, per-Card win-when-played correlation, termination-reason breakdown.
 - **Define scoring.** Create, edit, clone Criteria per Universe. Each is a named weighted feature set that Guinea Pigs consult when evaluating candidate states. The other half of emulation configuration — rules — is inherited from the Universe in MVP (not per-Protocol tunable; see [Out of scope](#out-of-scope)).
 
@@ -67,15 +68,16 @@ sequenceDiagram
     Council->>Lab: POST protocol, start experiment (seed?)
     Lab->>Codex: Load Universe content snapshot
     Codex-->>Lab: Cards, Heroes, dictionaries
-    Lab->>Engine: New trial (snapshot, initial state, seed)
-    loop until terminal
-        Engine-->>Lab: Yields decision point (state, legal actions)
+    Lab->>Engine: Construct(snapshot, initial state, seed, onEvent)
+    loop until Outcome set
+        Lab->>Engine: Observe
+        Engine-->>Lab: Decision point (state, playable cards, targets)
         Lab->>Lab: GuineaPig.pickAction(state, legalActions)
         Lab->>Engine: Submit chosen action
-        Engine-->>Lab: Event log delta
+        Note over Lab,Engine: Submit fires Events to onEvent;<br/>Lab buffers them as the Observation's event delta
     end
-    Engine-->>Lab: Terminal state + winner
-    Lab->>Lab: Build Trial record (observations, event log)
+    Engine-->>Lab: Outcome (winner, reason)
+    Lab->>Lab: Build Trial record (observations, outcome)
     Lab-->>Council: Trial record
     Council-->>Designer: Render trajectory + log
 ```
@@ -94,9 +96,9 @@ sequenceDiagram
     Designer->>Council: Configure Protocol
     Council->>Lab: POST protocol, start experiment (trialCount=1000)
     loop N trials
-        Lab->>Engine: New trial (fresh seed per trial)
-        Note over Lab,Engine: Same step/yield loop as single trial
-        Engine-->>Lab: Terminal state
+        Lab->>Engine: Construct (fresh seed per trial)
+        Note over Lab,Engine: Same Observe / Submit loop as single trial
+        Engine-->>Lab: Outcome
         Lab->>Lab: Append outcome
     end
     Lab->>Lab: Aggregate (win rate, distributions, curves)
@@ -106,7 +108,7 @@ sequenceDiagram
 
 ### Comparison
 
-A designer wants to compare two variants of one axis — two Guinea Pigs (which AI policy plays better?), two Criteria (which scoring better models the Universe?), or a (Guinea Pig, Criterion) pair on each side. Everything else in the Protocol is held constant.
+A designer wants to compare two variants of one axis — two Guinea Pigs (which plays better?), two Criteria (which scoring better models the Universe?), or a (Guinea Pig, Criterion) pair on each side. Everything else in the Protocol is held constant.
 
 ```mermaid
 sequenceDiagram
@@ -119,9 +121,9 @@ sequenceDiagram
     Note over Designer,Council: variant = Guinea Pig or Criterion or both
     Council->>Lab: POST protocol
     loop N trials
-        Lab->>Engine: New trial
+        Lab->>Engine: Construct
         Note over Lab: Side A runs variant A,<br/>side B runs variant B
-        Engine-->>Lab: Terminal state
+        Engine-->>Lab: Outcome
     end
     Lab-->>Council: Aggregate stratified by variant
     Council-->>Designer: Win rate per variant + score curves
@@ -156,7 +158,7 @@ The input to an experiment. A reusable specification of what to test. Carries:
 
 - a **Universe** reference — resolves Codex content and the engine that drives the trial,
 - an **initial setup** — the per-side starting data the engine consumes. The shape is engine-defined and varies by Universe. For the MVP universes this is a Hero plus a deck of Cards per side, validated against Codex; other Universes may have no Heroes, no Cards, asymmetric setups, or pools instead of decks. Lab treats it as engine-validated payload rather than a fixed schema.
-- a **Guinea Pig name** per side — names a Lab-resident code module (`random`, `greedy`, `lookahead`, …),
+- a **Guinea Pig** per side — a value object pairing a character (`random`, `greedy`, `lookahead`, …) with its params,
 - a **Criterion** reference per side — the weighted feature set the Guinea Pig consults,
 - **turnLimit** — operational guard that caps runaway trials.
 
@@ -182,9 +184,9 @@ One simulated game inside an Experiment. Carries:
 
 - the **per-trial seed**,
 - the **initial state** — deck order, starting hands, board layout (engine-determined from the seed),
-- the **observation log** — an ordered list of **Observation** entries, one per yield point,
-- the engine's **event log** for the trial,
-- the **terminal state** — winner, turns played, and termination reason.
+- the **observation log** — an ordered list of **Observation** entries, one per decision point (each carrying its engine event delta, so the trial's event stream is the deltas in order — no separate log),
+- the **outcome** — the engine's Outcome (`winner`, `reason`), set when the Battle ends,
+- **turns played** — a recorded length metric feeding the trial-length distribution.
 
 ### Criterion
 
@@ -192,7 +194,7 @@ A named weighted feature set used by Guinea Pigs to evaluate trial states. Unive
 
 - a **Universe** reference,
 - a **name**,
-- a list of **(feature, weight)** pairs — each feature must exist in Lab's catalog for that Universe.
+- a list of **(feature, weight)** pairs — each feature must exist in the Universe's feature catalog.
 
 Multiple Criteria can coexist for the same Universe. Criteria are mutable — an Experiment captures the resolved weights in its snapshot, so later edits don't change past Experiment results. Designers preserve historical weights by **cloning** a Criterion before editing it.
 
@@ -208,9 +210,9 @@ Value object owned by an Experiment. Computed from the Experiment's Trials; not 
 
 ### Observation
 
-Value object owned by a Trial — one entry per yield point. Carries:
+Value object owned by a Trial — one entry per decision point. Carries:
 
-- the **yield point** — engine-yielded state and the legal actions presented,
+- the **decision point** — the observed state and the legal actions presented,
 - the **chosen action**,
 - the **alternatives considered** with the score each would have produced,
 - the **engine event delta** that followed submitting the chosen action,
@@ -259,21 +261,22 @@ One engine instance = one Trial. Lab constructs N instances for a batch, each fu
 
 | Operation | Purpose |
 |---|---|
-| `Engine.start(snapshot, initialSetup, seed)` | Construct an engine and advance to the first yield point. Returns the engine plus that yield point (or a terminal state if the trial ends immediately). |
-| `engine.submit(action)` | Submit the chosen action; advance to the next yield point or terminal state. |
-| `engine.peek(action)` | Return the state that would result from `action`, without committing. `greedy` and `lookahead` rely on this. |
-| `engine.getEvents()` | Return the engine's event log since `start`. |
+| `Construct(snapshot, initialSetup, seed, onEvent?)` | Construct an engine, register an optional event listener, and advance to the first decision point. Returns the engine (or a set Outcome if the trial ends immediately). |
+| `Observe` | Read the current Battle — hero stats, minion array, element pools, hand contents, the playable cards, and the Outcome (set once the trial ends). |
+| `Submit(action)` | Submit the chosen action; resolve it (including the automatic cascade — minion attacks, element damage, turn end) and advance to the next decision point, or set the Outcome if the Battle ends. Fires Events to the listener during resolution. |
+| `Peek(action)` | Return a forked engine as it would look after applying `action`, without committing. `greedy` and `lookahead` rely on this. |
 
-### What a yield point exposes
+The names mirror the authoritative [Design-010: Engine Prototype](./Design-010_engine-prototype.md#operations); Lab consumes that surface unchanged.
 
-At each yield point the engine returns:
+### What a decision point exposes
+
+The engine yields one decision per turn-state — there is no mid-cascade suspension; attacks and element damage resolve automatically inside `Submit`. At each decision point `Observe` returns:
 
 - the **current state** — hero stats, minion array, element pools, hand contents (shape is universe-specific),
 - the **playable cards**, each carrying its target requirement (per Design-008's `activation`),
-- the **available targets** by category (own minions, enemy minions, heroes, empty slots),
-- any **other actionable entities** — e.g., own minions ready to attack and their valid attack targets.
+- the **available targets** by category (own minions, enemy minions, heroes, empty slots).
 
-Lab-side helpers enumerate legal (action, target) pairs from these ingredients (see [Guinea Pigs](#guinea-pigs)). The engine itself doesn't enumerate combinations.
+The two action kinds are `playCard` and `endTurn` ([Design-010 — Actions](./Design-010_engine-prototype.md#actions)); `endTurn` is always legal in the prototype, and minion attacks and element damage are *not* actions — they happen automatically during `Submit`. Lab-side helpers enumerate legal (action, target) pairs from these ingredients (see [Guinea Pigs](#guinea-pigs)). The engine itself doesn't enumerate combinations.
 
 ### Determinism
 
@@ -285,39 +288,48 @@ Lab picks which engine to run from the Protocol's Universe — the binding lives
 
 ## Guinea Pigs
 
-A Guinea Pig is an action-selection policy. At each engine yield point the Guinea Pig receives the current state and the legal actions, and returns one action to submit. Guinea Pigs are **code modules**, not entities; each is universe-agnostic in MVP and operates on the engine's yield shape without knowing which Universe is loaded.
+A Guinea Pig is a configured player: a **character** (an action-selection strategy) plus the params that character takes. At each decision point it receives the current state and the legal actions and returns one action to submit. A character is a **code module**, universe-agnostic in MVP, operating on the engine's decision-point shape without knowing which Universe is loaded.
 
-Action combination is not the engine's concern. At each yield point the engine exposes actionable entities — playable cards with their target requirements, own minions ready to attack with their valid attack targets — plus the available target categories (own minions, enemy minions, heroes, empty slots). A Lab-side helper enumerates valid (action, target) pairs by matching requirements to categories; Guinea Pigs consume the enumerated list. For `greedy` and `lookahead`, each candidate is peeked and scored.
+The Guinea Pig is a **value object** — `{ character, …params }`, e.g. `{ character: 'lookahead', depth: 3 }`. It is inlined per Protocol side today; if designers later need to name, save, clone, and reuse configured Guinea Pigs (as they do Criteria), it promotes to an entity referenced by id. That change is additive.
 
-### Reference set
+Action combination is not the engine's concern. At each decision point the engine exposes the playable cards with their target requirements, plus the available target categories (own minions, enemy minions, heroes, empty slots). A Lab-side helper enumerates valid (action, target) pairs by matching each card's requirement to the categories, always including `endTurn`; the character consumes the enumerated list. For `greedy` and `lookahead`, each candidate is peeked and scored.
 
-| Name        | Description |
-|-------------|-------------|
-| `random`    | Uniform random over legal actions. Baseline / control. |
-| `greedy`    | For each legal action, peek the resulting state, score via the Criterion, pick max. |
-| `lookahead` | Search k plies forward (k is a parameter), assuming the opponent uses a symmetric Guinea Pig; pick the action with the best leaf score. Phase 3. |
+### Characters
 
-Future: Monte Carlo Tree Search and ML / RL policies; per-Universe Guinea Pig variants will likely emerge as Universes diverge in shape, since MVP only gets away with universal Guinea Pigs because all MVP Universes share the engine's yield shape. The interface accommodates these; MVP doesn't ship them.
+| Character   | Params | Description |
+|-------------|--------|-------------|
+| `random`    | —      | Uniform random over legal actions. Baseline / control. |
+| `greedy`    | —      | For each legal action, peek the resulting state, score via the Criterion, pick max. |
+| `lookahead` | `depth` | Search `depth` plies forward, assuming the opponent uses a symmetric Guinea Pig; pick the action with the best leaf score. Phase 3. |
+
+Future: Monte Carlo Tree Search and ML / RL characters; per-Universe characters will likely emerge as Universes diverge in shape, since MVP only gets away with universal characters because all MVP Universes share the engine's decision-point shape. The interface accommodates these; MVP doesn't ship them.
 
 ## Scoring
 
-Scoring turns a match state into a single number — used by `greedy` Guinea Pigs to compare candidate actions, by `lookahead` to evaluate leaf states, and by Lab's analytics to produce per-turn score trajectories. A Criterion combines two things: a **feature set** Lab defines per Universe and **weights** chosen by the designer.
+Scoring turns a match state into a single number — used by `greedy` Guinea Pigs to compare candidate actions, by `lookahead` to evaluate leaf states, and by Lab's analytics to produce per-turn score trajectories. A Criterion combines two things: the Universe's **feature catalog** and **weights** chosen by the designer.
 
 ### Features
 
-A feature is a named, deterministic read or aggregation over match state that returns a number (booleans coerced to 0/1). Features are **Lab-defined per Universe**: the engine exposes state primitives (hero stats, the minion array, element pools, hand contents), and Lab combines them into features that Criteria can reference.
+A feature is a named expression over match state that evaluates to a number (booleans coerce to 0/1): `{ name, expression }`, where `expression` uses the [Design-008](./Design-008_card-dsl.md) grammar and is read by the shared expression evaluator. `owner*` / `enemy*` resolve relative to the Combatant being scored, so the same feature evaluated once per Combatant yields that side's score (hence the two score curves).
 
-Example feature set for a DoM-style Universe (illustrative, not normative):
+A feature is therefore an **authored value object**, not an entity — only its `name` is referenced (by Criterion weights). The **feature catalog** is per-Universe and its home is the Universe's **Lab settings** (the per-Universe bundle each realm extends — see [Universe settings](../tasks/DOD-0024_universe-settings.md)); Lab snapshots it at experiment start, like Codex content, for reproducibility. **For MVP the catalog is hardcoded in Lab**; promoting it to authored settings is additive, since Criteria already reference features by name.
 
-| Feature | Computes |
-|---|---|
-| `ownerHero.stats.health` / `enemyHero.stats.health` | Hero `health` per side — direct engine read |
-| `ownerMinions.totalHealth` / `enemyMinions.totalHealth` | sum over `ownerMinions[].stats.health` |
-| `ownerMinions.totalAttack` / `enemyMinions.totalAttack` | sum over `ownerMinions[].stats.attack` |
-| `ownerHero.elements.total` / `enemyHero.elements.total` | sum over `ownerHero.elements.*` |
-| `ownerHero.handSize` | count of cards in own hand |
+Examples (`name` → `expression`):
 
-Feature names mirror Codex DSL path conventions for readability (`ownerHero.stats.health` parallels how the DSL reads a hero's health in [Design-008](./Design-008_card-dsl.md)). The engine doesn't compute aggregations — it returns the minion array, the element map, the hand list; the summing and counting is Lab's job. Adding a feature is a Lab-side change as long as it can be derived from existing engine primitives; only fundamentally new state (a new kind of pool, a new entity type) requires an engine extension.
+| `name` | `expression` | Coverage |
+|---|---|---|
+| `ownerHeroHealth` | `"ownerHero.stats.health"` | direct path |
+| `heroHealthLead` | `{ sub: ["ownerHero.stats.health", "enemyHero.stats.health"] }` | operators |
+| `enemyMinionCount` | `{ count: ["enemyMinions"] }` | collection op |
+| `topTwoOwnerAttack` | `{ sumTopBy: ["ownerMinions", 2, "attack"] }` | collection op |
+| `ownerBoardAttack` | `{ sumBy: ["ownerMinions", "attack"] }` | needs `sumBy` |
+| `ownerHandSize` | `{ count: ["ownerHand"] }` | needs hand access |
+| `ownerElementTotal` | `{ sumValues: ["ownerHero.elements"] }` | needs map-sum |
+
+**DSL coverage.** Most useful features map straight onto the existing grammar. Making features fully authored needs two **additive** extensions to the DSL — neither a redesign, and neither needed for MVP (hardcoded features sidestep both):
+
+- an **aggregate-all operator** (`sumBy` / `avg` over a collection) — today only `sumTopBy(coll, N, stat)` exists;
+- **scoring-context state access** the card DSL doesn't expose — hand / deck size, and sum over the element map.
 
 ### Weights
 
@@ -327,7 +339,7 @@ The score of a state is the dot product `score = Σ weight[i] × feature[i](stat
 
 ### Score curve
 
-A Trial's *score curve* is the sequence of scores across its Observations — one per yield point. The same Criterion is applied to both sides, so a Trial yields two curves (owner and enemy). Aggregated across an Experiment's Trials, these become the per-turn score trajectory shown in Findings.
+A Trial's *score curve* is the sequence of scores across its Observations — one per decision point. The same Criterion is applied to both sides, so a Trial yields two curves (owner and enemy). Aggregated across an Experiment's Trials, these become the per-turn score trajectory shown in Findings.
 
 ## Analysis & representation
 
@@ -385,11 +397,11 @@ A designer wants to test whether Fire Drake outperforms Wall of Fire in mid-game
 
 **Execution.** The designer starts an Experiment with `trialCount=1000`. Lab loads the Codex content snapshot once, then runs 1000 Trials. Each Trial:
 
-1. `Engine.start(snapshot, initialSetup, seed)` yields the first decision point.
-2. The Lab helper enumerates legal (action, target) pairs from the yield ingredients.
+1. `Construct(snapshot, initialSetup, seed, onEvent)` advances to the first decision point.
+2. The Lab helper enumerates legal (action, target) pairs from the `Observe` ingredients.
 3. The `greedy` Guinea Pig peeks each candidate, scores it via the Criterion, picks the max.
-4. `engine.submit(chosenAction)` advances to the next yield, until a terminal state.
-5. Lab records the Trial — Observations, engine event log, terminal state.
+4. `Submit(chosenAction)` resolves it (with the automatic cascade) and advances to the next decision point, until the Outcome is set.
+5. Lab records the Trial — Observations (each with its buffered engine event delta) and the outcome.
 
 **Reading the result.** Lab aggregates the 1000 terminals into Findings. Council renders the *Is this matchup balanced?* view: Side A wins 38% ±2%; confidence crosses 50% → "results inconclusive, consider larger N". The *Is this Card overpowered?* view shows Fire Drake at +12 win-when-played vs baseline, Wall of Fire at +5 — suggestive but within noise.
 

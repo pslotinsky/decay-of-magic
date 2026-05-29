@@ -29,4 +29,8 @@
 - [x] [DOD-0026: Improve Poe and Zok](./DOD-0026_improve-poe-and-zok.md)
 - [x] [DOD-0027: Migrate to pnpm](./DOD-0027_migrate-to-pnpm.md)
 - [x] [DOD-0028: Migrate to Biome](./DOD-0028_migrate-to-biome.md)
+- [ ] [DOD-0029: Lab API and tests](./DOD-0029_lab-api-and-tests.md)
+- [ ] [DOD-0030: Lab and engine mock](./DOD-0030_lab-and-engine-mock.md)
+- [ ] [DOD-0031: Lab UI](./DOD-0031_lab-ui.md)
+- [ ] [DOD-0032: Engine prototype](./DOD-0032_engine-prototype.md)
 <!-- TOC.END -->
