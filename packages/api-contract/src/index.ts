@@ -1,6 +1,7 @@
 export * from './codes';
 export * from './contracts/citizen';
 export * from './contracts/codex';
+export * from './contracts/lab';
 export * from './contracts/session';
 export * from './contracts/universe';
 export * from './contracts/vault';

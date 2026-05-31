@@ -1,29 +1,22 @@
 {
-  "name": "@dod/api-contract",
+  "name": "@dod/engine",
   "version": "0.0.1",
-  "description": "Shared API contracts — Zod schemas and DTOs consumed by every realm",
+  "description": "Battle engine — match rules: card effects, abilities, combat, turn flow",
   "private": true,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "test": "pnpm run test:unit",
-    "test:unit": "jest --config ./test/jest-unit.json",
-    "docs": "poe inspect",
     "format": "biome format --write src",
     "lint": "biome lint --write src"
   },
   "dependencies": {
-    "@dod/engine": "workspace:*",
     "zod": "^4.4.2"
   },
   "devDependencies": {
     "@dod/config": "workspace:*",
-    "@types/jest": "^30.0.0",
     "@types/node": "^25.6.2",
-    "jest": "^30.4.2",
-    "ts-jest": "^29.4.9",
     "typescript": "^6.0.3"
   }
 }

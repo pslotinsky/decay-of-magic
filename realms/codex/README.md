@@ -45,28 +45,28 @@ pnpm run prisma:migrate:dev
 
 | Endpoint | Description |
 |----------|-------------|
-| POST /v1/card | Param `dto`: [`CreateCardDto`](../../packages/api-contract/src/contracts/codex.ts#L400)<br>Returns: [`CardDto`](../../packages/api-contract/src/contracts/codex.ts#L397) |
-| PATCH /v1/card/:id | Param `id`: `string`<br>Param `dto`: [`UpdateCardDto`](../../packages/api-contract/src/contracts/codex.ts#L421)<br>Returns: [`CardDto`](../../packages/api-contract/src/contracts/codex.ts#L397) |
-| GET /v1/card/:id | Param `id`: `string`<br>Returns: [`CardDto`](../../packages/api-contract/src/contracts/codex.ts#L397) |
-| GET /v1/card | Param `universeId`: `string`<br>Returns: [`CardDto`](../../packages/api-contract/src/contracts/codex.ts#L397)[] |
+| POST /v1/card | Param `dto`: [`CreateCardDto`](../../packages/api-contract/src/contracts/codex.ts#L384)<br>Returns: [`CardDto`](../../packages/api-contract/src/contracts/codex.ts#L381) |
+| PATCH /v1/card/:id | Param `id`: `string`<br>Param `dto`: [`UpdateCardDto`](../../packages/api-contract/src/contracts/codex.ts#L405)<br>Returns: [`CardDto`](../../packages/api-contract/src/contracts/codex.ts#L381) |
+| GET /v1/card/:id | Param `id`: `string`<br>Returns: [`CardDto`](../../packages/api-contract/src/contracts/codex.ts#L381) |
+| GET /v1/card | Param `universeId`: `string`<br>Returns: [`CardDto`](../../packages/api-contract/src/contracts/codex.ts#L381)[] |
 
 ### [Element](src/frontier/gates/element.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
-| POST /v1/element | Param `dto`: [`CreateElementDto`](../../packages/api-contract/src/contracts/codex.ts#L322)<br>Returns: [`ElementDto`](../../packages/api-contract/src/contracts/codex.ts#L319) |
-| PATCH /v1/element/:id | Param `id`: `string`<br>Param `dto`: [`UpdateElementDto`](../../packages/api-contract/src/contracts/codex.ts#L325)<br>Returns: [`ElementDto`](../../packages/api-contract/src/contracts/codex.ts#L319) |
-| GET /v1/element/:id | Param `id`: `string`<br>Returns: [`ElementDto`](../../packages/api-contract/src/contracts/codex.ts#L319) |
-| GET /v1/element | Param `universeId`: `string`<br>Returns: [`ElementDto`](../../packages/api-contract/src/contracts/codex.ts#L319)[] |
+| POST /v1/element | Param `dto`: [`CreateElementDto`](../../packages/api-contract/src/contracts/codex.ts#L306)<br>Returns: [`ElementDto`](../../packages/api-contract/src/contracts/codex.ts#L303) |
+| PATCH /v1/element/:id | Param `id`: `string`<br>Param `dto`: [`UpdateElementDto`](../../packages/api-contract/src/contracts/codex.ts#L309)<br>Returns: [`ElementDto`](../../packages/api-contract/src/contracts/codex.ts#L303) |
+| GET /v1/element/:id | Param `id`: `string`<br>Returns: [`ElementDto`](../../packages/api-contract/src/contracts/codex.ts#L303) |
+| GET /v1/element | Param `universeId`: `string`<br>Returns: [`ElementDto`](../../packages/api-contract/src/contracts/codex.ts#L303)[] |
 
 ### [Faction](src/frontier/gates/faction.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
-| POST /v1/faction | Param `dto`: [`CreateFactionDto`](../../packages/api-contract/src/contracts/codex.ts#L333)<br>Returns: [`FactionDto`](../../packages/api-contract/src/contracts/codex.ts#L330) |
-| PATCH /v1/faction/:id | Param `id`: `string`<br>Param `dto`: [`UpdateFactionDto`](../../packages/api-contract/src/contracts/codex.ts#L338)<br>Returns: [`FactionDto`](../../packages/api-contract/src/contracts/codex.ts#L330) |
-| GET /v1/faction/:id | Param `id`: `string`<br>Returns: [`FactionDto`](../../packages/api-contract/src/contracts/codex.ts#L330) |
-| GET /v1/faction | Param `universeId`: `string`<br>Returns: [`FactionDto`](../../packages/api-contract/src/contracts/codex.ts#L330)[] |
+| POST /v1/faction | Param `dto`: [`CreateFactionDto`](../../packages/api-contract/src/contracts/codex.ts#L317)<br>Returns: [`FactionDto`](../../packages/api-contract/src/contracts/codex.ts#L314) |
+| PATCH /v1/faction/:id | Param `id`: `string`<br>Param `dto`: [`UpdateFactionDto`](../../packages/api-contract/src/contracts/codex.ts#L322)<br>Returns: [`FactionDto`](../../packages/api-contract/src/contracts/codex.ts#L314) |
+| GET /v1/faction/:id | Param `id`: `string`<br>Returns: [`FactionDto`](../../packages/api-contract/src/contracts/codex.ts#L314) |
+| GET /v1/faction | Param `universeId`: `string`<br>Returns: [`FactionDto`](../../packages/api-contract/src/contracts/codex.ts#L314)[] |
 
 ### [Health](src/frontier/gates/health.gate.ts)
 
@@ -78,28 +78,28 @@ pnpm run prisma:migrate:dev
 
 | Endpoint | Description |
 |----------|-------------|
-| POST /v1/hero | Param `dto`: [`CreateHeroDto`](../../packages/api-contract/src/contracts/codex.ts#L433)<br>Returns: [`HeroDto`](../../packages/api-contract/src/contracts/codex.ts#L430) |
-| PATCH /v1/hero/:id | Param `id`: `string`<br>Param `dto`: [`UpdateHeroDto`](../../packages/api-contract/src/contracts/codex.ts#L442)<br>Returns: [`HeroDto`](../../packages/api-contract/src/contracts/codex.ts#L430) |
-| GET /v1/hero/:id | Param `id`: `string`<br>Returns: [`HeroDto`](../../packages/api-contract/src/contracts/codex.ts#L430) |
-| GET /v1/hero | Param `universeId`: `string`<br>Returns: [`HeroDto`](../../packages/api-contract/src/contracts/codex.ts#L430)[] |
+| POST /v1/hero | Param `dto`: [`CreateHeroDto`](../../packages/api-contract/src/contracts/codex.ts#L417)<br>Returns: [`HeroDto`](../../packages/api-contract/src/contracts/codex.ts#L414) |
+| PATCH /v1/hero/:id | Param `id`: `string`<br>Param `dto`: [`UpdateHeroDto`](../../packages/api-contract/src/contracts/codex.ts#L426)<br>Returns: [`HeroDto`](../../packages/api-contract/src/contracts/codex.ts#L414) |
+| GET /v1/hero/:id | Param `id`: `string`<br>Returns: [`HeroDto`](../../packages/api-contract/src/contracts/codex.ts#L414) |
+| GET /v1/hero | Param `universeId`: `string`<br>Returns: [`HeroDto`](../../packages/api-contract/src/contracts/codex.ts#L414)[] |
 
 ### [Stat](src/frontier/gates/stat.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
-| POST /v1/stat | Param `dto`: [`CreateStatDto`](../../packages/api-contract/src/contracts/codex.ts#L347)<br>Returns: [`StatDto`](../../packages/api-contract/src/contracts/codex.ts#L344) |
-| PATCH /v1/stat/:id | Param `id`: `string`<br>Param `dto`: [`UpdateStatDto`](../../packages/api-contract/src/contracts/codex.ts#L353)<br>Returns: [`StatDto`](../../packages/api-contract/src/contracts/codex.ts#L344) |
-| GET /v1/stat/:id | Param `id`: `string`<br>Returns: [`StatDto`](../../packages/api-contract/src/contracts/codex.ts#L344) |
-| GET /v1/stat | Param `universeId`: `string`<br>Returns: [`StatDto`](../../packages/api-contract/src/contracts/codex.ts#L344)[] |
+| POST /v1/stat | Param `dto`: [`CreateStatDto`](../../packages/api-contract/src/contracts/codex.ts#L331)<br>Returns: [`StatDto`](../../packages/api-contract/src/contracts/codex.ts#L328) |
+| PATCH /v1/stat/:id | Param `id`: `string`<br>Param `dto`: [`UpdateStatDto`](../../packages/api-contract/src/contracts/codex.ts#L337)<br>Returns: [`StatDto`](../../packages/api-contract/src/contracts/codex.ts#L328) |
+| GET /v1/stat/:id | Param `id`: `string`<br>Returns: [`StatDto`](../../packages/api-contract/src/contracts/codex.ts#L328) |
+| GET /v1/stat | Param `universeId`: `string`<br>Returns: [`StatDto`](../../packages/api-contract/src/contracts/codex.ts#L328)[] |
 
 ### [Trait](src/frontier/gates/trait.gate.ts)
 
 | Endpoint | Description |
 |----------|-------------|
-| POST /v1/trait | Param `dto`: [`CreateTraitDto`](../../packages/api-contract/src/contracts/codex.ts#L361)<br>Returns: [`TraitDto`](../../packages/api-contract/src/contracts/codex.ts#L358) |
-| PATCH /v1/trait/:id | Param `id`: `string`<br>Param `dto`: [`UpdateTraitDto`](../../packages/api-contract/src/contracts/codex.ts#L366)<br>Returns: [`TraitDto`](../../packages/api-contract/src/contracts/codex.ts#L358) |
-| GET /v1/trait/:id | Param `id`: `string`<br>Returns: [`TraitDto`](../../packages/api-contract/src/contracts/codex.ts#L358) |
-| GET /v1/trait | Param `universeId`: `string`<br>Returns: [`TraitDto`](../../packages/api-contract/src/contracts/codex.ts#L358)[] |
+| POST /v1/trait | Param `dto`: [`CreateTraitDto`](../../packages/api-contract/src/contracts/codex.ts#L345)<br>Returns: [`TraitDto`](../../packages/api-contract/src/contracts/codex.ts#L342) |
+| PATCH /v1/trait/:id | Param `id`: `string`<br>Param `dto`: [`UpdateTraitDto`](../../packages/api-contract/src/contracts/codex.ts#L350)<br>Returns: [`TraitDto`](../../packages/api-contract/src/contracts/codex.ts#L342) |
+| GET /v1/trait/:id | Param `id`: `string`<br>Returns: [`TraitDto`](../../packages/api-contract/src/contracts/codex.ts#L342) |
+| GET /v1/trait | Param `universeId`: `string`<br>Returns: [`TraitDto`](../../packages/api-contract/src/contracts/codex.ts#L342)[] |
 
 ## Law
 

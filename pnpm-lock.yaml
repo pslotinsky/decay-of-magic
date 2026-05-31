@@ -89,6 +89,9 @@ importers:
 
   packages/api-contract:
     dependencies:
+      '@dod/engine':
+        specifier: workspace:*
+        version: link:../engine
       zod:
         specifier: ^4.4.2
         version: 4.4.3
@@ -153,6 +156,22 @@ importers:
       zod:
         specifier: ^4.4.2
         version: 4.4.3
+
+  packages/engine:
+    dependencies:
+      zod:
+        specifier: ^4.4.2
+        version: 4.4.3
+    devDependencies:
+      '@dod/config':
+        specifier: workspace:*
+        version: link:../config
+      '@types/node':
+        specifier: ^25.6.2
+        version: 25.6.2
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
 
   realms/citizen:
     dependencies:
@@ -453,6 +472,27 @@ importers:
       tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.0
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+
+  realms/lab:
+    devDependencies:
+      '@dod/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@types/jest':
+        specifier: ^30.0.0
+        version: 30.0.0
+      '@types/node':
+        specifier: ^25.6.2
+        version: 25.6.2
+      jest:
+        specifier: ^30.4.2
+        version: 30.4.2(@types/node@25.6.2)(ts-node@10.9.2(@swc/core@1.15.33)(@types/node@25.6.2)(typescript@6.0.3))
+      ts-jest:
+        specifier: ^29.4.9
+        version: 29.4.9(@babel/core@7.29.0)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.0))(jest-util@30.4.1)(jest@30.4.2(@types/node@25.6.2)(ts-node@10.9.2(@swc/core@1.15.33)(@types/node@25.6.2)(typescript@6.0.3)))(typescript@6.0.3)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3

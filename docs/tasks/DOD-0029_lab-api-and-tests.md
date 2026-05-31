@@ -2,7 +2,7 @@
 
 | Field     | Value                                                     |
 | --------- | --------------------------------------------------------- |
-| Status    | In progress                                               |
+| Status    | Done |
 | Milestone | [Lab + Engine](../milestones/Milestone-007_lab-engine.md) |
 | Created   | 2026-05-29                                                |
 
@@ -12,7 +12,7 @@ Pin the **Lab** realm HTTP contract — Zod shapes + behavioral spec as `it.todo
 
 ## Resources
 
-Ids are server-generated. Engine-side types (`Battle`, `Action`, `Event`, `Outcome`, `EngineSetup`) come from the engine interface ([DOD-0030](./DOD-0030_lab-and-engine-mock.md)). `CodexContent` is the Codex content snapshot (Cards, Heroes, dictionaries).
+Ids are server-generated. Engine-side types (`Battle`, `Action`, `BattleEvent`, `Outcome`, `BattleSetup`) come from the engine interface ([DOD-0030](./DOD-0030_lab-and-engine-mock.md)). `CodexContent` is the Codex content snapshot (Cards, Heroes, dictionaries).
 
 ```ts
 type Character = 'random' | 'greedy' | 'lookahead'
@@ -26,7 +26,7 @@ interface Protocol {
   id: string
   name?: string
   universeId: string            // engine must be bound
-  initialSetup: EngineSetup     // opaque to Lab; hardcoded Hero + deck (MVP)
+  initialSetup: BattleSetup     // opaque to Lab; hardcoded Hero + deck (MVP)
   sides: [Side, Side]
   turnLimit: number
 }
@@ -72,7 +72,7 @@ interface Observation {         // one per decision point
   state: Battle                                          // engine: Observe ingredients
   candidates: Array<{ action: Action; score?: number }>  // lab: enumerated; no score for random
   action: Action                                         // lab: the submitted candidate
-  events: Event[]                                        // engine: fired during Submit
+  events: BattleEvent[]                                  // engine: fired during Submit
   scores: Record<CombatantId, number>                    // lab: state scored per Combatant
 }
 ```

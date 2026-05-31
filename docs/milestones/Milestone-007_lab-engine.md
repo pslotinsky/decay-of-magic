@@ -16,12 +16,6 @@ Bring up the **Lab** realm and the **Engine** it drives — an AI match simulato
 - **Lab** — drive the engine, score states, aggregate Findings, surface in Council.
 - Built Lab-first against a mock, then the real engine swapped in.
 
-## Phases
-
-1. **Lab + mock engine** — Lab plumbing against a deterministic fake. Exit: scripted match runs end-to-end, logging action / score-delta / state.
-2. **Lab + real engine** — swap in the DSL interpreter; batch runs + seed replay. Exit: 2–3 reference pairings × thousands of sims → score curves + win-rate distributions.
-3. **Polish** — engine edge-cases, cross-match search, Council batch view, large-batch performance.
-
 ## Out of scope
 
 - Real-time / networked human play (future Battle realm).
@@ -30,7 +24,7 @@ Bring up the **Lab** realm and the **Engine** it drives — an AI match simulato
 - Rust/WASM engine port (Roadmap-01 stage 6).
 
 <!-- TOC.START: task -->
-- [ ] [DOD-0029: Lab API and tests](../tasks/DOD-0029_lab-api-and-tests.md)
+- [x] [DOD-0029: Lab API and tests](../tasks/DOD-0029_lab-api-and-tests.md)
 - [ ] [DOD-0030: Lab and engine mock](../tasks/DOD-0030_lab-and-engine-mock.md)
 - [ ] [DOD-0031: Lab UI](../tasks/DOD-0031_lab-ui.md)
 - [ ] [DOD-0032: Engine prototype](../tasks/DOD-0032_engine-prototype.md)
