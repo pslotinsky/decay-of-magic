@@ -1,7 +1,7 @@
 import { Entity } from '@dod/core';
 import type { BattleDto } from '@dod/engine';
 
-import type { Side } from '../value-objects/side';
+import type { Side } from './side';
 
 export type ProtocolParams = {
   id: string;

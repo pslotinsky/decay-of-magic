@@ -1,10 +1,10 @@
 import { Entity } from '@dod/core';
 import type { CodexContentDto } from '@dod/engine';
 
+import type { Protocol } from '../protocol/protocol.entity';
+import type { Trial } from '../trial/trial.entity';
 import { ExperimentStatus } from '../types';
-import type { Findings } from '../value-objects/findings';
-import type { Protocol } from './protocol.entity';
-import type { Trial } from './trial.entity';
+import type { Findings } from './findings';
 
 export type ExperimentParams = {
   id: string;

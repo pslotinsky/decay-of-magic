@@ -1,4 +1,4 @@
-import type { GuineaPig } from './guinea-pig';
+import type { GuineaPig } from '../guinea-pig/guinea-pig';
 
 /**
  * One side of a Protocol: the Guinea Pig that plays it and the Criterion it

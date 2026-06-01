@@ -1,7 +1,7 @@
 import { Entity } from '@dod/core';
 import type { BattleDto, Outcome } from '@dod/engine';
 
-import type { Observation } from '../value-objects/observation';
+import type { Observation } from './observation';
 
 export type TrialParams = {
   id: string;
