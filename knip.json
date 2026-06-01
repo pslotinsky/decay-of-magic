@@ -7,6 +7,13 @@
     "packages/config": {
       "entry": []
     },
+    "packages/engine": {
+      "entry": [
+        "poe.config.mjs",
+        "test/unit/*.unit-spec.ts",
+        "test/flow/*.flow-spec.ts"
+      ]
+    },
     "packages/*": {
       "entry": ["poe.config.mjs"]
     },
@@ -15,6 +22,9 @@
     },
     "realms/citizen": {
       "entry": ["src/main.ts", "poe.config.mjs", "test/api/*.api-spec.ts"]
+    },
+    "realms/lab": {
+      "entry": ["poe.config.mjs", "test/api/*.api-spec.ts"]
     },
     "realms/codex": {
       "entry": [

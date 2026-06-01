@@ -261,7 +261,7 @@ One engine instance = one Trial. Lab constructs N instances for a batch, each fu
 
 | Operation | Purpose |
 |---|---|
-| `Construct(snapshot, initialSetup, seed, onEvent?)` | Construct an engine, register an optional event listener, and advance to the first decision point. Returns the engine (or a set Outcome if the trial ends immediately). |
+| `Construct(snapshot, battle, seed, onEvent?)` | Construct an engine from an initial Battle, register an optional event listener, and advance to the first decision point. Returns the engine (or a set Outcome if the trial ends immediately). |
 | `Observe` | Read the current Battle — hero stats, minion array, element pools, hand contents, the playable cards, and the Outcome (set once the trial ends). |
 | `Submit(action)` | Submit the chosen action; resolve it (including the automatic cascade — minion attacks, element damage, turn end) and advance to the next decision point, or set the Outcome if the Battle ends. Fires Events to the listener during resolution. |
 | `Peek(action)` | Return a forked engine as it would look after applying `action`, without committing. `greedy` and `lookahead` rely on this. |
@@ -320,10 +320,10 @@ Examples (`name` → `expression`):
 |---|---|---|
 | `ownerHeroHealth` | `"ownerHero.stats.health"` | direct path |
 | `heroHealthLead` | `{ sub: ["ownerHero.stats.health", "enemyHero.stats.health"] }` | operators |
-| `enemyMinionCount` | `{ count: ["enemyMinions"] }` | collection op |
+| `enemyMinionCount` | `{ count: "enemyMinions" }` | collection op |
 | `topTwoOwnerAttack` | `{ sumTopBy: ["ownerMinions", 2, "attack"] }` | collection op |
 | `ownerBoardAttack` | `{ sumBy: ["ownerMinions", "attack"] }` | needs `sumBy` |
-| `ownerHandSize` | `{ count: ["ownerHand"] }` | needs hand access |
+| `ownerHandSize` | `{ count: "ownerHand" }` | needs hand access |
 | `ownerElementTotal` | `{ sumValues: ["ownerHero.elements"] }` | needs map-sum |
 
 **DSL coverage.** Most useful features map straight onto the existing grammar. Making features fully authored needs two **additive** extensions to the DSL — neither a redesign, and neither needed for MVP (hardcoded features sidestep both):
@@ -397,7 +397,7 @@ A designer wants to test whether Fire Drake outperforms Wall of Fire in mid-game
 
 **Execution.** The designer starts an Experiment with `trialCount=1000`. Lab loads the Codex content snapshot once, then runs 1000 Trials. Each Trial:
 
-1. `Construct(snapshot, initialSetup, seed, onEvent)` advances to the first decision point.
+1. `Construct(snapshot, battle, seed, onEvent)` advances to the first decision point.
 2. The Lab helper enumerates legal (action, target) pairs from the `Observe` ingredients.
 3. The `greedy` Guinea Pig peeks each candidate, scores it via the Criterion, picks the max.
 4. `Submit(chosenAction)` resolves it (with the automatic cascade) and advances to the next decision point, until the Outcome is set.

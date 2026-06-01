@@ -77,7 +77,7 @@ List of (name, weighted-feature count). New / Clone / edit.
 └──────────────────────────────────────────────────────┘
 ```
 
-- Hero / Deck picked from the Universe's Codex content; MVP `initialSetup` is a hardcoded Hero + deck shape.
+- Hero / Deck picked from the Universe's Codex content; MVP `initialState` is a hardcoded Hero + deck shape.
 - Guinea Pig = character dropdown (`random` / `greedy` / `lookahead`) + its params (e.g. `depth` for `lookahead`); Criterion lists this Universe's Criteria.
 - Comparison = sides differing on Guinea Pig and/or Criterion. No comparison toggle.
 

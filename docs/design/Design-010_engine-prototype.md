@@ -6,7 +6,7 @@
 
 ## Description
 
-The **BattleEngine** is the deterministic runtime that drives a single match to completion. It loads three inputs at start — immutable **Codex content** (Cards, Heroes, dictionaries), a **Ruleset** (per-Universe gameplay parameters), and an engine-validated **BattleState** (per-combatant hero + deck in MVP) — and produces a mutable **Battle**: the runtime model of the active match. Players take Turns; on each Turn, the active player submits Actions, and the engine resolves them.
+The **BattleEngine** is the deterministic runtime that drives a single match to completion. It loads two immutable inputs at start — **Codex content** (Cards, Heroes, dictionaries) and a **Ruleset** (per-Universe gameplay parameters) — and takes an initial **Battle** (per-combatant hero + deck in MVP): the mutable runtime model of the active match, which it advances to completion. Players take Turns; on each Turn, the active player submits Actions, and the engine resolves them.
 
 Callers are policy-free. Lab supplies a Guinea Pig (an AI policy); a future Battle realm supplies a human via the network. The BattleEngine never knows or cares which is on the other end — same contract, same Battle model, same Action vocabulary.
 
@@ -37,8 +37,7 @@ Terms specific to the BattleEngine layer. Card-DSL terms (Card, Ability, Trigger
 | Term | What it is |
 |---|---|
 | **BattleEngine** | The runtime layer that advances a Battle: validates Actions, resolves them against the Ruleset and Codex content, emits Events, and mutates the Battle. One BattleEngine instance drives one Battle. |
-| **Battle** | Mutable runtime model of an active match: per-combatant Heroes, hands, decks, and element pools; a single shared Field of positioned Minions (each carrying its controlling Combatant); the current Turn; the Outcome (when ended). The engine derives the initial Battle from a BattleState and the Seed. Battle is purely runtime — history of submitted Actions lives outside the engine, on the caller (Lab's Trial). |
-| **BattleState** | Engine-validated input shape that populates a Battle. For a fresh match: per-combatant `{hero, deck}` plus Ruleset-derived starting values. For a future resume operation: a previously serialized mid-Battle snapshot. |
+| **Battle** | Mutable runtime model of an active match: per-combatant Heroes, hands, decks, and element pools; a single shared Field of positioned Minions (each carrying its controlling Combatant); the current Turn; the Outcome (when ended). The engine takes an initial Battle and the Seed; for a fresh match that Battle has full decks and empty hands, and Construct shuffles and deals the opening hands. Battle is purely runtime — history of submitted Actions lives outside the engine, on the caller (Lab's Trial). |
 | **Ruleset** | Per-Universe gameplay parameters that frame the game — board, draws, growth, victory, timers. Full treatment in [Ruleset](#ruleset). Separates *how the game flows* from *what exists in it* (Codex content) and *what's happening now* (Battle). |
 | **Codex content** | Immutable content (Cards, Heroes, dictionaries) loaded at battle start. The engine never re-reads Codex mid-battle. |
 | **Combatant** | One side of the match — a Hero, a hand, a deck. The prototype has two; the model permits more. |
@@ -46,9 +45,9 @@ Terms specific to the BattleEngine layer. Card-DSL terms (Card, Ability, Trigger
 | **Minion** | Runtime entity occupying one Slot on the Field. Spawned from a CardArchetype at summon time; carries its own stats, traits, and controller. |
 | **Field** | The shared board owned by the Battle: a fixed set of Slots, each empty or holding one Minion. Side-relative targets resolve through a Minion's controller, not its slot. |
 | **Turn** | One player's active phase. Starts (firing `onTurnStart`), awaits that player's Actions, ends (emitting `TurnEndEvent`). After end, the engine starts the other player's Turn or transitions to terminal. |
-| **Action** | What the active player submits during their Turn: play a card (with target if required) or end the Turn. The atomic unit of player intent. Minion attacks and element damage are not Actions — they happen automatically during resolution. The ordered list of Actions (plus initial BattleState + Seed) is the canonical replay history. |
+| **Action** | What the active player submits during their Turn: play a card (with target if required) or end the Turn. The atomic unit of player intent. Minion attacks and element damage are not Actions — they happen automatically during resolution. The ordered list of Actions (plus the initial Battle + Seed) is the canonical replay history. |
 | **Event** | Transient signal fired during Action resolution (`TurnStartEvent`, `PlayEvent`, `SummonEvent`, `DamageEvent`, `DeathEvent`, …). Triggers and passives consume Events internally. The engine does not retain them; a caller that wants telemetry registers an event listener at Construct. Not the canonical history — replaying the Action list reproduces the Event stream. |
-| **Seed** | Input to the engine's deterministic RNG. Same Codex content + same Ruleset + same BattleState + same Seed + same Action list → identical Battle resolution. |
+| **Seed** | Input to the engine's deterministic RNG. Same Codex content + same Ruleset + same initial Battle + same Seed + same Action list → identical Battle resolution. |
 
 ## API surface
 
@@ -58,7 +57,7 @@ The BattleEngine exposes four operations: construct, observe, submit, peek. Lab 
 
 | Operation | Purpose |
 |---|---|
-| **Construct** | Given Codex content, Ruleset, BattleState, Seed, and an optional event listener, validate the BattleState, hydrate it into a Battle, fire `TurnStartEvent` for the first Turn. |
+| **Construct** | Given Codex content, Ruleset, an initial Battle, Seed, and an optional event listener, take ownership of the Battle, shuffle and deal the opening hands (fresh match), and fire `TurnStartEvent` for the first Turn. |
 | **Observe Battle** | Read the current Battle — heroes, minions, hands, decks, pools, current Turn, the active player's playable cards, and the Outcome (set once the Battle has ended). |
 | **Submit** | Validate an Action against the active player's options; resolve it (including any automatic cascade — minion attacks, element damage, turn end); fire Events to the listener; mutate the Battle. Rejects illegal Actions. |
 | **Peek** | Return a forked BattleEngine as it would look after applying the Action. The original instance is untouched. Used by Lab's `greedy` / `lookahead` Guinea Pigs. |
@@ -117,7 +116,7 @@ sequenceDiagram
     participant Caller as Caller<br/>(Lab / Battle)
     participant Engine as BattleEngine
 
-    Caller->>Engine: Construct(codex, ruleset, battleState, seed, onEvent?)
+    Caller->>Engine: Construct(codex, ruleset, battle, seed, onEvent?)
     Engine-->>Caller: engine (initial Battle, Turn 1 started)
 
     loop until battle.outcome is set
@@ -136,7 +135,7 @@ sequenceDiagram
 
 ## Battle model
 
-Battle is the mutable runtime model the engine derives at Construct from `{Codex content, Ruleset, BattleState, Seed}` and mutates on every Submit. Battle holds everything needed to continue resolution — and nothing more (no event log, no telemetry, no internal scratch).
+Battle is the mutable runtime model: the engine takes the initial Battle at Construct and mutates it on every Submit, resolving against the Codex content, Ruleset, and Seed. Battle holds everything needed to continue resolution — and nothing more (no event log, no telemetry, no internal scratch).
 
 ### Archetype vs runtime
 
@@ -222,7 +221,7 @@ classDiagram
 - **Turn** — which Combatant is active and what Turn number it is. Phases (if any) belong here too, but the prototype keeps Turn structure simple — see [Event flow](#event-flow).
 - **Outcome** — null while in progress; set to `{ winner, reason }` once a terminal condition (HP zero, deck-out, turn limit, Ruleset-defined victory) is reached. After Outcome is set, Submit rejects further Actions.
 
-Battle is runtime; the **history of submitted Actions is not part of Battle**. Callers that need replay (Lab's Trial) record the Actions they submit. `{ initial BattleState, Seed, caller-recorded Action list }` plus identical Codex content + Ruleset replays byte-identical.
+Battle is runtime; the **history of submitted Actions is not part of Battle**. Callers that need replay (Lab's Trial) record the Actions they submit. `{ initial Battle, Seed, caller-recorded Action list }` plus identical Codex content + Ruleset replays byte-identical.
 
 Battle also carries an internal **deterministic random source** — advanced by draws and shuffles; copied when Peek forks the engine so the fork's randomness doesn't disturb the real Battle. The caller never reads it directly. Full treatment in [Determinism + Canonical replay](#determinism--canonical-replay).
 
@@ -266,7 +265,7 @@ The atomic unit of player intent. The caller submits one Action per Submit; the 
 | `playCard` | a Card in the active Combatant's hand, plus a target if the Card's activation requires one | Pay cost, run the activation branch, fire onPlay / onAfterPlay; auto-cascade if Ruleset says auto-end. |
 | `endTurn` | nothing | Run Turn end (the "pass" Action in one-card-per-turn rulesets; the explicit close in multi-action rulesets). |
 
-Two kinds is the whole prototype vocabulary. Mulligans, surrenders, concedes, and mid-resolution choices are not part of the Action contract today; mulligan is handled by the caller before Construct (BattleState arrives with hands already populated). See [Out of scope](#out-of-scope).
+Two kinds is the whole prototype vocabulary. Mulligans, surrenders, concedes, and mid-resolution choices are not part of the Action contract today; mulligan is handled by the caller before Construct (the initial Battle arrives with hands already populated). See [Out of scope](#out-of-scope).
 
 ### Shape
 
@@ -312,7 +311,7 @@ A Submit either fully resolves — cost paid, ability cascade complete, victory 
 
 ### Canonical replay
 
-`{ initial BattleState, Seed, ordered Action list }` plus identical Codex content + Ruleset replays byte-identical. The Action list is the only history the caller needs to record; Battle state, Event stream, and RNG cursor all recompute from those five inputs. Full treatment in [Determinism + Canonical replay](#determinism--canonical-replay).
+`{ initial Battle, Seed, ordered Action list }` plus identical Codex content + Ruleset replays byte-identical. The Action list is the only history the caller needs to record; Battle state, Event stream, and RNG cursor all recompute from those five inputs. Full treatment in [Determinism + Canonical replay](#determinism--canonical-replay).
 
 ## Events
 
@@ -635,7 +634,7 @@ Submit(playCard Griffin → slot 3)
 Submit returns                      Hist.elements.air = 5, Griffin #4 at slot 3, Dio.stats.health = 25
 ```
 
-Every line of the trace is reachable from `{ Codex, Ruleset, BattleState, Seed, Action list }` and nothing else; replaying this Submit on the same inputs produces it identically.
+Every line of the trace is reachable from `{ Codex, Ruleset, initial Battle, Seed, Action list }` and nothing else; replaying this Submit on the same inputs produces it identically.
 
 ## Determinism + Canonical replay
 
@@ -649,7 +648,7 @@ Five inputs, together, determine a Battle's entire arc:
 |---|---|---|
 | **Codex content** | Universe content — Cards, Heroes, dictionaries | loaded once at Construct, immutable for the match |
 | **Ruleset** | Universe parameters — board, draws, victory, growth | loaded once at Construct, immutable for the match |
-| **Initial BattleState** | per-combatant hero + deck (and starting hand if pre-mulligan) | input to Construct |
+| **Initial Battle** | per-combatant hero + deck (hands empty, or pre-dealt before Construct) | input to Construct |
 | **Seed** | seed for the deterministic RNG | input to Construct |
 | **Action list** | ordered submitted Actions | accumulated across Submits |
 
@@ -684,7 +683,7 @@ The caller never reads the RNG state directly; it is engine-internal and surface
 
 A caller that wants replay records exactly one thing across the match: the ordered **Action list**. Nothing else.
 
-Replay: Construct against the same `{ Codex content, Ruleset, initial BattleState, Seed }`, then `Submit` each Action in order. The result is byte-identical — same Battle at every step, same Event stream firing in the same order to any attached listener, same RNG state. The Event stream is *not* recorded; it is recomputable from the Action list, and storing it would only let it drift from truth.
+Replay: Construct against the same `{ Codex content, Ruleset, initial Battle, Seed }`, then `Submit` each Action in order. The result is byte-identical — same Battle at every step, same Event stream firing in the same order to any attached listener, same RNG state. The Event stream is *not* recorded; it is recomputable from the Action list, and storing it would only let it drift from truth.
 
 That buys three things directly:
 
@@ -707,7 +706,7 @@ What the prototype deliberately does **not** specify. Each item names what's mis
 
 The Action contract is two kinds — `playCard` and `endTurn` ([Actions — Vocabulary](#vocabulary)). The prototype does not handle:
 
-- **Mulligans** — the caller resolves them before Construct; BattleState arrives with hands already populated.
+- **Mulligans** — the caller resolves them before Construct; the initial Battle arrives with hands already populated.
 - **Surrenders, concedes, draws-by-agreement** — terminal Outcomes today come only from HP / deck-out / turn-limit / Ruleset-defined conditions.
 - **Mid-resolution player choices** — "pick one of two effects," "pay X to gain Y." No current card needs them, and the Action contract has no shape for a player to choose during a cascade.
 
@@ -717,7 +716,7 @@ Each is an Action-vocabulary addition: a new `Action` kind and the engine path t
 
 - **N-player and teams.** Battle holds a fixed pair of Combatants for the prototype ([Battle model — Notes on contents](#notes-on-contents)). N-player or team modes plug in via Ruleset later; the keywords `ownerHero` / `enemyHero` generalize to active-combatant / opposing-combatant when that happens, but the combatant-iteration logic the engine would need doesn't exist yet.
 - **Movement, range, retaliation.** The Event-flow assumes Minions don't move and attacks resolve against the opposing slot. Heroes-of-Might-and-Magic-style movement, hex range, or retaliation combat need additional sub-sequences — flagged at [Event flow](#event-flow).
-- **Mid-battle resume.** BattleState's shape reserves "a previously serialized mid-Battle snapshot," but the prototype does not define the serialization format or the Construct path that consumes it. Fresh matches only.
+- **Mid-battle resume.** A Battle can in principle be a previously serialized mid-Battle snapshot, but the prototype does not define the serialization format or a resume Construct path — Construct always shuffles and deals as a fresh match. Fresh matches only.
 
 ### Engine boundary
 
