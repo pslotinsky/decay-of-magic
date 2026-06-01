@@ -8,4 +8,5 @@
 - [DevLog-005: It's been long-long time](./DevLog-005_its-been-long-long-time.md)
 - [DevLog-006: First Zok, now Poe!](./DevLog-006_first-zok-now-poe.md)
 - [DevLog-007: Codex draft](./DevLog-007_codex-draft.md)
+- [DevLog-008: Lab and Engine design](./DevLog-008_lab-and-engine-design.md)
 <!-- TOC.END -->
