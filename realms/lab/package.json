@@ -12,6 +12,10 @@
     "lint": "biome lint --write src",
     "docs": "poe inspect"
   },
+  "dependencies": {
+    "@dod/core": "workspace:*",
+    "@dod/engine": "workspace:*"
+  },
   "devDependencies": {
     "@dod/config": "workspace:*",
     "@types/jest": "^30.0.0",

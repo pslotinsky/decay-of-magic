@@ -489,6 +489,13 @@ importers:
         version: 6.0.3
 
   realms/lab:
+    dependencies:
+      '@dod/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@dod/engine':
+        specifier: workspace:*
+        version: link:../../packages/engine
     devDependencies:
       '@dod/config':
         specifier: workspace:*
