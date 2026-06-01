@@ -8,11 +8,7 @@
       "entry": []
     },
     "packages/engine": {
-      "entry": [
-        "poe.config.mjs",
-        "test/unit/*.unit-spec.ts",
-        "test/flow/*.flow-spec.ts"
-      ]
+      "entry": ["poe.config.mjs", "test/unit/*.spec.ts", "test/flow/*.spec.ts"]
     },
     "packages/*": {
       "entry": ["poe.config.mjs"]
@@ -24,7 +20,12 @@
       "entry": ["src/main.ts", "poe.config.mjs", "test/api/*.api-spec.ts"]
     },
     "realms/lab": {
-      "entry": ["poe.config.mjs", "test/api/*.api-spec.ts"]
+      "entry": [
+        "poe.config.mjs",
+        "src/**/*.ts",
+        "test/unit/*.unit-spec.ts",
+        "test/api/*.api-spec.ts"
+      ]
     },
     "realms/codex": {
       "entry": [
