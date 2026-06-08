@@ -25,7 +25,7 @@ Bring up the **Lab** realm and the **Engine** it drives — an AI match simulato
 
 <!-- TOC.START: task -->
 - [x] [DOD-0029: Lab API and tests](../tasks/DOD-0029_lab-api-and-tests.md)
-- [ ] [DOD-0030: Lab and engine mock](../tasks/DOD-0030_lab-and-engine-mock.md)
+- [x] [DOD-0030: Lab and engine mock](../tasks/DOD-0030_lab-and-engine-mock.md)
 - [ ] [DOD-0031: Lab UI](../tasks/DOD-0031_lab-ui.md)
 - [ ] [DOD-0032: Engine prototype](../tasks/DOD-0032_engine-prototype.md)
 <!-- TOC.END -->

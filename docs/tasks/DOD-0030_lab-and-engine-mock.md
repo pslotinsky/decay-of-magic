@@ -2,7 +2,7 @@
 
 | Field     | Value                                                     |
 | --------- | --------------------------------------------------------- |
-| Status    | In progress                                               |
+| Status    | Done |
 | Milestone | [Lab + Engine](../milestones/Milestone-007_lab-engine.md) |
 | Created   | 2026-05-29                                                |
 
