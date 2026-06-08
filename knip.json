@@ -24,6 +24,7 @@
         "poe.config.mjs",
         "src/**/*.ts",
         "test/unit/*.unit-spec.ts",
+        "test/flow/*.flow-spec.ts",
         "test/api/*.api-spec.ts"
       ]
     },

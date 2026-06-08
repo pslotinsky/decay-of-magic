@@ -5,8 +5,9 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "test": "pnpm run test:unit && pnpm run test:api",
+    "test": "pnpm run test:unit && pnpm run test:flow && pnpm run test:api",
     "test:unit": "jest --config ./test/jest-unit.json",
+    "test:flow": "jest --config ./test/jest-flow.json",
     "test:api": "jest --config ./test/jest-api.json",
     "typecheck": "tsc --noEmit",
     "format": "biome format --write src",
