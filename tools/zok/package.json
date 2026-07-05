@@ -16,11 +16,11 @@
   "license": "UNLICENSED",
   "dependencies": {
     "commander": "^14.0.3",
-    "date-fns": "^4.1.0",
+    "date-fns": "^4.4.0",
     "lodash": "^4.18.1",
-    "nanoid": "^5.1.11",
+    "nanoid": "^5.1.16",
     "nunjucks": "^3.2.4",
-    "prettier": "^3.8.3",
+    "prettier": "^3.9.4",
     "source-map-support": "^0.5.21",
     "yaml": "^2.8.4"
   },
@@ -28,8 +28,8 @@
     "@types/lodash": "^4.17.24",
     "@types/node": "^25.6.2",
     "@types/nunjucks": "^3.2.6",
-    "tsc-alias": "^1.8.17",
-    "tsx": "^4.21.0",
+    "tsc-alias": "^1.9.0",
+    "tsx": "^4.23.0",
     "typescript": "^6.0.3"
   }
 }
